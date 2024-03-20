@@ -9,6 +9,30 @@ import numpy as np
 import scipy as sp
 
 
+def max_norm(phi, phi_tilde, relative=True):
+    """
+    Compute the error in the max-norm of the spectral densities.
+
+    Parameters
+    ----------
+    phi : np.ndarray of shape (n,)
+        The true DOS evaluated at a series of uniformly distributed points.
+    phi_tilde : np.ndarray of shape (n,)
+        The approximated DOS evaluated at the same points as phi.
+    relative : bool
+        Whether to compute the relative or absolute error.
+
+    Returns
+    -------
+    error : float
+        The error of the approximated DOS from the actual DOS.
+    """
+    error = np.max(np.abs(phi_tilde - phi))
+    if relative:
+        error /= np.max(np.abs(phi))
+    return error
+
+
 def p_norm(phi, phi_tilde, p=1, relative=True):
     """
     Compute the error in the p-norm of the spectral densities.

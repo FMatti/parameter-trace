@@ -3,12 +3,6 @@
 ## Matrices
 *.npz
 
-## PDFs
-*.pdf
-
-## Jupyter notebooks
-*.ipynb
-
 ## Pickled objects
 *.pkl
 
