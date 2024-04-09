@@ -12,7 +12,7 @@ import scipy as sp
 
 from src.kernel import gaussian_kernel
 from src.interpolation import chebyshev_coefficients, exponentiate_chebyshev_coefficients_cosine_transform, chebyshev_recurrence
-from src.eigenproblem import generalized_eigenproblem_standard, generalized_eigenproblem_pinv, generalied_eigenproblem_direct
+from src.eigenproblem import generalized_eigenproblem_standard, generalized_eigenproblem_pinv, generalied_eigenproblem_direct, generalized_eigenproblem_pinv_oversampled
 from src.utils import continued_fraction
 
 
@@ -166,6 +166,8 @@ def NC(A, t, m, sigma, n_v, k=1, zeta=1e-7, kappa=1e-5, eta=1e-3, kernel=gaussia
                 Xi = generalized_eigenproblem_pinv(K_2[i], K_1[i], zeta=zeta)
             elif eigenproblem == "direct":
                 Xi = generalied_eigenproblem_direct(K_2[i], K_1[i], n=n, sigma=sigma, eta=eta)
+            elif eigenproblem == "oversampled":
+                Xi = generalized_eigenproblem_pinv_oversampled(K_2[i], K_1[i], c=1.5)
             else:  # eigenproblem == "standard":
                 Xi = generalized_eigenproblem_standard(K_2[i], K_1[i], n=n, sigma=sigma, zeta=zeta, eta=eta)[0]
             phi_hat[i] = np.sum(Xi)

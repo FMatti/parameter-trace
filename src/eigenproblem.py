@@ -137,6 +137,36 @@ def generalized_eigenproblem_pinv(K_2, K_1, zeta=1e-7):
     return xi
 
 
+def generalized_eigenproblem_pinv_oversampled(K_2, K_1, c=1.5):
+    """
+    Compute the pseudo-inverse: pinv(K_1) * K_2.
+
+    Parameters
+    ----------
+    K_2 : np.ndarray of shape (n_v, n_v)
+        Reduced matrix defined as K_2 = Z* Z = W* P^2 W.
+    K_1 : np.ndarray of shape (n_v, n_v)
+        Reduced matrix defined as K_1 = W* Z = W* P W.
+    c : int or float
+        The amonut of oversampling (factor by which sketch size is larger than
+        target rank).
+
+    Returns
+    -------
+    xi : np.ndarray
+        The generalized eigenvalues.
+    """
+
+    r = int(round(K_1.shape[0] / c))
+    S, W = np.linalg.eigh(K_1)
+    I = np.argsort(np.abs(S))[-r:]
+    S_inv_r = 1 / S[I]
+    Xi = (W[:, I] * S_inv_r @ W[:, I].conj().T) @ K_2
+    xi = np.diag(Xi)
+
+    return xi
+
+
 # --- Unused implementations ---
 
 

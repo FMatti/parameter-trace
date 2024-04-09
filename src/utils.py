@@ -313,7 +313,7 @@ def _form_spectral_distribution(eigenvalues, kernel=gaussian_kernel, n=None, a=-
         spectral_density += kernel(
             grid_points - eigenvalue, n=n if n else len(eigenvalues), sigma=sigma
         )
-    spectral_distribution = np.cumsum(spectral_density)
+    spectral_distribution = np.cumsum(spectral_density) * ((b - a) / n_t)
     return spectral_distribution
 
 
