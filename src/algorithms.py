@@ -526,18 +526,69 @@ def Haydock(A, t, m, sigma, n_v, seed=0, kernel=None, eta=None):
     return phi_tilde
 
 
-def BlockLanczos(A, Z0, k):
+def Lanczos(A, X, k, reorth_tol=0.7, return_matrix=False, extend_matrix=False):
 
-    Z = np.copy(Z0)
-    n, n_v = Z.shape
+    if len(X.shape) < 2:
+        X = X.reshape(-1, 1)
+    n, m = X.shape
 
     # Initialize arrays for storing the block-tridiagonal elements
-    a = np.empty((k, n_v, n_v), dtype=A.dtype)
-    b = np.empty((k + 1, n_v, n_v), dtype=A.dtype)
+    a = np.empty((k, m), dtype=A.dtype)
+    b = np.empty((k + 1, m), dtype=A.dtype)
+    U = np.empty((k + 1, n, m), dtype=A.dtype)
 
-    U = np.empty((k + 1, A.shape[0], n_v), dtype=A.dtype)
+    b[0] = np.linalg.norm(X, axis=0)
+    U[0] = X / b[0]
 
-    U[0], b[0] = np.linalg.qr(Z)
+    for j in range(k):
+
+        # New set of vectors
+        w = A @ U[j]
+        a[j] = np.sum(U[j].conj() * w, axis=0)
+        u_tilde = w - U[j] * a[j] - (U[j-1] * b[j] if j > 0 else 0)
+
+        # reorthogonalization
+        idx = np.where(np.linalg.norm(u_tilde, axis=0) < reorth_tol * np.linalg.norm(w, axis=0))[0]
+        if len(idx) >= 1:
+            h_hat = np.einsum("ijk,jk->ik", U[:j + 1, :, idx].conj(), u_tilde[:, idx])
+            a[j, idx] += h_hat[-1]
+            if j > 0:
+                b[j - 1, idx] += h_hat[-2]
+            u_tilde[:, idx] -= np.einsum("ijk,ik->jk", U[:j + 1, :, idx].conj(), h_hat)
+
+        b[j + 1] = np.linalg.norm(u_tilde, axis=0)
+        U[j + 1] = u_tilde / b[j + 1]
+
+    U = np.swapaxes(U, 0, 2)
+    a = np.swapaxes(a, 0, 1)
+    b = np.swapaxes(b, 0, 1)
+
+    if return_matrix:
+        T = np.zeros((m, k + 1, k), dtype=a.dtype)
+        for i in range(m):
+            T[i, :k, :k] = np.diag(b[i, 1:-1], 1) + np.diag(a[i]) + np.diag(b[i, 1:-1], -1)
+            T[i, -1, -1] = b[i, -1]
+        if not extend_matrix:
+            T = T[:, :k, :]
+        return U, T
+    return U, a, b
+
+
+def BlockLanczos(A, X, k, reorth_steps=-1, return_matrix=False, extend_matrix=False):
+
+    if len(X.shape) < 2:
+        X = X.reshape(-1, 1)
+    n, m = X.shape
+
+    if reorth_steps == -1:
+        reorth_steps = k
+
+    # Initialize arrays for storing the block-tridiagonal elements
+    a = np.empty((k, m, m), dtype=A.dtype)
+    b = np.empty((k + 1, m, m), dtype=A.dtype)
+    U = np.empty((k + 1, n, m), dtype=A.dtype)
+
+    U[0], b[0] = np.linalg.qr(X)
 
     for j in range(k):
 
@@ -546,224 +597,72 @@ def BlockLanczos(A, Z0, k):
         a[j] = U[j].conj().T @ w
         u_tilde = w - U[j] @ a[j] - (U[j-1] @ b[j].conj().T if j > 0 else 0)
 
-        # Tridiagonal block M
-        #a[j] = U[j].conj().T @ Z
-        #Z -= U[j] @ a[j]
-
         # reorthogonalization
-        h_hat = np.swapaxes(U[:j], 0, 1).reshape(n, -1).conj().T @ u_tilde
-        a[j] += h_hat[-1]
-        #Z -= np.swapaxes(U[:j], 0, 1).reshape(n, -1) @ 
+        if j > 0 and reorth_steps > j:
+            h_hat = np.swapaxes(U[:j], 0, 1).reshape(n, -1).conj().T @ u_tilde
+            a[j] += h_hat[-1]
+            u_tilde = u_tilde - np.swapaxes(U[:j], 0, 1).reshape(n, -1) @ h_hat
 
         # Pivoted QR
-        Z_, R_, p = sp.linalg.qr(Z, pivoting=True, mode='economic')
-        b[j + 1] = R_[:, np.argsort(p)]
+        z_tilde, R, p = sp.linalg.qr(u_tilde, pivoting=True, mode="economic")
+        b[j + 1] = R[:, np.argsort(p)]
 
         # Orthogonalize again if R is rank deficient
-        r = np.abs(np.diag(b[j + 1]))
-        r_idx = np.nonzero(r < np.max(r) * 1e-10)[0]
-        Z_[:, r_idx] -= U[j] @ (U[j].conj().T @ Z_[:, r_idx])
-        Z_[:, r_idx], R_ = np.linalg.qr(Z_[:, r_idx])
-        Z_[:, r_idx] *= np.sign(np.diag(R_))
-
-        U[j + 1] = Z_
+        if reorth_steps > j:
+            r = np.abs(np.diag(b[j + 1]))
+            r_idx = np.nonzero(r < np.max(r) * 1e-10)[0]
+            z_tilde[:, r_idx] = z_tilde[:, r_idx] - U[j] @ (U[j].conj().T @ z_tilde[:, r_idx])
+            z_tilde[:, r_idx], R = np.linalg.qr(z_tilde[:, r_idx])
+            z_tilde[:, r_idx] *= np.sign(np.diag(R))
+            U[j + 1] = z_tilde
 
     U = np.swapaxes(U, 0, 1).reshape(n, -1)
 
+    if return_matrix:
+        T = np.zeros(((k + 1)*m, k*m), dtype=A.dtype)
+        for i in range(k):
+            T[i*m:(i+1)*m,i*m:(i+1)*m] = a[i]
+            T[(i+1)*m:(i+2)*m, i*m:(i+1)*m] = b[i + 1]
+            if i < k - 1:
+                T[i*m:(i+1)*m, (i+1)*m:(i+2)*m] = b[i + 1].conj().T
+        if not extend_matrix:
+            T = T[:-m, :]
+        return U, T
     return U, a, b
 
 
-def BlockLanczosWorking(A, Z0, k):
-
-    Z = np.copy(Z0)
-    n, n_v = Z.shape
-
-    # Initialize arrays for storing the block-tridiagonal elements
-    a = np.empty((k, n_v, n_v), dtype=A.dtype)
-    b = np.empty((k + 1, n_v, n_v), dtype=A.dtype)
-
-    U = np.empty((k + 1, A.shape[0], n_v), dtype=A.dtype)
-
-    U[0], b[0] = np.linalg.qr(Z)
-
-    for i in range(k):
-
-        # New set of vectors
-        Z = A @ U[i] - (U[i-1] @ b[i].conj().T if i > 0 else 0)
-
-        # Tridiagonal block M
-        a[i] = U[i].conj().T @ Z
-        Z -= U[i] @ a[i]
-
-        # reorthogonalization
-        Z -= np.swapaxes(U[:i], 0, 1).reshape(n, -1) @ (np.swapaxes(U[:i], 0, 1).reshape(n, -1).conj().T @ Z)
-
-        # Pivoted QR
-        Z_, R_, p = sp.linalg.qr(Z, pivoting=True, mode='economic')
-        b[i + 1] = R_[:, np.argsort(p)]
-
-        # Orthogonalize again if R is rank deficient
-        r = np.abs(np.diag(b[i + 1]))
-        r_idx = np.nonzero(r < np.max(r) * 1e-10)[0]
-        Z_[:, r_idx] -= U[i] @ (U[i].conj().T @ Z_[:, r_idx])
-        Z_[:, r_idx], R_ = np.linalg.qr(Z_[:, r_idx])
-        Z_[:, r_idx] *= np.sign(np.diag(R_))
-
-        U[i + 1] = Z_
-
-    U = np.swapaxes(U, 0, 1).reshape(n, -1)
-
-    return U, a, b
-
-
-def BlockLanczosOld(A, Z0, q, reorth=0):
-        
-    Z = np.copy(Z0)
-    d,b = Z.shape
-    
-    M = [ np.zeros((b,b),dtype=A.dtype) ]*q
-    R = [ np.zeros((b,b),dtype=A.dtype) ]*(q+1)
-    
-    Q = np.zeros((d,b*(q+1)),dtype=A.dtype)
-
-    Q[:,0:b],R[0] = np.linalg.qr(Z)
-    for k in range(0,q):
-        
-        # New set of vectors
-        Qk = Q[:,k*b:(k+1)*b]
-        Qkm1 = Q[:,(k-1)*b:k*b]
-        Z = A@Qk - Qkm1@(R[k].conj().T) if k>0 else A@Qk
-        
-        # Tridiagonal block M
-        M[k] = Qk.conj().T@Z
-        Z -= Qk@M[k]
-
-        # reorthogonalization
-        if reorth>k:
-            Z -= Q[:,:k*b]@(Q[:,:k*b].conj().T@Z)
-        
-        # Pivoted QR
-        Z_,R_,p = sp.linalg.qr(Z,pivoting=True,mode='economic')
-        R[k+1] = R_[:,np.argsort(p)]
-        
-        # Orthogonalize again if R is rank deficient
-        if reorth>k:
-            r = np.abs(np.diag(R[k+1]))
-            r_idx = np.nonzero(r<np.max(r)*1e-10)[0]
-            Z_[:,r_idx] -= Qk@(Qk.conj().T@Z_[:,r_idx])
-            Z_[:,r_idx],R_ = np.linalg.qr(Z_[:,r_idx])
-            Z_[:,r_idx] *= np.sign(np.diag(R_))
-            
-        Q[:,(k+1)*b:(k+2)*b] = Z_
-
-    return Q,M,R
-
-
-def ParallelLanczos(A, Z0, q, reorth=0):
-        
-    Z = np.copy(Z0)
-    d,b = Z.shape
-    
-    M = np.zeros((q,b),dtype=A.dtype)
-    R = np.zeros((q+1,b),dtype=A.dtype)
-    
-    Q = np.zeros((d,q+1,b),dtype=A.dtype)
-
-    for j in range(b):
-        R[0,j] = np.linalg.norm(Z[:,j])
-        Q[:,0,j] = Z[:,j] / R[0,j]
-
-    for k in range(0,q):
-
-        AQk = A@Q[:,k]
-        for j in range(b):
-            Qk = Q[:,k,j]
-            Qkm1 = Q[:,k-1,j]
-            Z = AQk[:,j] - Qkm1*(R[k,j]) if k>0 else AQk[:,j]
-
-            M[k,j] = Qk.conj().T@Z
-            Z -= Qk*M[k,j]
-
-            if reorth>k:
-                Z -= Q[:,:k,j]@(Q[:,:k,j].conj().T@Z)
-                Z -= Q[:,:k,j]@(Q[:,:k,j].conj().T@Z)
-                
-            R[k+1,j] = np.linalg.norm(Z)
-            Q[:,k+1,j] = Z / R[k+1,j]
-
-    return Q,M,R
-
-
-def BlockTridiag(M,R):
-
-    q = len(M)
-    b = len(M[0])
-    
-    T = np.zeros((q*b,q*b),dtype=M[0].dtype)
-
-    for k in range(q):
-        T[k*b:(k+1)*b,k*b:(k+1)*b] = M[k]
-
-    for k in range(q-1):
-        T[(k+1)*b:(k+2)*b,k*b:(k+1)*b] = R[k]
-        T[k*b:(k+1)*b,(k+1)*b:(k+2)*b] = R[k].conj().T
-        
-    return T
-
-
-def KAL(A, t, m, sigma, n_v, n_v_tilde=None, kernel=gaussian_kernel, seed=0):
+def KAL(A, t, m, sigma, n_v, n_v_tilde=None, k_deflation=10, k_correction=10, kernel=gaussian_kernel, seed=0):
 
     phi = np.zeros(len(t))
     f = lambda x: kernel(x, n=n, sigma=sigma)
-
-    assert n_v>0, 'b must be positive'
 
     if n_v_tilde is None:  # Evenly distribute mat-vecs
         n_v_tilde = n_v // 2
         n_v = n_v // 2
 
     n = A.shape[0]
-    n1 = m // 10
-    n2 = m // 10
-    q = 20
-   
+
     np.random.seed(seed)
-    Ω = np.random.randn(n, n_v)
-    Ψ = np.random.randn(n, n_v_tilde)
+    Omega = np.random.randn(n, n_v)
+    Psi = np.random.randn(n, n_v_tilde)
 
-    #for i in range(r):
-    #    QQ,M,R = block_lanczos(A,Ω,q,reorth=q)
-    #    
-    #    T = get_block_tridiag(M+[np.zeros((n_omega,n_omega))],R[1:])
-    #    Θ,S = np.linalg.eigh(T)
-    #
-    #    Y = S@np.diag(f(Θ))@S.conj().T[:,:n_omega]
-    #    Ω = QQ[:,:(q+1)*n_omega]@Y@R[0]
+    # Block-Lanczos low-rank approximation of A
+    Q, T = BlockLanczos(A, Omega, k=m + k_deflation, reorth_steps=m, return_matrix=True, extend_matrix=False)
 
-    QQ,M,R = BlockLanczos(A,Ω,q+n1,reorth=q)
-    Q = QQ[:,:(q+1)*n_v]
-    T = BlockTridiag(M,R[1:-1])
-    Θ,S = np.linalg.eigh(T)
-    Sqb = S.conj().T[:,:(q+1)*n_v]
+    # Deflated trace estimates
+    ev, U = np.linalg.eigh(T)
+    phi = f(np.subtract.outer(t, ev)) @ np.linalg.norm(U[:(m + 1) * n_v, :], axis=0)**2
 
-    for i in range(t.shape[0]):
-        phi[i] = f(t[i] - Θ) @ np.linalg.norm(Sqb,axis=1)**2
+    Y = Psi - Q[:, :(m + 1) * n_v] @ (Q[:, :(m + 1) * n_v].conj().T @ Psi)
 
-    Y = Ψ - Q@(Q.conj().T@Ψ)
+    # Krylov-aware iterations (do them "simultaneously" to vectorize for-loops)
+    _, M, R = Lanczos(A, Y, k_correction, reorth_tol=0)
 
-    Qt,Mt,Rt = ParallelLanczos(A,Y,n2,reorth=0)
     for i in range(n_v_tilde):
 
-        try:
-            Θt,St = sp.linalg.eigh_tridiagonal(Mt[:,i],Rt[1:-1,i])
-        except:
-            Tt = np.diag(Mt[:,i]) + np.diag(Rt[1:-1,i],-1) + np.diag(Rt[1:-1,i],1)
-            Θt,St = np.linalg.eigh(Tt)
-
-        Sm2Rt = St.conj().T[:,0]*Rt[0,i]
-
-        for i in range(t.shape[0]):
-            phi[i] += f(t[i] - Θt) @ Sm2Rt**2/n_v_tilde
+        # Trace corrections
+        ev, U = sp.linalg.eigh_tridiagonal(M[i], R[i,1:-1])
+        phi += f(np.subtract.outer(t, ev)) @ (U[0].conj().T * R[i,0])**2 / n_v_tilde
 
     return phi
 
