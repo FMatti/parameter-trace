@@ -1,0 +1,260 @@
+%%% LANGUAGE AND FONTS
+
+% Typesetting packages
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[activate={true,nocompatibility},
+            final,
+            tracking=true,
+            kerning=true,
+            spacing=false,
+            factor=1100,
+            stretch=10,
+            shrink=10]{microtype}
+
+% English language package
+\usepackage[english]{babel}
+
+% Package for stylizing quotes
+\usepackage{csquotes}
+
+% Set font to Palatino with Euler math
+\usepackage{palatino}
+\usepackage{eulervm}
+\renewcommand\familydefault{\rmdefault}
+
+% Comment
+\newcommand\todo[1]{{{\color{red}#1}}}
+
+% Remove page numbering from empty page at section end
+\let\origdoublepage\cleardoublepage
+\newcommand{\clearemptydoublepage}{\clearpage{\pagestyle{empty}\origdoublepage}}
+\let\cleardoublepage\clearemptydoublepage
+
+
+%%% COLOR THEME
+
+% Color package
+\usepackage{xcolor}
+
+% Color definitions
+\definecolor{darkblue}{HTML}{2F455C}
+\definecolor{mainblue}{HTML}{0e437c}
+\definecolor{darkorange}{HTML}{F98125}
+\colorlet{lightblue}{darkblue!10!white}
+\colorlet{linkcolor}{mainblue}
+
+
+%%% PAGE THEME
+
+% Page layout
+\usepackage[textwidth=420pt,
+            textheight=640pt,
+            headheight=15pt,
+            voffset=40pt]{geometry}
+
+% Section title styles
+\renewcommand\section{\@startsection{section}{1}{\z@}
+                                   {-3.5ex \@plus -1.3ex \@minus -.7ex}
+                                   {2.3ex \@plus.4ex \@minus .4ex}
+                                   {\scshape\Large\bfseries}}
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}
+                                   {-2.3ex\@plus -1ex \@minus -.5ex}
+                                   {1.2ex \@plus .3ex \@minus .3ex}
+                                   {\scshape\large\bfseries}}
+\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}
+                                   {-2.3ex\@plus -1ex \@minus -.5ex}
+                                   {1ex \@plus .2ex \@minus .2ex}
+                                   {\scshape\normalsize\bfseries}}
+
+% Command for adding empty page
+\newcommand\emptypage{
+  \newpage
+  \thispagestyle{empty}
+  \mbox{}
+  \newpage
+}
+
+
+%%% REFERENCING
+
+% Bibliography management
+\usepackage[square, numbers]{natbib}
+\bibliographystyle{plainnat}
+\newcommand*{\doi}[1]{DOI: \href{https://doi.org/#1}{#1}}
+\let\oldcite\cite
+\renewcommand{\cite}[2][]{\textcolor{linkcolor}{\oldcite[#1]{#2}}}
+%\bibpunct{\color{linkcolor}[}{\color{linkcolor}]}{,}{n}{}{;}
+
+% Links
+\usepackage{url}
+\urlstyle{same}
+
+% Clickable references
+\usepackage[linktoc=all]{hyperref}
+\hypersetup{citecolor=linkcolor}
+
+% Enumerations within section (Figure 3.4 instead of maybe Figure 42)
+\counterwithin{figure}{section}
+\counterwithin{table}{section}
+\counterwithin{equation}{section}
+\usepackage[list=true, listformat=simple]{subcaption}
+
+% Reference commands
+\newcommand{\reffig}[1]{\hyperref[#1]{\textcolor{linkcolor}{figure \ref*{#1}}}}
+\newcommand{\Reffig}[1]{\hyperref[#1]{\textcolor{linkcolor}{Figure \ref*{#1}}}}
+\newcommand{\reftab}[1]{\hyperref[#1]{\textcolor{linkcolor}{table \ref*{#1}}}}
+\newcommand{\Reftab}[1]{\hyperref[#1]{\textcolor{linkcolor}{Table \ref*{#1}}}}
+\newcommand{\refdef}[1]{\hyperref[#1]{\textcolor{linkcolor}{definition \ref*{#1}}}}
+\newcommand{\Refdef}[1]{\hyperref[#1]{\textcolor{linkcolor}{Definition \ref*{#1}}}}
+\newcommand{\reflem}[1]{\hyperref[#1]{\textcolor{linkcolor}{lemma \ref*{#1}}}}
+\newcommand{\Reflem}[1]{\hyperref[#1]{\textcolor{linkcolor}{Lemma \ref*{#1}}}}
+\newcommand{\refthm}[1]{\hyperref[#1]{\textcolor{linkcolor}{theorem \ref*{#1}}}}
+\newcommand{\Refthm}[1]{\hyperref[#1]{\textcolor{linkcolor}{Theorem \ref*{#1}}}}
+\newcommand{\refalg}[1]{\hyperref[#1]{\textcolor{linkcolor}{algorithm \ref*{#1}}}}
+\newcommand{\Refalg}[1]{\hyperref[#1]{\textcolor{linkcolor}{Algorithm \ref*{#1}}}}
+\newcommand{\refsec}[1]{\hyperref[#1]{\textcolor{linkcolor}{section \ref*{#1}}}}
+\newcommand{\Refsec}[1]{\hyperref[#1]{\textcolor{linkcolor}{Section \ref*{#1}}}}
+\newcommand{\refchp}[1]{\hyperref[#1]{\textcolor{linkcolor}{section \ref*{#1}}}}
+\newcommand{\Refchp}[1]{\hyperref[#1]{\textcolor{linkcolor}{section \ref*{#1}}}}
+\newcommand{\refapp}[1]{\hyperref[#1]{\textcolor{linkcolor}{appendix \ref*{#1}}}}
+\newcommand{\Refapp}[1]{\hyperref[#1]{\textcolor{linkcolor}{Appendix \ref*{#1}}}}
+\newcommand{\reflin}[1]{\hyperref[#1]{\textcolor{linkcolor}{line \ref*{#1}}}}
+\newcommand{\Reflin}[1]{\hyperref[#1]{\textcolor{linkcolor}{Line \ref*{#1}}}}
+\newcommand{\refequ}[1]{\hyperref[#1]{\textcolor{linkcolor}{(\ref*{#1})}}}
+
+
+%%% FLOATS
+
+% Figures
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{fadings}
+\usetikzlibrary{calc}
+\usetikzlibrary{decorations.text}
+
+% Table layouting
+\usepackage{booktabs}
+\usepackage{multirow}
+
+% Caption
+\usepackage[font=small,
+            labelfont=sc,
+            labelsep=endash,
+            margin=\parindent,
+            tableposition=top]{caption}
+
+% Algorithms
+\usepackage[noend]{algpseudocode}
+
+
+%%% MATHEMATICS
+
+% Mathematics packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{relsize}
+
+% Fix undefined contorl sequence issue with pyplot pgf exports
+\def\mathdefault#1{#1}
+
+% Custom commands
+\newcommand{\pp}{\text{\raisebox{0.3ex}{\relscale{0.9}++}}}
+\newcommand*\rfrac[2]{{}^{#1}\!/_{#2}}
+\newcommand{\mtx}[1]{\boldsymbol{#1}}
+\newcommand{\vct}[1]{\boldsymbol{#1}}
+
+% Custom opertators
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Real}{Re}
+\DeclareMathOperator{\Imag}{Im}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\dimension}{dim}
+\DeclareMathOperator{\DCT}{DCT}
+\DeclareMathOperator{\Hutch}{H}
+\DeclareMathOperator{\MSE}{MSE}
+\DeclareMathOperator{\range}{range}
+
+% Colorboxes
+\usepackage[many]{tcolorbox}
+\tcbset{breakable}
+\newtcolorbox{block}[2][]
+{
+  colframe = darkblue,
+  colback  = lightblue,
+  coltitle = white,
+  title    = {#2},
+  sharp corners,
+  before skip=10pt,
+  after skip=10pt,
+  left=3pt,
+  right=3pt,
+  boxrule=0pt,
+  #1,
+}
+
+\tcbuselibrary{theorems}
+
+\newtcbtheorem[number within=section]{theorem}{Theorem}%
+{
+  colframe = darkblue,
+  colback  = lightblue,
+  coltitle = white,
+  sharp corners,
+  before skip=10pt,
+  after skip=10pt,
+  left=3pt,
+  right=3pt,
+  boxrule=0pt,
+}{thm}
+
+\newtcbtheorem[number within=section, use counter from=theorem]{lemma}{Lemma}%
+{
+  colframe = darkblue,
+  colback  = lightblue,
+  coltitle = white,
+  sharp corners,
+  before skip=10pt,
+  after skip=10pt,
+  left=3pt,
+  right=3pt,
+  boxrule=0pt,
+}{lem}
+
+\newtcbtheorem[number within=section, use counter from=theorem]{definition}{Definition}%
+{
+  colframe = darkblue,
+  colback  = lightblue,
+  coltitle = white,
+  sharp corners,
+  before skip=10pt,
+  after skip=10pt,
+  left=3pt,
+  right=3pt,
+  boxrule=0pt,
+}{def}
+
+\newtcbtheorem[number within=section, use counter from=theorem]{algo}{Algorithm}%
+{
+  colframe = darkblue,
+  colback  = lightblue,
+  coltitle = white,
+  sharp corners,
+  before skip=10pt,
+  after skip=10pt,
+  left=3pt,
+  right=3pt,
+  boxrule=0pt,
+}{alg}
+
+
+%%% GLOSSARY
+
+\usepackage{glossaries}
+
+\makeglossaries
+
