@@ -166,8 +166,13 @@
 \newcommand{\mtx}[1]{\boldsymbol{#1}}
 \newcommand{\vct}[1]{\boldsymbol{#1}}
 
+% Trace estimator notations
+\DeclareMathOperator{\Trace}{Tr}
+\newcommand\Hutch[1]{\Trace^{(0, #1)}}
+\newcommand\Nystr[1]{\Trace^{(#1, 0)}}
+\newcommand\Nystrpp[2]{\Trace^{(#1, #2)}}
+
 % Custom opertators
-\DeclareMathOperator{\Tr}{Tr}
 \DeclareMathOperator{\Var}{Var}
 \DeclareMathOperator{\Real}{Re}
 \DeclareMathOperator{\Imag}{Im}
@@ -175,7 +180,6 @@
 \DeclareMathOperator{\diag}{diag}
 \DeclareMathOperator{\dimension}{dim}
 \DeclareMathOperator{\DCT}{DCT}
-\DeclareMathOperator{\Hutch}{H}
 \DeclareMathOperator{\MSE}{MSE}
 \DeclareMathOperator{\range}{range}
 
