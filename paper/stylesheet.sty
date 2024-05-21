@@ -42,6 +42,7 @@
 \definecolor{mainblue}{HTML}{0e437c}
 \definecolor{darkorange}{HTML}{F98125}
 \colorlet{lightblue}{darkblue!10!white}
+\colorlet{lightorange}{darkorange!10!white}
 \colorlet{linkcolor}{mainblue}
 
 
@@ -57,15 +58,15 @@
 \renewcommand\section{\@startsection{section}{1}{\z@}
                                    {-3.5ex \@plus -1.3ex \@minus -.7ex}
                                    {2.3ex \@plus.4ex \@minus .4ex}
-                                   {\scshape\Large\bfseries}}
+                                   {\Large\bfseries}}
 \renewcommand\subsection{\@startsection{subsection}{2}{\z@}
                                    {-2.3ex\@plus -1ex \@minus -.5ex}
                                    {1.2ex \@plus .3ex \@minus .3ex}
-                                   {\scshape\large\bfseries}}
+                                   {\large\bfseries}}
 \renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}
                                    {-2.3ex\@plus -1ex \@minus -.5ex}
                                    {1ex \@plus .2ex \@minus .2ex}
-                                   {\scshape\normalsize\bfseries}}
+                                   {\normalsize\bfseries}}
 
 % Command for adding empty page
 \newcommand\emptypage{
@@ -81,6 +82,7 @@
 % Bibliography management
 \usepackage[square, numbers]{natbib}
 \bibliographystyle{plainnat}
+\setcitestyle{authoryear}
 \newcommand*{\doi}[1]{DOI: \href{https://doi.org/#1}{#1}}
 \let\oldcite\cite
 \renewcommand{\cite}[2][]{\textcolor{linkcolor}{\oldcite[#1]{#2}}}
@@ -205,8 +207,8 @@
 
 \newtcbtheorem[number within=section]{theorem}{Theorem}%
 {
-  colframe = darkblue,
-  colback  = lightblue,
+  colframe = darkorange,
+  colback  = lightorange,
   coltitle = white,
   sharp corners,
   before skip=10pt,
