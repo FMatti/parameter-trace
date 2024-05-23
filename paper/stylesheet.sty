@@ -170,9 +170,16 @@
 
 % Trace estimator notations
 \DeclareMathOperator{\Trace}{Tr}
-\newcommand\Hutch[1]{\Trace^{(0, #1)}}
-\newcommand\Nystr[1]{\Trace^{(#1, 0)}}
-\newcommand\Nystrpp[2]{\Trace^{(#1, #2)}}
+\newcommand\Hutch[1]{\Trace_{#1}}
+%\newcommand\Hutch[1]{$H_{#1}$}
+\newcommand\Nystr[2]{\widehat{#2}_{#1}}
+%\newcommand\Hutch[1]{$N_{#1}$}
+\newcommand\Nystrpp[2]{\Trace_{#1, #2}}
+%\newcommand\Hutch[1]{$N++_{#1}$}
+
+%\usepackage{xfrac}
+\newcommand\sfrac[2]{{}^{#1}{\mskip -5mu/\mskip -3mu}_{#2}}
+%\newcommand{\sfrac}[2]{{\textstyle\frac{#1}{#2}}}
 
 % Custom opertators
 \DeclareMathOperator{\Var}{Var}
