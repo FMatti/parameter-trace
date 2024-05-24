@@ -43,7 +43,7 @@
 \definecolor{darkorange}{HTML}{F98125}
 \colorlet{lightblue}{darkblue!10!white}
 \colorlet{lightorange}{darkorange!10!white}
-\colorlet{linkcolor}{mainblue}
+\colorlet{linkcolor}{black}
 
 
 %%% PAGE THEME
@@ -85,7 +85,7 @@
 \setcitestyle{authoryear}
 \newcommand*{\doi}[1]{DOI: \href{https://doi.org/#1}{#1}}
 \let\oldcite\cite
-\renewcommand{\cite}[2][]{\textcolor{linkcolor}{\oldcite[#1]{#2}}}
+\renewcommand{\cite}[2][]{\textcolor{linkcolor}{\bf \oldcite[#1]{#2}}}
 %\bibpunct{\color{linkcolor}[}{\color{linkcolor}]}{,}{n}{}{;}
 
 % Links
@@ -103,27 +103,27 @@
 \usepackage[list=true, listformat=simple]{subcaption}
 
 % Reference commands
-\newcommand{\reffig}[1]{\hyperref[#1]{\textcolor{linkcolor}{figure \ref*{#1}}}}
-\newcommand{\Reffig}[1]{\hyperref[#1]{\textcolor{linkcolor}{Figure \ref*{#1}}}}
-\newcommand{\reftab}[1]{\hyperref[#1]{\textcolor{linkcolor}{table \ref*{#1}}}}
-\newcommand{\Reftab}[1]{\hyperref[#1]{\textcolor{linkcolor}{Table \ref*{#1}}}}
-\newcommand{\refdef}[1]{\hyperref[#1]{\textcolor{linkcolor}{definition \ref*{#1}}}}
-\newcommand{\Refdef}[1]{\hyperref[#1]{\textcolor{linkcolor}{Definition \ref*{#1}}}}
-\newcommand{\reflem}[1]{\hyperref[#1]{\textcolor{linkcolor}{lemma \ref*{#1}}}}
-\newcommand{\Reflem}[1]{\hyperref[#1]{\textcolor{linkcolor}{Lemma \ref*{#1}}}}
-\newcommand{\refthm}[1]{\hyperref[#1]{\textcolor{linkcolor}{theorem \ref*{#1}}}}
-\newcommand{\Refthm}[1]{\hyperref[#1]{\textcolor{linkcolor}{Theorem \ref*{#1}}}}
-\newcommand{\refalg}[1]{\hyperref[#1]{\textcolor{linkcolor}{algorithm \ref*{#1}}}}
-\newcommand{\Refalg}[1]{\hyperref[#1]{\textcolor{linkcolor}{Algorithm \ref*{#1}}}}
-\newcommand{\refsec}[1]{\hyperref[#1]{\textcolor{linkcolor}{section \ref*{#1}}}}
-\newcommand{\Refsec}[1]{\hyperref[#1]{\textcolor{linkcolor}{Section \ref*{#1}}}}
-\newcommand{\refchp}[1]{\hyperref[#1]{\textcolor{linkcolor}{section \ref*{#1}}}}
-\newcommand{\Refchp}[1]{\hyperref[#1]{\textcolor{linkcolor}{section \ref*{#1}}}}
-\newcommand{\refapp}[1]{\hyperref[#1]{\textcolor{linkcolor}{appendix \ref*{#1}}}}
-\newcommand{\Refapp}[1]{\hyperref[#1]{\textcolor{linkcolor}{Appendix \ref*{#1}}}}
-\newcommand{\reflin}[1]{\hyperref[#1]{\textcolor{linkcolor}{line \ref*{#1}}}}
-\newcommand{\Reflin}[1]{\hyperref[#1]{\textcolor{linkcolor}{Line \ref*{#1}}}}
-\newcommand{\refequ}[1]{\hyperref[#1]{\textcolor{linkcolor}{(\ref*{#1})}}}
+\newcommand{\reffig}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf figure \ref*{#1}}}}
+\newcommand{\Reffig}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Figure \ref*{#1}}}}
+\newcommand{\reftab}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf table \ref*{#1}}}}
+\newcommand{\Reftab}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Table \ref*{#1}}}}
+\newcommand{\refdef}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf definition \ref*{#1}}}}
+\newcommand{\Refdef}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Definition \ref*{#1}}}}
+\newcommand{\reflem}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf lemma \ref*{#1}}}}
+\newcommand{\Reflem}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Lemma \ref*{#1}}}}
+\newcommand{\refthm}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf theorem \ref*{#1}}}}
+\newcommand{\Refthm}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Theorem \ref*{#1}}}}
+\newcommand{\refalg}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf algorithm \ref*{#1}}}}
+\newcommand{\Refalg}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Algorithm \ref*{#1}}}}
+\newcommand{\refsec}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf section \ref*{#1}}}}
+\newcommand{\Refsec}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Section \ref*{#1}}}}
+\newcommand{\refchp}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf section \ref*{#1}}}}
+\newcommand{\Refchp}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf section \ref*{#1}}}}
+\newcommand{\refapp}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf appendix \ref*{#1}}}}
+\newcommand{\Refapp}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Appendix \ref*{#1}}}}
+\newcommand{\reflin}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf line \ref*{#1}}}}
+\newcommand{\Reflin}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Line \ref*{#1}}}}
+\newcommand{\refequ}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf (\ref*{#1})}}}
 
 
 %%% FLOATS
@@ -174,7 +174,7 @@
 %\newcommand\Hutch[1]{$H_{#1}$}
 \newcommand\Nystr[2]{\widehat{#2}_{#1}}
 %\newcommand\Hutch[1]{$N_{#1}$}
-\newcommand\Nystrpp[2]{\Trace_{#1, #2}}
+\newcommand\Nystrpp[2]{\Trace_{#2, #1}}
 %\newcommand\Hutch[1]{$N++_{#1}$}
 
 %\usepackage{xfrac}
@@ -214,55 +214,73 @@
 
 \newtcbtheorem[number within=section]{theorem}{Theorem}%
 {
-  colframe = darkorange,
-  colback  = lightorange,
+  colframe = black,
+  colback  = white,
   coltitle = white,
   sharp corners,
   before skip=10pt,
   after skip=10pt,
   left=3pt,
   right=3pt,
-  boxrule=0pt,
+  boxrule=1pt,
 }{thm}
 
 \newtcbtheorem[number within=section, use counter from=theorem]{lemma}{Lemma}%
 {
-  colframe = darkblue,
-  colback  = lightblue,
+  colframe = black,
+  colback  = white,
   coltitle = white,
   sharp corners,
   before skip=10pt,
   after skip=10pt,
   left=3pt,
   right=3pt,
-  boxrule=0pt,
+  boxrule=1pt,
 }{lem}
 
 \newtcbtheorem[number within=section, use counter from=theorem]{definition}{Definition}%
 {
-  colframe = darkblue,
-  colback  = lightblue,
+  colframe = black,
+  colback  = white,
   coltitle = white,
   sharp corners,
   before skip=10pt,
   after skip=10pt,
   left=3pt,
   right=3pt,
-  boxrule=0pt,
+  boxrule=1pt,
 }{def}
 
 \newtcbtheorem[number within=section, use counter from=theorem]{algo}{Algorithm}%
 {
-  colframe = darkblue,
-  colback  = lightblue,
+  colframe = black,
+  colback  = white,
   coltitle = white,
   sharp corners,
   before skip=10pt,
   after skip=10pt,
   left=3pt,
   right=3pt,
-  boxrule=0pt,
+  boxrule=1pt,
 }{alg}
+
+%\newtcbtheorem[number within=section, use counter from=theorem]{remark}{Remark}%
+%{
+%  colframe = black,
+%  colback  = white,
+%  coltitle = white,
+%  sharp corners,
+%  before skip=10pt,
+%  after skip=10pt,
+%  left=3pt,
+%  right=3pt,
+%  boxrule=1pt,
+%}{rem}
+
+\renewenvironment{proof}{\noindent\paragraph{\bfseries Proof:}}{\qed \\}
+
+\newenvironment{remark}{\noindent\paragraph{\bfseries Remark:}}{\\}
+
 
 
 %%% GLOSSARY

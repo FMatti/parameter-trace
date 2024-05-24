@@ -31,24 +31,24 @@
 \section{Introduction}
 \label{sec:introduction}
 
-In numerous problems across physics, chemistry, engineering, and data science, eigenvalues and especially their distribution are crucial for understanding the properties of a system: In electronic structure calculations they represent the energy levels which electrons occupy \cite{lin-2017-randomized-estimation, drabold-1993-maximum-entropy, ducastelle-1970-moments-developments, haydock-1972-electronic-structure}, in neural network optimization they are indicative of the topology of the loss landscape \cite{yao-2020-pyhessian-neural, ghorbani-2019-investigation-neural}, and in graph processing they can uncover hidden graph motifs \cite{huang-2021-density-states}. The distribution of the eigenvalues $\lambda_1, \dots, \lambda_n \in \mathbb{R}$ of a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ can be captured with the spectral density
+In numerous problems across physics, chemistry, engineering, and data science, eigenvalues and especially their distribution are crucial for understanding the properties of a system: In electronic structure calculations they represent the energy levels which electrons occupy \cite{lin-2017-randomized-estimation, drabold-1993-maximum-entropy, ducastelle-1970-moments-developments, haydock-1972-electronic-structure}, in neural network optimization they are indicative of the topology of the loss landscape \cite{yao-2020-pyhessian-neural, ghorbani-2019-investigation-neural}, and in graph processing they can uncover hidden graph motifs \cite{huang-2021-density-states}. The distribution of the eigenvalues $\lambda_1, \dots, \lambda_n \in \mathbb{R}$ of a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ can be captured in the spectral density
 \begin{equation}
     \phi(t) = \frac{1}{n} \sum_{i=1}^{n} \delta(t - \lambda_i).
 \end{equation}
-Clearly, assembling this expression amounts to computing all eigenvalues of the matrix; an operation which is often prohibitively expensive. Therefore, many techniques have been proposed for approximating $\phi$. For example, by matching its moments with a discrete density function \cite{cohen-steiner-2018-approximating-spectrum, braverman-2022-sublinear-time}, by deriving a quadrature from the Lanczos procedure \cite{lin-2016-approximating-spectral, chen-2021-analysis-stochastic}, or by explicit polynomial expansion \cite{weisse-2006-kernel-polynomial, lin-2016-approximating-spectral}. In many applications, it is also acceptable to trade in some of the finer details of the spectrum for a better approximability by smoothing $\phi$, typically through convolution with a Gaussian \cite{lin-2016-approximating-spectral, lin-2017-randomized-estimation} or a Lorentzian \cite{haydock-1972-electronic-structure, lin-2016-approximating-spectral}. This converts the problem to estimating the trace of a smooth parameter-dependent matrix function.
+Clearly, assembling this expression amounts to computing all eigenvalues of the matrix; an operation which is often prohibitively expensive. Therefore, many techniques have been proposed for approximating $\phi$. For example, by matching its moments with a discrete density function \cite{cohen-steiner-2018-approximating-spectrum, braverman-2022-sublinear-time}, by deriving a quadrature from the Lanczos procedure \cite{lin-2016-approximating-spectral, chen-2021-analysis-stochastic}, or by explicit polynomial expansion \cite{weisse-2006-kernel-polynomial, lin-2016-approximating-spectral}. In many applications, it is also acceptable to trade in some of the finer details of the spectrum for a better approximability by smoothing $\phi$, typically through convolution with a Gaussian \cite{lin-2016-approximating-spectral, lin-2017-randomized-estimation} or a Lorentzian \cite{haydock-1972-electronic-structure, lin-2016-approximating-spectral}. This converts the problem to estimating the trace of a smooth parameter-dependent matrix.
 
 \todo{
 \begin{itemize}
-    \item Definition of parameter-dependent matrix ($\mtx{B}(t) \in \mathbb{R}^{n \times n}$, every entry depends continuously on $t \in [a,b]$ \cite{kressner-2023-randomized-lowrank})
+    \item Brief definition of parameter-dependent matrix ($\mtx{B}(t) \in \mathbb{R}^{n \times n}$, every entry depends continuously on $t \in [a,b]$ \cite{kressner-2023-randomized-lowrank})
     \item Trace estimation through mat-vecs (if matrix is only accessed implicitly \cite{pearlmutter-1994-fast-exact} or for complicated matrix functions [partition function, spectral density, exponential integrators])
-    \item Existing trace estimation methods for constant matrices: Girard-Hutchinson \cite{girard-1989-fast-montecarlo, hutchinson-1990-stochastic-estimator}, variance reduced versions thereof \cite{gambhir-2017-deflation-method, saibaba-2017-randomized-matrixfree, lin-2017-randomized-estimation, meyer-2021-hutch-optimal, persson-2022-improved-variants, epperly-2024-xtrace-making} which have only recently been specialized to trace estimation of matrix functions \cite{chen-2023-krylovaware-stochastic}
-    \item Trace estimation for parameter-dependent matrices (Nyström++ but no analysis \cite{lin-2017-randomized-estimation}, low-rank approximation \cite{kressner-2023-randomized-lowrank}, dynamic trace estimation but only discrete setting [Woodruff, Dharangutte])
+    \item Existing trace estimation methods for constant matrices: Girard-Hutchinson \cite{girard-1989-fast-montecarlo, hutchinson-1990-stochastic-estimator} and variance reduced versions thereof \cite{gambhir-2017-deflation-method, saibaba-2017-randomized-matrixfree, lin-2017-randomized-estimation, meyer-2021-hutch-optimal, persson-2022-improved-variants, epperly-2024-xtrace-making} which have only recently been specialized to trace estimation of matrix functions \cite{chen-2023-krylovaware-stochastic}
+    \item Trace estimation in the parameter-dependent matrices (Nyström++ but no analysis \cite{lin-2017-randomized-estimation}, only low-rank approximation \cite{kressner-2023-randomized-lowrank}, dynamic trace estimation for sequence of similar matrices \cite{woodruff-2022-optimal-query, dharangutte-2021-dynamic-trace})
     %\item Error analysis for spectral density approximation (Wasserstein-1 error [Braverman, Chen], missing $1/\varepsilon$ guarantees)
 \end{itemize}
 
 \paragraph{Contribution}
 \begin{itemize}
-    \item Theoretical guarantees in the $L^1$-norm for three trace estimators on parameter-dependent matrices (Girard-Hutchinson, Nyström, Nyström++), in particular, $\mathcal{O}(\varepsilon^{-1})$ scaling with number of mat-vecs
+    \item Theoretical guarantees in the $L^1$-norm for three established trace estimators for constant matrices when applied to parameter-dependent matrices (Girard-Hutchinson, Nyström, Nyström++), in particular, $\mathcal{O}(\varepsilon^{-1})$ scaling with number of mat-vecs
     \item A simple and efficient algorithm for estimating spectral densities using any of the three estimators using Chebyshev expansion, including theoretical guarantees
 \end{itemize}
 }
@@ -56,19 +56,14 @@ Clearly, assembling this expression amounts to computing all eigenvalues of the 
 \paragraph{Notation}
 We follow the notation and conventions which are used in contemporary literature in this field. Further,
 \begin{itemize}
-    \item we denote with $\mathbb{N}$ all positive whole numbers and with $\mathbb{R}$ all real numbers;
+    \item we denote with $\mathbb{N}$ all positive whole numbers;
     \item $e$ denotes Euler's number and $\log$ is the corresponding logartihm;
     \item the ceiling function $\lceil x \rceil$ of a real number $x$ returns the greatest integer larger than or equal to $x$;
-    \item scalars are represented by lower case Greek or Latin letters ($s$, $\varepsilon$, \dots),
-    vectors are additionally printed in bold ($\vct{v}$, $\vct{\psi}$, \dots),
-    and matrices are additionally capitalized ($\mtx{A}$, $\mtx{\Omega}$, \dots);
+    \item scalars are represented by lower case Greek or Latin letters ($s$, $\varepsilon$, \dots), vectors are additionally printed in bold ($\vct{v}$, $\vct{\psi}$, \dots), and matrices are additionally capitalized ($\mtx{A}$, $\mtx{\Omega}$, \dots);
     \item the expected value of a random variable $x$ is denoted with $\mathbb{E}[x]$. The $k$-th moment of a random variable $x$ is defined as $\mathbb{E}^{k}[x] = \left(\mathbb{E}\left[ | x |^{k} \right] \right)^{\sfrac{1}{k}}$;
-    \item the identity matrix $\mtx{I}_n = \diag(1, \dots, 1) \in \mathbb{R}^{n \times n}$
-    carries ones on its diagonal and zeros everywhere else. The zero matrix
-    $\mtx{0}_{n \times m} \in \mathbb{R}^{n \times m}$ consists of only zero entries;
+    \item the identity matrix $\mtx{I}_n = \diag(1, \dots, 1) \in \mathbb{R}^{n \times n}$ carries ones on its diagonal and zeros everywhere else. The zero matrix $\mtx{0}_{n \times m} \in \mathbb{R}^{n \times m}$ consists of only zero entries;
     \item in a Gaussian random vector and a Gaussian random matrix, all entries are independently sampled from the standard normal distribution;
-    \item matrix norms are denoted with $\lVert \cdot \rVert$. For symmetric matrices, the $p$-Schatten norm is
-    $\lVert \mtx{A} \rVert _{(p)} = (\sum_{i=1}^n |\lambda_i|^p)^{1/p}$. We refer to the spectral norm as $\lVert \mtx{A} \rVert _2 = \lVert \mtx{A} \rVert _{(\infty)} = \max_{i=1,\dots,n}|\lambda_i|$, the nuclear norm as $\lVert \mtx{A} \rVert _{\ast} = \lVert \mtx{A} \rVert _{(1)} = \sum_{i=1}^{n} |\lambda_i|$, and the Frobenius norm as $\lVert \mtx{A} \rVert _F = \lVert \mtx{A} \rVert _{(2)} = (\sum_{i=1}^{n} |\lambda_i|^2)^{\sfrac{1}{2}}$.
+    \item matrix norms are denoted with $\lVert \cdot \rVert$. For symmetric matrices, the $p$-Schatten norm is $\lVert \mtx{A} \rVert _{(p)} = (\sum_{i=1}^n |\lambda_i|^p)^{1/p}$. We refer to the spectral norm as $\lVert \mtx{A} \rVert _2 = \lVert \mtx{A} \rVert _{(\infty)} = \max_{i=1,\dots,n}|\lambda_i|$, the nuclear norm as $\lVert \mtx{A} \rVert _{\ast} = \lVert \mtx{A} \rVert _{(1)} = \sum_{i=1}^{n} |\lambda_i|$, and the Frobenius norm as $\lVert \mtx{A} \rVert _F = \lVert \mtx{A} \rVert _{(2)} = (\sum_{i=1}^{n} |\lambda_i|^2)^{\sfrac{1}{2}}$.
 \end{itemize}
 
 \todo{
@@ -122,19 +117,17 @@ We define the $L^{1}$ norm of a square-integrable function $f:[a,b] \to \mathbb{
 \begin{equation}
     \int_{a}^{b} | f(t) | \mathrm{d}t.
 \end{equation}
-\todo{Motivate why we use this.}
+We use it to measure the error of the trace estimators. \todo{Motivate why we use this.}
 
 \subsection{Girard-Hutchinson estimator for parameter-dependent matrices}
 \label{subsec:hutchinson}
 
-We first consider \refequ{equ:hutchinson-trace-estimator}.
-\todo{Discuss theory for constant matrix
-}
+We first consider the estimator \refequ{equ:hutchinson-trace-estimator}.
 
 \begin{theorem}{Girard-Hutchinson estimator for parameter-dependent matrices}{hutchinson}
     Let $\mtx{A}(t) \in \mathbb{R}^{n \times n}$ continuously depend on $t \in [a, b]$. Then for any $k \in \mathbb{N}$ and $\gamma \geq 1$ it holds with probability at least $1 - \gamma^{-2k}$
     \begin{equation}
-        \int_{a}^{b} \left| \Trace(\mtx{A}(t)) - \Hutch{\mtx{\Psi}}(\mtx{A}(t)) \right| ~\mathrm{d}t < 16 \gamma k \frac{1}{\sqrt{n_{\mtx{\Psi}}}} \int_{a}^{b} \lVert \mtx{A}(t) \rVert _F  ~\mathrm{d}t.
+        \int_{a}^{b} \left| \Trace(\mtx{A}(t)) - \Hutch{\mtx{\Psi}}(\mtx{A}(t)) \right| ~\mathrm{d}t < 2^4 \gamma k \frac{1}{\sqrt{n_{\mtx{\Psi}}}} \int_{a}^{b} \lVert \mtx{A}(t) \rVert _F  ~\mathrm{d}t.
     \end{equation}
     In particular, if we choose $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2} \log(\delta^{-1})^2)$, then with probability at least $1-\delta$ for $\delta \in (0, e^{\sfrac{1}{2}})$ and any $\varepsilon > 0$ we have $\int_{a}^{b} | \Trace(\mtx{A}(t)) - \Hutch{\mtx{\Psi}}(\mtx{A}(t)) | ~\mathrm{d}t < \varepsilon \int_{a}^{b} \lVert \mtx{A}(t) \rVert _F~\mathrm{d}t$.
 \end{theorem}
@@ -143,11 +136,11 @@ The idea behind the proof is to bound the higher order moments for fixed paramet
 \begin{proof} 
     We define the 1-query quadratic trace estimate 
     \begin{equation}
-        r(t) = \vct{\psi}^{\top} \mtx{B}(t) \vct{\psi} - \Trace(\mtx{B}(t))
+        r(t) = \Trace(\mtx{B}(t)) - \vct{\psi}^{\top} \mtx{B}(t) \vct{\psi}
     \end{equation}
     for a parameter-dependent matrix $\mtx{B}(t)$ over the real numbers with the Gaussian random vector $\vct{\psi}$.
 
-    First, we consider $r(t)$ for a fixed $t \in [a,b]$ and therefore temporarily ignore the parameter-dependence. From the proof of \cite[Lemma 3]{cortinovis-2022-randomized-trace} we know that $r$ is sub-Gamma with parameters $(v, c) = (2 \lVert \mtx{B} \rVert _F^2, 2 \lVert \mtx{B} \rVert _2)$. Thus, by \cite[Theorem 2.3]{boucheron-2013-basic-inequalities} this implies that for every $k \in \mathbb{N}$
+    First, we consider $r(t)$ for a fixed $t \in [a,b]$ and therefore temporarily ignore the parameter-dependence. From the proof of \cite[lemma 3]{cortinovis-2022-randomized-trace} we know that $r$ is sub-Gamma with parameters $(v, c) = (2 \lVert \mtx{B} \rVert _F^2, 2 \lVert \mtx{B} \rVert _2)$. Thus, by \cite[theorem 2.3]{boucheron-2013-basic-inequalities} this implies that for every $k \in \mathbb{N}$
     \begin{align}
         \mathbb{E}\left[ r^{2 k} \right]
         &\stackrel{\text{\cite{boucheron-2013-basic-inequalities}}}{\leq} k! \left( 16 \lVert \mtx{B} \rVert _F^2 \right)^k + (2 k)! \left( 8 \lVert \mtx{B} \rVert _2 \right)^{2 k} \notag \\
@@ -160,24 +153,24 @@ The idea behind the proof is to bound the higher order moments for fixed paramet
     Stirling's approximation \cite{robbins-1955-remark-stirling} bonuds $(2 k)! < 2 \sqrt{\pi k}  e^{\sfrac{1}{24 k}} ( 2 k / e )^{2 k}$. Consequently, the moments of $r$ for a fixed $t$ are limited by
     \begin{equation}
         \mathbb{E}^{2k}\left[ r \right]
-        < \left( \frac{9}{4} \sqrt{\pi k} e^{\sfrac{1}{24 k}} \right)^{\sfrac{1}{2k}} \left( \frac{2 k}{e}\right) 2^{3} \lVert \mtx{B} \rVert _F < 16 k \lVert \mtx{B} \rVert _F,
+        < \left( \frac{9}{4} \sqrt{\pi k} e^{\sfrac{1}{24 k}} \right)^{\sfrac{1}{2k}} \left( \frac{2 k}{e}\right) 2^{3} \lVert \mtx{B} \rVert _F < 2^4 k \lVert \mtx{B} \rVert _F,
         \label{equ:hutchinson-trace-onequery-fixed}
     \end{equation}
     since it can be checked that $(\frac{9}{4} \sqrt{\pi k} e^{\sfrac{1}{24 k}})^{\sfrac{1}{2k}} < e$, due to the monotonous decrease of this expression in $k \in \mathbb{N}$.
 
-    Now we make the transition to the continuous. Minkowski's integral inequality \cite[Theorem 2.2]{hardy-1952-inequalities} allows us to apply \refequ{equ:hutchinson-trace-onequery-fixed} in the continuous setting: 
+    Now we make the transition to the continuous. Minkowski's integral inequality \cite[theorem 2.2]{hardy-1952-inequalities} allows us to apply \refequ{equ:hutchinson-trace-onequery-fixed} in the continuous setting: 
     \begin{equation}
         \mathbb{E}^{2 k}\left[ \int_{a}^{b} |r(t)|~\mathrm{d}t  \right]
-        \stackrel{\text{\cite{hardy-1952-inequalities}}}{\leq} \int_{a}^{b} \mathbb{E}\left[ |r(t)|^{2 k}\right]^{\sfrac{1}{2 k}}~\mathrm{d}t
-        < 16 k \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t.
+        \stackrel{\text{\cite{hardy-1952-inequalities}}}{\leq} \int_{a}^{b} \mathbb{E}^{2 k}\left[ r(t) \right]~\mathrm{d}t
+        < 2^4 k \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t.
     \end{equation}
     By Markov's inequality, for any $k \in \mathbb{N}$ and $\gamma \geq 1$, it holds with probability at least $1 - \gamma^{-2 k}$
     \begin{equation}
-        \int_{a}^{b} |r(t)|~\mathrm{d}t < 16 k \gamma \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t.
+        \int_{a}^{b} |r(t)|~\mathrm{d}t < 2^4 k \gamma \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t.
         \label{equ:hutchinson-trace-onequery-uniform}
     \end{equation}
 
-    To extend the bound to the $n_{\mtx{\Psi}}$-query quadratic trace estimator, we use a technique from the proof of \cite[Theorem 1]{cortinovis-2022-randomized-trace}. Let
+    To extend the bound to the $n_{\mtx{\Psi}}$-query quadratic trace estimator, we use a technique from the proof of \cite[theorem 1]{cortinovis-2022-randomized-trace}. Let
     \begin{equation}
         \mtx{B}(t)
         = \frac{1}{n_{\mtx{\Psi}}} \begin{pmatrix}
@@ -194,12 +187,12 @@ The idea behind the proof is to bound the higher order moments for fixed paramet
     \end{equation}
     where $\vct{\psi}_1, \dots, \vct{\psi}_{n_{\mtx{\Psi}}} \in \mathbb{R}^{n}$ are independent Gaussian random vectors. Then $\lVert \mtx{B}(t) \rVert _F = \lVert \mtx{A}(t) \rVert _F / \sqrt{n_{\mtx{\Psi}}}$ and
     \begin{equation}
-        r(t) = \frac{1}{n_{\mtx{\Psi}}} \sum_{j=1}^{n_{\mtx{\Psi}}} \vct{\psi}_j^{\top} \mtx{A}(t) \vct{\psi}_j - \Trace(\mtx{A}(t)).
+        r(t) = \Trace(\mtx{A}(t)) - \frac{1}{n_{\mtx{\Psi}}} \sum_{j=1}^{n_{\mtx{\Psi}}} \vct{\psi}_j^{\top} \mtx{A}(t) \vct{\psi}_j.
     \end{equation}
     Hence, we conclude from \refequ{equ:hutchinson-trace-onequery-uniform} that for any $k \in \mathbb{N}$ and $\gamma \geq 1$ with probability at least $1 - \gamma^{-2 k}$
     \begin{equation}
-        \int_{a}^{b} \left| \frac{1}{n_{\mtx{\Psi}}} \sum_{j=1}^{n_{\mtx{\Psi}}} \vct{\psi}_j^{\top} \mtx{A}(t) \vct{\psi}_j - \Trace(\mtx{A}(t)) \right| ~ \mathrm{d}t
-        < 16 k \gamma \frac{1}{\sqrt{n_{\mtx{\Psi}}}} \int_{a}^{b} \lVert \mtx{A}(t) \rVert _F~\mathrm{d}t.
+        \int_{a}^{b} \left| \Trace(\mtx{A}(t)) - \frac{1}{n_{\mtx{\Psi}}} \sum_{j=1}^{n_{\mtx{\Psi}}} \vct{\psi}_j^{\top} \mtx{A}(t) \vct{\psi}_j \right| ~ \mathrm{d}t
+        < 2^4 k \gamma \frac{1}{\sqrt{n_{\mtx{\Psi}}}} \int_{a}^{b} \lVert \mtx{A}(t) \rVert _F~\mathrm{d}t.
     \end{equation}
 
     Setting $\delta = \gamma^{-2 k}$ and choosing $k = \lceil \log(\delta^{-1}) \rceil$ we get that for all $\delta \in (0, e^{-\sfrac{1}{2}})$
@@ -215,21 +208,53 @@ The idea behind the proof is to bound the higher order moments for fixed paramet
     %\end{equation}
 \end{proof}
 
-\todo{Discuss $1/\varepsilon^2$ drawback}
+\begin{remark}
+    If additionally $\mtx{A}(t)$ is nonzero for all $t \in [a, b]$, then it follows from the proof of \refthm{thm:hutchinson} that with probability at least $1 - \delta$
+    \begin{equation}
+        \int_{a}^{b} \frac{| \Trace(\mtx{A}(t)) - \Hutch{\mtx{\Psi}}(\mtx{A}(t)) |}{\Trace(\mtx{A}(t))} ~\mathrm{d}t < \varepsilon,
+    \end{equation}
+    if $n_{\mtx{\Psi}} \geq 2^{10} \varepsilon^{-2} \log(\delta^{-1})^2 (\int_{a}^{b} \mu(t)^{\sfrac{1}{2}}~\mathrm{d}t)^2$ with $\mu(t) = \lVert \mtx{A}(t) \rVert _2 / \Trace(\mtx{A}(t))$. Compared to the constant matrix equivalent \cite[remark 2]{cortinovis-2022-randomized-trace} we observe an additional factor of $\log(\delta^{-1})$.
+\end{remark}
+
+\todo{The drawback of the Girard-Hutchinson estimator is the $\mathcal{O}(\varepsilon^{-2})$-requirement on the number of queries. }
 
 \subsection{Nyström approximation for parameter-dependent matrices}
 \label{subsec:nystrom}
 
-Next we consider \refequ{equ:nystrom-trace-estimator}. \todo{Motivate Nyström approximation if matrix is low-rank}
+Next we consider \refequ{equ:nystrom-trace-estimator}. \todo{Motivate Nyström approximation if matrix is low-rank.}
 
-Pointwise eigenvalue decomposition
+\begin{theorem}{Nyström estimator for parameter-dependent matrices}{nystrom}
+    Suppose $f(\mtx{A}, t)$ is continuous and non-negative in $t \in [a, b]$ for a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ and $n_{\mtx{\Omega}} \geq 6, n_{\mtx{\Omega}} - 4 \geq r \geq 2$ two integers. Then for all $\gamma \geq 1$ with probability at least $1 - \gamma^{-(n_{\mtx{\Omega}} - r)}$
+    \begin{equation}
+        \int_{a}^{b} \left| \Trace(f(\mtx{A}, t)) - \Trace(\Nystr{\mtx{\Omega}}{f}(\mtx{A}, t)) \right| ~\mathrm{d}t
+        \leq \gamma^2 (1 + r) \int_{a}^{b} \sum_{i = r+1}^{n} \sigma_i(f(\mtx{A}, t)) ~\mathrm{d}t.
+    \end{equation}
+\end{theorem}
+
+\begin{proof}
+    Since $f$ is non-negative, $f(\mtx{A}, t)$ is positive definite for all $\mtx{A}$ and $t$.
+    Notice that by \cite[lemma 2.1]{frangella-2023-randomized-nystrom}, $f(\mtx{A}, t) - \widehat{f}(\mtx{A}, t)$ is also positive semi-definite for all $t$. Therefore,
+    \begin{equation}
+        \left| \Trace(f(\mtx{A}, t)) - \Trace(\widehat{f}(\mtx{A}, t)) \right|
+        = \left| \Trace(f(\mtx{A}, t) - \widehat{f}(\mtx{A}, t)) \right|
+        = \lVert f(\mtx{A}, t) - \widehat{f}(\mtx{A}, t) \rVert _{\ast}
+    \end{equation}
+    From the proof of \cite[corollary 8.2]{tropp-2023-randomized-algorithms} it follows that
+    \begin{equation}
+        \lVert f(\mtx{A}, t) - \widehat{f}(\mtx{A}, t) \rVert _{\ast} = \lVert (\mtx{I}_n - \mtx{\Pi}_{f(\mtx{A}, t)^{\sfrac{1}{2}} \mtx{\Omega}}) f(\mtx{A}, t)^{\sfrac{1}{2}} \rVert _2^2
+    \end{equation}
+    Hence, by \cite[theorem 9]{kressner-2023-randomized-lowrank}, with $n_{\mtx{\Omega}} = p + r$, the result follows
+    with $\lVert \cdot \rVert _2 \leq \lVert \cdot \rVert _F$ and $\sigma_i(f^{\sfrac{1}{2}}(\mtx{A}, t))^{2} = \sigma_i(f(\mtx{A}, t))$.
+\end{proof}
+
+\todo{Explain that \reflem{lem:nystrom} is a weaker result, and mainly there to help proof \refthm{thm:nystrom-pp}.}
+
+For the coming pages, we employ the following notation. Let
 \begin{equation}
     \mtx{A}(t) 
     = \mtx{U}(t) \mtx{\Lambda}(t) \mtx{U}(t)^{\top} 
 \end{equation}
-where $\mtx{\Lambda}(t) = \operatorname{diag}(\lambda_1(t), \dots, \lambda_n(t))$.
-
-We define the matrix partitions
+be the eigenvalue decomposition of $\mtx{A}(t)$ at a fixed $t$, i.e. $\mtx{\Lambda}(t) = \operatorname{diag}(\lambda_1(t), \dots, \lambda_n(t))$ and $\mtx{U}(t)^{\top} \mtx{U}(t) = \mtx{I}_n$. We define the matrix partitions
 \begin{equation}
     \rule[\dimexpr-2ex-\ht\strutbox]{0pt}{\dimexpr2ex+2ex+\baselineskip}
     \mtx{U}(t) = \begin{bmatrix}
@@ -268,7 +293,7 @@ and let $\mtx{\Omega}_1(t) = \mtx{U}_1(t)^{\top} \mtx{\Omega} \in \mathbb{R}^{k 
         &\leq \sqrt{2k} \cdot \sqrt{ \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert (\mtx{A} \widetilde{\mtx{\Omega}}_2^{\top}) (\mtx{A} \widetilde{\mtx{\Omega}}_2^{\top})^{\top} - \mtx{A}^{\top} \mtx{A} \rVert _2 \right] + \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert \mtx{A}^{\top} \mtx{A} \rVert _2 \right]} && \text{(triangle inequality)} \notag \\
         &\leq \sqrt{2k} \cdot \sqrt{ \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert (\widetilde{\mtx{\Omega}}_2 \mtx{A} )^{\top} (\widetilde{\mtx{\Omega}}_2 \mtx{A}) - \mtx{A}^{\top} \mtx{A} \rVert _2\right]} + \sqrt{2k} \cdot \lVert \mtx{A} \rVert _2. && \text{($\sqrt{a+b} \leq \sqrt{a} + \sqrt{b}$)}
     \end{align}
-    By \cite{} $\widetilde{\mtx{\Omega}}_2 \in \mathbb{R}^{2k \times l}$ satisfies the \todo{$(c_1 \sqrt{q/2k}, c_2 e^{-q}, q)$}-JL moment property for \todo{any $q$ (in what?) $\geq \dots$} and some constants $c_1, c_2 > 0$, hence, by \cite[Lemma 4]{cohen-2016-optimal-approximate} it satisfies the $(2 c_1 \sqrt{q/2k}, 9^d c_2 e^{-q}, d, q)$-OSE moment property for any $d \in \mathbb{N}$. For convenience, we choose $d=2k$ and $q=k/2$, such that $\widetilde{\mtx{\Omega}}_2$ has $(c_1, c_2 (3^4e^{-\sfrac{1}{2}})^k, 2k, k/2)$-OSE moment property. We may then apply an intermediary result from the proof of \cite[Theorem 1]{cohen-2016-optimal-approximate} to bound
+    By \cite{} $\widetilde{\mtx{\Omega}}_2 \in \mathbb{R}^{2k \times l}$ satisfies the \todo{$(c_1 \sqrt{q/2k}, c_2 e^{-q}, q)$}-JL moment property for \todo{any $q$ (in what?) $\geq \dots$} and some constants $c_1, c_2 > 0$, hence, by \cite[lemma 4]{cohen-2016-optimal-approximate} it satisfies the $(2 c_1 \sqrt{q/2k}, 9^d c_2 e^{-q}, d, q)$-OSE moment property for any $d \in \mathbb{N}$. For convenience, we choose $d=2k$ and $q=k/2$, such that $\widetilde{\mtx{\Omega}}_2$ has $(c_1, c_2 (3^4e^{-\sfrac{1}{2}})^k, 2k, k/2)$-OSE moment property. We may then apply an intermediary result from the proof of \cite[theorem 1]{cohen-2016-optimal-approximate} to bound
     \begin{equation}
         \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert (\widetilde{\mtx{\Omega}}_2 \mtx{A} )^{\top} (\widetilde{\mtx{\Omega}}_2 \mtx{A}) - \mtx{A}^{\top} \mtx{A} \rVert _2\right] \leq c_1 c_2^2 3^8e^{-1} \left( \lVert \mtx{A} \rVert _2^2 + \frac{\lVert \mtx{A} \rVert _F^2}{k} \right).
     \end{equation}
@@ -280,7 +305,7 @@ and let $\mtx{\Omega}_1(t) = \mtx{U}_1(t)^{\top} \mtx{\Omega} \in \mathbb{R}^{k 
         \label{equ:OSE-moment-bound-first}
     \end{align}
 
-    The second term in \refequ{equ:OSE-moment-bound-initial} can be bounded with help of the proof of \cite[Lemma B.3]{tropp-2023-randomized-algorithms}
+    The second term in \refequ{equ:OSE-moment-bound-initial} can be bounded with help of the proof of \cite[lemma B.3]{tropp-2023-randomized-algorithms}
     \begin{equation}
         \mathbb{E}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^{k} \right]
         = \mathbb{E}\left[ \lVert ( \mtx{\Omega}_1 \mtx{\Omega}_1^{\top} )^{-1} \rVert _2^{\sfrac{k}{2}} \right]
@@ -303,24 +328,24 @@ and let $\mtx{\Omega}_1(t) = \mtx{U}_1(t)^{\top} \mtx{\Omega} \in \mathbb{R}^{k 
 \end{proof}
 
 \begin{lemma}{Nyström approximation for parameter-dependent matrices}{nystrom}
-    Let $\mtx{A}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. Then its Nyström approximation $\Nystr{\mtx{\Omega}}{\mtx{A}}(t)$ with Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ for even $n_{\mtx{\Omega}} \in \mathbb{N}$ and $\gamma \geq 1$ verifies with probability at least $1 - \gamma^{-\sfrac{n_{\mtx{\Omega}}}{4}}$
+    Let $\mtx{A}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. Then its Nyström approximation $\Nystr{\mtx{\Omega}}{\mtx{A}}(t)$ with Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ for \emph{even} $n_{\mtx{\Omega}} \in \mathbb{N}$ and $\gamma \geq 1$ verifies with probability at least $1 - \gamma^{-\sfrac{n_{\mtx{\Omega}}}{4}}$
     \begin{equation}
         \int_{a}^{b} \lVert \mtx{A}(t) - \Nystr{\mtx{\Omega}}{\mtx{A}}(t) \rVert _F~\mathrm{d}t \leq \gamma \sqrt{2} \cdot \frac{1 + 2c}{\sqrt{n_{\mtx{\Omega}}}} \int_{a}^{b} \Trace(\mtx{A}(t))~\mathrm{d}t.
     \end{equation}
     for a universal constant $c > 0$. In particular, if we choose $n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-2} \log(\delta^{-1})), n_{\mtx{\Omega}} \geq 2$, then with probability at least $1-\delta$ for $\delta \in (0, e^{-e^{4 \varepsilon^2}})$ and $\varepsilon > 0$ we have $\int_{a}^{b} \lVert \mtx{A}(t) - \Nystr{\mtx{\Omega}}{\mtx{A}}(t) \rVert _F~\mathrm{d}t  < \varepsilon \int_{a}^{b} \Trace(A(t))~\mathrm{d}t$.
 \end{lemma}
 
-\todo{proof idea (structural bound, then higher order moment bound to apply Markov's inequality)}
+\todo{Proof idea: structural bound, then higher order moment bound to apply Markov's inequality.}
 
 \begin{proof}
-    We let $n_{\mtx{\Omega}} = 2k$ for some $k \in \mathbb{N}$, i.e. $\mtx{\Omega} \in \mathbb{R}^{n \times 2k}$. After temporarily omitting the parameter dependence, we can apply \cite[Theorem B.1]{persson-2023-randomized-lowrank} with $f(x) = x$ to bound the integrand with \todo{maybe explain where $\mtx{\Omega}_i$ come from...}
+    We let $n_{\mtx{\Omega}} = 2k$ for some $k \in \mathbb{N}$, i.e. $\mtx{\Omega} \in \mathbb{R}^{n \times 2k}$. After temporarily omitting the parameter dependence, we can apply \cite[theorem B.1]{persson-2023-randomized-lowrank} with $f(x) = x$ to bound the integrand with \todo{maybe explain where $\mtx{\Omega}_i$ come from...}
     \begin{equation}
         \lVert \mtx{A} - \Nystr{\mtx{\Omega}}{\mtx{A}} \rVert _F 
         \leq  \lVert \mtx{\Lambda}_2 \rVert _F + \lVert (\mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} )^2 \rVert _F.
         \label{equ:nystrom-proof-persson-bonud}
     \end{equation}
     
-    As in the proof of \cite[Lemma 3]{meyer-2021-hutch-optimal}, the first term can be bonud with
+    As in the proof of \cite[lemma 3]{meyer-2021-hutch-optimal}, the first term can be bonud with
     \begin{equation}
         \lVert \mtx{\Lambda}_2 \rVert _F
         = \sqrt{\sum_{i=k+1}^{n} \lambda_i^2}
@@ -353,7 +378,7 @@ and let $\mtx{\Omega}_1(t) = \mtx{U}_1(t)^{\top} \mtx{\Omega} \in \mathbb{R}^{k 
         \leq \frac{1 + 2c}{\sqrt{k}} \Trace(\mtx{A})
     \end{equation}
 
-    We use Minkowski's integral inequality \cite[Theorem 2.2]{hardy-1952-inequalities} to get
+    We use Minkowski's integral inequality \cite[theorem 2.2]{hardy-1952-inequalities} to get
     \begin{equation}
         \mathbb{E}^{\sfrac{k}{2}}\left[ \int_{a}^{b} \lVert \mtx{A}(t) - \Nystr{\mtx{\Omega}}{\mtx{A}}(t) \rVert _F~\mathrm{d}t \right] 
         \stackrel{\text{\cite{hardy-1952-inequalities}}}{\leq} \int_{a}^{b} \mathbb{E}^{\sfrac{k}{2}} \left[\lVert \mtx{A} - \Nystr{\mtx{\Omega}}{\mtx{A}} \rVert _F \right] ~\mathrm{d}t% \notag \\
@@ -378,37 +403,13 @@ and let $\mtx{\Omega}_1(t) = \mtx{U}_1(t)^{\top} \mtx{\Omega} \in \mathbb{R}^{k 
     which is smaller than $\varepsilon$ if $\delta \leq e^{-e^{4 \varepsilon^2}}$from which follows the second part of the theorem.
 \end{proof}
 
-\begin{theorem}{Nyström estimator for parameter-dependent matrices}{nystrom}
-    Suppose $f(\mtx{A}, t)$ is continuous and non-negative in $t \in [a, b]$ for a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ and $n_{\mtx{\Omega}} \geq 6, n_{\mtx{\Omega}} - 4 \geq r \geq 2$ two integers. Then for all $\gamma \geq 1$ with probability at least $1 - \gamma^{-(n_{\mtx{\Omega}} - r)}$
-    \begin{equation}
-        \int_{a}^{b} \left| \Trace(f(\mtx{A}, t)) - \Trace(\Nystr{\mtx{\Omega}}{f}(\mtx{A}, t)) \right| ~\mathrm{d}t
-        \leq \gamma^2 (1 + r) \int_{a}^{b} \sum_{i = r+1}^{n} \sigma_i(f(\mtx{A}, t)) ~\mathrm{d}t.
-    \end{equation}
-\end{theorem}
-
-\begin{proof}
-    Since $f$ is non-negative, $f(\mtx{A}, t)$ is positive definite for all $\mtx{A}$ and $t$.
-    Notice that by \cite[Lemma 2.1]{frangella-2023-randomized-nystrom}, $f(\mtx{A}, t) - \widehat{f}(\mtx{A}, t)$ is also positive semi-definite for all $t$. Therefore,
-    \begin{equation}
-        \left| \Trace(f(\mtx{A}, t)) - \Trace(\widehat{f}(\mtx{A}, t)) \right|
-        = \left| \Trace(f(\mtx{A}, t) - \widehat{f}(\mtx{A}, t)) \right|
-        = \lVert f(\mtx{A}, t) - \widehat{f}(\mtx{A}, t) \rVert _{\ast}
-    \end{equation}
-    From the proof of \cite[Corollary 8.2]{tropp-2023-randomized-algorithms} it follows that
-    \begin{equation}
-        \lVert f(\mtx{A}, t) - \widehat{f}(\mtx{A}, t) \rVert _{\ast} = \lVert (\mtx{I}_n - \mtx{\Pi}_{f(\mtx{A}, t)^{\sfrac{1}{2}} \mtx{\Omega}}) f(\mtx{A}, t)^{\sfrac{1}{2}} \rVert _2^2
-    \end{equation}
-    Hence, by \cite[Theorem 9]{kressner-2023-randomized-lowrank}, with $n_{\mtx{\Omega}} = p + r$, the result follows
-    with $\lVert \cdot \rVert _2 \leq \lVert \cdot \rVert _F$ and $\sigma_i(f^{\sfrac{1}{2}}(\mtx{A}, t))^{2} = \sigma_i(f(\mtx{A}, t))$.
-\end{proof}
-
 \subsection{Nyström++ estimator for parameter-dependent matrices}
 \label{subsec:nystrom-pp}
 
 Finally, we combine the analysis of the two estimators from \refsec{subsec:hutchinson} and \refsec{subsec:nystrom} into a more efficient, general-purpose trace estimator.
 
 \begin{theorem}{Nyström++ trace estimator for parameter-dependent matrices}{nystrom-pp}
-    Let $\mtx{A}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. If $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-1} \log(2\delta^{-1})^2)$, with probability at least $1 - \delta$ for $\delta \in (0, 2^{-1} \min\{e^{\sfrac{1}{2}}, e^{-e^{4\varepsilon}}\})$ we have
+    Let $\mtx{A}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. If $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-1} \log(2\delta^{-1})^2)$ with \emph{even} $n_{\mtx{\Omega}} \geq 2$, then for $\delta \in (0, 2^{-1} e^{-e^{4\varepsilon}})$ with probability at least $1 - \delta$
     \begin{equation}
         \int_{a}^{b} | \Trace(\mtx{A}(t)) - \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{A}(t)) |~\mathrm{d}t
         \leq \varepsilon \int_{a}^{b} \Trace(\mtx{A}(t))~\mathrm{d}t.
@@ -421,10 +422,12 @@ Finally, we combine the analysis of the two estimators from \refsec{subsec:hutch
         &\int_{a}^{b} | \Trace(\mtx{A}(t)) - \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{A}(t)) |~\mathrm{d}t \notag \\
         &= \int_{a}^{b} | \Hutch{\mtx{\Psi}}(\mtx{A}(t) - \Nystr{\mtx{\Omega}}{\mtx{A}}(t)) - \Trace(\mtx{A}(t) - \Nystr{\mtx{\Omega}}{\mtx{A}}(t)) |~\mathrm{d}t && \text{(by definition of estimators)} \notag \\
         &\leq \tilde{\varepsilon} \int_{a}^{b} \lVert \mtx{A}(t) - \Nystr{\mtx{\Omega}}{\mtx{A}}(t) \rVert _F ~\mathrm{d}t && \text{(\refthm{thm:hutchinson} w.p. $\geq 1 - \tilde{\delta}$)} \notag \\
-        &\leq \tilde{\varepsilon}^2 \int_{a}^{b} \Trace(\mtx{A}(t)) ~\mathrm{d}t && \text{(\reflem{lem:nystrom} w.p. $\geq 1 - \widetilde{\delta}$)} 
+        &\leq \tilde{\varepsilon}^2 \int_{a}^{b} \Trace(\mtx{A}(t)) ~\mathrm{d}t && \text{(\reflem{lem:nystrom} w.p. $\geq 1 - \tilde{\delta}$)} 
     \end{align}
     with probability at least $1 - 2\tilde{\delta}$. Taking $\varepsilon = \tilde{\varepsilon}^2$ and $\delta = 2 \tilde{\delta}$
 \end{proof}
+
+Comparing \refthm{thm:nystrom-pp} with its equivalent for constant matrices \cite[theorem 3.4]{persson-2022-improved-variants}, we notice that our choice of $\delta$ is more restricted and the dependence of $n_{\mtx{\Psi}}$ and $n_{\mtx{\Omega}}$ on $\delta$ is worse.
 
 % \begin{proof}
 %     Combining with union bound.
@@ -444,22 +447,40 @@ We consider the task of computing the spectral density of a real symmetric matri
     \phi(t) = \frac{1}{n} \sum_{i=1}^{n} \delta(t - \lambda_i),
     \label{equ:spectral-density}
 \end{equation}
-where $\delta$ is the Dirac delta distribution.
+where $\delta$ is the Dirac delta distribution. Finding approximations to this distribution is challenging. Furthermore, in most applications the exact location of every eigenvalue is not important, but more so their approximate locations relative to each other, such as eigenvalue clusters, spectral gaps, or outliers. In the following we will introduce a smooth version of the spectral density, which is significantly easier to approximate at the cost of losing some of the finer characteristics of the spectrum.
 
-\subsection{Introduction to spectral density estimation}
+\subsection{Smooth spectral density}
 \label{subsec:spectral-density}
 
-\todo{Motivate reason for smoothing?} Therefore, we seek approximations to the smooth spectral density $\phi_{\sigma}$ defined as
+The smooth spectral density $\phi_{\sigma}$ is defined as
 \begin{equation}
     \phi_{\sigma}(t) = \sum_{i=1}^{n} g_{\sigma}(t - \lambda_i) = \Trace(g_{\sigma}(t\mtx{I}_n - \mtx{A}))
     \label{equ:smooth-spectral-density}
 \end{equation}
-with a Gaussian smoothing kernel of width $\sigma > 0$
+for a smoothing kernel $g_{\sigma}$ parametrized by a smoothing parameter $\sigma > 0$, which controls by how much $\phi$ is smoothed. We choose a Gaussian smoothing kernel of width $\sigma > 0$, given by
 \begin{equation}
     g_{\sigma}(s) = \frac{1}{n \sigma \sqrt{2\pi}} e^{-\sfrac{s^2}{2\sigma^2}}.
     \label{equ:smoothing-kernel}
 \end{equation}
-This conversion of the task to a trace estimation problem for the parameter-dependent matrix $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ allows us to apply the results for the estimators derived in \refsec{sec:analysis}.
+The task in \refequ{equ:smooth-spectral-density} is to approximate the trace of the parameter-dependent matrix $g_{\sigma}(t\mtx{I}_n - \mtx{A})$, which allows us to apply the results derived in \refsec{sec:analysis}.
+
+\todo{
+Measuring error between spectral density $\phi$ and approximation $\widetilde{\phi}$
+\begin{equation}
+    \sup_{f \in \mathcal{S}} \int_{-1}^{1} f(t) (\phi(t) - \widetilde{\phi}(t)) \mathrm{d}t
+    \label{equ:error-metric}
+\end{equation}
+
+In \cite{lin-2016-approximating-spectral} propose $\mathcal{S} = \{ f: f(t) \equiv g_{\sigma}(t - \lambda), \lambda \in [\lambda_{\text{min}}, \lambda_{\text{max}}]\}$
+
+In \cite{chen-2021-analysis-stochastic} use $\mathcal{S} = \{f : f(t) = \Theta(s - t), s \in [-1, 1] \}$ where $\Theta$ the unit step which is equivalent to Kolmogorov-Smirnov.
+
+In \cite{braverman-2022-sublinear-time} use $\mathcal{S} = \text{Lip}_1 = \{f : |f(x) - f(y)| \leq |x - y| \}$ which is equivalent to the Wasserstein-1 norm.
+
+For small enough $\sigma$ and well separated eigenvalues, the  error \refequ{equ:error-metric} when testing against Lipschitz-1 functions we make by smoothing is already $\mathcal{\sigma}$.
+
+Having noted this, we will from now on measure errors in $L^1$ norm from smooth spectral density.
+}
 
 \todo{Discuss error measures and baseline smoothing error, choice of $\sigma$} 
 
@@ -499,7 +520,9 @@ This allows us to define the expanded spectral density
 \subsubsection{Fast and consistent squaring}
 \label{subsubsec:dct}
 
+\todo{
 Fast computation of expansion with DCT (duality with evaluations)
+}
 
 Squaring of Chebyshev expansion for consistent and affine Nyström approximation
 \begin{equation}
@@ -527,10 +550,10 @@ We analyze the error we commit when working with the expanded spectral density \
 \end{lemma}
 
 The proof specializes Bernstein's theorem for Chebyshev interpolation to the case of a Gaussian smoothing kernel \refequ{equ:smoothing-kernel}.
-\todo{It loosely follows the proof give in the preprint of \cite[Theorem 2]{lin-2017-randomized-estimation}, but reaches slightly different conclusion.}
+\todo{It loosely follows the proof give in the preprint of \cite[theorem 2]{lin-2017-randomized-estimation}, but reaches slightly different conclusion.}
 
 \begin{proof}
-    From Bernstein's theorem \cite[Theorem 4.3]{trefethen-2008-gauss-quadrature} it follows that if $f$ is analytic within the Bernstein ellipse $\mathcal{E}_{\chi} \subset \mathbb{C}$ with foci $\pm 1$ and sum of semi-axes $\chi > 1$, then for any $m \in \mathbb{N}$
+    From Bernstein's theorem \cite[theorem 4.3]{trefethen-2008-gauss-quadrature} it follows that if $f$ is analytic within the Bernstein ellipse $\mathcal{E}_{\chi} \subset \mathbb{C}$ with foci $\pm 1$ and sum of semi-axes $\chi > 1$, then for any $m \in \mathbb{N}$
     \begin{equation}
         \sup_{t \in [-1, 1]} \left| f - f^{(m)} \right| \leq \frac{2}{\chi^m (\chi - 1)} \max_{z \in \mathcal{E}_{\chi}} |f(z)|.
         \label{equ:bernstein-bound}
@@ -554,12 +577,20 @@ The proof specializes Bernstein's theorem for Chebyshev interpolation to the cas
     \end{equation}
 \end{proof}
 
-\todo{Explain need for non-negativity for Nyström approximation, and mention alternatives (Putinar, Jackson-damping, ...)}
+\todo{
+Explain need for non-negativity for Nyström approximation (for positive semi-definiteness in theorem).
+
+Converges too slow: polynomial interpolation with Jackson damping \cite{jackson-1912-approximation-trigonometric,braverman-2022-sublinear-time}
+
+Non-negative Chebyshev expansion: expand $\sqrt{g_{\sigma}}$ to degree $m/2$ and then square the expansion. Error guarantee very comparable to normal expansion, and proof below.
+
+Side-note: it is possible to refine the coefficients of the Chebyshev expansion to get a better approximation in the supremum-norm over the set of all non-negative polynomials \cite{fejer-1916-uber-trigonometrische}. The non-convex nature of this problem and the relatively small improvement we get with this technique made us decide to not pursue this further.
+}
 
 \begin{lemma}{Non-negative Chebyshev expansion error}{non-negative-chebyshev-error}
     The non-negative expansion $\underline{g}_{\sigma}^{(m)}$ of the Gaussian smoothing kernel satisfies
     \begin{equation}
-        \sup_{t \in [-1, 1]} \left| g_{\sigma}(t - s) - \underline{g}_{\sigma}^{(m)}(t - s) \right| \leq 2\sqrt{2} \left(1 + \sigma \sqrt{\pi} \cdot E_{\sqrt{2}\sigma, \frac{m}{2}}\right) \frac{E_{\sqrt{2}\sigma, \frac{m}{2}}}{n} \equiv \frac{\underline{E}_{\sigma, m}}{n}
+        \sup_{t \in [-1, 1]} \left| g_{\sigma}(t - s) - \underline{g}_{\sigma}^{(m)}(t - s) \right| \leq 2\sqrt{2} \left(1 + \sigma \sqrt{\pi} \cdot E_{\sqrt{2}\sigma, \sfrac{m}{2}}\right) \frac{E_{\sqrt{2}\sigma, \sfrac{m}{2}}}{n} \equiv \frac{\underline{E}_{\sigma, m}}{n}
         \label{equ:2-chebyshev-interpolation-sup-error-kernel}
         %\lVert  \phi_{\sigma} - \phi_{\sigma}^{(m)} \rVert _1 &\leq \frac{2\sqrt{2}}{\sigma^2} (1 + \sigma)^{-m}.
         %\label{equ:2-chebyshev-interpolation-error}
@@ -572,15 +603,15 @@ The proof specializes Bernstein's theorem for Chebyshev interpolation to the cas
     \begin{equation}
     | a^2 - b^2 | = | (a + b)(a - b) | = | a + b | | a - b | \leq (2 | a | + | a - b |)  | a - b |
     \end{equation}
-    Therefore, omitting the arguments and noting $g_{\sigma} = (\sqrt{g_{\sigma}})^2$ and $\underline{g}_{\sigma}^{(m)} = (\sqrt{g_{\sigma}}^{(m/2)})^2$.
+    Therefore, omitting the arguments and noting $g_{\sigma} = (\sqrt{g_{\sigma}})^2$ and $\underline{g}_{\sigma}^{(m)} = (\sqrt{g_{\sigma}}^{(\sfrac{m}{2})})^2$.
     we have
     \begin{equation}
-        \left| g_{\sigma} - \underline{g}_{\sigma}^{(m)} \right| \leq \left( 2 \left| \sqrt{g_{\sigma}} \right| + \left| \sqrt{g_{\sigma}} - \sqrt{g_{\sigma}}^{(m/2)} \right| \right) \left| \sqrt{g_{\sigma}} - \sqrt{g_{\sigma}}^{(m/2)} \right|.
+        \left| g_{\sigma} - \underline{g}_{\sigma}^{(m)} \right| \leq \left( 2 \left| \sqrt{g_{\sigma}} \right| + \left| \sqrt{g_{\sigma}} - \sqrt{g_{\sigma}}^{(\sfrac{m}{2})} \right| \right) \left| \sqrt{g_{\sigma}} - \sqrt{g_{\sigma}}^{(\sfrac{m}{2})} \right|.
     \end{equation}
     Since $\sqrt{g_{\sigma}} = \sqrt{2 n \sigma \sqrt{2 \pi}} \cdot g_{\sqrt{2}\sigma}$ and $\sqrt{g_{\sigma}} \leq 1/\sqrt{n \sigma \sqrt{2 \pi}}$ we can apply the result from \refthm{thm:chebyshev-error} to get
     \begin{align}
         &\sup_{t \in [-1, 1]} \left| g_{\sigma}(t - s) - \underline{g}_{\sigma}^{(m)}(t - s) \right| \notag \\
-        &\leq \left( 2 \frac{1}{\sqrt{n \sigma \sqrt{2\pi}}} + \sqrt{2 n \sigma \sqrt{2 \pi}} \cdot \frac{E_{\sqrt{2}\sigma, \frac{m}{2}}}{n}\right)\sqrt{2 n \sigma \sqrt{2 \pi}} \cdot \frac{E_{\sqrt{2}\sigma, \frac{m}{2}}}{n},
+        &\leq \left( 2 \frac{1}{\sqrt{n \sigma \sqrt{2\pi}}} + \sqrt{2 n \sigma \sqrt{2 \pi}} \cdot \frac{E_{\sqrt{2}\sigma, \sfrac{m}{2}}}{n}\right)\sqrt{2 n \sigma \sqrt{2 \pi}} \cdot \frac{E_{\sqrt{2}\sigma, \sfrac{m}{2}}}{n},
     \end{align}
     from which follows the result with some minor simplifications.
 \end{proof}
@@ -683,8 +714,6 @@ With the cost of a matrix-vector product denoted by $c(n)$, and supposing $n_{\m
 \subsubsection{Analysis}
 \label{subsubsec:chebyshev-nystrom-analysis}
 
-Corollary for expanded spectral density
-
 \begin{theorem}{Chebyshev-Nyström++ method}{chebyshev-nystrom}
     Let $\phi_{\sigma}$ be the smooth spectral density of a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ whose spectrum is contained in $[-1, 1]$. Then the Chebyshev-Nyström++ estimate $\underline{\widetilde{\phi}}_{\sigma}^{(m)}$ with \emph{even} degree $m \in \mathbb{N}$, $n_{\mtx{\Omega}} = n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-1}\log(2\delta^{-1})^2)$, and smoothing parameter $\sigma > 0$ satisfies with probability at least $1 - \delta$
     \begin{equation}
@@ -704,9 +733,11 @@ Corollary for expanded spectral density
         &\leq \int_{-1}^{1} \left| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \int_{-1}^{1} \left| \underline{\phi}^{(m)}_{\sigma}(t) - \underline{\widetilde{\phi}}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t && \text{(triangle inequality)} \notag \\
         &\leq \int_{-1}^{1} \left| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \varepsilon \int_{-1}^{1} \left| \underline{\phi}^{(m)}_{\sigma}(t) \right|~\mathrm{d}t && \text{(\refthm{thm:nystrom-pp} w.p. $\geq 1 - \delta$)} \notag \\
         &\leq (1 + \varepsilon) \int_{-1}^{1} \left| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \varepsilon \int_{-1}^{1} \left| \phi_{\sigma}(t) \right|~\mathrm{d}t && \text{(triangle inequality)} \notag \\
-        &\leq (1 + \varepsilon) \underline{E}_{\sigma, m} + \varepsilon. && \text{(\reflem{lem:non-negative-chebyshev-error} and normalization)} \notag \\
+        &\leq 2 (1 + \varepsilon) \underline{E}_{\sigma, m} + \varepsilon. && \text{(\reflem{lem:non-negative-chebyshev-error} and normalization)} \notag \\
     \end{align}
 \end{proof}
+
+\todo{Maybe specialize \refthm{thm:nystrom} to spectral densities?}
 
 We now discuss what value to choose for $n_{\mtx{\Omega}}$ in the Nyström trace estimator introduced in \refsec{subsec:nystrom}. In order to guarantee a good approximation error based on \refthm{thm:nystrom}, we analyze the numerical rank of the matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$.
 
