@@ -31,11 +31,11 @@
 \section{Introduction}
 \label{sec:introduction}
 
-In numerous problems across physics, chemistry, engineering, and data science, eigenvalues, particularly their distribution, are crucial for understanding the properties of a system: In electronic structure calculations they represent the energy levels which electrons occupy \cite{lin-2017-randomized-estimation, drabold-1993-maximum-entropy, ducastelle-1970-moments-developments, haydock-1972-electronic-structure}, in neural network optimization they are indicative of the topology of the loss landscape \cite{yao-2020-pyhessian-neural, ghorbani-2019-investigation-neural}, and in graph processing they can uncover hidden graph motifs \cite{huang-2021-density-states}. The distribution of the eigenvalues $\lambda_1, \dots, \lambda_n \in \mathbb{R}$ of a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ can be represented by the spectral density
+In numerous problems across physics, chemistry, engineering, and data science, how the eigenvalues of certain matrices are distributed can be indicative of what properties a system has: In electronic structure calculations they represent the energy levels which electrons occupy \cite{lin-2017-randomized-estimation, drabold-1993-maximum-entropy, ducastelle-1970-moments-developments, haydock-1972-electronic-structure}, in neural network optimization they are indicative of the topology of the loss landscape \cite{yao-2020-pyhessian-neural, ghorbani-2019-investigation-neural}, and in graph processing they can uncover hidden graph motifs \cite{huang-2021-density-states}. The distribution of the eigenvalues $\lambda_1, \dots, \lambda_n \in \mathbb{R}$ of a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ can be represented by the spectral density $\phi(t) = n^{-1} \sum_{i=1}^{n} \delta(t - \lambda_i)$. Clearly, assembling this expression amounts to computing all eigenvalues of the matrix; an operation which is often prohibitively expensive. Therefore, many techniques have been proposed for approximating $\phi$. For example, by matching its moments with a discrete density function \cite{cohen-steiner-2018-approximating-spectrum, braverman-2022-sublinear-time}, by deriving a quadrature rule from the Lanczos procedure \cite{lin-2016-approximating-spectral, chen-2021-analysis-stochastic}, or by explicit polynomial expansion \cite{weisse-2006-kernel-polynomial, lin-2016-approximating-spectral}. Further, $\delta$ is hard to approximate and in many applications, a rough estimate of the spectral density is already acceptable. One standard approach is to instead approximate the smooth spectral density
 \begin{equation}
-    \phi(t) = \frac{1}{n} \sum_{i=1}^{n} \delta(t - \lambda_i).
+    \phi_{\sigma}(t) = \frac{1}{n} \sum_{i=1}^{n} g_{\sigma}(t - \lambda_i)
 \end{equation}
-Clearly, assembling this expression amounts to computing all eigenvalues of the matrix; an operation which is often prohibitively expensive. Therefore, many techniques have been proposed for approximating $\phi$. For example, by matching its moments with a discrete density function \cite{cohen-steiner-2018-approximating-spectrum, braverman-2022-sublinear-time}, by deriving a quadrature rule from the Lanczos procedure \cite{lin-2016-approximating-spectral, chen-2021-analysis-stochastic}, or by explicit polynomial expansion \cite{weisse-2006-kernel-polynomial, lin-2016-approximating-spectral}. In many applications, it is also acceptable to trade in some of the finer details of the spectrum for a better approximability by smoothing $\phi$, typically through convolution with a Gaussian \cite{lin-2016-approximating-spectral, lin-2017-randomized-estimation} or a Lorentzian \cite{haydock-1972-electronic-structure, lin-2016-approximating-spectral}. This converts the problem to estimating the trace of a smooth parameter-dependent matrix.
+for a smoothing kernel $g_{\sigma}$, typically a Gaussian \cite{lin-2016-approximating-spectral, lin-2017-randomized-estimation} or a Lorentzian \cite{haydock-1972-electronic-structure, lin-2016-approximating-spectral}. This allows the problem to be framed in the setting of trace estimation of parameter-dependent matrices.
 
 \todo{
 \begin{itemize}
@@ -52,6 +52,7 @@ Clearly, assembling this expression amounts to computing all eigenvalues of the 
 
 \paragraph{Contribution}
 \begin{itemize}
+    \item Same random matrix for all $t$, which allows for favorable scaling in the number of evaluation points
     \item Theoretical guarantees in the $L^1$-norm for three established trace estimators for constant matrices when applied to parameter-dependent matrices (Girard-Hutchinson, Nyström, Nyström++), in particular, $\mathcal{O}(\varepsilon^{-1})$ scaling with number of mat-vecs
     \item A simple and efficient algorithm for estimating spectral densities using any of the three estimators with Chebyshev expansion, including theoretical guarantees
 \end{itemize}
@@ -298,7 +299,7 @@ and let $\mtx{\Omega}_1(t) = \mtx{U}_1(t)^{\top} \mtx{\Omega} \in \mathbb{R}^{k 
         &\leq \sqrt{2k} \cdot \sqrt{ \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert (\mtx{A} \widetilde{\mtx{\Omega}}_2^{\top}) (\mtx{A} \widetilde{\mtx{\Omega}}_2^{\top})^{\top} - \mtx{A}^{\top} \mtx{A} \rVert _2 \right] + \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert \mtx{A}^{\top} \mtx{A} \rVert _2 \right]} && \text{(triangle inequality)} \notag \\
         &\leq \sqrt{2k} \cdot \sqrt{ \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert (\widetilde{\mtx{\Omega}}_2 \mtx{A} )^{\top} (\widetilde{\mtx{\Omega}}_2 \mtx{A}) - \mtx{A}^{\top} \mtx{A} \rVert _2\right]} + \sqrt{2k} \cdot \lVert \mtx{A} \rVert _2. && \text{($\sqrt{a+b} \leq \sqrt{a} + \sqrt{b}$)}
     \end{align}
-    By \cite{} $\widetilde{\mtx{\Omega}}_2 \in \mathbb{R}^{2k \times l}$ satisfies the \todo{$(c_1 \sqrt{q/2k}, c_2 e^{-q}, q)$}-JL moment property for \todo{any $q$ (in what?) $\geq \dots$} and some constants $c_1, c_2 > 0$, hence, by \cite[lemma 4]{cohen-2016-optimal-approximate} it satisfies the $(2 c_1 \sqrt{q/2k}, 9^d c_2 e^{-q}, d, q)$-OSE moment property for any $d \in \mathbb{N}$. For convenience, we choose $d=2k$ and $q=k/2$, such that $\widetilde{\mtx{\Omega}}_2$ has $(c_1, c_2 (3^4e^{-\sfrac{1}{2}})^k, 2k, k/2)$-OSE moment property. We may then apply an intermediary result from the proof of \cite[theorem 1]{cohen-2016-optimal-approximate} to bound
+    By \cite{} $\widetilde{\mtx{\Omega}}_2 \in \mathbb{R}^{2k \times l}$ satisfies the \todo{$(c_1 \sqrt{q/2k}, c_2 e^{-q}, q)$}-JL moment property for \todo{any $q$ (in what?) $\geq \dots$} \todo{\cite[remark below lemma 4]{cohen-2016-optimal-approximate} or define} and some constants $c_1, c_2 > 0$, hence, by \cite[lemma 4]{cohen-2016-optimal-approximate} it satisfies the $(2 c_1 \sqrt{q/2k}, 9^d c_2 e^{-q}, d, q)$-OSE moment property for any $d \in \mathbb{N}$. For convenience, we choose $d=2k$ and $q=k/2$, such that $\widetilde{\mtx{\Omega}}_2$ has $(c_1, c_2 (3^4e^{-\sfrac{1}{2}})^k, 2k, k/2)$-OSE moment property. We may then apply an intermediary result from the proof of \cite[theorem 1]{cohen-2016-optimal-approximate} to bound
     \begin{equation}
         \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert (\widetilde{\mtx{\Omega}}_2 \mtx{A} )^{\top} (\widetilde{\mtx{\Omega}}_2 \mtx{A}) - \mtx{A}^{\top} \mtx{A} \rVert _2\right] \leq c_1 c_2^2 3^8e^{-1} \left( \lVert \mtx{A} \rVert _2^2 + \frac{\lVert \mtx{A} \rVert _F^2}{k} \right).
     \end{equation}
@@ -507,7 +508,7 @@ With the help of \refequ{equ:matrix-expansion} we can now define the expanded sp
     \label{equ:expanded-spectral-density}
 \end{equation}
 
-However, the Chebyshev polynomials are only well-defined for matrices whose spectrum is contained in $[-1, 1]$. When working with general matrices of bounded spectrum, we will first have to estimate a lower bound $a$ and upper bound $b$, on the spectrum \todo{[cite Saad, estimate spectrum]}. A spectral transform
+However, the Chebyshev polynomials are only well-defined for matrices whose spectrum is contained in $[-1, 1]$. When working with general matrices of bounded spectrum, we will first have to estimate a lower bound $a$ and upper bound $b$ on the spectrum \cite{zhou-2011-bounding-spectrum}. A spectral transform
 \begin{equation}
     \begin{cases}
         \tau : [a, b] \to [-1, 1],\\
@@ -557,9 +558,9 @@ We now analyze the error of the Chebyshev expansion of a Gaussian smoothing kern
 The proof specializes Bernstein's theorem for Chebyshev interpolation to the case of a Gaussian smoothing kernel \refequ{equ:smoothing-kernel}. It loosely follows the proof give in the preprint of \cite[theorem 2]{lin-2017-randomized-estimation}, but reaches slightly different conclusion.
 
 \begin{proof}
-    From Bernstein's theorem \cite[theorem 4.3]{trefethen-2008-gauss-quadrature} it follows that if $f$ is analytic within the Bernstein ellipse $\mathcal{E}_{\chi} \subset \mathbb{C}$ with foci $\pm 1$ and sum of semi-axes $\chi > 1$, then for any $m \in \mathbb{N}$
+    From Bernstein's theorem \cite[theorem 4.3]{trefethen-2008-gauss-quadrature} it follows that if $f$ is analytic within the Bernstein ellipse $\mathcal{E}_{\chi} \subset \mathbb{C}$ with foci $\{-1, +1\}$ and sum of semi-axes $\chi > 1$, then for any $m \in \mathbb{N}$
     \begin{equation}
-        \sup_{t \in [-1, 1]} \left| f - f^{(m)} \right| \leq \frac{2}{\chi^m (\chi - 1)} \max_{z \in \mathcal{E}_{\chi}} |f(z)|.
+        \sup_{s \in [-1, 1]} \left| f(s) - f^{(m)}(s) \right| \leq \frac{2}{\chi^m (\chi - 1)} \max_{z \in \mathcal{E}_{\chi}} |f(z)|.
         \label{equ:bernstein-bound}
     \end{equation}
     In particular, when $f = g_{\sigma}(t - \cdot)$ we observe for $z = x + iy \in \mathcal{E}_{\chi}$
@@ -652,17 +653,17 @@ Thanks to the affine form of the Chebyshev expansion, we can rewrite the first m
 \end{equation}
 for which we first precompute the $n_{\mtx{\Omega}} \times n_{\mtx{\Omega}}$ matrices $\mtx{\Omega}^{\top} T_l(\mtx{A}) \mtx{\Omega}$ for $l=0, \dots, m$ using the recurrence \refequ{equ:chebyshev-recurrence} and then inexpensively sum them up with the corresponding coefficients $\mu_l(t)$ for all $t$ in which we want to evaluate the approximation. Thanks to \refalg{alg:chebyshev-squaring}, the second part of \refequ{equ:cyclic-property} can be approximated in an equivalent way \todo{(which is consistent, unlike \cite{lin-2017-randomized-estimation})}.
 
-\todo{Explain idea behind algorithm: Two-phase, first assemble matrices with recurrence then compute approximate in every time step}
+Similar observations for the case when $\mtx{\Psi}$ is nonzero lead to the following algorithm.
 
 \begin{algo}{Chebyshev-Nystrom++}{nystrom-chebyshev-pp}
 \begin{algorithmic}[1]
     \Statex \textbf{Input:} Symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$, evaluation points $\{t_i\}_{i=1}^{n_t}$
     \Statex \textbf{Parameters:} Degree $m$, allocation $(n_{\mtx{\Omega}}, n_{\mtx{\Psi}})$,  smoothing parameter $\sigma$
-    \Statex \textbf{Output:} Approximate evaluations of the spectral density $\{\phi_{\sigma}(t_i)\}_{i=1}^{n_t}$
+    \Statex \textbf{Output:} Approximate evaluations of the spectral density $\{\widetilde{\phi}_{\sigma}(t_i)\}_{i=1}^{n_t}$
     \State Compute $\{\mu_l(t_i)\}_{l=0}^{m}$ for all $t_i$ using the $\DCT$ \refequ{equ:discrete-cosine-transform}
     \State Compute $\{\nu_l(t_i)\}_{l=0}^{2m}$ using \refalg{alg:chebyshev-squaring}%\refalg{alg:2-chebyshev-chebyshev-expansion}
     %\State Compute  for all $t_i$ using %\refalg{alg:3-nystrom-chebyshev-exponentiation}
-    \State Generate standard Gaussian matrices $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ and $\mtx{\Psi} \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$%\glsfirst{sketching-matrix} $\in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$
+    \State Generate Gaussian random matrices $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ and $\mtx{\Psi} \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$%\glsfirst{sketching-matrix} $\in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$
     %\State Generate standard Gaussian %\glsfirst{random-matrix} $\in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$
     \State Initialize $[\mtx{V}_1, \mtx{V}_2, \mtx{V}_3] \gets [\mtx{0}_{n \times n_{\mtx{\Omega}}}, \mtx{\mtx{\Omega}}, \mtx{0}_{n \times n_{\mtx{\Omega}}}]$
     \State Initialize $[\mtx{W}_1, \mtx{W}_2, \mtx{W}_3] \gets [\mtx{0}_{n \times n_{\mtx{\Psi}}}, \mtx{\Psi}, \mtx{0}_{n \times n_{\mtx{\Psi}}}]$
@@ -677,10 +678,10 @@ for which we first precompute the $n_{\mtx{\Omega}} \times n_{\mtx{\Omega}}$ mat
       \For {$i = 1, \dots, n_t$}
         \If {$l \leq m$}
             \State $\mtx{K}_1(t_i) \gets \mtx{K}_1(t_i) + \mu_l(t_i) \mtx{X}$ \Comment{assemble $\mtx{\Omega}^{\top} g_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A}) \mtx{\Omega}$}
-            \State $\mtx{L}_1(t_i) \gets \mtx{L}_1(t_i) + \mu_l(t_i) \mtx{Y}$ \Comment{assemble $\mtx{\Psi}^{\top} g_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A}) \mtx{\Omega}$}
+            \State $\mtx{L}_1(t_i) \gets \mtx{L}_1(t_i) + \mu_l(t_i) \mtx{Y}$ \Comment{assemble $\mtx{\Omega}^{\top} g_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A}) \mtx{\Psi}$}
             \State $\ell(t_i) \gets \ell(t_i) + \mu_l(t_i) z$ \Comment{assemble $\Trace(\mtx{\Psi}^{\top} g_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A}) \mtx{\Psi})$}
         \EndIf
-        \State $\mtx{K}_2(t_i) \gets \mtx{K}_2(t_i) + \nu_l(t_i) \mtx{X}$ \Comment{assemble $\mtx{\Omega}^{\top} (g_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A}))^2 \mtx{\Omega}$}
+        \State $\mtx{K}_2(t_i) \gets \mtx{K}_2(t_i) + \nu_l(t_i) \mtx{X}$ \Comment{assemble $\mtx{\Omega}^{\top} g_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A})^2 \mtx{\Omega}$}
       \EndFor
       \State $[\mtx{V}_3, \mtx{W}_3] \gets (2 - \delta_{l0}) \mtx{A} [\mtx{V}_2, \mtx{W}_2] - [\mtx{V}_1, \mtx{W}_1]$ \Comment{Chebyshev recurrence}
       \State $[\mtx{V}_1, \mtx{W}_1] \gets [\mtx{V}_2, \mtx{W}_2]$
@@ -691,18 +692,24 @@ for which we first precompute the $n_{\mtx{\Omega}} \times n_{\mtx{\Omega}}$ mat
       %\State $\mtx{W}_1 \gets \mtx{W}_2, \mtx{W}_2 \gets \mtx{W}_3$
     \EndFor
     \For {$i = 1, \dots, n_t$}
-      \State $\phi_{\sigma}(t_i) \gets \frac{1}{n} \Trace\left( \mtx{K}_1(t_i)^{\dagger}\mtx{K}_2(t_i) \right) + \frac{1}{n n_{\mtx{\Psi}}} \left( \ell(t_i) + \Trace\left( \mtx{L}_1(t_i)^{\top} \mtx{K}_1(t_i)^{\dagger} \mtx{L}_1(t_i) \right)  \right) $ \label{lin:4-nystromchebyshev-nystrom-pp}
+      \State $\widetilde{\phi}_{\sigma}(t_i) \gets \frac{1}{n} \Trace\left( \mtx{K}_1(t_i)^{\dagger}\mtx{K}_2(t_i) \right) + \frac{1}{n n_{\mtx{\Psi}}} \left( \ell(t_i) + \Trace\left( \mtx{L}_1(t_i)^{\top} \mtx{K}_1(t_i)^{\dagger} \mtx{L}_1(t_i) \right)  \right) $ \label{lin:4-nystromchebyshev-nystrom-pp}
     \EndFor
 \end{algorithmic}
 \end{algo}
 
-With the cost of a matrix-vector product denoted by $c(n)$, and supposing $n_{\mtx{\Omega}} \approx n_{\mtx{\Psi}}$, we determine the computational complexity of the Chebyshev-Nyström++ method to be $\mathcal{O}(m \log(m) n_t + m n_{\mtx{\Omega}}^2 n + m n_t n_{\mtx{\Omega}}^2 +  m c(n) n_{\mtx{\Omega}} + n_t n_{\mtx{\Omega}}^3)$, with $\mathcal{O}(m n_t + n n_{\mtx{\Omega}} + n_{\mtx{\Omega}}^2 n_t)$ required additional storage.
+The dominating cost stems from the $(2m + 1)(n_{\mtx{\Psi}} + n_{\mtx{\Omega}})$ multiplications of $\mtx{A}$ with a vector and the cost associated with computing the estimate in each evaluation point $t_1, \dots, t_{n_t}$ given by $\mathcal{O}(m \log(m) + m (n_{\mtx{\Omega}}^2 + n_{\mtx{\Omega}} n_{\mtx{\Psi}} + 1) + (n_{\mtx{\Omega}}^3 + n_{\mtx{\Omega}} n_{\mtx{\Psi}}^2 + 1))$.
 
-\todo{Explain modifications for other estimators, and improved complexity for quadratic trace estimator}
+The algorithm also accomodates the two other estimators introduced in \refsec{sec:analysis}: For $n_{\mtx{\Omega}} = 0$ we recover \refequ{equ:hutchinson-trace-estimator}, and the complexity for each evaluation of the estimate decreases significantly. For $n_{\mtx{\Psi}} = 0$ we end up with \refequ{equ:nystrom-trace-estimator}.
+%Chebyshev $\mathcal{O}(n_t (m \log(m) + m (n_{\mtx{\Omega}}^2 + n_{\mtx{\Omega}} n_{\mtx{\Psi}} + 1) + n_{\mtx{\Omega}}^3) + mn^2(n_{\mtx{\Psi}} + n_{\mtx{\Omega}}))$.
+
+%\todo{Complexity in terms of both $n_{\mtx{\Omega}}$ and $n_{\mtx{\Psi}}$.}
+%With the cost of a matrix-vector product denoted by $c(n)$, and supposing $n_{\mtx{\Omega}} \approx n_{\mtx{\Psi}}$, we determine the computational complexity of the Chebyshev-Nyström++ method to be $\mathcal{O}(m \log(m) n_t + m n_{\mtx{\Omega}}^2 n + m n_t n_{\mtx{\Omega}}^2 +  m c(n) n_{\mtx{\Omega}} + n_t n_{\mtx{\Omega}}^3)$, with $\mathcal{O}(m n_t + n n_{\mtx{\Omega}} + n_{\mtx{\Omega}}^2 n_t)$ required additional storage.
+
+%\todo{Explain modifications for other estimators, and improved complexity for quadratic trace estimator}
+
+\todo{Discuss computation of pseudo inverse: Generalized eigenvalue problem with thresholding \cite{lin-2017-randomized-estimation, epperly-2022-theory-quantuma}, }
 
 \todo{Explain short-circuit mechanism -> may not be too crucial for directly calculating pseudo-inverse}
-
-\todo{Discuss Lin Lin generalized eigenvalue problem for pseudo-inverse, other ways are not available, since we only have access to the \enquote{compressed} matrix function}
 
 \subsubsection{Analysis}
 \label{subsubsec:chebyshev-nystrom-analysis}
@@ -768,9 +775,9 @@ We can express the numerical rank of a matrix with respect to the nuclear norm i
     r_{\varepsilon} = \min \{1 \leq r \leq n: \sum_{j=r+1}^n \sigma_{j} \leq \varepsilon \},
     \label{equ:numerical-rank}
 \end{equation}
-$\varepsilon$ is usually taken to be the double machine precision, i.e. $10^{-16}$. When using a Gaussian smoothing-kernel, we can explicitly write the signular values of $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ as
+$\varepsilon$ is usually taken to be the double machine precision, i.e. $10^{-16}$. When using a Gaussian smoothing-kernel, we can explicitly write the singular values of $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ as
 \begin{equation}
-    \sigma_i(t) = g_{\sigma}(t - \lambda_{(i)}) = \frac{1}{n \sqrt{2 \pi \sigma^2}} e^{-\sfrac{(t - \lambda_{(i)})^2}{2 \sigma^2}},
+    \sigma_i(t) = g_{\sigma}(t - \lambda_{(i)}) = \frac{1}{\sqrt{2 \pi \sigma^2}} e^{-\sfrac{(t - \lambda_{(i)})^2}{2 \sigma^2}},
     \label{equ:gaussian-kernel-eigenvalues}
 \end{equation}
 where $\lambda_{(1)}, \dots, \lambda_{(n)}$ denote the eigenvalues of $\mtx{A}$ sorted by increasing distance from spectral-parameter, such that $\sigma_1(t) \geq \dots \geq \sigma_n(t)$. Consequently, by using the closed-form expression of the eigenvalues \refequ{equ:gaussian-kernel-eigenvalues}, we may upper bound the numerical rank of a Gaussian smoothing kernel as
@@ -778,7 +785,7 @@ where $\lambda_{(1)}, \dots, \lambda_{(n)}$ denote the eigenvalues of $\mtx{A}$ 
     r_{\varepsilon}(g_{\sigma}(t\mtx{I}_n - \mtx{A})) \leq \#\left\{1\leq i\leq n: |t - \lambda_i| < d_{\varepsilon, \sigma} \right\},
     \label{equ:gaussian-kernel-numerical-rank}
 \end{equation}
-with $d_{\varepsilon, \sigma} = \sigma \sqrt{-2 \log(\sqrt{2 \pi n} \sigma \varepsilon)}$ and the eigenvalues $\lambda_1, \dots, \lambda_n$ of $\mtx{A}$ and the constants. The expression \refequ{equ:gaussian-kernel-numerical-rank} has a nice visual interpretation: The numerical rank of a matrix is at most equal to the number of eigenvalues which are closer to the parameter $t$ than $d_{\varepsilon, \sigma}$. This is illustrated in \reffig{fig:numerical-rank}.
+with $d_{\varepsilon, \sigma} = \sigma \sqrt{-2 \log(\sqrt{2 \pi} \sigma \varepsilon)}$ and the eigenvalues $\lambda_1, \dots, \lambda_n$ of $\mtx{A}$ and the constants. The expression \refequ{equ:gaussian-kernel-numerical-rank} has a nice visual interpretation: The numerical rank of a matrix is at most equal to the number of eigenvalues which are closer to the parameter $t$ than $d_{\varepsilon, \sigma}$. This is illustrated in \reffig{fig:numerical-rank}.
 \begin{figure}[ht]
     \centering
     \input{figures/numerical-rank.tex}
