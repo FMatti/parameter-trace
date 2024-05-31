@@ -1,8 +1,34 @@
 import numpy as np
 import scipy as sp
-# TODO: Add Numba JIT!!!
 
-def gaussian_kernel(s, sigma):
+def spectral_transformation(A, min_ev=None, max_ev=None):
+    """
+    Perform a spectral transformation of a matrix, i.e. transform a spectrum
+    contained in (a, b) to (-1, 1).
+
+    Parameters
+    ----------
+    A : np.ndarray of shape (n, n) or (n,)
+        The matrix or vector to be spectrally transformed.
+    min_ev : int, float or None
+        The starting point of the spectrum. If None is specified, the smallest
+        eigenvalue of A is computed and used for min_ev.
+    max_ev : int, float or None
+        The ending point of the spectrum. If None is specified, the largest
+        eigenvalue of A is computed and used for max_ev.
+    """
+    I = 1
+    if len(A.shape) == 2:
+        if isinstance(A, sp.sparse.spmatrix):
+            I = sp.sparse.eye(*A.shape)
+        if isinstance(A, np.ndarray):
+            I = np.eye(*A.shape)
+
+    A_st = (2 * A - (min_ev + max_ev) * I) / (max_ev - min_ev)
+
+    return A_st
+
+def gaussian_kernel(s, sigma=0.1):
     """
     Gaussian kernel.
 
@@ -18,9 +44,28 @@ def gaussian_kernel(s, sigma):
     g(s) : np.ndarray of shape (n, dim)
         The Gaussian kernel evaulated at all points s.
     """
-    s = np.asarray(s, dtype=np.float64)
-
     return np.exp(- s**2 / (2 * sigma**2)) / (np.sqrt(2 * np.pi) * sigma)
+
+def form_spectral_density(eigvals, t, kernel=gaussian_kernel):
+    """
+    Compute the (regularized) spectral density of a (small) matrix A at n_t
+    evenly spaced grid-points within the interval [a, b].
+
+    Parameters
+    ----------
+    eigvals : np.ndarray of shape (n,)
+        The eigenvalues for which the spectral density should be formed.
+    t: np.ndarray (n_t,)
+        Parameter values at which the spectral density should be evaluated.
+    kernel : function
+        Smoothing kernel.
+
+    Returns
+    -------
+    spectral_density : np.ndarray of shape (n_t,)
+        The value of the spectral density evaluated at the grid points.
+    """
+    return kernel(np.subtract.outer(t, eigvals)).sum(axis=1) / len(eigvals)
 
 def chebyshev_expansion(kernel, t, m, nonnegative=False):
     """
@@ -46,7 +91,8 @@ def chebyshev_expansion(kernel, t, m, nonnegative=False):
 
     if nonnegative:
         m = m // 2
-        kernel = lambda x: np.sqrt(kernel(x))
+        kernel_ = kernel # Avoid recursion
+        kernel = lambda x: np.sqrt(kernel_(x))
 
     # Compute the coefficients mu for all t and l simultaneously with DCT
     chebyshev_nodes = np.cos(np.arange(m + 1) * np.pi / m)
@@ -92,7 +138,7 @@ def square_chebyshev_expansion(mu):
 
     return nu
 
-def spectral_density(A, t, m=100, n_Psi=10, n_Omega=10, sigma=0.1, nonnegative=False, kappa=1e-5, seed=0):
+def spectral_density(A, t=0, m=100, n_Psi=10, n_Omega=10, kernel=gaussian_kernel, nonnegative=False, kappa=1e-5, rcond=1e-5, seed=0):
     """
     Chebyshev-Nyström++ method for estimating the spectral density.
 
@@ -108,8 +154,8 @@ def spectral_density(A, t, m=100, n_Psi=10, n_Omega=10, sigma=0.1, nonnegative=F
         Number of queries with Girard-Hutchinson estimator.
     n_Omega : int > 0
         Size of sketching matrix in Nyström approximation.
-    sigma : int or float > 0
-        Smearing parameter.
+    kernel : function
+        Smoothing kernel.
     nonnegative : bool
         Use non-negative Chebyshev expansion.
     kappa : float > 0
@@ -137,7 +183,6 @@ def spectral_density(A, t, m=100, n_Psi=10, n_Omega=10, sigma=0.1, nonnegative=F
     n_t = t.shape[0]
 
     # Compute coefficients of Chebyshev expansion of the smoothing kernel
-    kernel = lambda x: gaussian_kernel(x, sigma=sigma)
     mu = chebyshev_expansion(kernel, t, m, nonnegative=nonnegative)
     nu = square_chebyshev_expansion(mu)
 
@@ -155,7 +200,7 @@ def spectral_density(A, t, m=100, n_Psi=10, n_Omega=10, sigma=0.1, nonnegative=F
 
         # Helper quantities
         X, Y = Omega.T @ V_2, Omega.T @ W_2
-        z = np.sum(Psi * W_2)
+        z = np.sum(np.multiply(Psi,  W_2))
 
         for i in range(n_t):
             # Accumulation
@@ -175,11 +220,11 @@ def spectral_density(A, t, m=100, n_Psi=10, n_Omega=10, sigma=0.1, nonnegative=F
     for i in range(n_t):
 
         # Early-stopping
-        if np.trace(K_1[i]) <= kappa * n_Omega:
+        if n_Omega and np.trace(K_1[i]) <= kappa * n_Omega:
             continue
 
-        phi[i] = np.trace(np.linalg.lstsq(K_1[i], K_2[i], rcond=None)[0]) / n
+        phi[i] = np.trace(np.linalg.lstsq(K_1[i], K_2[i], rcond=rcond)[0]) / n
         if n_Psi > 0:
-            phi[i] += (l_2[i] + np.trace(L_1[i].T @ np.linalg.lstsq(K_1[i], L_1[i], rcond=None)[0])) / (n * n_Psi)
+            phi[i] += (l_2[i] - np.trace(L_1[i].T @ np.linalg.lstsq(K_1[i], L_1[i], rcond=rcond)[0])) / (n * n_Psi)
 
     return phi

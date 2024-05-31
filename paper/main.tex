@@ -29,7 +29,7 @@
 \begin{itemize}
     \item Change all parameter-dependent matrices to $\mtx{B}(t)$ to avoid confusion with $\mtx{A}$
     \item Change citation style to \textbf{[1]}, \textbf{[2]}, \dots
-    \item Re-run numerical experiments with simplified and improved implementation
+    \item Re-run numerical experiments with simplified and improved implementation (test pinvh against lstsq)
 \end{itemize}
 }
 
@@ -44,7 +44,7 @@ In numerous problems across physics, chemistry, engineering, and data science, h
 \begin{equation}
     \phi_{\sigma}(t) = \frac{1}{n} \sum_{i=1}^{n} g_{\sigma}(t - \lambda_i) = \frac{1}{n} \Trace(g_{\sigma}(t \mtx{I}_n - \mtx{A}))
 \end{equation}
-for a smoothing kernel $g_{\sigma}$, typically a Gaussian \cite{lin-2016-approximating-spectral, lin-2017-randomized-estimation} or a Lorentzian \cite{haydock-1972-electronic-structure, lin-2016-approximating-spectral}. This translates the problem to computing the trace of the parameter-dependent matrix $\mtx{B}(t) \equiv g_{\sigma}(t \mtx{I}_n - \mtx{A}) \in \mathbb{R}^{n \times n}$. Directly assembling the matrix function requires diagonalizing the matrix $\mtx{A}$, which again is prohibitively expensive. Therefore, we estimate its trace implicitly by approximating products of the matrix function with vectors. For constant matrices, the most widespread methods for implicit trace estimation are the Girard-Hutchinson estimator \cite{girard-1989-fast-montecarlo, hutchinson-1990-stochastic-estimator} and the variance reduced versions thereof \cite{gambhir-2017-deflation-method, saibaba-2017-randomized-matrixfree, lin-2017-randomized-estimation, meyer-2021-hutch-optimal, persson-2022-improved-variants, epperly-2024-xtrace-making, chen-2023-krylovaware-stochastic}. Some of these estimators have already been successfully applied to parameter-dependent matrices \cite{lin-2017-randomized-estimation}, but they have not yet been analyzed. A related technique is dynamic trace estimation for sequences $\mtx{B}_1, \dots, \mtx{B}_m$ of similar matrices \cite{woodruff-2022-optimal-query, dharangutte-2021-dynamic-trace}, which achieves guarantees for the estimate $b_i$ of $\Trace(\mtx{B}_i)$ of the form $\mathbb{P}(|\Trace(\mtx{B}_i) - b_i| \geq \varepsilon) \leq \delta$ for $i=1,\dots, m$. A drawback of this type of bound is that when we aim for $\varepsilon$ accuracy for all $i=1,\dots, m$ simultaneously, the probability will grow linearly with $m$ by the union bound. Therefore, instead of discretizing $[a, b]$ with $t_1, \ldots, t_m$ and looking at the error $|\Trace(\mtx{B}(t_i)) - b(t_i)|$ for each $i$, a more natural way to quantify the error is to use $\int_{a}^{b} | \Trace(\mtx{B}(t)) - b(t) |~\mathrm{d}t$, where $b(t)$ is the trace estimate for each $t \in [a, b]$.
+for a smoothing kernel $g_{\sigma}$, typically a Gaussian \cite{lin-2016-approximating-spectral, lin-2017-randomized-estimation} or a Lorentzian \cite{haydock-1972-electronic-structure, lin-2016-approximating-spectral}. This translates the problem to computing the trace of a continuous parameter-dependent matrix $\mtx{B}(t) \equiv g_{\sigma}(t \mtx{I}_n - \mtx{A}) \in \mathbb{R}^{n \times n}$. Directly assembling the matrix function requires diagonalizing the matrix $\mtx{A}$, which again is prohibitively expensive. Therefore, we estimate its trace implicitly by approximating products of the matrix function with vectors. For constant matrices, the most widespread methods for implicit trace estimation are the Girard-Hutchinson estimator \cite{girard-1989-fast-montecarlo, hutchinson-1990-stochastic-estimator} and the variance reduced versions thereof \cite{gambhir-2017-deflation-method, saibaba-2017-randomized-matrixfree, lin-2017-randomized-estimation, meyer-2021-hutch-optimal, persson-2022-improved-variants, epperly-2024-xtrace-making, chen-2023-krylovaware-stochastic}. Some of these estimators have already been successfully applied to parameter-dependent matrices \cite{lin-2017-randomized-estimation}, but they have not yet been analyzed. A related technique is dynamic trace estimation for sequences $\mtx{B}_1, \dots, \mtx{B}_m$ of similar matrices \cite{woodruff-2022-optimal-query, dharangutte-2021-dynamic-trace}, which achieves guarantees for the estimate $b_i$ of $\Trace(\mtx{B}_i)$ of the form $\mathbb{P}(|\Trace(\mtx{B}_i) - b_i| \geq \varepsilon) \leq \delta$ for $i=1,\dots, m$. A drawback of this type of bound is that when we aim for $\varepsilon$ accuracy for all $i=1,\dots, m$ simultaneously, the probability will grow linearly with $m$ by the union bound. Therefore, instead of discretizing $[a, b]$ with $t_1, \ldots, t_m$ and looking at the error $|\Trace(\mtx{B}(t_i)) - b(t_i)|$ for each $i$, a more natural way to quantify the error is to use $\int_{a}^{b} | \Trace(\mtx{B}(t)) - b(t) |~\mathrm{d}t$, where $b(t)$ is the trace estimate for each $t \in [a, b]$.
 
 \paragraph{Contribution}
 We analyze three well-established randomized trace estimators when they are applied to parameter-dependent matrices. In particular, we reuse the same randomization for each value of the parameter $t$ in the estimators, which makes them scale favorably with the number of parameter evaluations. Subsequently, we propose a simple, efficient, and provably correct procedure in which these estimators are employed for approximating the smooth spectral density $\phi_{\sigma}$ of a matrix.
@@ -693,6 +693,8 @@ Similar observations for the case when $\mtx{\Psi}$ is nonzero lead to the follo
 The dominating cost stems from the $(2m + 1)(n_{\mtx{\Psi}} + n_{\mtx{\Omega}})$ multiplications of $\mtx{A}$ with a vector and the cost associated with computing the estimate in each evaluation point $t_1, \dots, t_{n_t}$ given by $\mathcal{O}(m \log(m) + m (n_{\mtx{\Omega}}^2 + n_{\mtx{\Omega}} n_{\mtx{\Psi}} + 1) + (n_{\mtx{\Omega}}^3 + n_{\mtx{\Omega}} n_{\mtx{\Psi}}^2 + 1))$.
 
 The algorithm also accomodates the two other estimators introduced in \refsec{sec:analysis}: For $n_{\mtx{\Omega}} = 0$ we recover \refequ{equ:hutchinson-trace-estimator}, and the complexity for each evaluation of the estimate decreases significantly. For $n_{\mtx{\Psi}} = 0$ we end up with \refequ{equ:nystrom-trace-estimator}.
+
+\todo{Clearly need not divide by $n_{\mtx{\Psi}}=0$, hence just ignore this term. }
 %Chebyshev $\mathcal{O}(n_t (m \log(m) + m (n_{\mtx{\Omega}}^2 + n_{\mtx{\Omega}} n_{\mtx{\Psi}} + 1) + n_{\mtx{\Omega}}^3) + mn^2(n_{\mtx{\Psi}} + n_{\mtx{\Omega}}))$.
 
 %\todo{Complexity in terms of both $n_{\mtx{\Omega}}$ and $n_{\mtx{\Psi}}$.}
@@ -702,7 +704,7 @@ The algorithm also accomodates the two other estimators introduced in \refsec{se
 
 \todo{Discuss computation of pseudo inverse: Generalized eigenvalue problem with thresholding \cite{lin-2017-randomized-estimation, epperly-2022-theory-quantuma}, }
 
-\todo{Explain short-circuit mechanism -> may not be too crucial for directly calculating pseudo-inverse}
+\todo{Explain short-circuit mechanism -> very crucial if matrix can be zero}
 
 \subsubsection{Analysis}
 \label{subsubsec:chebyshev-nystrom-analysis}
@@ -879,7 +881,7 @@ in two dimensions.
     \item Test
 \end{itemize}
 
-% Acknowledge advice from David
+% Acknowledge advice from David and Data/Parameters from Lin Lin
 
 \clearpage
 \bibliography{bibliography.bib}
