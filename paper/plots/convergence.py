@@ -12,19 +12,19 @@ np.random.seed(0)
 A = sp.sparse.load_npz("matrices/ModES3D_1.npz")
 
 # Perform spectral transform with A and its eigenvalues
-eigvals = np.linalg.eigvalsh(A)#.toarray())
+eigvals = np.linalg.eigvalsh(A.toarray())
 min_ev, max_ev = eigvals[0], eigvals[-1]
 A_st = spectral_transformation(A, min_ev, max_ev)
 eigvals_st = spectral_transformation(eigvals, min_ev, max_ev)
 
 # Set parameter
 t = np.linspace(-1, 1, 100)
-sigma = 0.2
-m = 500
-n_Vec_list = np.logspace(0.95, 2.6, 2).astype(int) 
+sigma = 0.005
+m = 2000
+n_Vec_list = np.logspace(1.3, 2.8, 7).astype(int) 
 
 plt.style.use("paper/plots/stylesheet.mplstyle")
-colors = cm.magma(np.arange(5) / 4.5)
+colors = cm.magma(np.arange(3) / 2.5)
 markers = ["o", "^", "s"]
 labels = [r"$n_{\mathbf{\Omega}} = 0$",
           r"$n_{\mathbf{\Psi}} = n_{\mathbf{\Omega}}$",
@@ -51,9 +51,10 @@ plt.text(8e+1, 5e-3, r"$\mathcal{O}(\varepsilon^{-1})$", color="#7a7a7a")
 plt.plot(n_Vec_list, 0.45/n_Vec_list**(0.5), linestyle="dashed", color="#7a7a7a", alpha=0.5)
 plt.text(6e+1, 9.5e-2, r"$\mathcal{O}(\varepsilon^{-2})$", color="#7a7a7a")
 
-plt.grid()
+plt.grid(True, which="both")
 plt.ylabel(r"$L^1$ error")
 plt.xlabel(r"estimator size $n_{\mathbf{\Psi}} + n_{\mathbf{\Omega}}$")
 plt.legend()
 plt.xscale("log")
 plt.yscale("log")
+plt.savefig("paper/plots/convergence.pgf", bbox_inches="tight")

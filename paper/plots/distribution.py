@@ -19,7 +19,7 @@ eigvals_st = spectral_transformation(eigvals, min_ev, max_ev)
 
 # Set parameter
 t = np.linspace(-1, 1, 100)
-sigma_list = np.logspace(-2.5, -0.5, 7)
+sigma_list = np.logspace(-3.0, -1.0, 7)
 n_Vec = 80
 n_Psi_list = np.arange(n_Vec + 1, step=20).astype(np.int64)
 n_Omega_list = n_Vec - n_Psi_list
@@ -35,19 +35,19 @@ for j, sigma in enumerate(sigma_list):
     # Determine the baseline spectral density
     kernel = lambda x: gaussian_kernel(x, sigma=sigma)
     baseline = form_spectral_density(eigvals_st, t, kernel)
-    m = int(120 / sigma)
+    m = int(16 / sigma)  # Double-check this, i.e. use error estimate for this
 
     for i, (n_Psi, n_Omega) in enumerate(zip(n_Psi_list, n_Omega_list)):
         estimate = spectral_density(A_st, t, m, n_Psi, n_Omega, kernel)
         error[i, j] = 2 * np.mean(np.abs(estimate - baseline))
 
-for i in range(len(n_Psi_list)):
+for i in reversed(range(len(n_Psi_list))):
     plt.plot(sigma_list, error[i], color=colors[i], marker=markers[i], label=labels[i])
 
-plt.grid()
+plt.grid(True, which="both")
 plt.ylabel(r"$L^1$ error")
 plt.xlabel(r"smoothing parameter $\sigma$")
 plt.legend()
 plt.xscale("log")
 plt.yscale("log")
-
+plt.savefig("paper/plots/distribution.pgf", bbox_inches="tight")

@@ -280,6 +280,58 @@ def NCPP(A, t, m, sigma, n_v, n_v_tilde=None, k=1, zeta=1e-7, kappa=1e-5, eta=1e
     return phi_breve - rho * n
 
 
+
+def ChebyshevNystrom(A, t, m=100, n_Omega=10, n_Psi=10, sigma=0.1, nonnegative=False, seed=0):
+    """
+    Chebyshev-Nystrom++ method
+    """
+    # Seed the random number generator
+    np.random.seed(seed)
+
+    # Convert evaluation point(s) to numpy array
+    if not isinstance(t, np.ndarray):
+        t = np.array(t).reshape(-1)
+
+    # Determine size of matrix i.e. number of eigenvalues 
+    n = A.shape[0]
+    n_t = t.shape[0]
+
+    # Compute coefficients of Chebyshev expansion of the smoothing kernel
+    g = lambda x: gaussian_kernel(x, n=n, sigma=sigma)
+    mu = chebyshev_coefficients(t, m, function=g, nonnegative=nonnegative)
+    nu = exponentiate_chebyshev_coefficients_cosine_transform(mu, k=2)
+
+    # Generate Gaussian random matrices
+    Omega = np.random.randn(n, n_Omega)
+    Psi = np.random.randn(n, n_Psi)
+
+    # Initialize Chebyshev recurrence and helper matrices
+    V_1, V_2, V_3 = np.zeros((n, n_Omega)), Omega, np.zeros((n, n_Omega))
+    W_1, W_2, W_3 = np.zeros((n, n_Psi)), Psi, np.zeros((n, n_Psi))
+    K_1, K_2 = np.zeros((n_t, n_Omega, n_Omega)), np.zeros((n_t, n_Omega, n_Omega))
+    L_1, l_2 = np.zeros((n_t, n_Omega, n_Psi)), np.zeros(n_t)
+
+    for l in range(2 * m + 1):
+        X, Y = Omega.T @ V_2, Omega.T @ W_2
+        z = np.sum(Psi * W_2)
+        for i in range(n_t):
+            if l <= m:
+                K_1[i] += mu[i, l] * X
+                L_1[i] += mu[i, l] * Y
+                l_2[i] += mu[i, l] * z
+            K_2[i] += nu[i, l] * X
+        V_3, W_3 = (2 - (l == 0)) * A @ V_2 - V_1, (2 - (l == 0)) * A @ W_2 - W_1
+        V_1, W_1 = V_2, W_2
+        V_2, W_2 = V_3, W_3
+
+    phi = np.empty(n_t)
+    for i in range(n_t):
+        phi[i] = np.trace(np.linalg.pinv(K_1[i]) @ K_2[i]) + (1 / n_Psi if n_Psi else n_Psi) * (l_2[i] + np.trace(L_1[i].T @ np.linalg.pinv(K_1[i]) @ L_1[i]))
+
+    return phi
+
+
+
 def Lanczos(A, x, k, reorth_tol=0.7):
     """
     Compute coefficients of symmetric tridiagonal (k x k)-matrix

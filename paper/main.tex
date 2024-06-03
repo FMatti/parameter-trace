@@ -47,24 +47,13 @@ In numerous problems across physics, chemistry, engineering, and data science, h
 for a smoothing kernel $g_{\sigma}$, typically a Gaussian \cite{lin-2016-approximating-spectral, lin-2017-randomized-estimation} or a Lorentzian \cite{haydock-1972-electronic-structure, lin-2016-approximating-spectral}. This translates the problem to computing the trace of a continuous parameter-dependent matrix $\mtx{B}(t) \equiv g_{\sigma}(t \mtx{I}_n - \mtx{A}) \in \mathbb{R}^{n \times n}$. Directly assembling the matrix function requires diagonalizing the matrix $\mtx{A}$, which again is prohibitively expensive. Therefore, we estimate its trace implicitly by approximating products of the matrix function with vectors. For constant matrices, the most widespread methods for implicit trace estimation are the Girard-Hutchinson estimator \cite{girard-1989-fast-montecarlo, hutchinson-1990-stochastic-estimator} and the variance reduced versions thereof \cite{gambhir-2017-deflation-method, saibaba-2017-randomized-matrixfree, lin-2017-randomized-estimation, meyer-2021-hutch-optimal, persson-2022-improved-variants, epperly-2024-xtrace-making, chen-2023-krylovaware-stochastic}. Some of these estimators have already been successfully applied to parameter-dependent matrices \cite{lin-2017-randomized-estimation}, but they have not yet been analyzed. A related technique is dynamic trace estimation for sequences $\mtx{B}_1, \dots, \mtx{B}_m$ of similar matrices \cite{woodruff-2022-optimal-query, dharangutte-2021-dynamic-trace}, which achieves guarantees for the estimate $b_i$ of $\Trace(\mtx{B}_i)$ of the form $\mathbb{P}(|\Trace(\mtx{B}_i) - b_i| \geq \varepsilon) \leq \delta$ for $i=1,\dots, m$. A drawback of this type of bound is that when we aim for $\varepsilon$ accuracy for all $i=1,\dots, m$ simultaneously, the probability will grow linearly with $m$ by the union bound. Therefore, instead of discretizing $[a, b]$ with $t_1, \ldots, t_m$ and looking at the error $|\Trace(\mtx{B}(t_i)) - b(t_i)|$ for each $i$, a more natural way to quantify the error is to use $\int_{a}^{b} | \Trace(\mtx{B}(t)) - b(t) |~\mathrm{d}t$, where $b(t)$ is the trace estimate for each $t \in [a, b]$.
 
 \paragraph{Contribution}
-We analyze three well-established randomized trace estimators when they are applied to parameter-dependent matrices. In particular, we reuse the same randomization for each value of the parameter $t$ in the estimators, which makes them scale favorably with the number of parameter evaluations. Subsequently, we propose a simple, efficient, and provably correct procedure in which these estimators are employed for approximating the smooth spectral density $\phi_{\sigma}$ of a matrix.
+We analyze three well-established randomized trace estimators when they are applied to parameter-dependent matrices. In particular, we reuse the same randomization for each value of the parameter $t$ in the estimators, which makes them scale favorably with the number of parameter evaluations. Subsequently, we propose a simple, fast, robust, and provable procedure in which these estimators are employed for approximating the smooth spectral density $\phi_{\sigma}$ of a matrix.
 
 \paragraph{Notation}
-We follow the notation and conventions which are used in contemporary literature in this field. Further,
-\begin{itemize}
-    \item we denote with $\mathbb{N}$ all positive whole numbers;
-    \item $e$ denotes Euler's number and $\log$ is the corresponding logartihm;
-    \item the ceiling function $\lceil x \rceil$ of a real number $x$ returns the greatest integer larger than or equal to $x$;
-    \item scalars are represented by lower case Greek or Latin letters ($s$, $\varepsilon$, \dots), vectors are additionally printed in bold ($\vct{v}$, $\vct{\psi}$, \dots), and matrices are additionally capitalized ($\mtx{A}$, $\mtx{\Omega}$, \dots);
-    \item the expected value of a random variable $x$ is denoted with $\mathbb{E}[x]$. The $k$-th moment of a random variable $x$ is defined as $\mathbb{E}^{k}[x] = \left(\mathbb{E}\left[ | x |^{k} \right] \right)^{\sfrac{1}{k}}$;
-    \item the identity matrix $\mtx{I}_n = \diag(1, \dots, 1) \in \mathbb{R}^{n \times n}$ carries ones on its diagonal and zeros everywhere else. The zero matrix $\mtx{0}_{n \times m} \in \mathbb{R}^{n \times m}$ consists of only zero entries;
-    \item in a Gaussian random vector and a Gaussian random matrix, all entries are independently sampled from the standard normal distribution;
-    \item matrix norms are denoted with $\lVert \cdot \rVert$. For symmetric matrices, the $p$-Schatten norm is $\lVert \mtx{A} \rVert _{(p)} = (\sum_{i=1}^n |\lambda_i|^p)^{1/p}$. We refer to the spectral norm as $\lVert \mtx{A} \rVert _2 = \lVert \mtx{A} \rVert _{(\infty)} = \max_{i=1,\dots,n}|\lambda_i|$, the nuclear norm as $\lVert \mtx{A} \rVert _{\ast} = \lVert \mtx{A} \rVert _{(1)} = \sum_{i=1}^{n} |\lambda_i|$, and the Frobenius norm as $\lVert \mtx{A} \rVert _F = \lVert \mtx{A} \rVert _{(2)} = (\sum_{i=1}^{n} |\lambda_i|^2)^{\sfrac{1}{2}}$.
-\end{itemize}
+We follow the notation and conventions which are used in contemporary literature in this field. Further, we denote with $\mathbb{N}$ all positive whole numbers; $e$ denotes Euler's number and $\log$ is the corresponding logartihm; the ceiling function $\lceil x \rceil$ of a real number $x$ returns the greatest integer larger than or equal to $x$; scalars are represented by lower case Greek or Latin letters ($s$, $\varepsilon$, \dots), vectors are additionally printed in bold ($\vct{v}$, $\vct{\psi}$, \dots), and matrices are additionally capitalized ($\mtx{A}$, $\mtx{\Omega}$, \dots); the expected value of a random variable $x$ is denoted with $\mathbb{E}[x]$; the $k$-th moment of a random variable $x$ is defined as $\mathbb{E}^{k}[x] = \left(\mathbb{E}\left[ | x |^{k} \right] \right)^{\sfrac{1}{k}}$; the identity matrix $\mtx{I}_n = \diag(1, \dots, 1) \in \mathbb{R}^{n \times n}$ carries ones on its diagonal and zeros everywhere else; the zero matrix $\mtx{0}_{n \times m} \in \mathbb{R}^{n \times m}$ consists of only zero entries; in a Gaussian random vector and a Gaussian random matrix, all entries are independently sampled from the standard normal distribution; matrix norms are denoted with $\lVert \cdot \rVert$; for symmetric matrices, the $p$-Schatten norm is $\lVert \mtx{A} \rVert _{(p)} = (\sum_{i=1}^n |\lambda_i|^p)^{1/p}$; we refer to the spectral norm as $\lVert \mtx{A} \rVert _2 = \lVert \mtx{A} \rVert _{(\infty)} = \max_{i=1,\dots,n}|\lambda_i|$, the nuclear norm as $\lVert \mtx{A} \rVert _{\ast} = \lVert \mtx{A} \rVert _{(1)} = \sum_{i=1}^{n} |\lambda_i|$, and the Frobenius norm as $\lVert \mtx{A} \rVert _F = \lVert \mtx{A} \rVert _{(2)} = (\sum_{i=1}^{n} |\lambda_i|^2)^{\sfrac{1}{2}}$.
 
-\todo{
-\paragraph{Reproducibility} Fully reproducible paper hosted on GitHub.
-}
+\paragraph{Reproducibility} This document, along with all included plots and tables, was generated from commit \href{https://github.com/FMatti/Rand-SD/tree/ca391a8}{ca391a8} at \href{https://github.com/FMatti/Rand-TRACE}{github.com/FMatti/Rand-TRACE} on 2024-02-05 at 18:44:29 UTC.
+
 \section{Analysis of trace estimators for parameter-dependent matrices}
 \label{sec:analysis}
 
@@ -125,7 +114,7 @@ We use it to measure the error of the trace estimators. The following sections p
 We first consider the estimator \refequ{equ:hutchinson-trace-estimator}.
 
 \begin{theorem}{Girard-Hutchinson estimator for parameter-dependent matrices}{hutchinson}
-    Let $\mtx{A}(t) \in \mathbb{R}^{n \times n}$ continuously depend on $t \in [a, b]$. Then for any $k \in \mathbb{N}$ and $\gamma \geq 1$ it holds with probability at least $1 - \gamma^{-2k}$
+    Let $\mtx{A}(t) \in \mathbb{R}^{n \times n}$ be symmetric and continuously depend on $t \in [a, b]$. Then for any $k \in \mathbb{N}$ and $\gamma \geq 1$ it holds with probability at least $1 - \gamma^{-2k}$
     \begin{equation}
         \int_{a}^{b} \left| \Trace(\mtx{A}(t)) - \Hutch{\mtx{\Psi}}(\mtx{A}(t)) \right| ~\mathrm{d}t < 2^4 \gamma k \frac{1}{\sqrt{n_{\mtx{\Psi}}}} \int_{a}^{b} \lVert \mtx{A}(t) \rVert _F  ~\mathrm{d}t.
     \end{equation}
@@ -138,7 +127,7 @@ The idea behind the proof is to bound the higher order moments for fixed paramet
     \begin{equation}
         r(t) = \Trace(\mtx{B}(t)) - \vct{\psi}^{\top} \mtx{B}(t) \vct{\psi}
     \end{equation}
-    for a parameter-dependent matrix $\mtx{B}(t)$ over the real numbers with the Gaussian random vector $\vct{\psi}$.
+    for a symmetric parameter-dependent matrix $\mtx{B}(t)$ over the real numbers with the Gaussian random vector $\vct{\psi}$.
 
     First, we consider $r(t)$ for a fixed $t \in [a,b]$ and therefore temporarily ignore the parameter-dependence. From the proof of \cite[lemma 3]{cortinovis-2022-randomized-trace} we know that $r$ is sub-Gamma with parameters $(v, c) = (2 \lVert \mtx{B} \rVert _F^2, 2 \lVert \mtx{B} \rVert _2)$. Thus, by \cite[theorem 2.3]{boucheron-2013-basic-inequalities} this implies that for every $k \in \mathbb{N}$
     \begin{align}
@@ -216,7 +205,7 @@ The idea behind the proof is to bound the higher order moments for fixed paramet
     if $n_{\mtx{\Psi}} \geq 2^{10} \varepsilon^{-2} \log(\delta^{-1})^2 (\int_{a}^{b} \mu(t)^{\sfrac{1}{2}}~\mathrm{d}t)^2$ with $\mu(t) = \lVert \mtx{A}(t) \rVert _2 / \Trace(\mtx{A}(t))$. Compared to the constant matrix equivalent \cite[remark 2]{cortinovis-2022-randomized-trace} we mainly observe a larger constant and an additional factor of $\log(\delta^{-1})$.
 \end{remark}
 
-\todo{The drawback of the Girard-Hutchinson estimator is the $\mathcal{O}(\varepsilon^{-2})$-requirement on the number of queries. }
+The Girard-Hutchinson estimator distinguishes itself for its simplicity and provability for all symmetric matrices. However, the $n_{\mtx{\Psi}} = \mathcal{\varepsilon^{-2}}$ requirement implies that if we aim to increase the accuracy of the estimate by one digit, we would need to increase the number of queries by a factor of $100$. The next two estimators improve on this by exploiting the structure of $\mtx{A}(t)$.
 
 \subsection{Nyström approximation for parameter-dependent matrices}
 \label{subsec:nystrom}
@@ -267,11 +256,10 @@ be the eigenvalue decomposition of $\mtx{A}(t)$ at a fixed $t$, i.e. $\mtx{\Lamb
 \end{equation}
 and let $\mtx{\Omega}_1(t) = \mtx{U}_1(t)^{\top} \mtx{\Omega} \in \mathbb{R}^{k \times 2k}$ and $\mtx{\Omega}_2(t) = \mtx{U}_2(t)^{\top} \mtx{\Omega} \in \mathbb{R}^{(n - k) \times 2k}$ with $\mtx{\Omega} \in \mathbb{R}^{n \times 2k}$.
 
-
 \begin{lemma}{Moments of tail bound}{ose}
-    A symmetric matrix $\mtx{A} \in \mathbb{R}^{l \times l}$ and independent standard Gaussian random matrices $\mtx{\Omega}_1 \in \mathbb{R}^{k \times 2k}, \mtx{\Omega}_2 \in \mathbb{R}^{l \times 2k}$ satisfy for all $k \in \mathbb{N}$ and a constant $c > 0$
+    A matrix $\mtx{A} \in \mathbb{R}^{l \times l}$ and independent standard Gaussian random matrices $\mtx{\Omega}_1 \in \mathbb{R}^{k \times 2k}, \mtx{\Omega}_2 \in \mathbb{R}^{l \times 2k}$ satisfy for all $k \in \mathbb{N}$ and a universal constant $c > 0$
     \begin{equation}
-        \mathbb{E}^{k}\left[ \lVert \mtx{A} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2 \right] \leq c \left( \lVert \mtx{A} \rVert _2 + \frac{\lVert \mtx{A} \rVert _F}{\sqrt{k}} \right).
+        \mathbb{E}^{k}\left[ \lVert \mtx{A} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2 \right] \leq c \lVert \mtx{A} \rVert _2 .
     \end{equation}
 \end{lemma}
 
@@ -279,32 +267,33 @@ and let $\mtx{\Omega}_1(t) = \mtx{U}_1(t)^{\top} \mtx{\Omega} \in \mathbb{R}^{k 
     We first use the submultiplicativity of the spectral norm and the stochastic independendence of the random matrices
     \begin{equation}
         \mathbb{E}^{k}\left[ \lVert \mtx{A} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
-        \leq \mathbb{E}^{k}\left[ \lVert \mtx{A} \mtx{\Omega}_2 \rVert _2 \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
-        = \mathbb{E}^{k}\left[ \lVert \mtx{A} \mtx{\Omega}_2 \rVert _2 \right] \mathbb{E}^{k}\left[  \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right].
-        \label{equ:OSE-moment-bound-initial}
+        \leq \mathbb{E}^{k}\left[ \lVert \mtx{A} \rVert _2 \lVert \mtx{\Omega}_2 \rVert _2 \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
+        = \lVert \mtx{A} \rVert _2 \mathbb{E}^{k}\left[ \lVert \mtx{\Omega}_2 \rVert _2 \right] \mathbb{E}^{k}\left[  \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right].
+        \label{equ:OSE-moment-bound-initial-new}
     \end{equation}
 
-    To bound the first term, we define $\widetilde{\mtx{\Omega}}_2 = \mtx{\Omega}_2^{\top} / \sqrt{2k}$ and rewrite
+    To bound the moments of $\lVert \mtx{\Omega}_2 \rVert _2$ we define $\widetilde{\mtx{\Omega}}_2 = \mtx{\Omega}_2^{\top} / \sqrt{2k}$ and rewrite
     \begin{align}
-        &\mathbb{E}^{k}\left[ \lVert \mtx{A} \mtx{\Omega}_2 \rVert _2 \right] \notag \\
-        &= \sqrt{2k} \cdot \mathbb{E}^{k}\left[ \lVert \mtx{A} \widetilde{\mtx{\Omega}}_2^{\top} \rVert _2 \right] && \text{(definition of $\widetilde{\mtx{\Omega}}_2$)} \notag \\
-        &= \sqrt{2k} \cdot \sqrt{ \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert (\mtx{A} \widetilde{\mtx{\Omega}}_2^{\top}) (\mtx{A} \widetilde{\mtx{\Omega}}_2^{\top})^{\top} \rVert _2 \right] } && \text{($\lVert \mtx{B} \rVert _2 = \lVert \mtx{B} \mtx{B}^{\top} \rVert _2^{\sfrac{1}{2}} $ )} \notag \\
-        &\leq \sqrt{2k} \cdot \sqrt{ \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert (\mtx{A} \widetilde{\mtx{\Omega}}_2^{\top}) (\mtx{A} \widetilde{\mtx{\Omega}}_2^{\top})^{\top} - \mtx{A}^{\top} \mtx{A} \rVert _2 \right] + \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert \mtx{A}^{\top} \mtx{A} \rVert _2 \right]} && \text{(triangle inequality)} \notag \\
-        &\leq \sqrt{2k} \cdot \sqrt{ \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert (\widetilde{\mtx{\Omega}}_2 \mtx{A} )^{\top} (\widetilde{\mtx{\Omega}}_2 \mtx{A}) - \mtx{A}^{\top} \mtx{A} \rVert _2\right]} + \sqrt{2k} \cdot \lVert \mtx{A} \rVert _2. && \text{($\sqrt{a+b} \leq \sqrt{a} + \sqrt{b}$)}
+        &\mathbb{E}^{k}\left[ \lVert \mtx{\Omega}_2 \rVert _2 \right] \notag \\
+        &= \sqrt{2k} \cdot \mathbb{E}^{k}\left[ \lVert \widetilde{\mtx{\Omega}}_2^{\top} \rVert _2 \right] && \text{(definition of $\widetilde{\mtx{\Omega}}_2$)} \notag \\
+        &= \sqrt{2k} \cdot \sqrt{ \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert \widetilde{\mtx{\Omega}}_2^{\top} \widetilde{\mtx{\Omega}}_2 \rVert _2 \right] } && \text{($\lVert \mtx{B} \rVert _2 = \lVert \mtx{B} \mtx{B}^{\top} \rVert _2^{\sfrac{1}{2}} $ )} \notag \\
+        &\leq \sqrt{2k} \cdot \sqrt{ \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert \widetilde{\mtx{\Omega}}_2^{\top} \widetilde{\mtx{\Omega}}_2 - \mtx{I}_l \rVert _2 \right] + \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert \mtx{I}_l \rVert _2 \right]} && \text{(triangle inequality)} \notag \\
+        &\leq \sqrt{2k} \cdot \sqrt{ \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert \widetilde{\mtx{\Omega}}_2^{\top} \widetilde{\mtx{\Omega}}_2 - \mtx{I}_l \rVert _2 \right]} + \sqrt{2k} &&
+         \text{($\sqrt{a+b} \leq \sqrt{a} + \sqrt{b}$, $\lVert \mtx{I}_l \rVert _2 = 1$)}
     \end{align}
-    By \cite{} $\widetilde{\mtx{\Omega}}_2 \in \mathbb{R}^{2k \times l}$ satisfies the \todo{$(c_1 \sqrt{q/2k}, c_2 e^{-q}, q)$}-JL moment property for \todo{any $q$ (in what?) $\geq \dots$} \todo{\cite[remark below lemma 4]{cohen-2016-optimal-approximate} or define} and some constants $c_1, c_2 > 0$, hence, by \cite[lemma 4]{cohen-2016-optimal-approximate} it satisfies the $(2 c_1 \sqrt{q/2k}, 9^d c_2 e^{-q}, d, q)$-OSE moment property for any $d \in \mathbb{N}$. For convenience, we choose $d=2k$ and $q=k/2$, such that $\widetilde{\mtx{\Omega}}_2$ has $(c_1, c_2 (3^4e^{-\sfrac{1}{2}})^k, 2k, k/2)$-OSE moment property. We may then apply an intermediary result from the proof of \cite[theorem 1]{cohen-2016-optimal-approximate} to bound
+    By \cite[section 2.2]{nelson-2017-sketching-algorithms} $\widetilde{\mtx{\Omega}}_2 \in \mathbb{R}^{2k \times l}$ satisfies the $(c_1 \sqrt{q/2k}, e^{-q}, q)$-JL moment property for any $q > 0$ and a universal constant $c_1 > 0$. Hence, by \cite[lemma 4]{cohen-2016-optimal-approximate} it satisfies the $(2 c_1 \sqrt{q/2k}, 9^d e^{-q}, d, q)$-OSE moment property for any $d \in \mathbb{N}$. For convenience, we choose $d=2k$ and $q=k/2$, such that $\widetilde{\mtx{\Omega}}_2$ has $(c_1, (3^4 e^{-\sfrac{1}{2}})^k, 2k, k/2)$-OSE moment property, i.e. \cite[definition 3]{cohen-2016-optimal-approximate}
     \begin{equation}
-        \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert (\widetilde{\mtx{\Omega}}_2 \mtx{A} )^{\top} (\widetilde{\mtx{\Omega}}_2 \mtx{A}) - \mtx{A}^{\top} \mtx{A} \rVert _2\right] \leq c_1 c_2^2 3^8e^{-1} \left( \lVert \mtx{A} \rVert _2^2 + \frac{\lVert \mtx{A} \rVert _F^2}{k} \right).
+        \mathbb{E}^{\sfrac{k}{2}} \left[ \lVert \widetilde{\mtx{\Omega}}_2 \widetilde{\mtx{\Omega}}_2^{\top} - \mtx{I}_l \rVert _2 \right] \leq c_1 (3^4 e^{-\sfrac{1}{2}})^2 = c_1 3^8 e^{-1}.
+        %\mathbb{E}^{\sfrac{k}{2}}\left[ \lVert (\widetilde{\mtx{\Omega}}_2 \mtx{A} )^{\top} (\widetilde{\mtx{\Omega}}_2 \mtx{A}) - \mtx{A}^{\top} \mtx{A} \rVert _2\right] \leq c_1 c_2^2 3^8e^{-1} \left( \lVert \mtx{A} \rVert _2^2 + \frac{\lVert \mtx{A} \rVert _F^2}{k} \right).
     \end{equation}
-    Inserting this bound into the above inequality and generously bounding all terms with a single constant we get
-    \begin{align}
-        \mathbb{E}^{k}\left[ \lVert \mtx{A} \mtx{\Omega}_2 \rVert _2 \right]
-        &\leq \sqrt{2k} \cdot \sqrt{c_1 e^{-1}} c_2 3^4 \left( \lVert \mtx{A} \rVert _2^2  + \frac{\lVert \mtx{A} \rVert _F^2}{k} \right)^{\sfrac{1}{2}} + \sqrt{2k} \cdot \lVert \mtx{A} \rVert _2 \notag \\
-        &\leq 2 \sqrt{2} (1 + \sqrt{c_1 e^{-1}} c_2 3^4)\left( \sqrt{k} \cdot \lVert \mtx{A} \rVert _2  + \lVert \mtx{A} \rVert _F \right).
+    Inserting this bound into the above inequality we get
+    \begin{equation}
+        \mathbb{E}^{k}\left[ \lVert \mtx{\Omega}_2 \rVert _2 \right]
+        \leq \sqrt{2k} \cdot (3^4 \sqrt{c_1 e^{-1}} + 1).
         \label{equ:OSE-moment-bound-first}
-    \end{align}
+    \end{equation}
 
-    The second term in \refequ{equ:OSE-moment-bound-initial} can be bounded with help of the proof of \cite[lemma B.3]{tropp-2023-randomized-algorithms}
+    The moments of $\lVert \mtx{\Omega}^{\dagger} \rVert _2$ can be bound with help of the proof of \cite[lemma B.3]{tropp-2023-randomized-algorithms}
     \begin{equation}
         \mathbb{E}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^{k} \right]
         = \mathbb{E}\left[ \lVert ( \mtx{\Omega}_1 \mtx{\Omega}_1^{\top} )^{-1} \rVert _2^{\sfrac{k}{2}} \right]
@@ -321,7 +310,7 @@ and let $\mtx{\Omega}_1(t) = \mtx{U}_1(t)^{\top} \mtx{\Omega} \in \mathbb{R}^{k 
     Putting \refequ{equ:OSE-moment-bound-first} and  \refequ{equ:OSE-moment-bound-second} together, we get
     \begin{equation}
         \mathbb{E}^{k}\left[ \lVert \mtx{A} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
-        \leq \underbrace{2 e^2\sqrt{3} (1 + \sqrt{c_1 e^{-1}} c_2 3^4)}_{\equiv c}\left( \lVert \mtx{A} \rVert _2  + \frac{\lVert \mtx{A} \rVert _F}{\sqrt{k}} \right).
+        \leq \underbrace{e^2\sqrt{3} (3^4 \sqrt{c_1 e^{-1}} + 1)}_{\equiv c} \lVert \mtx{A} \rVert _2.
     \end{equation}
 
 \end{proof}
@@ -329,15 +318,15 @@ and let $\mtx{\Omega}_1(t) = \mtx{U}_1(t)^{\top} \mtx{\Omega} \in \mathbb{R}^{k 
 \begin{lemma}{Nyström approximation for parameter-dependent matrices}{nystrom}
     Let $\mtx{A}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. Then its Nyström approximation $\Nystr{\mtx{\Omega}}{\mtx{A}}(t)$ with Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ for \emph{even} $n_{\mtx{\Omega}} \in \mathbb{N}$ and $\gamma \geq 1$ verifies with probability at least $1 - \gamma^{-\sfrac{n_{\mtx{\Omega}}}{4}}$
     \begin{equation}
-        \int_{a}^{b} \lVert \mtx{A}(t) - \Nystr{\mtx{\Omega}}{\mtx{A}}(t) \rVert _F~\mathrm{d}t \leq \gamma \sqrt{2} \cdot \frac{1 + 2c}{\sqrt{n_{\mtx{\Omega}}}} \int_{a}^{b} \Trace(\mtx{A}(t))~\mathrm{d}t.
+        \int_{a}^{b} \lVert \mtx{A}(t) - \Nystr{\mtx{\Omega}}{\mtx{A}}(t) \rVert _F~\mathrm{d}t \leq \gamma \sqrt{2} \cdot \frac{1 + c}{\sqrt{n_{\mtx{\Omega}}}} \int_{a}^{b} \Trace(\mtx{A}(t))~\mathrm{d}t.
     \end{equation}
     for a universal constant $c > 0$. In particular, if we choose $n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-2} \log(\delta^{-1})), n_{\mtx{\Omega}} \geq 2$, then with probability at least $1-\delta$ for $\delta \in (0, e^{-e^{4 \varepsilon^2}})$ and $\varepsilon > 0$ we have $\int_{a}^{b} \lVert \mtx{A}(t) - \Nystr{\mtx{\Omega}}{\mtx{A}}(t) \rVert _F~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \Trace(A(t))~\mathrm{d}t$.
 \end{lemma}
 
-\todo{Proof idea: structural bound, then higher order moment bound to apply Markov's inequality.}
+%\todo{Proof idea: structural bound, then higher order moment bound to apply Markov's inequality.}
 
 \begin{proof}
-    We let $n_{\mtx{\Omega}} = 2k$ for some $k \in \mathbb{N}$, i.e. $\mtx{\Omega} \in \mathbb{R}^{n \times 2k}$. After temporarily omitting the parameter dependence, we can apply \cite[theorem B.1]{persson-2023-randomized-lowrank} with $f(x) = x$ to bound the integrand with \todo{maybe explain where $\mtx{\Omega}_i$ come from...}
+    We let $n_{\mtx{\Omega}} = 2k$ for some $k \in \mathbb{N}$, i.e. $\mtx{\Omega} \in \mathbb{R}^{n \times 2k}$. After temporarily omitting the parameter dependence, we can apply \cite[theorem B.1]{persson-2023-randomized-lowrank} with $f(x) = x$ to bound the integrand with% \todo{maybe explain where $\mtx{\Omega}_i$ come from...}
     \begin{equation}
         \lVert \mtx{A} - \Nystr{\mtx{\Omega}}{\mtx{A}} \rVert _F 
         \leq  \lVert \mtx{\Lambda}_2 \rVert _F + \lVert (\mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} )^2 \rVert _F.
@@ -361,20 +350,20 @@ and let $\mtx{\Omega}_1(t) = \mtx{U}_1(t)^{\top} \mtx{\Omega} \in \mathbb{R}^{k 
         \leq \sqrt{k} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2^2.
         \label{equ:nystrom-proof-processed-tail}
     \end{equation}
-    Its higher order moments are bounded by
+    Its higher order moments are therefore bounded by
     \begin{align}
-        \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2^2 \right]
-        &= \mathbb{E}^{k}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2 \right]^2 && \text{(by definition of $\mathbb{E}^{k}$)} \notag \\
-        &\leq c \left( \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2 + \frac{1}{\sqrt{k}}\lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F \right)^2 && \text{(\reflem{lem:ose} with $\mtx{A}=\mtx{\Lambda}_2^{\sfrac{1}{2}}$)} \notag \\
-        &\leq c \left( \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2  + \frac{1}{k}\lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \right) && \text{($(a + b)^2 \leq a^2 + b^2$)} \notag \\
-        &= c \left( \lambda_{k+1} + \frac{1}{k}\Trace(\mtx{\Lambda}_2) \right) && \text{(definition of $\lVert \cdot \rVert _2$ and $\lVert \cdot \rVert _F$)} \notag \\
-        &\leq \frac{2 c}{k} \Trace(\mtx{A}) && \text{($\lambda_{k+1} \leq \frac{\Trace(\mtx{A})}{k}$, $\Trace(\mtx{\Lambda}_2) \leq \Trace(\mtx{A})$)}
+        \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert (\mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} )^2 \rVert _F \right]
+        &\leq \sqrt{k} \cdot \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2^2 \right] && \text{(using \refequ{equ:nystrom-proof-processed-tail})} \notag \\
+        &= \sqrt{k} \cdot \mathbb{E}^{k}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2 \right]^2 && \text{(by definition of $\mathbb{E}^{k}$)} \notag \\
+        &\leq \sqrt{k} c \cdot \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 && \text{(\reflem{lem:ose} with $\mtx{A}=\mtx{\Lambda}_2^{\sfrac{1}{2}}$)} \notag \\
+        &= \sqrt{k} c \cdot \lambda_{k+1} && \text{(from the definition of $\lVert \cdot \rVert _2$)} \notag \\
+        &\leq \frac{c}{\sqrt{k}} \Trace(\mtx{A}) && \text{($\lambda_{k+1} \leq \frac{\Trace(\mtx{A})}{k}$)}
         \label{equ:nystrom-proof-tail-bound}
     \end{align}
-    Thus, inserting \refequ{equ:nystrom-proof-tail-bound} into \refequ{equ:nystrom-proof-processed-tail} and using it along with \refequ{equ:nystrom-proof-frobenius-trace} into \refequ{equ:nystrom-proof-persson-bonud} we obtain
+    Thus, using the triangle inequality for $\mathbb{E}^{\sfrac{k}{2}}$ and inserting \refequ{equ:nystrom-proof-tail-bound} along with \refequ{equ:nystrom-proof-frobenius-trace} in \refequ{equ:nystrom-proof-persson-bonud} we obtain
     \begin{equation}
         \mathbb{E}^{\sfrac{k}{2}} \left[\lVert \mtx{A} - \Nystr{\mtx{\Omega}}{\mtx{A}} \rVert _F \right]
-        \leq \frac{1 + 2c}{\sqrt{k}} \Trace(\mtx{A})
+        \leq \frac{1 + c}{\sqrt{k}} \Trace(\mtx{A})
     \end{equation}
 
     We use Minkowski's integral inequality \cite[theorem 202]{hardy-1952-inequalities} to get
@@ -384,11 +373,11 @@ and let $\mtx{\Omega}_1(t) = \mtx{U}_1(t)^{\top} \mtx{\Omega} \in \mathbb{R}^{k 
         %&\leq \mathbb{E}^{\sfrac{k}{2}} \left[ \frac{1}{\sqrt{k}} \int_{a}^{b} \Trace(\mtx{A}(t)) + \sqrt{k} \lVert \mtx{\Lambda}_2(t)^{\sfrac{1}{2}} \mtx{\Omega}_2(t) \mtx{\Omega}_1(t)^{\dagger} \rVert _2^2~\mathrm{d}t  \right] && \text{(\refequ{xy})} \notag \\
         %&\leq \frac{1}{\sqrt{k}} \int_{a}^{b} \Trace(\mtx{A}(t))~\mathrm{d}t + \mathbb{E}^{\sfrac{k}{2}} \left[ \int_{a}^{b}  \sqrt{k} \lVert \mtx{\Lambda}_2(t)^{\sfrac{1}{2}} \mtx{\Omega}_2(t) \mtx{\Omega}_1(t)^{\dagger} \rVert _2^2~\mathrm{d}t  \right] \notag \\
         %&\leq \frac{1}{\sqrt{k}} \int_{a}^{b} \Trace(\mtx{A}(t))~\mathrm{d}t + \sqrt{k} \int_{a}^{b} \mathbb{E}^{\sfrac{k}{2}} \left[ \lVert \mtx{\Lambda}_2(t)^{\sfrac{1}{2}} \mtx{\Omega}_2(t) \mtx{\Omega}_1(t)^{\dagger} \rVert _2^2 \right]  ~\mathrm{d}t \notag \\
-        \leq \frac{1 + 2c}{\sqrt{k}} \int_{a}^{b} \Trace(\mtx{A}(t))~\mathrm{d}t.
+        \leq \frac{1 + c}{\sqrt{k}} \int_{a}^{b} \Trace(\mtx{A}(t))~\mathrm{d}t.
     \end{equation}
     From Markov's inequality follows with probability at least $1 - \gamma^{-\sfrac{k}{2}}$
     \begin{equation}
-        \int_{a}^{b} \lVert \mtx{A}(t) - \Nystr{\mtx{\Omega}}{\mtx{A}}(t) \rVert _F~\mathrm{d}t \leq \gamma \frac{1 + 2c}{\sqrt{k}} \int_{a}^{b} \Trace(\mtx{A}(t))~\mathrm{d}t,
+        \int_{a}^{b} \lVert \mtx{A}(t) - \Nystr{\mtx{\Omega}}{\mtx{A}}(t) \rVert _F~\mathrm{d}t \leq \gamma \frac{1 + c}{\sqrt{k}} \int_{a}^{b} \Trace(\mtx{A}(t))~\mathrm{d}t,
     \end{equation}
     from which follows the first statement by replacing $k = \frac{n_{\mtx{\Omega}}}{2}$.
 
@@ -823,52 +812,40 @@ we consider the three-dimensional case, but for visualization purposes, we
 illustrate the potential in \reffig{fig:gaussian-well}
 in two dimensions.
 
-\begin{figure}[ht]
-    \begin{subfigure}[b]{0.32\columnwidth}
-        \input{plots/gaussian-well-1.pgf}
-        \caption{$n_c=1$}
-        \label{fig:gaussian-well-1}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.32\columnwidth}
-        \input{plots/gaussian-well-2.pgf}
-        \caption{$n_c=2$}
-        \label{fig:gaussian-well-2}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.32\columnwidth}
-        \input{plots/gaussian-well-5.pgf}
-        \caption{$n_c=5$}
-        \label{fig:gaussian-well-5}
-    \end{subfigure}
-    \caption{Two dimensional periodic potential $V$ for different sizes $n_c$ of the computational domain.}
-    \label{fig:gaussian-well}
-\end{figure}
+%\begin{figure}[ht]
+%    \begin{subfigure}[b]{0.32\columnwidth}
+%        \input{plots/gaussian-well-1.pgf}
+%        \caption{$n_c=1$}
+%        \label{fig:gaussian-well-1}
+%    \end{subfigure}
+%    \begin{subfigure}[b]{0.32\columnwidth}
+%        \input{plots/gaussian-well-2.pgf}
+%        \caption{$n_c=2$}
+%        \label{fig:gaussian-well-2}
+%    \end{subfigure}
+%    \begin{subfigure}[b]{0.32\columnwidth}
+%        \input{plots/gaussian-well-5.pgf}
+%        \caption{$n_c=5$}
+%        \label{fig:gaussian-well-5}
+%    \end{subfigure}
+%    \caption{Two dimensional periodic potential $V$ for different sizes $n_c$ of the computational domain.}
+%    \label{fig:gaussian-well}
+%\end{figure}
 
 
 \begin{figure}[ht]
-    \begin{subfigure}[b]{0.49\columnwidth}
-        \input{plots/convergence-degree.pgf}
-        \caption{$n_{\mtx{\Omega}} + n_{\mtx{\Psi}} = 160$}
-        \label{convergence-randvec}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.49\columnwidth}
-        \input{plots/convergence-randvec.pgf}
-        \caption{$m = 2400$}
-        \label{fig:convergence-degree}
-    \end{subfigure}
-    \caption{For increasing values of s$n_{\mtx{\Omega}} + n_{\mtx{\Psi}}$ but fixed $m$ we plot the $L^1$ relative approximation error for the model problem with $\sigma=0.05$.}
+    \centering
+    \input{plots/convergence.pgf}
+    \caption{For increasing values of $n_{\mtx{\Omega}} + n_{\mtx{\Psi}}$ but fixed $m$ we plot the $L^1$ relative approximation error for the model problem with $\sigma=0.005$.}
     \label{fig:convergence}
 \end{figure}
 
 
 \begin{figure}[ht]
     \centering
-    \input{plots/matvec-mix.pgf}
+    \input{plots/distribution.pgf}
     \caption{The NC++ method for different ways of allocations a 
-    total of $n_{\mtx{\Omega}} + n_{\mtx{\Psi}}=80$ random vectors
-    to either the Nystr\"om low-rank approximation or the Girard-Hutchinson trace estimation
-    for the Gaussian smoothing kernel with multiple different values of
-    the smoothing parameter. We make the approximation error made in the
-    Chebyshev expansion negligible by rescaling $m=120 / \sigma$.}
+    total of $n_{\mtx{\Omega}} + n_{\mtx{\Psi}}=80$ random vectors to either the Nystr\"om low-rank approximation or the Girard-Hutchinson trace estimation for the Gaussian smoothing kernel with multiple different values of the smoothing parameter. We make the approximation error made in the Chebyshev expansion negligible by rescaling $m=16 / \sigma$ (based on \refthm{thm:chebyshev-error}).}
     \label{fig:matvec-mix}
 \end{figure}
 
@@ -878,7 +855,7 @@ in two dimensions.
 \label{sec:discussion}
 
 \begin{itemize}
-    \item Test
+    \item Robustness (can choose $m$ and $n_{\mtx{\Omega}}$, $n_{\mtx{\Psi}}$ as large as one wants, and not break algorithm, unlike Krylov-aware Lanczos)
 \end{itemize}
 
 % Acknowledge advice from David and Data/Parameters from Lin Lin

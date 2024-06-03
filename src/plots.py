@@ -139,7 +139,7 @@ def plot_spectral_densities(spectral_densities, parameters, variable_parameter=N
     return ax
 
 
-def compute_spectral_density_errors(A, methods, labels, variable_parameter, variable_parameter_values, parameters, kernel=gaussian_kernel, n_t=1000, error_metric=p_norm, correlated_parameter=None, correlated_parameter_values=None, eigenvalues=None):
+def compute_spectral_density_errors(A, methods, labels, variable_parameter, variable_parameter_values, parameters, kernel=gaussian_kernel, n_t=1000, error_metric=p_norm, correlated_parameter=None, correlated_parameter_values=None, eigenvalues=None, smooth_baseline=True):
     """
     Compute the errors of the spectral densities of a matrix A using different
     methods or parameters.
@@ -168,6 +168,8 @@ def compute_spectral_density_errors(A, methods, labels, variable_parameter, vari
         The values which the correlated parameter depending on the variable parameter.
     eigenvalues : np.ndarray
         Eigenvalues which are used to form the baseline spectral density.
+    smooth_baseline : bool
+        Compute the metric from the smoothened or original spectral density.
     
     Returns
     -------
@@ -222,8 +224,11 @@ def compute_spectral_density_errors(A, methods, labels, variable_parameter, vari
             except:
                 pass
             parameter[variable_parameter] = param
-            spectral_density_baseline = form_spectral_density(eigenvalues_transformed, kernel=kernel, n=A_transformed.shape[0], n_t=n_t, sigma=parameter["sigma"])
             spectral_density = method(A=A_transformed, t=t, **parameter)
+            if smooth_baseline:
+                spectral_density_baseline = form_spectral_density(eigenvalues_transformed, kernel=kernel, n=A_transformed.shape[0], n_t=n_t, sigma=parameter["sigma"])
+            else:
+                spectral_density_baseline = eigenvalues_transformed
             spectral_density_errors[label].append(error_metric(spectral_density_baseline, spectral_density))
 
     return spectral_density_errors
@@ -293,6 +298,7 @@ def plot_spectral_density_errors(spectral_density_errors, parameters, variable_p
         ax.plot(variable_parameter_values, spectral_density_error, linewidth=1, color=colors[i], label=label, marker=markers[i], linestyle=linestyles[i])
     ax.legend()
     return ax
+
 
 
 # --- Unused implementations ---

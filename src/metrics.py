@@ -59,6 +59,65 @@ def p_norm(phi, phi_tilde, p=1, relative=True):
     return error
 
 
+def wasserstein_distance(phi, phi_tilde, a=-1, b=1):
+    """
+    Compute the Wasserstein-1 distance between the spectral densities.
+
+    Parameters
+    ----------
+    phi : np.ndarray of shape (n,)
+        The true DOS evaluated at a series of uniformly distributed points.
+    phi_tilde : np.ndarray of shape (n,)
+        The approximated DOS evaluated at the same points as phi.
+    a : float or int
+        The start-point of the support of the spectral density.
+    b : float or int > a
+        The end-point of the support of the spectral density.
+
+    Returns
+    -------
+    error : float
+        The error of the approximated DOS from the actual DOS.
+    """
+    dx = (b - a) / (len(phi) - 1)
+    Phi = sp.integrate.cumulative_simpson(phi, dx=dx)
+    Phi_tilde = sp.integrate.cumulative_simpson(phi_tilde, dx=dx)
+    error = sp.integrate.simpson(np.abs(Phi - Phi_tilde), dx=dx)
+    return error
+
+
+def wasserstein_error(eigenvalues, phi_tilde, a=-1, b=1, normalize=False):
+    """
+    Compute the Wasserstein-1 of the spectral density from the ground truth.
+
+    Parameters
+    ----------
+    eigenvalues : np.ndarray of shape (n,)
+        The true eigenvalues of the matrix.
+    phi_tilde : np.ndarray of shape (n,)
+        The approximated DOS evaluated at the same points as phi.
+    a : float or int
+        The start-point of the support of the spectral density.
+    b : float or int > a
+        The end-point of the support of the spectral density.
+    normalize : bool
+        Whether to enforce normalization of the approximate spectral density.
+
+    Returns
+    -------
+    error : float
+        The error of the approximated DOS from the actual DOS.
+    """
+    dx = (b - a) / (len(phi_tilde) - 1)
+    Phi_x = lambda x: np.sum(np.subtract.outer(eigenvalues, x) < 0, axis=0) / len(eigenvalues)
+    Phi = Phi_x(np.linspace(a, b, len(phi_tilde)))
+    Phi_tilde = sp.integrate.cumulative_simpson(phi_tilde, dx=dx, initial=0)
+    if normalize:
+        Phi_tilde /= Phi_tilde[-1]
+    error = sp.integrate.simpson(np.abs(Phi - Phi_tilde), dx=dx)
+    return error
+
+
 # --- Unused implementations ---
 
 
