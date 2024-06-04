@@ -205,7 +205,7 @@ The idea behind the proof is to bound the higher order moments for fixed paramet
     if $n_{\mtx{\Psi}} \geq 2^{10} \varepsilon^{-2} \log(\delta^{-1})^2 (\int_{a}^{b} \mu(t)^{\sfrac{1}{2}}~\mathrm{d}t)^2$ with $\mu(t) = \lVert \mtx{A}(t) \rVert _2 / \Trace(\mtx{A}(t))$. Compared to the constant matrix equivalent \cite[remark 2]{cortinovis-2022-randomized-trace} we mainly observe a larger constant and an additional factor of $\log(\delta^{-1})$.
 \end{remark}
 
-The Girard-Hutchinson estimator distinguishes itself for its simplicity and provability for all symmetric matrices. However, the $n_{\mtx{\Psi}} = \mathcal{\varepsilon^{-2}}$ requirement implies that if we aim to increase the accuracy of the estimate by one digit, we would need to increase the number of queries by a factor of $100$. The next two estimators improve on this by exploiting the structure of $\mtx{A}(t)$.
+The Girard-Hutchinson estimator distinguishes itself for its simplicity and provability for all symmetric matrices. However, the $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2})$ requirement implies that if we aim to increase the accuracy of the estimate by one digit, we would need to increase the number of queries by a factor of $100$. The next two estimators improve on this by exploiting the structure of $\mtx{A}(t)$.
 
 \subsection{Nyström approximation for parameter-dependent matrices}
 \label{subsec:nystrom}
