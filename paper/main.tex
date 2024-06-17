@@ -249,61 +249,82 @@ be the eigenvalue decomposition of $\mtx{B}(t)$ at a fixed $t$, i.e. $\mtx{\Lamb
 and let $\mtx{\Omega}_1(t) = \mtx{U}_1(t)^{\top} \mtx{\Omega} \in \mathbb{R}^{k \times 2k}$ and $\mtx{\Omega}_2(t) = \mtx{U}_2(t)^{\top} \mtx{\Omega} \in \mathbb{R}^{(n - k) \times 2k}$ with $\mtx{\Omega} \in \mathbb{R}^{n \times 2k}$.
 
 \begin{lemma}{Moments of tail bound}{ose}
-    \todo{A matrix $\mtx{A} \in \mathbb{R}^{l \times l}$ and }independent standard Gaussian random matrices $\mtx{\Omega}_1 \in \mathbb{R}^{k \times 2k}, \mtx{\Omega}_2 \in \mathbb{R}^{l \times 2k}$ satisfy for all $k \in \mathbb{N}$ and a universal constant $c > 0$
+    Let $\mtx{\Sigma} = \operatorname{diag}(\sigma_1, \dots, \sigma_m) \in \mathbb{R}^{m \times m}$ such that $|\sigma_1| \geq \dots \geq |\sigma_m|$ and independent standard Gaussian random matrices $\mtx{\Omega} \in \mathbb{R}^{m \times k}$ satisfy for all \todo{$k \geq 2$}
     \begin{equation}
-        \mathbb{E}^{k}\left[ \lVert \mtx{A} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2 \right] \leq c \lVert \mtx{A} \rVert _2 .
+        \mathbb{E}^{p}\left[ \lVert \mtx{\Sigma} \mtx{\Omega} \rVert _2 \right]
+        \leq \sqrt{\frac{k + p}{2}} \cdot \left( 2 + \frac{1}{\sqrt{k}} \right) \cdot \lVert \mtx{\Sigma} \rVert _2 + \sqrt{\frac{k + p}{2k}} \cdot \lVert \mtx{\Sigma} \rVert _F.
     \end{equation}
+    %\begin{equation}
+    %    \mathbb{E}^{p}\left[ \lVert \mtx{\Sigma} \mtx{\Omega}_2\rVert _2 \right]
+    %    &\leq \sqrt{\frac{k + p}{2}} \cdot \left( 2 + \frac{1}{\sqrt{k}} \right) \cdot \lVert \mtx{\Sigma} \rVert _2 + \sqrt{\frac{k + p}{2k}} \cdot \lVert \mtx{\Sigma} \rVert _F. \notag \\
+    %    \mathbb{E}^{p}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
+    %    &\leq \frac{1}{2} \left( 1 + \frac{p}{k - r + 1 - p} \right)^{\sfrac{1}{p}} \left( \frac{k + r}{k - r + 2} \right).
+    %\end{equation}
+    %If we choose 
 \end{lemma}
 
 \begin{proof}
-    We first use the submultiplicativity of the spectral norm and the stochastic independendence of the random matrices
+    We can rewrite
     \begin{equation}
-        \mathbb{E}^{k}\left[ \lVert \mtx{A} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
-        \leq \mathbb{E}^{k}\left[ \lVert \mtx{A} \rVert _2 \lVert \mtx{\Omega}_2 \rVert _2 \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
-        = \lVert \mtx{A} \rVert _2 \mathbb{E}^{k}\left[ \lVert \mtx{\Omega}_2 \rVert _2 \right] \mathbb{E}^{k}\left[  \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right].
-        \label{equ:OSE-moment-bound-initial-new}
+        \mathbb{E}^{p}\left[ \lVert \mtx{\Sigma} \vct{\omega} \rVert _2 \right]
+        = \mathbb{E}\left[  \left( \lVert \mtx{\Sigma} \vct{\omega} \rVert _2^2 \right)^{\sfrac{p}{2}} \right]^{\sfrac{1}{2p}}
+        = \mathbb{E}\left[  \left( \sum_{i=1}^{m} \sigma_i^2 \omega_i^2 \right)^{\sfrac{p}{2}} \right]^{\sfrac{1}{p}}
+        = \sqrt{ \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{i=1}^{m} \sigma_i^2 \omega_i^2 \right] }.
     \end{equation}
 
-    To bound the moments of $\lVert \mtx{\Omega}_2 \rVert _2$ we define $\widetilde{\mtx{\Omega}}_2 = \mtx{\Omega}_2^{\top} / \sqrt{2k}$ and rewrite
+    Inspired by the proof of \cite[theorem 1]{cohen-2016-optimal-approximate}, we split the diagonal entries of $\mtx{\Sigma}$ into $\ell = \lceil m/k \rceil$ groups of size $k \geq 2$ as follows
+    \begin{equation}
+        \underbrace{\sigma_1, \dots, \sigma_k}_{\leq \sigma_1}, \underbrace{\sigma_{k+1}, \dots, \sigma_{2k}}_{\leq \sigma_{k+1}}, \dots, \underbrace{\sigma_{1+(\ell - 1)k}, \dots, \sigma_{\ell k}}_{\leq \sigma_{1+(\ell - 1)k}}
+    \end{equation}
+    In case $m$ is not a multiple of $k$, we set $\sigma_i = 0$ if $i > m$. Now we see that
+    \begin{equation}
+        \sigma_1^2 \leq \lVert \mtx{\Sigma} \rVert _2^2
+        \quad \text{and} \quad
+        \sigma_{1 + (i-1)k}^2 \leq \frac{1}{k} \sum_{j=1}^{k} \sigma_{j + (i-2)k}^2, i = 2, \dots, \ell
+    \end{equation}
+    and therefore
+    \begin{equation}
+        \sum_{i=1}^{\ell} \sigma_{1 + (i-1)k}^2 \leq \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \sum_{j=1}^{(\ell - 1)k} \sigma_j^2 \leq \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2.
+    \end{equation}
+    By the triangle inequality for moments \todo{[cite Hysan]}
     \begin{align}
-        &\mathbb{E}^{k}\left[ \lVert \mtx{\Omega}_2 \rVert _2 \right] \notag \\
-        &= \sqrt{2k} \cdot \mathbb{E}^{k}\left[ \lVert \widetilde{\mtx{\Omega}}_2^{\top} \rVert _2 \right] && \text{(definition of $\widetilde{\mtx{\Omega}}_2$)} \notag \\
-        &= \sqrt{2k} \cdot \sqrt{ \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert \widetilde{\mtx{\Omega}}_2^{\top} \widetilde{\mtx{\Omega}}_2 \rVert _2 \right] } && \text{($\lVert \mtx{B} \rVert _2 = \lVert \mtx{B}^{\top} \mtx{B} \rVert _2^{\sfrac{1}{2}} $ )} \notag \\
-        &\leq \sqrt{2k} \cdot \sqrt{ \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert \widetilde{\mtx{\Omega}}_2^{\top} \widetilde{\mtx{\Omega}}_2 - \mtx{I}_l \rVert _2 \right] + \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert \mtx{I}_l \rVert _2 \right]} && \text{(triangle inequality)} \notag \\
-        &\leq \sqrt{2k} \cdot \sqrt{ \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert \widetilde{\mtx{\Omega}}_2^{\top} \widetilde{\mtx{\Omega}}_2 - \mtx{I}_l \rVert _2 \right]} + \sqrt{2k} &&
-         \text{($\sqrt{a+b} \leq \sqrt{a} + \sqrt{b}$, $\lVert \mtx{I}_l \rVert _2 = 1$)}
+        \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{i=1}^{m} \sigma_i^2 \omega_i^2 \right]
+        &= \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{i=1}^{\ell} \sum_{j=1}^{k} \underbrace{\sigma_{j + (i-1)k}^2}_{\leq \sigma_{1 + (i-1)k}^2} \omega_{j + (i-1)k}^2 \right] \notag \\
+        &\leq \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{i=1}^{\ell} \sigma_{1 + (i-1)k}^2 \sum_{j=1}^{k} \omega_{j + (i-1)k}^2 \right] \notag \\
+        &\leq \sum_{i=1}^{\ell} \sigma_{1 + (i-1)k}^2 \cdot \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{j=1}^{k} \omega_{j + (i-1)k}^2 \right] \notag \\
+        &\leq \left( \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2 \right) 2 \left( \frac{\Gamma(\frac{k + p}{2})}{\Gamma(\frac{k}{2})} \right)^{\sfrac{2}{p}} \notag \\
+        &\leq \frac{k + p}{2} \left( \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2 \right)
     \end{align}
-    By \cite[section 2.2]{nelson-2017-sketching-algorithms} $\widetilde{\mtx{\Omega}}_2 \in \mathbb{R}^{2k \times l}$ satisfies the $(c_1 \sqrt{q/2k}, e^{-q}, q)$-JL moment property for any $q > 0$ and a universal constant $c_1 > 0$. Hence, by \cite[lemma 4]{cohen-2016-optimal-approximate} it satisfies the $(2 c_1 \sqrt{q/2k}, 9^d e^{-q}, d, q)$-OSE moment property for any $d \in \mathbb{N}$. For convenience, we choose $d=2k$ and $q=k/2$, such that $\widetilde{\mtx{\Omega}}_2$ has $(c_1, (3^4 e^{-\sfrac{1}{2}})^k, 2k, k/2)$-OSE moment property, i.e. \cite[definition 3]{cohen-2016-optimal-approximate}
+    Thus, bounding the constant up front with $1$, we get
     \begin{equation}
-        \mathbb{E}^{\sfrac{k}{2}} \left[ \lVert \widetilde{\mtx{\Omega}}_2 \widetilde{\mtx{\Omega}}_2^{\top} - \mtx{I}_l \rVert _2 \right] \leq c_1 (3^4 e^{-\sfrac{1}{2}})^2 = c_1 3^8 e^{-1}.
-        %\mathbb{E}^{\sfrac{k}{2}}\left[ \lVert (\widetilde{\mtx{\Omega}}_2 \mtx{A} )^{\top} (\widetilde{\mtx{\Omega}}_2 \mtx{A}) - \mtx{A}^{\top} \mtx{A} \rVert _2\right] \leq c_1 c_2^2 3^8e^{-1} \left( \lVert \mtx{A} \rVert _2^2 + \frac{\lVert \mtx{A} \rVert _F^2}{k} \right).
+        \mathbb{E}^{p}\left[ \lVert \mtx{\Sigma} \vct{\omega} \rVert _2 \right]
+        \leq \sqrt{\frac{k + p}{2}} \left( \lVert \mtx{\Sigma} \rVert _2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F \right)
     \end{equation}
-    Inserting this bound into the above inequality we get
+    From the proof of \cite[lemma B.1]{tropp-2023-randomized-algorithms} we know that 
     \begin{equation}
-        \mathbb{E}^{k}\left[ \lVert \mtx{\Omega}_2 \rVert _2 \right]
-        \leq \sqrt{2k} \cdot (3^4 \sqrt{c_1 e^{-1}} + 1).
-        \label{equ:OSE-moment-bound-first}
+        \mathbb{E}^p\left[ \lVert \mtx{\Sigma} \mtx{\Omega} \rVert _2 \right]
+        \leq \lVert \mtx{\Sigma} \rVert _2 \mathbb{E}^p\left[ \lVert \vct{\omega}_1 \rVert _2 \right] + \mathbb{E}^p\left[ \lVert \mtx{\Sigma} \vct{\omega}_2 \rVert _2 \right]
     \end{equation}
-
-    The moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ can be bound with help of the proof of \cite[lemma B.3]{tropp-2023-randomized-algorithms}
+    for independent standard Gaussian random vectors $\vct{\omega}_1 \in \mathbb{R}^{k}$ and $\vct{\omega}_2 \in \mathbb{R}^{m}$. The second moment is bound by \todo{equation} while for the first moment we apply the above $\mtx{\Sigma} = \mtx{I}_k$ to get
     \begin{equation}
-        \mathbb{E}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^{k} \right]
-        = \mathbb{E}\left[ \lVert ( \mtx{\Omega}_1 \mtx{\Omega}_1^{\top} )^{-1} \rVert _2^{\sfrac{k}{2}} \right]
-        \leq \left( k + 1 \right) \left( \frac{1}{(k + 1)!}\right)^{\sfrac{k}{k + 1}} \left( \frac{3 k}{2}\right)^{\sfrac{k}{2}}.
-    \end{equation}
-    With the Taylor series expansion of the exponential function it can be shown that $e^n \geq 1 + n$ and $e^n \geq \frac{n^n}{n!}$ for all $n \in \mathbb{N}$, from which $(n + 1)^{\sfrac{1}{n}} \leq e$ and $\left( \frac{1}{n!} \right)^{\sfrac{1}{n}} \leq \frac{e}{n}$ follow respectively. Hence,
-    \begin{equation}
-        \mathbb{E}^{k}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
-        \leq \frac{e^2}{k + 1}\sqrt{ \frac{3k}{2} }
-        \leq e^2 \sqrt{\frac{3}{2k}}.
-        \label{equ:OSE-moment-bound-second}
+        \mathbb{E}^p\left[ \lVert \mtx{\Sigma} \mtx{\Omega} \rVert _2 \right]
+        \leq \sqrt{\frac{k + p}{2}} \cdot \left( 2 + \frac{1}{\sqrt{k}} \right) \cdot \lVert \mtx{\Sigma} \rVert _2 + \sqrt{\frac{k + p}{2k}} \cdot \lVert \mtx{\Sigma} \rVert _F.
     \end{equation}
 
-    Putting \refequ{equ:OSE-moment-bound-first} and  \refequ{equ:OSE-moment-bound-second} together, we get
-    \begin{equation}
-        \mathbb{E}^{k}\left[ \lVert \mtx{A} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
-        \leq \underbrace{e^2\sqrt{3} (3^4 \sqrt{c_1 e^{-1}} + 1)}_{\equiv c} \lVert \mtx{A} \rVert _2.
-    \end{equation}
+    %The moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ can be bound with help of the proof of \cite[lemma B.3]{tropp-2023-randomized-algorithms}
+    %\begin{align}
+    %    \mathbb{E}^{p}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
+    %    &= \mathbb{E}\left[ \lVert ( \mtx{\Omega}_1 \mtx{\Omega}_1^{\top} )^{-1} \rVert _2^{\sfrac{p}{2}} \right]^{\sfrac{1}{p}} \notag \\
+    %    &\leq \left( 1 + \frac{p}{k - r + 1 - p} \right)^{\sfrac{1}{p}} \left( \frac{1}{\Gamma(k - r + 2)} \right)^{\frac{1}{k - r + 1}} \left( \frac{k + r}{2} \right) \notag \\
+    %    &\leq \frac{1}{2} \left( 1 + \frac{p}{k - r + 1 - p} \right)^{\sfrac{1}{p}} \left( \frac{k + r}{k - r + 2} \right)
+    %\end{align}
+    %With the Taylor series expansion of the exponential function it can be shown that $e^n \geq 1 + n$ and $e^n \geq \frac{n^n}{n!}$ for all $n \in \mathbb{N}$, from which $(n + 1)^{\sfrac{1}{n}} \leq e$ and $\left( \frac{1}{n!} \right)^{\sfrac{1}{n}} \leq \frac{e}{n}$ follow respectively. Hence,
+    %\begin{equation}
+    %    \mathbb{E}^{k}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
+    %    \leq \frac{e^2}{k + 1}\sqrt{ \frac{3k}{2} }
+    %    \leq e^2 \sqrt{\frac{3}{2k}}.
+    %    \label{equ:OSE-moment-bound-second}
+    %\end{equation}
 
 \end{proof}
 
@@ -343,15 +364,52 @@ and let $\mtx{\Omega}_1(t) = \mtx{U}_1(t)^{\top} \mtx{\Omega} \in \mathbb{R}^{k 
         \label{equ:nystrom-proof-processed-tail}
     \end{equation}
     Its higher order moments are therefore bounded by
-    \begin{align}
+    \begin{equation}
         \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert (\mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} )^2 \rVert _F \right]
-        &\leq \sqrt{k} \cdot \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2^2 \right] && \text{(using \refequ{equ:nystrom-proof-processed-tail})} \notag \\
-        &= \sqrt{k} \cdot \mathbb{E}^{k}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2 \right]^2 && \text{(by definition of $\mathbb{E}^{k}$)} \notag \\
+        \leq \sqrt{k} \cdot \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2^2 \right]
+        = \sqrt{k} \cdot \mathbb{E}^{k}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2 \right]^2
+        \label{equ:nystrom-proof-tail-bound}
+    \end{equation}
+
+    We first use the submultiplicativity of the spectral norm and the stochastic independendence of the random matrices
+    \begin{equation}
+        \mathbb{E}^{k}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
+        \leq \mathbb{E}^{k}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2 \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
+        \leq \mathbb{E}^{k}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2 \right] \mathbb{E}^{k}\left[  \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
+        \label{equ:OSE-moment-bound-initial-new}
+    \end{equation}
+    The first term can be bound with \reflem{lem:ose} with $\mtx{\Sigma} = \mtx{\Lambda}_2^{\sfrac{1}{2}}$:
+    \begin{equation}
+        \mathbb{E}^{p}\left[ \lVert \mtx{\Sigma} \mtx{\Omega} \rVert _2 \right]
+        \leq \sqrt{\frac{3}{2}} \cdot \left( 2 \sqrt{k} + \frac{1}{\sqrt{2}} \right) \cdot \lVert \mtx{\Sigma} \rVert _2 + \sqrt{\frac{3}{2}} \cdot \lVert \mtx{\Sigma} \rVert _F.
+    \end{equation}
+    The moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ can be bound with help of the proof of \cite[lemma B.3]{tropp-2023-randomized-algorithms}
+    \begin{equation}
+        \mathbb{E}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^{k} \right]
+        = \mathbb{E}\left[ \lVert ( \mtx{\Omega}_1 \mtx{\Omega}_1^{\top} )^{-1} \rVert _2^{\sfrac{k}{2}} \right]
+        \leq \left( k + 1 \right) \left( \frac{1}{(k + 1)!}\right)^{\sfrac{k}{k + 1}} \left( \frac{3 k}{2}\right)^{\sfrac{k}{2}}.
+    \end{equation}
+    With the Taylor series expansion of the exponential function it can be shown that $e^n \geq 1 + n$ and $e^n \geq \frac{n^n}{n!}$ for all $n \in \mathbb{N}$, from which $(n + 1)^{\sfrac{1}{n}} \leq e$ and $\left( \frac{1}{n!} \right)^{\sfrac{1}{n}} \leq \frac{e}{n}$ follow respectively. Hence,
+    \begin{equation}
+        \mathbb{E}^{k}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
+        \leq \frac{e^2}{k + 1}\sqrt{ \frac{3k}{2} }
+        \leq e^2 \sqrt{\frac{3}{2k}}.
+        \label{equ:OSE-moment-bound-second}
+    \end{equation}
+
+    Putting \refequ{equ:OSE-moment-bound-first} and  \refequ{equ:OSE-moment-bound-second} together, we get
+    \begin{equation}
+        \mathbb{E}^{k}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
+        \leq ...
+    \end{equation}
+
+    Just as in the proof of \cite[lemma 3.1]{meyer-2021-hutch-optimal} we can bound
+    \begin{align}
         &\leq \sqrt{k} c \cdot \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 && \text{(\reflem{lem:ose} with $\mtx{A}=\mtx{\Lambda}_2^{\sfrac{1}{2}}$)} \notag \\
         &= \sqrt{k} c \cdot \lambda_{k+1} && \text{(from the definition of $\lVert \cdot \rVert _2$)} \notag \\
         &\leq \frac{c}{\sqrt{k}} \Trace(\mtx{B}) && \text{($\lambda_{k+1} \leq \Trace(\mtx{B})/k$)}
-        \label{equ:nystrom-proof-tail-bound}
     \end{align}
+
     Thus, using the triangle inequality for $\mathbb{E}^{\sfrac{k}{2}}$ and inserting \refequ{equ:nystrom-proof-tail-bound} along with \refequ{equ:nystrom-proof-frobenius-trace} in \refequ{equ:nystrom-proof-persson-bonud} we obtain
     \begin{equation}
         \mathbb{E}^{\sfrac{k}{2}} \left[\lVert \mtx{B} - \Nystr{\mtx{\Omega}}{\mtx{B}} \rVert _F \right]
