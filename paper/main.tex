@@ -229,30 +229,11 @@ Next we consider \refequ{equ:nystrom-trace-estimator}. \todo{Motivate Nyström a
 
 \todo{Motivate and explain proof technique (to mimic Hutch++)}
 
-For the coming pages, we employ the following notation. Let
-\begin{equation}
-    \mtx{B}(t) 
-    = \mtx{U}(t) \mtx{\Lambda}(t) \mtx{U}(t)^{\top} 
-\end{equation}
-be the eigenvalue decomposition of $\mtx{B}(t)$ at a fixed $t$, i.e. $\mtx{\Lambda}(t) = \operatorname{diag}(\lambda_1(t), \dots, \lambda_n(t))$ and $\mtx{U}(t)^{\top} \mtx{U}(t) = \mtx{I}_n$. We define the matrix partitions
-\begin{equation}
-    \rule[\dimexpr-2ex-\ht\strutbox]{0pt}{\dimexpr2ex+4ex+\baselineskip}
-    \mtx{U}(t) = \begin{bmatrix}
-        \smash{\underbrace{\mtx{U}_1(t)}_{n \times k}} & \smash{\underbrace{\mtx{U}_2(t)}_{n \times (n-k)}}
-    \end{bmatrix}
-    \quad \text{and} \quad
-    \mtx{\Lambda}(t) =
-    \begin{bmatrix}
-        \smash{\overbrace{\mtx{\Lambda}_1(t)}^{k \times k}} & \\ & \smash{\underbrace{\mtx{\Lambda}_2(t)}_{(n-k) \times (n-k)}}
-    \end{bmatrix}
-\end{equation}
-and let $\mtx{\Omega}_1(t) = \mtx{U}_1(t)^{\top} \mtx{\Omega} \in \mathbb{R}^{k \times 2k}$ and $\mtx{\Omega}_2(t) = \mtx{U}_2(t)^{\top} \mtx{\Omega} \in \mathbb{R}^{(n - k) \times 2k}$ with $\mtx{\Omega} \in \mathbb{R}^{n \times 2k}$.
-
-\begin{lemma}{Moments of tail bound}{ose}
-    Let $\mtx{\Sigma} = \operatorname{diag}(\sigma_1, \dots, \sigma_m) \in \mathbb{R}^{m \times m}$ such that $|\sigma_1| \geq \dots \geq |\sigma_m|$ and independent standard Gaussian random matrices $\mtx{\Omega} \in \mathbb{R}^{m \times k}$ satisfy for all \todo{$k \geq 2$}
+\begin{lemma}{Moment of spectral norm of non-standard Gaussian random matrix}{ose}
+    The matrix $\mtx{\Sigma} = \operatorname{diag}(\sigma_1, \dots, \sigma_m) \in \mathbb{R}^{m \times m}$ with $\sigma_1 \geq \dots \geq \sigma_m \geq 0$ and the standard Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{m \times k}$ satisfy for all $p \in \mathbb{N}$ 
     \begin{equation}
         \mathbb{E}^{p}\left[ \lVert \mtx{\Sigma} \mtx{\Omega} \rVert _2 \right]
-        \leq \sqrt{\frac{k + p}{2}} \cdot \left( 2 + \frac{1}{\sqrt{k}} \right) \cdot \lVert \mtx{\Sigma} \rVert _2 + \sqrt{\frac{k + p}{2k}} \cdot \lVert \mtx{\Sigma} \rVert _F.
+        \leq  \sqrt{k + p} \left( 3 \lVert \mtx{\Sigma} \rVert _2 + \frac{1}{\sqrt{k}} \lVert \mtx{\Sigma} \rVert _F \right).
     \end{equation}
     %\begin{equation}
     %    \mathbb{E}^{p}\left[ \lVert \mtx{\Sigma} \mtx{\Omega}_2\rVert _2 \right]
@@ -264,51 +245,54 @@ and let $\mtx{\Omega}_1(t) = \mtx{U}_1(t)^{\top} \mtx{\Omega} \in \mathbb{R}^{k 
 \end{lemma}
 
 \begin{proof}
-    We can rewrite
+    First, consider the above moment of a vector $\vct{\omega} \in \mathbb{R}^{m}$. We can rewrite
     \begin{equation}
         \mathbb{E}^{p}\left[ \lVert \mtx{\Sigma} \vct{\omega} \rVert _2 \right]
-        = \mathbb{E}\left[  \left( \lVert \mtx{\Sigma} \vct{\omega} \rVert _2^2 \right)^{\sfrac{p}{2}} \right]^{\sfrac{1}{2p}}
+        = \mathbb{E}\left[  \left( \lVert \mtx{\Sigma} \vct{\omega} \rVert _2^2 \right)^{\sfrac{p}{2}} \right]^{\sfrac{1}{p}}
         = \mathbb{E}\left[  \left( \sum_{i=1}^{m} \sigma_i^2 \omega_i^2 \right)^{\sfrac{p}{2}} \right]^{\sfrac{1}{p}}
         = \sqrt{ \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{i=1}^{m} \sigma_i^2 \omega_i^2 \right] }.
+        \label{equ:matvec-spectral-norm-simplification}
     \end{equation}
-
-    Inspired by the proof of \cite[theorem 1]{cohen-2016-optimal-approximate}, we split the diagonal entries of $\mtx{\Sigma}$ into $\ell = \lceil m/k \rceil$ groups of size $k \geq 2$ as follows
+    Inspired by the proof of \cite[theorem 1]{cohen-2016-optimal-approximate}, we split the diagonal entries of $\mtx{\Sigma}$ into $\ell = \lceil m/k \rceil$ groups of size $k \geq 1$
     \begin{equation}
-        \underbrace{\sigma_1, \dots, \sigma_k}_{\leq \sigma_1}, \underbrace{\sigma_{k+1}, \dots, \sigma_{2k}}_{\leq \sigma_{k+1}}, \dots, \underbrace{\sigma_{1+(\ell - 1)k}, \dots, \sigma_{\ell k}}_{\leq \sigma_{1+(\ell - 1)k}}
+        \underbrace{\sigma_1, \dots, \sigma_k}_{\leq \sigma_1}, \underbrace{\sigma_{k+1}, \dots, \sigma_{2k}}_{\leq \sigma_{k+1}}, \dots, \underbrace{\sigma_{1+(\ell - 1)k}, \dots, \sigma_{\ell k}}_{\leq \sigma_{1+(\ell - 1)k}}.
     \end{equation}
-    In case $m$ is not a multiple of $k$, we set $\sigma_i = 0$ if $i > m$. Now we see that
+    If $m$ is not a multiple of $k$, we let $\sigma_i = 0$ for $i > m$. Since $\sigma_1 \geq \dots \geq \sigma_{\ell k} \geq 0$,
     \begin{equation}
-        \sigma_1^2 \leq \lVert \mtx{\Sigma} \rVert _2^2
+        \sigma_1^2 = \lVert \mtx{\Sigma} \rVert _2^2
         \quad \text{and} \quad
-        \sigma_{1 + (i-1)k}^2 \leq \frac{1}{k} \sum_{j=1}^{k} \sigma_{j + (i-2)k}^2, i = 2, \dots, \ell
+        \sigma_{1 + (i-1)k}^2 \leq \frac{1}{k} \sum_{j=1}^{k} \sigma_{j + (i-2)k}^2, i = 2, \dots, \ell,
     \end{equation}
     and therefore
     \begin{equation}
         \sum_{i=1}^{\ell} \sigma_{1 + (i-1)k}^2 \leq \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \sum_{j=1}^{(\ell - 1)k} \sigma_j^2 \leq \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2.
+        \label{equ:singular-value-group-bound}
     \end{equation}
-    By the triangle inequality for moments \todo{[cite Hysan]}
+    This allows us to bound
     \begin{align}
         \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{i=1}^{m} \sigma_i^2 \omega_i^2 \right]
-        &= \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{i=1}^{\ell} \sum_{j=1}^{k} \underbrace{\sigma_{j + (i-1)k}^2}_{\leq \sigma_{1 + (i-1)k}^2} \omega_{j + (i-1)k}^2 \right] \notag \\
-        &\leq \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{i=1}^{\ell} \sigma_{1 + (i-1)k}^2 \sum_{j=1}^{k} \omega_{j + (i-1)k}^2 \right] \notag \\
-        &\leq \sum_{i=1}^{\ell} \sigma_{1 + (i-1)k}^2 \cdot \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{j=1}^{k} \omega_{j + (i-1)k}^2 \right] \notag \\
-        &\leq \left( \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2 \right) 2 \left( \frac{\Gamma(\frac{k + p}{2})}{\Gamma(\frac{k}{2})} \right)^{\sfrac{2}{p}} \notag \\
-        &\leq \frac{k + p}{2} \left( \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2 \right)
+        &= \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{i=1}^{\ell} \sum_{j=1}^{k} \underbrace{\sigma_{j + (i-1)k}^2}_{\leq \sigma_{1 + (i-1)k}^2} \omega_{j + (i-1)k}^2 \right] && \text{(separate sum into groups)} \notag \\
+        &\leq \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{i=1}^{\ell} \sigma_{1 + (i-1)k}^2 \sum_{j=1}^{k} \omega_{j + (i-1)k}^2 \right] && \text{($\sigma_{j + (i-1)k}^2 \leq \sigma_{1 + (i-1)k}^2$)} \notag \\
+        &\leq \sum_{i=1}^{\ell} \sigma_{1 + (i-1)k}^2 \cdot \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{j=1}^{k} \omega_{j + (i-1)k}^2 \right] && \text{(triangle inequality)} \notag \\
+        &\leq \left( \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2 \right) 2 \left( \frac{\Gamma(\frac{k + p}{2})}{\Gamma(\frac{k}{2})} \right)^{\sfrac{2}{p}} && \text{(\refequ{equ:singular-value-group-bound} and $\chi_k^2$ moments \cite[theorem 3.3.2]{hogg-2013-introduction-mathematical})} \notag \\
+        &\leq \left( \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2 \right) (k + p). && \text{(\reflem{lem:gamma})}
     \end{align}
-    Thus, bounding the constant up front with $1$, we get
+    Thus, together with \refequ{equ:matvec-spectral-norm-simplification} and using $\sqrt{a+b} \leq \sqrt{a} + \sqrt{b}$ for $a, b \geq 0$, we obtain
     \begin{equation}
         \mathbb{E}^{p}\left[ \lVert \mtx{\Sigma} \vct{\omega} \rVert _2 \right]
-        \leq \sqrt{\frac{k + p}{2}} \left( \lVert \mtx{\Sigma} \rVert _2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F \right)
+        \leq \sqrt{k + p} \left( \lVert \mtx{\Sigma} \rVert _2 + \frac{1}{\sqrt{k}} \lVert \mtx{\Sigma} \rVert _F \right).
+        \label{equ:matvec-spectral-norm-moment-bound}
     \end{equation}
-    From the proof of \cite[lemma B.1]{tropp-2023-randomized-algorithms} we know that 
+    
+    Now, we consider the matrix case. From the proof of \cite[lemma B.1]{tropp-2023-randomized-algorithms} we know that 
     \begin{equation}
         \mathbb{E}^p\left[ \lVert \mtx{\Sigma} \mtx{\Omega} \rVert _2 \right]
         \leq \lVert \mtx{\Sigma} \rVert _2 \mathbb{E}^p\left[ \lVert \vct{\omega}_1 \rVert _2 \right] + \mathbb{E}^p\left[ \lVert \mtx{\Sigma} \vct{\omega}_2 \rVert _2 \right]
     \end{equation}
-    for independent standard Gaussian random vectors $\vct{\omega}_1 \in \mathbb{R}^{k}$ and $\vct{\omega}_2 \in \mathbb{R}^{m}$. The second moment is bound by \todo{equation} while for the first moment we apply the above $\mtx{\Sigma} = \mtx{I}_k$ to get
+    for independent standard Gaussian random vectors $\vct{\omega}_1 \in \mathbb{R}^{k}$ and $\vct{\omega}_2 \in \mathbb{R}^{m}$. Both moments can be bound using \refequ{equ:matvec-spectral-norm-moment-bound}, one of which with $\mtx{\Sigma} = \mtx{I}_k$, to get
     \begin{equation}
         \mathbb{E}^p\left[ \lVert \mtx{\Sigma} \mtx{\Omega} \rVert _2 \right]
-        \leq \sqrt{\frac{k + p}{2}} \cdot \left( 2 + \frac{1}{\sqrt{k}} \right) \cdot \lVert \mtx{\Sigma} \rVert _2 + \sqrt{\frac{k + p}{2k}} \cdot \lVert \mtx{\Sigma} \rVert _F.
+        \leq \sqrt{k + p} \left( 3 \lVert \mtx{\Sigma} \rVert _2 + \frac{1}{\sqrt{k}} \lVert \mtx{\Sigma} \rVert _F \right).
     \end{equation}
 
     %The moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ can be bound with help of the proof of \cite[lemma B.3]{tropp-2023-randomized-algorithms}
@@ -331,22 +315,37 @@ and let $\mtx{\Omega}_1(t) = \mtx{U}_1(t)^{\top} \mtx{\Omega} \in \mathbb{R}^{k 
 \begin{lemma}{Nyström approximation for parameter-dependent matrices}{nystrom}
     Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. Then its Nyström approximation $\Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ with Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ for \emph{even} $n_{\mtx{\Omega}} \in \mathbb{N}$ and $\gamma \geq 1$ verifies with probability at least $1 - \gamma^{-\sfrac{n_{\mtx{\Omega}}}{4}}$
     \begin{equation}
-        \int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \leq \gamma \sqrt{2} \cdot \frac{1 + c}{\sqrt{n_{\mtx{\Omega}}}} \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t.
+        \int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \leq \gamma \frac{c}{\sqrt{n_{\mtx{\Omega}}}} \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t.
     \end{equation}
-    for a universal constant $c > 0$. In particular, if we choose $n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-2} \log(\delta^{-1})), n_{\mtx{\Omega}} \geq 2$, then with probability at least $1-\delta$ for $\delta \in (0, e^{-e^{4 \varepsilon^2}})$ and $\varepsilon > 0$ we have $\int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t$.
+    for a universal constant $c > 0$. In particular, if we choose $n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-2} \log(\delta^{-1}))$, then with probability at least $1-\delta$ for $\delta \in (0, e^{-e^{4 \varepsilon^2}})$ and $\varepsilon > 0$ we have $\int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t$.
 \end{lemma}
 
 %\todo{Proof idea: structural bound, then higher order moment bound to apply Markov's inequality.}
 
 \begin{proof}
-    We let $n_{\mtx{\Omega}} = 2k$ for some $k \in \mathbb{N}$, i.e. $\mtx{\Omega} \in \mathbb{R}^{n \times 2k}$. After temporarily omitting the parameter dependence, we can apply \cite[theorem B.1]{persson-2023-randomized-lowrank} with $f(x) = x$ to bound the integrand with% \todo{maybe explain where $\mtx{\Omega}_i$ come from...}
+    First, we temporarily omit the parameter dependence. Let $\mtx{B} = \mtx{U} \mtx{\Lambda} \mtx{U}^{\top}$ be the eigenvalue decomposition of a symmetric positive semi-definite matrix $\mtx{B}$, i.e. $\mtx{\Lambda} = \operatorname{diag}(\lambda_1, \dots, \lambda_n)$ and $\mtx{U}^{\top} \mtx{U}= \mtx{I}_n$. We define the matrix partitions
+    \begin{equation}
+        \rule[\dimexpr-2ex-\ht\strutbox]{0pt}{\dimexpr2ex+4ex+\baselineskip}
+        \mtx{U} = \begin{bmatrix}
+            \smash{\underbrace{\mtx{U}_1}_{n \times k}} & \smash{\underbrace{\mtx{U}_2}_{n \times (n-k)}}
+        \end{bmatrix}
+        \quad \text{and} \quad
+        \mtx{\Lambda} =
+        \begin{bmatrix}
+            \smash{\overbrace{\mtx{\Lambda}_1}^{k \times k}} & \\ & \smash{\underbrace{\mtx{\Lambda}_2}_{(n-k) \times (n-k)}}
+        \end{bmatrix}
+    \end{equation}
+    for some \todo{$k \leq n/2$}. Further, for a standard Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{n \times 2k}$ we define $\mtx{\Omega}_1 = \mtx{U}_1^{\top} \mtx{\Omega} \in \mathbb{R}^{k \times 2k}$ and $\mtx{\Omega}_2 = \mtx{U}_2^{\top} \mtx{\Omega} \in \mathbb{R}^{(n - k) \times 2k}$, which are likewise standard Gaussian.
+
+    We will set $n_{\mtx{\Omega}} = 2k$, such that we can apply \cite[theorem B.1]{persson-2023-randomized-lowrank} with $f(x) = x$ to bound
     \begin{equation}
         \lVert \mtx{B} - \Nystr{\mtx{\Omega}}{\mtx{B}} \rVert _F 
-        \leq  \lVert \mtx{\Lambda}_2 \rVert _F + \lVert (\mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} )^2 \rVert _F.
+        \leq  \lVert \mtx{\Lambda}_2 \rVert _F + \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2
         \label{equ:nystrom-proof-persson-bonud}
     \end{equation}
+    where $\lVert \cdot \rVert _{(4)}$ denotes the Schatten-4 norm.
     
-    As in the proof of \cite[lemma 3]{meyer-2021-hutch-optimal}, the first term can be bonud with
+    As in the proof of \cite[lemma 3]{meyer-2021-hutch-optimal}, the first term is limited by
     \begin{equation}
         \lVert \mtx{\Lambda}_2 \rVert _F
         = \sqrt{\sum_{i=k+1}^{n} \lambda_i^2}
@@ -355,33 +354,22 @@ and let $\mtx{\Omega}_1(t) = \mtx{U}_1(t)^{\top} \mtx{\Omega} \in \mathbb{R}^{k 
         \leq \frac{1}{\sqrt{k}} \Trace(\mtx{B}).
         \label{equ:nystrom-proof-frobenius-trace}
     \end{equation}
-
-    The second term is first processed with standard matrix-norm inequalities:
-    \begin{equation}
-        \lVert (\mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} )^2 \rVert _F 
-        \leq \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _F
-        \leq \sqrt{k} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2^2.
+    The second term is first processed with standard matrix norm manipulations to
+    \begin{align}
+        \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2 \right]
+        &= \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert (\mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} )( \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger})^{\top} \rVert _F \right] && \text{($\lVert \mtx{A} \rVert _{(4)}^2 = \lVert \mtx{A} \mtx{A}^{\top} \rVert _{F}$)} \notag \\
+        &\leq \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _F \right] && \text{($\lVert \mtx{A} \mtx{B} \rVert _F \leq \lVert \mtx{A} \rVert _F \lVert \mtx{B} \rVert _2$)} \notag \\
+        &\leq \mathbb{E}^{\sfrac{k}{2}}\left[ \sqrt{k} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2^2 \right]  && \text{($\lVert \mtx{A} \rVert _F \leq \sqrt{k} \lVert \mtx{A} \rVert _2$)} \notag \\
+        &\leq \mathbb{E}^{\sfrac{k}{2}}\left[ \sqrt{k} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2^2 \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^2 \right]  && \text{(submultiplicativity)} \notag \\
+        &\leq \sqrt{k} \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2^2\right] \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^2  \right]  && \text{(independence $\mtx{\Omega}_1, \mtx{\Omega}_2$)} \notag \\
+        &= \sqrt{k} \mathbb{E}^{k}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2 \right]^2 \mathbb{E}^{k}\left[  \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right]^2 && \text{(definition of $\mathbb{E}^{k}[\cdot]$)}
         \label{equ:nystrom-proof-processed-tail}
-    \end{equation}
-    Its higher order moments are therefore bounded by
+    \end{align}
+    We can apply \reflem{lem:ose} with $\mtx{\Sigma} = \mtx{\Lambda}_2^{\sfrac{1}{2}}$ to bound the first term with
     \begin{equation}
-        \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert (\mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} )^2 \rVert _F \right]
-        \leq \sqrt{k} \cdot \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2^2 \right]
-        = \sqrt{k} \cdot \mathbb{E}^{k}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2 \right]^2
-        \label{equ:nystrom-proof-tail-bound}
-    \end{equation}
-
-    We first use the submultiplicativity of the spectral norm and the stochastic independendence of the random matrices
-    \begin{equation}
-        \mathbb{E}^{k}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
-        \leq \mathbb{E}^{k}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2 \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
-        \leq \mathbb{E}^{k}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2 \right] \mathbb{E}^{k}\left[  \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
-        \label{equ:OSE-moment-bound-initial-new}
-    \end{equation}
-    The first term can be bound with \reflem{lem:ose} with $\mtx{\Sigma} = \mtx{\Lambda}_2^{\sfrac{1}{2}}$:
-    \begin{equation}
-        \mathbb{E}^{p}\left[ \lVert \mtx{\Sigma} \mtx{\Omega} \rVert _2 \right]
-        \leq \sqrt{\frac{3}{2}} \cdot \left( 2 \sqrt{k} + \frac{1}{\sqrt{2}} \right) \cdot \lVert \mtx{\Sigma} \rVert _2 + \sqrt{\frac{3}{2}} \cdot \lVert \mtx{\Sigma} \rVert _F.
+        \mathbb{E}^k\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2 \right]
+        \leq \sqrt{3 k} \left( 3 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2 + \frac{1}{\sqrt{2k}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F \right).
+        \label{equ:spectral-norm-bound-applied}
     \end{equation}
     The moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ can be bound with help of the proof of \cite[lemma B.3]{tropp-2023-randomized-algorithms}
     \begin{equation}
@@ -394,57 +382,55 @@ and let $\mtx{\Omega}_1(t) = \mtx{U}_1(t)^{\top} \mtx{\Omega} \in \mathbb{R}^{k 
         \mathbb{E}^{k}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
         \leq \frac{e^2}{k + 1}\sqrt{ \frac{3k}{2} }
         \leq e^2 \sqrt{\frac{3}{2k}}.
-        \label{equ:OSE-moment-bound-second}
+        \label{equ:pinv-spectral-norm-bound}
     \end{equation}
-
-    Putting \refequ{equ:OSE-moment-bound-first} and  \refequ{equ:OSE-moment-bound-second} together, we get
+    Plugging \refequ{equ:spectral-norm-bound-applied} and  \refequ{equ:pinv-spectral-norm-bound} into \refequ{equ:nystrom-proof-processed-tail}, and using $(a + b)^2 \leq 2a^2 + 2b^2$ for $a, b > 0$ gives us
     \begin{equation}
-        \mathbb{E}^{k}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
-        \leq ...
+        \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert (\mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} )^2 \rVert _F \right]
+        \leq  9 e^4 \sqrt{k} \left( 9 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{1}{2k} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \right)
     \end{equation}
-
-    Just as in the proof of \cite[lemma 3.1]{meyer-2021-hutch-optimal} we can bound
-    \begin{align}
-        &\leq \sqrt{k} c \cdot \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 && \text{(\reflem{lem:ose} with $\mtx{A}=\mtx{\Lambda}_2^{\sfrac{1}{2}}$)} \notag \\
-        &= \sqrt{k} c \cdot \lambda_{k+1} && \text{(from the definition of $\lVert \cdot \rVert _2$)} \notag \\
-        &\leq \frac{c}{\sqrt{k}} \Trace(\mtx{B}) && \text{($\lambda_{k+1} \leq \Trace(\mtx{B})/k$)}
-    \end{align}
-
-    Thus, using the triangle inequality for $\mathbb{E}^{\sfrac{k}{2}}$ and inserting \refequ{equ:nystrom-proof-tail-bound} along with \refequ{equ:nystrom-proof-frobenius-trace} in \refequ{equ:nystrom-proof-persson-bonud} we obtain
+    Here, we can identify $\lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 = \lambda_{k+1}$ and $\lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 = \Trace(\mtx{\Lambda}_2)$, and just as in the proof of \cite[lemma 3.1]{meyer-2021-hutch-optimal} we bound $\lambda_{k+1} \leq \Trace(\mtx{B})/k$ and $\Trace(\mtx{\Lambda}_2) \leq \Trace(\mtx{B})$ to get 
+    \begin{equation}
+        \mathbb{E}^{\sfrac{k}{2}}\left[ \lVert (\mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} )^2 \rVert _F \right]
+        \leq 9 e^4 \sqrt{k} \left( \frac{9}{k} \Trace(\mtx{B}) + \frac{1}{2k} \Trace(\mtx{B}) \right) \leq  9 e^4 \left(9 + \frac{1}{2} \right) \frac{1}{\sqrt{k}} \Trace(\mtx{B})
+        \label{equ:nystrom-proof-tail-bound}
+    \end{equation}
+    Finally, using the triangle inequality for $\mathbb{E}^{\sfrac{k}{2}}$ and inserting \refequ{equ:nystrom-proof-tail-bound} along with \refequ{equ:nystrom-proof-frobenius-trace} in \refequ{equ:nystrom-proof-persson-bonud} we obtain
     \begin{equation}
         \mathbb{E}^{\sfrac{k}{2}} \left[\lVert \mtx{B} - \Nystr{\mtx{\Omega}}{\mtx{B}} \rVert _F \right]
-        \leq \frac{1 + c}{\sqrt{k}} \Trace(\mtx{B}).
+        \leq \frac{c}{\sqrt{k}} \Trace(\mtx{B}).
     \end{equation}
+    where $c = 1 + 9 e^4 (9 + \frac{1}{2})$.
 
-    As in \cite{kressner-2023-randomized-lowrank}, we can show that the error $\left[\lVert \mtx{B} - \Nystr{\mtx{\Omega}}{\mtx{B}} \rVert _F \right]$ is measurable and by the Minkowski's integral inequality \cite[theorem 202]{hardy-1952-inequalities}, we get
-    \begin{equation}
+    As in \cite{kressner-2023-randomized-lowrank}, we can show that the error $\lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F$ is measurable and by the Minkowski's integral inequality \cite[theorem 202]{hardy-1952-inequalities}, we get
+    \begin{align}
         \mathbb{E}^{\sfrac{k}{2}}\left[ \int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \right] 
-        \stackrel{\text{\cite{hardy-1952-inequalities}}}{\leq} \int_{a}^{b} \mathbb{E}^{\sfrac{k}{2}} \left[\lVert \mtx{B} - \Nystr{\mtx{\Omega}}{\mtx{B}} \rVert _F \right] ~\mathrm{d}t% \notag \\
+        &\stackrel{\text{\cite{hardy-1952-inequalities}}}{\leq} \int_{a}^{b} \mathbb{E}^{\sfrac{k}{2}} \left[\lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F \right] ~\mathrm{d}t \notag \\
         %&\leq \mathbb{E}^{\sfrac{k}{2}} \left[ \frac{1}{\sqrt{k}} \int_{a}^{b} \Trace(\mtx{B}(t)) + \sqrt{k} \lVert \mtx{\Lambda}_2(t)^{\sfrac{1}{2}} \mtx{\Omega}_2(t) \mtx{\Omega}_1(t)^{\dagger} \rVert _2^2~\mathrm{d}t  \right] && \text{(\refequ{xy})} \notag \\
         %&\leq \frac{1}{\sqrt{k}} \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t + \mathbb{E}^{\sfrac{k}{2}} \left[ \int_{a}^{b}  \sqrt{k} \lVert \mtx{\Lambda}_2(t)^{\sfrac{1}{2}} \mtx{\Omega}_2(t) \mtx{\Omega}_1(t)^{\dagger} \rVert _2^2~\mathrm{d}t  \right] \notag \\
         %&\leq \frac{1}{\sqrt{k}} \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t + \sqrt{k} \int_{a}^{b} \mathbb{E}^{\sfrac{k}{2}} \left[ \lVert \mtx{\Lambda}_2(t)^{\sfrac{1}{2}} \mtx{\Omega}_2(t) \mtx{\Omega}_1(t)^{\dagger} \rVert _2^2 \right]  ~\mathrm{d}t \notag \\
-        \leq \frac{1 + c}{\sqrt{k}} \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t.
-    \end{equation}
+        &\leq \frac{c}{\sqrt{k}} \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t.
+    \end{align}
     From Markov's inequality follows with probability at least $1 - \gamma^{-\sfrac{k}{2}}$
     \begin{equation}
-        \int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \leq \gamma \frac{1 + c}{\sqrt{k}} \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t,
+        \int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \leq \gamma \frac{c}{\sqrt{k}} \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t,
     \end{equation}
-    from which follows the first statement by replacing $k = \frac{n_{\mtx{\Omega}}}{2}$.
+    from which follows the first statement by remembering $k = \frac{n_{\mtx{\Omega}}}{2}$ and redefining $c \to \sqrt{2}c$.
 
-    Setting $\delta = \gamma^{-\sfrac{k}{2}}$ and choosing $k = \lceil \varepsilon^{-2}\log(\delta^{-1}) \rceil$ we get
+    Setting $\delta = \gamma^{-\sfrac{k}{4}}$ and choosing $k = \lceil \varepsilon^{-2}\log(\delta^{-1}) \rceil$ we get
     \begin{align}
         \gamma \frac{1}{\sqrt{k}}
         &= \delta^{-\sfrac{2}{\lceil \varepsilon^{-2} \log(\delta^{-1}) \rceil}} \frac{1}{\sqrt{\lceil \varepsilon^{-2} \log(\delta^{-1}) \rceil}} && \text{(definition of $\delta$ and choice of $k$)} \notag \\
         &= e^{2\varepsilon^{2} \frac{\varepsilon^{-2}\log(\delta^{-1})}{\lceil \varepsilon^{-2} \log(\delta^{-1}) \rceil}} \frac{1}{\sqrt{\lceil \varepsilon^{-2} \log(\delta^{-1}) \rceil}} && \text{($\delta = e^{-\log(\delta^{-1})}$)} \notag \\ 
         &\leq e^{2\varepsilon^{2}} \frac{\varepsilon}{\sqrt{ \log(\delta^{-1})}} && \text{($\lceil x \rceil \geq x$ if $x \geq 0$)}
     \end{align}
-    which is smaller than $\varepsilon$ if $\delta \leq e^{-e^{4 \varepsilon^2}}$from which follows the second part of the theorem.
+    which is smaller than $\varepsilon$ if $\delta \leq e^{-e^{4 \varepsilon^2}}$from which follows the second part of the theorem when using $n_{\mtx{\Omega}} = 2k$.
 \end{proof}
 
 Finally, we combine the analysis of the two estimators from \refsec{subsec:hutchinson} and \refsec{subsec:nystrom} into a more efficient, general-purpose trace estimator.
 
 \begin{theorem}{Nyström++ trace estimator for parameter-dependent matrices}{nystrom-pp}
-    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. If $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-1} \log(2\delta^{-1})^2)$ with \emph{even} $n_{\mtx{\Omega}} \geq 2$, then for $\delta \in (0, 2^{-1} e^{-e^{4\varepsilon}})$ with probability at least $1 - \delta$
+    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. If $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-1} \log(2\delta^{-1})^2)$ with \emph{even} $n_{\mtx{\Omega}} \geq 2$, then for $\delta \in (0, e^{-e^{4\varepsilon}} / 2)$ with probability at least $1 - \delta$
     \begin{equation}
         \int_{a}^{b} | \Trace(\mtx{B}(t)) - \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{B}(t)) |~\mathrm{d}t
         \leq \varepsilon \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t.
@@ -909,9 +895,43 @@ we consider the three-dimensional case.%, but for visualization purposes, we ill
 \clearpage
 \bibliography{bibliography.bib}
 
-%\appendix
+\appendix
 
-%\clearpage
-%\section{Proofs}
+\clearpage
+\section{Proofs}
+
+\begin{lemma}{Quotient of Gamma functions}{gamma}
+    For all $p, k \in \mathbb{N}$ it holds
+    \begin{equation}
+        \frac{\Gamma(\frac{k + p}{2})}{\Gamma(\frac{k}{2})} \leq \left( \frac{k + p}{2} \right)^{\sfrac{p}{2}}.
+    \end{equation}
+\end{lemma}
+
+\begin{proof}
+    We first treat the case $k=p=1$, for which indeed
+    \begin{equation}
+        \frac{\Gamma(1)}{\Gamma(\frac{1}{2})} = \frac{1}{\sqrt{\pi}} \leq 1
+    \end{equation}
+    So we now assume $k + p \geq 3$. We can use a telescoping product and the property $\Gamma(z+1)/\Gamma(z) = z$ to bound
+    \begin{align}
+        \frac{\Gamma(\frac{k + p}{2})}{\Gamma(\frac{k}{2})} 
+        &= \frac{\Gamma(\frac{k}{2} + 1)}{\Gamma(\frac{k}{2})} \frac{\Gamma(\frac{k}{2} + 2)}{\Gamma(\frac{k}{2} + 1)} \cdots \frac{\Gamma(\frac{k}{2} + \lfloor \frac{p}{2} \rfloor)}{\Gamma(\frac{k}{2} + \lfloor \frac{p}{2} \rfloor - 1)} \frac{\Gamma( \frac{k + p}{2})}{\Gamma(\frac{k}{2} + \lfloor \frac{p}{2} \rfloor)} \notag \\
+        &= \left(\frac{k}{2}\right) \left(\frac{k}{2} + 1\right) \cdots \left( \frac{k}{2} + \bigg\lfloor \frac{p}{2} \bigg\rfloor - 1 \right) \frac{\Gamma( \frac{k + p}{2})}{\Gamma(\frac{k}{2} + \lfloor \frac{p}{2} \rfloor)} \notag \\
+        &\leq \left(\frac{k}{2} + \bigg\lfloor \frac{p}{2} \bigg\rfloor - 1\right)^{\lfloor \sfrac{p}{2} \rfloor} \frac{\Gamma( \frac{k + p}{2})}{\Gamma(\frac{k}{2} + \lfloor \frac{p}{2} \rfloor)}
+    \end{align}
+    If $p$ is even, then $\lfloor p/2 \rfloor = p/2$ and hence
+    \begin{equation}
+        \frac{\Gamma(\frac{k + p}{2})}{\Gamma(\frac{k}{2})} 
+        \leq \left( \frac{k + p}{2} - 1 \right)^{\sfrac{p}{2}}
+        \leq \left( \frac{k + p}{2}\right)^{\sfrac{p}{2}}.
+    \end{equation}
+    If $p$ is odd, then $\lfloor p/2 \rfloor = (p - 1)/2$, from which follows with Gautschi's inequality \cite{kershaw-1983-extensions-gautschi}
+    \begin{equation}
+        \frac{\Gamma(\frac{k + p}{2})}{\Gamma(\frac{k}{2})}
+        \leq \left(\frac{k + p}{2} - \frac{3}{2} \right)^{ \frac{p - 1}{2}} \frac{\Gamma( \frac{k + p}{2})}{\Gamma(\frac{k + p}{2} - \frac{1}{2})}
+        \leq \left(\frac{k + p}{2}\right)^{ \frac{p - 1}{2}} \left(\frac{k + p}{2}\right)^{\sfrac{1}{2}}
+        = \left(\frac{k + p}{2}\right)^{ \sfrac{p}{2}}
+    \end{equation}
+\end{proof}
 
 \end{document}
