@@ -97,10 +97,26 @@ Then we can estimate the trace as $\Trace(\Nystr{\mtx{\Omega}}{\mtx{B}}(t))$. Th
 \end{equation}
 This is the parameter-dependent analogue of the Nyström++ estimator \cite{persson-2022-improved-variants}, which is based on the Hutch++ estimator \cite{meyer-2021-hutch-optimal}. %We can interpret this estimator as an interpolation between the trace of the Nyström approximation and the Girard-Hutchinson estimator.
 
+In the remainder of this section, we will derive upper bounds on the error of these estimators.
+%
+%\begin{table}[ht]
+%\centering
+%\renewcommand{\arraystretch}{1.2}
+%\begin{tabular}{@{}lcc@{}}
+%\toprule
+%Estimator & Matrix & $m=1600$\\
+%\midrule
+%Girard-Hutchinson & symmetric & $\mathcal{O}(\varepsilon^{-2})%$ \\
+%Nyström & symmetric positive semi-definite & $\mathcal{O}%(\varepsilon^{-2})$ \\
+%Nyström++ & symmetric positive semi-definite & $\mathcal{O}%(\varepsilon^{-1})$  \\
+%\bottomrule
+%\end{tabular}
+%\end{table}
+
 \subsection{Girard-Hutchinson estimator for parameter-dependent matrices}
 \label{subsec:hutchinson}
 
-We first consider the estimator \refequ{equ:hutchinson-trace-estimator}. \todo{Introduce $L^1$ norm and Frobenius norm}
+We first consider the Girard-Hutchinson estimator \refequ{equ:hutchinson-trace-estimator}. We bound its $L^1$ norm in terms of the integral over the Frobenius norm $\lVert \cdot \rVert _F$ of the matrix whose trace we aim to approximate.
 
 \begin{theorem}{Girard-Hutchinson estimator for parameter-dependent matrices}{hutchinson}
     Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric and continuously depend on $t \in [a, b]$. Then for any $k \in \mathbb{N}$ and $\gamma \geq 1$ it holds with probability at least $1 - \gamma^{-2k}$
@@ -110,7 +126,9 @@ We first consider the estimator \refequ{equ:hutchinson-trace-estimator}. \todo{I
     In particular, if we choose $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2} \log(\delta^{-1})^2)$, then with probability at least $1-\delta$ for $\delta \in (0, e^{- \sfrac{1}{2}})$ and any $\varepsilon > 0$ we have $\int_{a}^{b} | \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) | ~\mathrm{d}t < \varepsilon \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t$.
 \end{theorem}
 
-The idea behind the proof is to bound the higher order moments for fixed parameter values and then use Markov's inequality to extend the results to the continuous parameter case. We first only consider the $1$-query estimator and subsequently use a diagonal embedding trick to carry the result over to the general case.
+Compared to the constant case \cite[lemma 2.1]{meyer-2021-hutch-optimal} we need to choose the number of queries $n_{\mtx{\Psi}}$ by a factor of $\log(\delta^{-1})$ larger to achieve the same guarantee.
+
+The idea behind the proof is to bound the higher order moments for fixed parameter values and then use Minkowski's integral inequality to extend the results to the continuous parameter case. We first only consider the $1$-query estimator and subsequently use a diagonal embedding trick to carry the result over to the general case.
 \begin{proof} 
     We define the 1-query Girard-Hutchinson estimate 
     \begin{equation}
@@ -118,7 +136,7 @@ The idea behind the proof is to bound the higher order moments for fixed paramet
     \end{equation}
     for a symmetric parameter-dependent matrix $\mtx{B}(t)$ over the real numbers with the Gaussian random vector $\vct{\psi}$.
 
-    First, we consider $r(\mtx{B}(t), \vct{\psi})$ for a fixed $t \in [a,b]$ and therefore temporarily ignore the parameter-dependence. From the proof of \cite[lemma 3]{cortinovis-2022-randomized-trace} we know that $r(\mtx{B}, \vct{\psi})$ is sub-Gamma with parameters $(v, c) = (2 \lVert \mtx{B} \rVert _F^2, 2 \lVert \mtx{B} \rVert _2)$ \todo{introduce spectral norm}. Thus, by \cite[theorem 2.3]{boucheron-2013-basic-inequalities} this implies that for every $k \in \mathbb{N}$
+    First, we consider $r(\mtx{B}(t), \vct{\psi})$ for a fixed $t \in [a,b]$ and therefore temporarily ignore the parameter-dependence. From the proof of \cite[lemma 3]{cortinovis-2022-randomized-trace} we know that $r(\mtx{B}, \vct{\psi})$ is sub-Gamma with parameters $(v, c) = (2 \lVert \mtx{B} \rVert _F^2, 2 \lVert \mtx{B} \rVert _2)$ where $\lVert \cdot \rVert _2$ denotes the spectral norm. Thus, by \cite[theorem 2.3]{boucheron-2013-basic-inequalities} this implies that for every $k \in \mathbb{N}$
     \begin{align}
         \mathbb{E}\left[ r(\mtx{B}, \vct{\psi})^{2 k} \right]
         &\stackrel{\text{\cite{boucheron-2013-basic-inequalities}}}{\leq} k! \left( 16 \lVert \mtx{B} \rVert _F^2 \right)^k + (2 k)! \left( 8 \lVert \mtx{B} \rVert _2 \right)^{2 k} \notag \\
@@ -186,6 +204,7 @@ The idea behind the proof is to bound the higher order moments for fixed paramet
     %\end{equation}
 \end{proof}
 
+\todo{
 \begin{remark}
     If additionally $\mtx{B}(t)$ is nonzero and symmetric positive semi-definite for all $t \in [a, b]$, then it follows from the proof of \refthm{thm:hutchinson} that with probability at least $1 - \delta$
     \begin{equation}
@@ -193,13 +212,14 @@ The idea behind the proof is to bound the higher order moments for fixed paramet
     \end{equation}
     if $n_{\mtx{\Psi}} \geq 2^{10} \varepsilon^{-2} \log(\delta^{-1})^2 (\int_{a}^{b} \mu(t)^{\sfrac{1}{2}}~\mathrm{d}t)^2$ with $\mu(t) = \lVert \mtx{B}(t) \rVert _2 / \Trace(\mtx{B}(t))$. Compared to the constant matrix equivalent \cite[remark 2]{cortinovis-2022-randomized-trace} we mainly observe a larger constant and an additional factor of $\log(\delta^{-1})$.
 \end{remark}
+}
 
-The Girard-Hutchinson estimator distinguishes itself for its simplicity and provability for all symmetric matrices. However, the $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2})$ requirement implies that if we aim to increase the accuracy of the estimate by one digit, we would need to increase the number of queries by a factor of $100$. The next two estimators improve on this by exploiting the structure of $\mtx{B}(t)$.
+The Girard-Hutchinson estimator distinguishes itself for its simplicity. However, its bound does not take into account the structure of $\mtx{B}(t)$. The $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2})$ requirement implies that if we aim to increase the accuracy of the estimate by one digit, we would need to increase the number of queries by a factor of $100$. 
 
 \subsection{Nyström approximation for parameter-dependent matrices}
 \label{subsec:nystrom}
 
-Next we consider \refequ{equ:nystrom-trace-estimator}. \todo{Motivate Nyström approximation if matrix is low-rank.}
+For symmetric positive semi-definite matrices whose singular values decay rapidly, the Nyström estimate \refequ{equ:nystrom-trace-estimator} can be significantly better than the Girard-Hutchinson estimate. This is reflected in the following theorem.
 
 \begin{theorem}{Nyström estimator for parameter-dependent matrices}{nystrom}
     Suppose $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ is continuous and positive semi-definite in $t \in [a, b]$. Let $n_{\mtx{\Omega}} \geq 6, n_{\mtx{\Omega}} - 4 \geq r \geq 2$ be two integers. Then for all $\gamma \geq 1$ with probability at least $1 - \gamma^{-(n_{\mtx{\Omega}} - r)}$
@@ -216,7 +236,7 @@ Next we consider \refequ{equ:nystrom-trace-estimator}. \todo{Motivate Nyström a
         = \left| \Trace(\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)) \right|
         = \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _{\ast},
     \end{equation}
-    \todo{introduce nuclear norm}.  From the proof of \cite[corollary 8.2]{tropp-2023-randomized-algorithms} it follows that
+    where $\lVert \cdot \rVert _{\ast}$ represents the nuclear norm.  From the proof of \cite[corollary 8.2]{tropp-2023-randomized-algorithms} it follows that
     \begin{equation}
         %\lVert f(\mtx{A}, t) - \widehat{f}(\mtx{A}, t) \rVert _{\ast} = \lVert (\mtx{I}_n - \mtx{\Pi}_{f(\mtx{A}, t)^{\sfrac{1}{2}} \mtx{\Omega}}) f(\mtx{A}, t)^{\sfrac{1}{2}} \rVert _2^2 \leq \lVert (\mtx{I}_n - \mtx{\Pi}_{f(\mtx{A}, t)^{\sfrac{1}{2}} \mtx{\Omega}}) f(\mtx{A}, t)^{\sfrac{1}{2}} \rVert _F^2
         \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _{\ast} = \lVert (\mtx{I}_n - \mtx{\Pi}_{\mtx{B}(t)^{\sfrac{1}{2}} \mtx{\Omega}}) \mtx{B}(t)^{\sfrac{1}{2}} \rVert _F^2.
@@ -224,17 +244,22 @@ Next we consider \refequ{equ:nystrom-trace-estimator}. \todo{Motivate Nyström a
     Hence, by \cite[theorem 9]{kressner-2023-randomized-lowrank}, with $n_{\mtx{\Omega}} = p + r$, the result follows by noting $\sigma_i(\mtx{B}(t)^{\sfrac{1}{2}})^{2} = \sigma_i(\mtx{B}(t))$.
 \end{proof}
 
+\todo{Compare to constant matrix case: \cite[theorem 8.1]{tropp-2023-randomized-algorithms} (similar result)}
+
+The downside of the Nyström estimator is that it will -- in general -- not work well enough on matrices whose singular values do not decay, for example $\mtx{B}(t) \equiv \mtx{I}_n$.
+
 \subsection{Nyström++ estimator for parameter-dependent matrices}
 \label{subsec:nystrom-pp}
 
-\todo{Motivate and explain proof technique (to mimic Hutch++)}
+Just as in the constant matrix case, our goal is now to prove that the Nyström++ estimator \refequ{equ:nystrompp-trace-estimator} achieves an $\varepsilon$ relative error with just $\mathcal{O}(\varepsilon)$ random vectors to construct the estimate. To do so, we mimic the proof of a similar bound for the Hutch++ estimator \cite[theorem 3.1]{meyer-2021-hutch-optimal}. Correspondingly, we will need to show that with $n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-2})$ the Nyström approximation verifies $\int \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)\rVert _F~\mathrm{d}t \leq \varepsilon \int \Trace(\mtx{B}(t))~\mathrm{d}t$, regardless of the structure of the matrix $\mtx{B}(t)$. Just as in the corresponding proof for the Girard-Hutchinson estimator \refthm{thm:hutchinson}, we again bound the higher order moments of the approximation error for fixed $t$ and then use Minkowsi's integral inequality to carry over the results to the continuous case. We will do this in a sequence of three lemmas.
 
+For reasons which will become clear in the proof of \reflem{lem:nystrom}, we will need to bound $\mathbb{E}^{p}\left[\lVert \mtx{\Sigma} \mtx{\Omega} \rVert _2 \right]$ for a diagonal matrix $\mtx{\Sigma}$ and a standard Gaussian random matrix $\mtx{\Omega}$. Several ways of bounding the moments of $\mtx{\Omega}$ already exist, however, most of them are either not sufficient for our purposes \cite{chen-2005-condition-numbers, edelman-1988-eigenvalues-condition, james-1964-distributions-matrix}. The corresponding result for the Frobenius norm has already been shown in \cite{kressner-2023-randomized-lowrank}. In \cite[lemma B.1]{tropp-2023-randomized-algorithms} a bound is achieved for $p = 2$ and $p = 4$. We will now generalize this result for arbitrary $p \in \mathbb{N}$. We first show the bound for Gaussian random vectors and then extend it to Gaussian random matrices in \reflem{lem:spectral-norm-moment}.
 
 \begin{lemma}{Spectral norm moments of non-standard Gaussian random vector}{spectral-norm-moment-vector}
     The matrix $\mtx{A} \in \mathbb{R}^{m \times m}$ and the standard Gaussian random vector $\vct{\omega} \in \mathbb{R}^{m}$ satisfy for all $k,p \in \mathbb{N}$ 
     \begin{equation}
         \mathbb{E}^{p}\left[ \lVert \mtx{A} \vct{\omega} \rVert _2 \right]
-        \leq  \sqrt{k + p} \left( 3 \lVert \mtx{A} \rVert _2 + \frac{1}{\sqrt{k}} \lVert \mtx{A} \rVert _F \right).
+        \leq  \sqrt{k + p} \left( \lVert \mtx{A} \rVert _2 + \frac{1}{\sqrt{k}} \lVert \mtx{A} \rVert _F \right).
     \end{equation}
     %\begin{equation}
     %    \mathbb{E}^{p}\left[ \lVert \mtx{\Sigma} \mtx{\Omega}_2\rVert _2 \right]
@@ -273,11 +298,11 @@ Next we consider \refequ{equ:nystrom-trace-estimator}. \todo{Motivate Nyström a
     \end{equation}
     This allows us to bound
     \begin{align}
-        \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{i=1}^{m} \sigma_i^2 \omega_i^2 \right]
+        &\mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{i=1}^{m} \sigma_i^2 \omega_i^2 \right] \notag \\
         &= \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{i=1}^{\ell} \sum_{j=1}^{k} \underbrace{\sigma_{j + (i-1)k}^2}_{\leq \sigma_{1 + (i-1)k}^2} \omega_{j + (i-1)k}^2 \right] && \text{(separate sum into groups)} \notag \\
-        &\leq \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{i=1}^{\ell} \sigma_{1 + (i-1)k}^2 \sum_{j=1}^{k} \omega_{j + (i-1)k}^2 \right] && \text{($\sigma_{j + (i-1)k}^2 \leq \sigma_{1 + (i-1)k}^2$)} \notag \\
+        &\leq \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{i=1}^{\ell} \sigma_{1 + (i-1)k}^2 \sum_{j=1}^{k} \omega_{j + (i-1)k}^2 \right] && \text{($\sigma_{j + (i-1)k}^2 \leq \sigma_{1 + (i-1)k}^2$, $j=1, \dots, k$)} \notag \\
         &\leq \sum_{i=1}^{\ell} \sigma_{1 + (i-1)k}^2 \cdot \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{j=1}^{k} \omega_{j + (i-1)k}^2 \right] && \text{(triangle inequality)} \notag \\
-        &\leq \left( \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2 \right) 2 \left( \frac{\Gamma(\frac{k + p}{2})}{\Gamma(\frac{k}{2})} \right)^{\sfrac{2}{p}} && \text{(\refequ{equ:singular-value-group-bound} and $\chi_k^2$ moments \cite[theorem 3.3.2]{hogg-2013-introduction-mathematical})} \notag \\
+        &\leq \left( \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2 \right) 2 \left( \frac{\Gamma(\frac{k + p}{2})}{\Gamma(\frac{k}{2})} \right)^{\sfrac{2}{p}} && \text{(\refequ{equ:singular-value-group-bound} and \cite[theorem 3.3.2]{hogg-2013-introduction-mathematical})} \notag \\
         &\leq \left( \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2 \right) (k + p). && \text{(\reflem{lem:gamma})}
     \end{align}
     Thus, together with \refequ{equ:matvec-spectral-norm-simplification} and using $\sqrt{a+b} \leq \sqrt{a} + \sqrt{b}$ for $a, b \geq 0$, we obtain
@@ -369,9 +394,9 @@ Next we consider \refequ{equ:nystrom-trace-estimator}. \todo{Motivate Nyström a
         \mtx{\Lambda} =
         \begin{bmatrix}
             \smash{\overbrace{\mtx{\Lambda}_1}^{k \times k}} & \\ & \smash{\underbrace{\mtx{\Lambda}_2}_{(n-k) \times (n-k)}}
-        \end{bmatrix}
+        \end{bmatrix}.
     \end{equation}
-    for some \todo{$k \leq n/2$}. Further, for a standard Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{n \times 2k}$ we define $\mtx{\Omega}_1 = \mtx{U}_1^{\top} \mtx{\Omega} \in \mathbb{R}^{k \times 2k}$ and $\mtx{\Omega}_2 = \mtx{U}_2^{\top} \mtx{\Omega} \in \mathbb{R}^{(n - k) \times 2k}$, which are likewise standard Gaussian.
+    Further, for a standard Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{n \times 2k}$ we define $\mtx{\Omega}_1 = \mtx{U}_1^{\top} \mtx{\Omega} \in \mathbb{R}^{k \times 2k}$ and $\mtx{\Omega}_2 = \mtx{U}_2^{\top} \mtx{\Omega} \in \mathbb{R}^{(n - k) \times 2k}$, which are likewise standard Gaussian.
 
     We will set $n_{\mtx{\Omega}} = 2k$, such that we can apply \cite[theorem B.1]{persson-2023-randomized-lowrank} with $f(x) = x$ to bound
     \begin{equation}
@@ -463,7 +488,7 @@ Next we consider \refequ{equ:nystrom-trace-estimator}. \todo{Motivate Nyström a
     which is smaller than $\varepsilon$ if $\delta \leq e^{-e^{4 \varepsilon^2}}$from which follows the second part of the theorem when using $n_{\mtx{\Omega}} = 2k$.
 \end{proof}
 
-Finally, we combine the analysis of the two estimators from \refsec{subsec:hutchinson} and \refsec{subsec:nystrom} into a more efficient, general-purpose trace estimator.
+Finally, we can combine the bound on the Girard-Hutchinson estimator \refthm{thm:hutchinson} and the one on the Nyström approximation \reflem{lem:nystrom} to obtain our main result.
 
 \begin{theorem}{Nyström++ trace estimator for parameter-dependent matrices}{nystrom-pp}
     Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. If $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-1} \log(2\delta^{-1})^2)$ with \emph{even} $n_{\mtx{\Omega}} \geq 2$, then for $\delta \in (0, e^{-e^{4\varepsilon}} / 2)$ with probability at least $1 - \delta$
@@ -484,7 +509,7 @@ Finally, we combine the analysis of the two estimators from \refsec{subsec:hutch
     with probability at least $1 - 2\tilde{\delta}$. Taking $\varepsilon = \tilde{\varepsilon}^2$ and $\delta = 2 \tilde{\delta}$
 \end{proof}
 
-Comparing \refthm{thm:nystrom-pp} with its equivalent for constant matrices \cite[theorem 3.4]{persson-2022-improved-variants}, we notice that our choice of $\delta$ is more restricted and the dependence of $n_{\mtx{\Psi}}$ and $n_{\mtx{\Omega}}$ on $\delta$ is slightly worse.
+Comparing \refthm{thm:nystrom-pp} with its equivalent for constant matrices \cite[theorem 3.4]{persson-2022-improved-variants}, we notice that our choice of $\delta$ is more restricted and the dependence of $n_{\mtx{\Psi}}$ and $n_{\mtx{\Omega}}$ on $\delta$ is worse.
 
 % \begin{proof}
 %     Combining with union bound.
@@ -750,9 +775,8 @@ Similar observations for the case when $\mtx{\Psi}$ is nonzero lead to the follo
 
 The dominating cost stems from the $(2m + 1)(n_{\mtx{\Psi}} + n_{\mtx{\Omega}})$ multiplications of $\mtx{A}$ with a vector and the cost associated with computing the estimate in each evaluation point $t_1, \dots, t_{n_t}$ given by $\mathcal{O}(m \log(m) + m (n_{\mtx{\Omega}}^2 + n_{\mtx{\Omega}} n_{\mtx{\Psi}} + 1) + (n_{\mtx{\Omega}}^3 + n_{\mtx{\Omega}} n_{\mtx{\Psi}}^2 + 1))$.
 
-The algorithm also accomodates the two other estimators introduced in \refsec{sec:analysis}: For $n_{\mtx{\Omega}} = 0$ we recover \refequ{equ:hutchinson-trace-estimator}, and the complexity for each evaluation of the estimate decreases significantly. For $n_{\mtx{\Psi}} = 0$ we end up with \refequ{equ:nystrom-trace-estimator}.
+The algorithm also accomodates the two other estimators introduced in \refsec{sec:analysis}: For $n_{\mtx{\Omega}} = 0$ we recover the Girard-Hutchinson estimator \refequ{equ:hutchinson-trace-estimator}, and the complexity for each evaluation of the estimate decreases significantly. For $n_{\mtx{\Psi}} = 0$ we end up with the Nyström estimator \refequ{equ:nystrom-trace-estimator}, provided the implementation ignores the second term on \reflin{lin:4-nystromchebyshev-nystrom-pp}.
 
-\todo{Clearly need not divide by $n_{\mtx{\Psi}}=0$, hence just ignore this term. }
 %Chebyshev $\mathcal{O}(n_t (m \log(m) + m (n_{\mtx{\Omega}}^2 + n_{\mtx{\Omega}} n_{\mtx{\Psi}} + 1) + n_{\mtx{\Omega}}^3) + mn^2(n_{\mtx{\Psi}} + n_{\mtx{\Omega}}))$.
 
 %\todo{Complexity in terms of both $n_{\mtx{\Omega}}$ and $n_{\mtx{\Psi}}$.}
@@ -760,6 +784,7 @@ The algorithm also accomodates the two other estimators introduced in \refsec{se
 
 %\todo{Explain modifications for other estimators, and improved complexity for quadratic trace estimator}
 
+The pseudoinverses on \reflin{lin:4-nystromchebyshev-nystrom-pp} need to be computed with care.
 \todo{Discuss computation of pseudo inverse: Generalized eigenvalue problem with thresholding \cite{lin-2017-randomized-estimation, epperly-2022-theory-quantuma}, }
 
 \todo{Explain short-circuit mechanism -> very crucial if matrix can be zero}
