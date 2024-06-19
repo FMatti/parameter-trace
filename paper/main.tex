@@ -230,9 +230,9 @@ Next we consider \refequ{equ:nystrom-trace-estimator}. \todo{Motivate Nyström a
 \todo{Motivate and explain proof technique (to mimic Hutch++)}
 
 \begin{lemma}{Moment of spectral norm of non-standard Gaussian random matrix}{ose}
-    The matrix $\mtx{\Sigma} = \operatorname{diag}(\sigma_1, \dots, \sigma_m) \in \mathbb{R}^{m \times m}$ with $\sigma_1 \geq \dots \geq \sigma_m \geq 0$ and the standard Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{m \times k}$ satisfy for all $p \in \mathbb{N}$ 
+    The matrix $\mtx{A} \in \mathbb{R}^{m \times m}$ and the standard Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{m \times k}$ satisfy for all $p \in \mathbb{N}$ 
     \begin{equation}
-        \mathbb{E}^{p}\left[ \lVert \mtx{\Sigma} \mtx{\Omega} \rVert _2 \right]
+        \mathbb{E}^{p}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2 \right]
         \leq  \sqrt{k + p} \left( 3 \lVert \mtx{\Sigma} \rVert _2 + \frac{1}{\sqrt{k}} \lVert \mtx{\Sigma} \rVert _F \right).
     \end{equation}
     %\begin{equation}
@@ -245,6 +245,8 @@ Next we consider \refequ{equ:nystrom-trace-estimator}. \todo{Motivate Nyström a
 \end{lemma}
 
 \begin{proof}
+    With the singular value decomposition $\mtx{A} = \mtx{U} \mtx{\Sigma} \mtx{V}^{\top}$ and the unitary invariance of the spectral norm, it can be seen that $\lVert \mtx{A} \mtx{\Omega} \rVert _2 = \lVert \mtx{\Sigma} \widetilde{\mtx{\Omega}} \rVert _2$ where $\widetilde{\mtx{\Omega}}$ is again a standard Gaussian random matrix. Hence, it is enough to bound $\mathbb{E}^{p}\left[ \lVert \mtx{\Sigma} \mtx{\Omega} \rVert _2 \right]$ for a diagonal matrix $\mtx{\Sigma} = \operatorname{diag}(\sigma_1, \dots, \sigma_m)$ with $\sigma_1 \geq \dots \geq \sigma_m \geq 0$.
+
     First, consider the above moment of a vector $\vct{\omega} \in \mathbb{R}^{m}$. We can rewrite
     \begin{equation}
         \mathbb{E}^{p}\left[ \lVert \mtx{\Sigma} \vct{\omega} \rVert _2 \right]
@@ -365,7 +367,7 @@ Next we consider \refequ{equ:nystrom-trace-estimator}. \todo{Motivate Nyström a
         &= \sqrt{k} \mathbb{E}^{k}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2 \right]^2 \mathbb{E}^{k}\left[  \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right]^2 && \text{(definition of $\mathbb{E}^{k}[\cdot]$)}
         \label{equ:nystrom-proof-processed-tail}
     \end{align}
-    We can apply \reflem{lem:ose} with $\mtx{\Sigma} = \mtx{\Lambda}_2^{\sfrac{1}{2}}$ to bound the first term with
+    We can apply \reflem{lem:ose} with $\mtx{A} = \mtx{\Lambda}_2^{\sfrac{1}{2}}$ to bound the first term with
     \begin{equation}
         \mathbb{E}^k\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2 \right]
         \leq \sqrt{3 k} \left( 3 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2 + \frac{1}{\sqrt{2k}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F \right).
