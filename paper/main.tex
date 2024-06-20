@@ -49,7 +49,7 @@ for a smoothing kernel $g_{\sigma}$, typically a Gaussian \cite{lin-2016-approxi
 
 \paragraph{Contribution} We analyze three well-established randomized trace estimators when they are applied to parameter-dependent matrices. In particular, we reuse the same randomization for each value of the parameter $t$ in the estimators, which makes them scale favorably with the number of parameter evaluations. Subsequently, we propose a simple, fast, robust, and provable procedure in which these estimators are employed for approximating the smooth spectral density $\phi_{\sigma}$ of a matrix.
 
-\paragraph{Structure} \todo{Write structure.}
+\paragraph{Structure} Write structure. In \refsec{sec:analysis} we will analyze three standard trace estimators -- the Girard-Hutchinson, Nyström, and Nyström++ estimators -- when they are applied to parameter dependent matrices. We propose and analyze a method for using the aforementioned estimators to estimate the spectral density of real symmetric matrices in \refsec{sec:application}. Finally, we will test our developments on an example from electronic structure calculation.
 
 \paragraph{Reproducibility} This document, along with all included plots and tables, was generated from commit \href{https://github.com/FMatti/Rand-SD/tree/ca391a8}{ca391a8} at \href{https://github.com/FMatti/Rand-TRACE}{github.com/FMatti/Rand-TRACE} on 2024-02-05 at 18:44:29 UTC.
 
@@ -254,7 +254,7 @@ The downside of the Nyström estimator is that it will -- in general -- not work
 \subsection{Nyström++ estimator for parameter-dependent matrices}
 \label{subsec:nystrom-pp}
 
-Just as in the constant matrix case, our goal is now to prove that the Nyström++ estimator \refequ{equ:nystrompp-trace-estimator} achieves an $\varepsilon$ relative error with just $\mathcal{O}(\varepsilon)$ random vectors to construct the estimate. To do so, we mimic the proof of a similar bound for the Hutch++ estimator \cite[theorem 3.1]{meyer-2021-hutch-optimal}. Correspondingly, we will need to show that with $n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-2})$ the Nyström approximation verifies $\int \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)\rVert _F~\mathrm{d}t \leq \varepsilon \int \Trace(\mtx{B}(t))~\mathrm{d}t$, regardless of the structure of the matrix $\mtx{B}(t)$. Just as in the corresponding proof for the Girard-Hutchinson estimator \refthm{thm:hutchinson}, we again bound the higher order moments of the approximation error for fixed $t$ and then use Minkowsi's integral inequality to carry over the results to the continuous case. We will do this in a sequence of three lemmas.
+Just as in the constant matrix case, our goal is now to prove that the Nyström++ estimator \refequ{equ:nystrompp-trace-estimator} achieves an $\varepsilon$ relative error with just $\mathcal{O}(\varepsilon^{-1})$ random vectors to construct the estimate. To do so, we mimic the proof of a similar bound for the Hutch++ estimator \cite[theorem 3.1]{meyer-2021-hutch-optimal}. Correspondingly, we will need to show that with $n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-2})$ the Nyström approximation verifies $\int \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)\rVert _F~\mathrm{d}t \leq \varepsilon \int \Trace(\mtx{B}(t))~\mathrm{d}t$, regardless of the structure of the matrix $\mtx{B}(t)$. Just as in the corresponding proof for the Girard-Hutchinson estimator \refthm{thm:hutchinson}, we again bound the higher order moments of the approximation error for fixed $t$ and then use Minkowsi's integral inequality to carry over the results to the continuous case. We will do this in a sequence of three lemmas.
 
 For reasons which will become clear in the proof of \reflem{lem:nystrom}, we will need to bound $\mathbb{E}^{p}\left[\lVert \mtx{\Sigma} \mtx{\Omega} \rVert _2 \right]$ for a diagonal matrix $\mtx{\Sigma}$ and a standard Gaussian random matrix $\mtx{\Omega}$. Several ways of bounding the moments of $\mtx{\Omega}$ already exist, however, most of them are either not sufficient for our purposes \cite{chen-2005-condition-numbers, edelman-1988-eigenvalues-condition, james-1964-distributions-matrix}. The corresponding result for the Frobenius norm has already been shown in \cite{kressner-2023-randomized-lowrank}. In \cite[lemma B.1]{tropp-2023-randomized-algorithms} a bound is achieved for $p = 2$ and $p = 4$. We will now generalize this result for arbitrary $p \in \mathbb{N}$. We first show the bound for Gaussian random vectors and then extend it to Gaussian random matrices in \reflem{lem:spectral-norm-moment}.
 
@@ -798,6 +798,8 @@ What we have found to be crucial for a successful approximation of the full spec
 \subsubsection{Analysis}
 \label{subsubsec:chebyshev-nystrom-analysis}
 
+\todo{Summarize analysis}
+
 \begin{lemma}{Non-negative Chebyshev expansion error}{non-negative-chebyshev-error}
     The non-negative expansion $\underline{g}_{\sigma}^{(m)}$ of the Gaussian smoothing kernel satisfies
     \begin{equation}
@@ -891,17 +893,17 @@ If we additionally assume the eigenvalues of the matrix $\mtx{A}$ to be evenly d
 \section{Numerical results}
 \label{sec:results}
 
-For our first example, we consider the example from \cite{lin-2017-randomized-estimation}, i.e. matrices which arise from the second order finite difference discretization of the Hamiltonian
+Our first numerical example comes from electronic structure interaction \cite{lin-2017-randomized-estimation}, more precisely from the second order finite difference discretization of the Hamiltonian
 \begin{equation}
-    \mathcal{H} u(\vct{x}) = - \Delta u(\vct{x}) + V(\vct{x}) u(\vct{x}),
+    \mathcal{H} = - \Delta + V.
     \label{equ:5-experiments-electronic-hamiltonian}
 \end{equation}
-in a cubic domain for a uniform mesh of size $h=0.6$. The potential $V$ arises from a primitive cell of length $L=6$ which is repeated $n_c \in \mathbb{N}$ times in every spatial dimension, yielding discretization matrices which are growing in size with $n_c$. A Gaussian well
+The potential $V$ interacting with the electrons is generated by Gaussian wells
 \begin{equation}
-    \alpha e^{-\sfrac{\lVert \vct{x} \rVert _2^2}{ 2 \beta^2 }}
+    v(r) = v_0 e^{-\lambda r^2}
     \label{equ:5-experiments-gaussian-cell}
 \end{equation}
-with $\alpha = -4$, $\beta = 2$ is located in the center of each of these cells. The Hamiltonian models the interaction of a single electron in a crystal. In our experiments we consider the three-dimensional case, but for visualization purposes, we illustrate the potential in \reffig{fig:gaussian-well} in two dimensions.
+with $V_0 = -4$ and $\lambda = 8$, centered in cells of side length $L=6$ which are stacked $n_c \in \mathbb{N}$ times in each spatial dimension (cf. \reffig{fig:gaussian-well}). The discretization step is fixed to be $h=0.6$, such that the size of the matrix grows cubically with $n_c$. This is an idealized model for the interaction of nuclei on a regular grid with electrons for a $k$-vector in the center of the first Brillouin zone. The distribution of the eigenvalues of the Hamiltonian -- its spectral density -- allows us to interpret the system's energy levels.
 
 \begin{figure}[ht]
     \begin{subfigure}[b]{0.32\columnwidth}
@@ -919,7 +921,7 @@ with $\alpha = -4$, $\beta = 2$ is located in the center of each of these cells.
         \caption{$n_c=5$}
         \label{fig:gaussian-well-5}
     \end{subfigure}
-    \caption{Periodic Gaussian well potential $V$ for different sizes $n_c$ of the computational domain.}
+    \caption{Periodic Gaussian well potential $V$ for different sizes of the supercell.}
     \label{fig:gaussian-well}
 \end{figure}
 
