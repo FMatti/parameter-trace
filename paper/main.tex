@@ -497,7 +497,7 @@ For reasons which will become clear in the proof of \reflem{lem:nystrom}, we wil
 Finally, we can combine the bound on the Girard-Hutchinson estimator \refthm{thm:hutchinson} and the one on the Nyström approximation \reflem{lem:nystrom} to obtain our main result.
 
 \begin{theorem}{Nyström++ trace estimator for parameter-dependent matrices}{nystrom-pp}
-    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. If $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-1} \log(2\delta^{-1})^2 + \log(2\delta^{-1}))$ with \emph{even} $n_{\mtx{\Omega}} \geq 2$, then for $\delta \in (0, 1/2)$ and $\varepsilon > 0$ with probability at least $1 - \delta$
+    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. If $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-1} \log(2\delta^{-1})^2 + \log(2\delta^{-1}))$ with \emph{even} $n_{\mtx{\Omega}}$, then for $\delta \in (0, 1/2)$ and $\varepsilon > 0$ with probability at least $1 - \delta$
     \begin{equation}
         \int_{a}^{b} | \Trace(\mtx{B}(t)) - \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{B}(t)) |~\mathrm{d}t
         \leq \varepsilon \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t.
@@ -828,7 +828,7 @@ What we have found to be crucial for a successful approximation of the full spec
 \end{proof}
 
 \begin{theorem}{Chebyshev-Nyström++ method}{chebyshev-nystrom}
-    Let $\phi_{\sigma}$ be the smooth spectral density of a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ whose spectrum is contained in $[-1, 1]$. Then the Chebyshev-Nyström++ estimate $\widetilde{\phi}_{\sigma}^{(m)}$ with \emph{even} degree $m \in \mathbb{N}$, $n_{\mtx{\Omega}} = n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-1}\log(2\delta^{-1})^2 + \log(2\delta^{-1}))$, and smoothing parameter $\sigma > 0$ satisfies with probability at least $1 - \delta$
+    Let $\phi_{\sigma}$ be the smooth spectral density of a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ whose spectrum is contained in $[-1, 1]$. Then the Chebyshev-Nyström++ estimate $\widetilde{\phi}_{\sigma}^{(m)}$ with \emph{even} degree $m \in \mathbb{N}$, $n_{\mtx{\Omega}} = n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-1}\log(2\delta^{-1})^2 + \log(2\delta^{-1}))$, $n_{\mtx{\Omega}}$ \emph{even}, and smoothing parameter $\sigma > 0$ satisfies with probability at least $1 - \delta$
     \begin{equation}
         \int_{-1}^{1} \left| \phi_{\sigma}(t) - \widetilde{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t < 2 (1 + \varepsilon) \underline{E}_{\sigma, m} + \varepsilon
         \label{equ:chebyshev-nystrom-error}
@@ -864,7 +864,7 @@ $\varepsilon$ is usually taken to be the double machine precision, i.e. $10^{-16
     \sigma_i(t) = g_{\sigma}(t - \lambda_{(i)}) = \frac{1}{\sqrt{2 \pi \sigma^2}} e^{-\sfrac{(t - \lambda_{(i)})^2}{2 \sigma^2}},
     \label{equ:gaussian-kernel-eigenvalues}
 \end{equation}
-where $\lambda_{(1)}, \dots, \lambda_{(n)}$ denote the eigenvalues of $\mtx{A}$ sorted by increasing distance from spectral-parameter, such that $\sigma_1(t) \geq \dots \geq \sigma_n(t)$. Consequently, by using the closed-form expression of the eigenvalues \refequ{equ:gaussian-kernel-eigenvalues}, we may upper bound the numerical rank of a Gaussian smoothing kernel as
+where $\lambda_{(1)}, \dots, \lambda_{(n)}$ denote the eigenvalues of $\mtx{A}$ sorted by increasing distance from spectral-parameter $t$, such that $\sigma_1(t) \geq \dots \geq \sigma_n(t)$. Consequently, by using the closed-form expression of the eigenvalues \refequ{equ:gaussian-kernel-eigenvalues}, we may upper bound the numerical rank of a Gaussian smoothing kernel as
 \begin{equation}
     r_{\varepsilon}(g_{\sigma}(t\mtx{I}_n - \mtx{A})) \leq \#\left\{1\leq i\leq n: |t - \lambda_i| < d_{\varepsilon, \sigma} \right\},
     \label{equ:gaussian-kernel-numerical-rank}
@@ -891,45 +891,37 @@ If we additionally assume the eigenvalues of the matrix $\mtx{A}$ to be evenly d
 \section{Numerical results}
 \label{sec:results}
 
-For our first example, we consider the matrix which arises from the second order
-finite difference discretization of the Laplace operator $\Delta$ in a potential
-field $V$,
+For our first example, we consider the example from \cite{lin-2017-randomized-estimation}, i.e. matrices which arise from the second order finite difference discretization of the Hamiltonian
 \begin{equation}
-    \mathcal{A} u(\vct{x}) = - \Delta u(\vct{x}) + V(\vct{x}) u(\vct{x}),
+    \mathcal{H} u(\vct{x}) = - \Delta u(\vct{x}) + V(\vct{x}) u(\vct{x}),
     \label{equ:5-experiments-electronic-hamiltonian}
 \end{equation}
-for a uniform mesh of size $h=0.6$. The potential $V$ results from a
-lattice whose primitive cell is of side-length $L=6$ and in whose center a
-potential
+in a cubic domain for a uniform mesh of size $h=0.6$. The potential $V$ arises from a primitive cell of length $L=6$ which is repeated $n_c \in \mathbb{N}$ times in every spatial dimension, yielding discretization matrices which are growing in size with $n_c$. A Gaussian well
 \begin{equation}
     \alpha e^{-\sfrac{\lVert \vct{x} \rVert _2^2}{ 2 \beta^2 }}
     \label{equ:5-experiments-gaussian-cell}
 \end{equation}
-with $\alpha = -4$, $\beta = 2$ is located. The computational domain is chosen
-to span $n_c \in \mathbb{N}$ primitive cells in every spatial dimension, hence, yielding
-discretization matrices which are growing in size with $n_c$. In our experiments
-we consider the three-dimensional case.%, but for visualization purposes, we illustrate the potential in \reffig{fig:gaussian-well} in two dimensions.
+with $\alpha = -4$, $\beta = 2$ is located in the center of each of these cells. The Hamiltonian models the interaction of a single electron in a crystal. In our experiments we consider the three-dimensional case, but for visualization purposes, we illustrate the potential in \reffig{fig:gaussian-well} in two dimensions.
 
-%\begin{figure}[ht]
-%    \begin{subfigure}[b]{0.32\columnwidth}
-%        \input{plots/gaussian-well-1.pgf}
-%        \caption{$n_c=1$}
-%        \label{fig:gaussian-well-1}
-%    \end{subfigure}
-%    \begin{subfigure}[b]{0.32\columnwidth}
-%        \input{plots/gaussian-well-2.pgf}
-%        \caption{$n_c=2$}
-%        \label{fig:gaussian-well-2}
-%    \end{subfigure}
-%    \begin{subfigure}[b]{0.32\columnwidth}
-%        \input{plots/gaussian-well-5.pgf}
-%        \caption{$n_c=5$}
-%        \label{fig:gaussian-well-5}
-%    \end{subfigure}
-%    \caption{Two dimensional periodic potential $V$ for different sizes $n_c$ of the computational domain.}
-%    \label{fig:gaussian-well}
-%\end{figure}
-
+\begin{figure}[ht]
+    \begin{subfigure}[b]{0.32\columnwidth}
+        \input{plots/gaussian-well-1.pgf}
+        \caption{$n_c=1$}
+        \label{fig:gaussian-well-1}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.32\columnwidth}
+        \input{plots/gaussian-well-2.pgf}
+        \caption{$n_c=2$}
+        \label{fig:gaussian-well-2}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.32\columnwidth}
+        \input{plots/gaussian-well-5.pgf}
+        \caption{$n_c=5$}
+        \label{fig:gaussian-well-5}
+    \end{subfigure}
+    \caption{Periodic Gaussian well potential $V$ for different sizes $n_c$ of the computational domain.}
+    \label{fig:gaussian-well}
+\end{figure}
 
 \begin{figure}[ht]
     \centering
@@ -946,7 +938,7 @@ we consider the three-dimensional case.%, but for visualization purposes, we ill
     \label{fig:distribution}
 \end{figure}
 
-\todo{[Comparison plots with other estimators]}
+\todo{[Comparison plots with other estimators?]}
 
 \section{Discussion}
 \label{sec:discussion}
