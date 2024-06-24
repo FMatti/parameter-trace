@@ -49,7 +49,7 @@ for a smoothing kernel $g_{\sigma}$, typically a Gaussian \cite{lin-2016-approxi
 
 \paragraph{Contribution} We analyze three well-established randomized trace estimators when they are applied to parameter-dependent matrices. In particular, we reuse the same randomization for each value of the parameter $t$ in the estimators, which makes them scale favorably with the number of parameter evaluations. Subsequently, we propose a simple, fast, robust, and provable procedure in which these estimators are employed for approximating the smooth spectral density $\phi_{\sigma}$ of a matrix.
 
-\paragraph{Structure} Write structure. In \refsec{sec:analysis} we will analyze three standard trace estimators -- the Girard-Hutchinson, Nyström, and Nyström++ estimators -- when they are applied to parameter dependent matrices. We propose and analyze a method for using the aforementioned estimators to estimate the spectral density of real symmetric matrices in \refsec{sec:application}. Finally, we will test our developments on an example from electronic structure calculation.
+\paragraph{Structure} In \refsec{sec:analysis} we will analyze three standard trace estimators -- the Girard-Hutchinson, Nyström, and Nyström++ estimators -- when they are applied to parameter dependent matrices. We propose and analyze a method for using the aforementioned estimators to estimate the spectral density of real symmetric matrices in \refsec{sec:application}. Finally, we will test our developments on an example from electronic structure calculation.
 
 \paragraph{Reproducibility} This document, along with all included plots and tables, was generated from commit \href{https://github.com/FMatti/Rand-SD/tree/ca391a8}{ca391a8} at \href{https://github.com/FMatti/Rand-TRACE}{github.com/FMatti/Rand-TRACE} on 2024-02-05 at 18:44:29 UTC.
 
@@ -497,7 +497,7 @@ For reasons which will become clear in the proof of \reflem{lem:nystrom}, we wil
 Finally, we can combine the bound on the Girard-Hutchinson estimator \refthm{thm:hutchinson} and the one on the Nyström approximation \reflem{lem:nystrom} to obtain our main result.
 
 \begin{theorem}{Nyström++ trace estimator for parameter-dependent matrices}{nystrom-pp}
-    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. If $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-1} \log(2\delta^{-1})^2 + \log(2\delta^{-1}))$ with \emph{even} $n_{\mtx{\Omega}}$, then for $\delta \in (0, 1/2)$ and $\varepsilon > 0$ with probability at least $1 - \delta$
+    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. If $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-1} \log(2\delta^{-1})^2 + \log(2\delta^{-1}))$ with \emph{even} $n_{\mtx{\Omega}}$, then for $\delta \in (0, e^{-\sfrac{1}{2}}/2)$ and $\varepsilon > 0$ with probability at least $1 - \delta$
     \begin{equation}
         \int_{a}^{b} | \Trace(\mtx{B}(t)) - \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{B}(t)) |~\mathrm{d}t
         \leq \varepsilon \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t.
@@ -698,6 +698,8 @@ The proof specializes Bernstein's theorem for Chebyshev interpolation to the cas
     \end{equation}
 \end{proof}
 
+This theorem shows that for $\sigma \ll 1$, if we choose $m = \mathcal{O}(\sigma^{-1}(\log(\varepsilon^{-1}) + \log(\sigma^{-1})))$, the error we induce with the Chebyshev expansion is at most $\mathcal{O}(\varepsilon)$.
+
 \subsection{Chebyshev-Nyström++ method for spectral density approximation}
 \label{subsec:chebyshev-nystrom}
 
@@ -798,7 +800,7 @@ What we have found to be crucial for a successful approximation of the full spec
 \subsubsection{Analysis}
 \label{subsubsec:chebyshev-nystrom-analysis}
 
-\todo{Summarize analysis}
+\todo{Summarize analysis (on one hand, half the degree $m$, but easier to interpolate because $\sigma \to \sqrt{2} \sigma$)}
 
 \begin{lemma}{Non-negative Chebyshev expansion error}{non-negative-chebyshev-error}
     The non-negative expansion $\underline{g}_{\sigma}^{(m)}$ of the Gaussian smoothing kernel satisfies
@@ -830,16 +832,15 @@ What we have found to be crucial for a successful approximation of the full spec
 \end{proof}
 
 \begin{theorem}{Chebyshev-Nyström++ method}{chebyshev-nystrom}
-    Let $\phi_{\sigma}$ be the smooth spectral density of a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ whose spectrum is contained in $[-1, 1]$. Then the Chebyshev-Nyström++ estimate $\widetilde{\phi}_{\sigma}^{(m)}$ with \emph{even} degree $m \in \mathbb{N}$, $n_{\mtx{\Omega}} = n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-1}\log(2\delta^{-1})^2 + \log(2\delta^{-1}))$, $n_{\mtx{\Omega}}$ \emph{even}, and smoothing parameter $\sigma > 0$ satisfies with probability at least $1 - \delta$
+    Let $\phi_{\sigma}$ be the smooth spectral density of a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ whose spectrum is contained in $[-1, 1]$. Then the Chebyshev-Nyström++ estimate $\widetilde{\phi}_{\sigma}^{(m)}$ with \emph{even} degree $m = \mathcal{O}(\sigma^{-1}(\log(\varepsilon^{-1}) + \log(\sigma^{-1})))$, \emph{even} $n_{\mtx{\Omega}} = n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-1}\log(2\delta^{-1})^2 + \log(2\delta^{-1}))$, and smoothing parameter $\sigma > 0$ satisfies with probability at least $1 - \delta$
     \begin{equation}
-        \int_{-1}^{1} \left| \phi_{\sigma}(t) - \widetilde{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t < 2 (1 + \varepsilon) \underline{E}_{\sigma, m} + \varepsilon
+        \int_{-1}^{1} \left| \phi_{\sigma}(t) - \widetilde{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t \leq \varepsilon
         \label{equ:chebyshev-nystrom-error}
         %\lVert  \phi_{\sigma} - \phi_{\sigma}^{(m)} \rVert _1 &\leq \frac{2\sqrt{2}}{\sigma^2} (1 + \sigma)^{-m}.
         %\label{equ:2-chebyshev-interpolation-error}
     \end{equation}
-    for all $\varepsilon > 0$ and $\delta \in (0, 1/2)$.
+    for all $0 < \varepsilon \leq 1$ and $\delta \in (0, e^{-\sfrac{1}{2}}/2)$.
 \end{theorem}
-
 
 \begin{proof}
     The previously derived results can be applied to
@@ -848,8 +849,12 @@ What we have found to be crucial for a successful approximation of the full spec
         &\leq \int_{-1}^{1} \left| \phi_{\sigma}(t) - \phi_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \int_{-1}^{1} \left| \phi^{(m)}_{\sigma}(t) - \widetilde{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t && \text{(triangle inequality)} \notag \\
         &\leq \int_{-1}^{1} \left| \phi_{\sigma}(t) - \phi_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \varepsilon \int_{-1}^{1} \left| \phi^{(m)}_{\sigma}(t) \right|~\mathrm{d}t && \text{(\refthm{thm:nystrom-pp} w.p. $\geq 1 - \delta$)} \notag \\
         &\leq (1 + \varepsilon) \int_{-1}^{1} \left| \phi_{\sigma}(t) - \phi_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \varepsilon \int_{-1}^{1} \left| \phi_{\sigma}(t) \right|~\mathrm{d}t && \text{(triangle inequality)} \notag \\
-        &\leq 2 (1 + \varepsilon) \underline{E}_{\sigma, m} + \varepsilon. && \text{(\reflem{lem:non-negative-chebyshev-error} and normalization)} \notag \\
+        &\leq (1 + \varepsilon) 2 \underline{E}_{\sigma, m} + \varepsilon. && \text{(\reflem{lem:non-negative-chebyshev-error} and normalization)} \notag \\
     \end{align}
+    From \reflem{lem:non-negative-chebyshev-error} we see that choosing $m = \mathcal{O}(\sigma^{-1}(\log(\varepsilon^{-1}) + \log(\sigma^{-1})))$ ensures $\underline{E}_{\sigma, m} \leq \varepsilon$, and thus, since $\mathcal{\varepsilon} \leq 1$,
+    \begin{equation}
+        \int_{-1}^{1} \left| \phi_{\sigma}(t) - \widetilde{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t \leq (1+\varepsilon) 2 \varepsilon + \varepsilon \leq 5 \varepsilon.
+    \end{equation}
 \end{proof}
 
 \todo{Maybe specialize \refthm{thm:nystrom} to spectral densities?}
@@ -861,7 +866,21 @@ We can express the numerical rank of a matrix with respect to the nuclear norm i
     r_{\varepsilon} = \min \{1 \leq r \leq n: \sum_{j=r+1}^n \sigma_{j} \leq \varepsilon \},
     \label{equ:numerical-rank}
 \end{equation}
-$\varepsilon$ is usually taken to be the double machine precision, i.e. $10^{-16}$. When using a Gaussian smoothing-kernel, we can explicitly write the singular values of $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ as
+$\varepsilon$ is usually taken to be the double machine precision, i.e. $10^{-16}$. 
+
+%\begin{theorem}{Nyström estimator for parameter-dependent matrices}%{chebyshev-nystrom-raw}
+%    Let $\phi_{\sigma}$ be the smooth spectral density of a symmetric %matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ whose spectrum is %contained in $[-1, 1]$. Then the Chebyshev-Nyström++ estimate %$\widetilde{\phi}_{\sigma}^{(m)}$ with \emph{even} degree $m \in %\mathbb{N}$, $n_{\mtx{\Omega}} \geq \max(6, \max_{t \in [-1, 1]}(r_%{\varepsilon}(g_{\sigma}(t\mtx{I}_n - \mtx{A}))) + \log(\delta^%{-1}))$, $n_{\mtx{\Psi}} = 0$, and smoothing parameter $\sigma > 0$ %satisfies with for all $\gamma \geq 1$ with probability at least $1 %- \delta$
+%    \begin{equation}
+%        \int_{a}^{b} \left| \phi_{\sigma}(t) - \widetilde{\phi}_{\sigma}%(t) \right| ~\mathrm{d}t
+%        \leq 2 e^2 (1 + r_{\varepsilon}) (\varepsilon + (n - r_%{\varepsilon}) \underline{E}_{\sigma, m}) + \underline{E}_%{\sigma, m}.
+%    \end{equation}
+%\end{theorem}
+%
+%\begin{proof}
+%    \todo{TODO}
+%\end{proof}
+
+When using a Gaussian smoothing-kernel, we can explicitly write the singular values of $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ as
 \begin{equation}
     \sigma_i(t) = g_{\sigma}(t - \lambda_{(i)}) = \frac{1}{\sqrt{2 \pi \sigma^2}} e^{-\sfrac{(t - \lambda_{(i)})^2}{2 \sigma^2}},
     \label{equ:gaussian-kernel-eigenvalues}
@@ -895,15 +914,15 @@ If we additionally assume the eigenvalues of the matrix $\mtx{A}$ to be evenly d
 
 Our first numerical example comes from electronic structure interaction \cite{lin-2017-randomized-estimation}, more precisely from the second order finite difference discretization of the Hamiltonian
 \begin{equation}
-    \mathcal{H} = - \Delta + V.
+    \mathcal{H} = - \Delta + V
     \label{equ:5-experiments-electronic-hamiltonian}
 \end{equation}
-The potential $V$ interacting with the electrons is generated by Gaussian wells
+in three dimensions. The potential $V$ interacting with the electrons is generated by Gaussian wells
 \begin{equation}
     v(r) = v_0 e^{-\lambda r^2}
     \label{equ:5-experiments-gaussian-cell}
 \end{equation}
-with $V_0 = -4$ and $\lambda = 8$, centered in cells of side length $L=6$ which are stacked $n_c \in \mathbb{N}$ times in each spatial dimension (cf. \reffig{fig:gaussian-well}). The discretization step is fixed to be $h=0.6$, such that the size of the matrix grows cubically with $n_c$. This is an idealized model for the interaction of nuclei on a regular grid with electrons for a $k$-vector in the center of the first Brillouin zone. The distribution of the eigenvalues of the Hamiltonian -- its spectral density -- allows us to interpret the system's energy levels.
+with $v_0 = -4$ and $\lambda = 8$, centered in cells of side length $L=6$ which are stacked $n_c \in \mathbb{N}$ times in each spatial dimension (cf. \reffig{fig:gaussian-well}). The discretization step is fixed to be $h=0.6$, such that the size of the matrix grows cubically with $n_c$. This is an idealized model for the interaction of nuclei on a regular grid with electrons for a $k$-vector in the center of the first Brillouin zone. The distribution of the eigenvalues of the Hamiltonian -- its spectral density -- allows us to interpret the system's energy levels.
 
 \begin{figure}[ht]
     \begin{subfigure}[b]{0.32\columnwidth}
@@ -921,7 +940,7 @@ with $V_0 = -4$ and $\lambda = 8$, centered in cells of side length $L=6$ which 
         \caption{$n_c=5$}
         \label{fig:gaussian-well-5}
     \end{subfigure}
-    \caption{Periodic Gaussian well potential $V$ for different sizes of the supercell.}
+    \caption{Cross-sections of the periodic Gaussian well potential $V$ for different sizes of the supercell.}
     \label{fig:gaussian-well}
 \end{figure}
 
