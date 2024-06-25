@@ -131,8 +131,6 @@ We first analyze the Girard-Hutchinson estimator \refequ{equ:hutchinson-trace-es
     In particular, if we choose $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2} \log(\delta^{-1})^2)$, then with probability at least $1-\delta$ for $\delta \in (0, e^{- \sfrac{1}{2}})$ and any $\varepsilon > 0$ we have $\int_{a}^{b} | \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) | ~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t$.
 \end{theorem}
 
-Compared to the constant case \cite[lemma 2.1]{meyer-2021-hutch-optimal} we need to choose the number of queries $n_{\mtx{\Psi}}$ by a factor of $\log(\delta^{-1})$ larger to achieve the same guarantee.
-
 The idea behind the proof is to bound the higher order moments for fixed parameter values and then use Minkowski's integral inequality to extend the results to the continuous parameter case. We first only consider the $1$-query estimator and subsequently use a diagonal embedding trick to carry the result over to the general case.
 \begin{proof} 
     We define the 1-query Girard-Hutchinson estimate 
@@ -202,22 +200,24 @@ The idea behind the proof is to bound the higher order moments for fixed paramet
         = \lceil \log(\delta^{-1}) \rceil e^{\sfrac{1}{2}\frac{\log(\delta^{-1})}{\lceil \log(\delta^{-1}) \rceil}}
         \leq 2 \log(\delta^{-1}) e^{\sfrac{1}{2}},
     \end{equation}
-    from which follows the second part of the theorem when inserting $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2} \log(\delta^{-1})^2)$.
+    from which follows the second part of the theorem when $n_{\mtx{\Psi}} = (2^5 e^{\sfrac{1}{2}} \varepsilon \log(\delta^{-1}))^2$.
     %Consequently, with probability $1 - \delta$ we have
     %\begin{equation}
     %    \int_{a}^{b} \left| \frac{1}{n_{\mtx{\Psi}}} \sum_{i=1}^{n_{\mtx{\Psi}}} \vct{\psi}_i^{\top} \mtx{B}(t) \vct{\psi}_i - \Trace(\mtx{B}(t)) \right| ~ \mathrm{d}t \leq 32 e^{\sfrac{1}{2}} \frac{\log(\delta^{-1})}{\sqrt{n_{\mtx{\Psi}}}} \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t
     %\end{equation}
 \end{proof}
 
-\todo{
-\begin{remark}
-    If additionally $\mtx{B}(t)$ is nonzero and symmetric positive semi-definite for all $t \in [a, b]$, then it follows from the proof of \refthm{thm:hutchinson} that with probability at least $1 - \delta$
-    \begin{equation}
-        \int_{a}^{b} \frac{| \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) |}{\Trace(\mtx{B}(t))} ~\mathrm{d}t < \varepsilon,
-    \end{equation}
-    if $n_{\mtx{\Psi}} \geq 2^{10} \varepsilon^{-2} \log(\delta^{-1})^2 (\int_{a}^{b} \mu(t)^{\sfrac{1}{2}}~\mathrm{d}t)^2$ with $\mu(t) = \lVert \mtx{B}(t) \rVert _2 / \Trace(\mtx{B}(t))$. Compared to the constant matrix equivalent \cite[remark 2]{cortinovis-2022-randomized-trace} we mainly observe a larger constant and an additional factor of $\log(\delta^{-1})$.
-\end{remark}
-}
+%\todo{
+%\begin{remark}
+%    If additionally $\mtx{B}(t)$ is nonzero and symmetric positive semi-definite for all $t \in [a, b]$, then it follows from the proof of \refthm{thm:hutchinson} that with probability at least $1 - \delta$
+%    \begin{equation}
+%        \int_{a}^{b} \frac{| \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) |}{\Trace(\mtx{B}(t))} ~\mathrm{d}t < \varepsilon,
+%    \end{equation}
+%    if $n_{\mtx{\Psi}} \geq 2^{10} \varepsilon^{-2} \log(\delta^{-1})^2 (\int_{a}^{b} \mu(t)^{\sfrac{1}{2}}~\mathrm{d}t)^2$ with $\mu(t) = \lVert \mtx{B}(t) \rVert _2 / \Trace(\mtx{B}(t))$. Compared to the constant matrix equivalent \cite[remark 2]{cortinovis-2022-randomized-trace} we mainly observe a larger constant and an additional factor of $\log(\delta^{-1})$.
+%\end{remark}
+%}
+
+Compared to the constant case \cite[lemma 2.1]{meyer-2021-hutch-optimal} we need to choose the number of queries $n_{\mtx{\Psi}}$ by a factor of $\log(\delta^{-1})$ larger to achieve the same guarantee.
 
 The Girard-Hutchinson estimator distinguishes itself for its simplicity. However, its bound does not take into account the structure of $\mtx{B}(t)$. The $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2})$ requirement implies that if we aim to increase the accuracy of the estimate by one digit, we would need to increase the number of queries by a factor of $100$. 
 
@@ -227,7 +227,7 @@ The Girard-Hutchinson estimator distinguishes itself for its simplicity. However
 For symmetric positive semi-definite matrices whose singular values decay rapidly, the Nyström estimate \refequ{equ:nystrom-trace-estimator} can be significantly better than the Girard-Hutchinson estimate. This is reflected in the following theorem.
 
 \begin{theorem}{Nyström estimator for parameter-dependent matrices}{nystrom}
-    Suppose $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ is continuous and positive semi-definite in $t \in [a, b]$. Let $n_{\mtx{\Omega}} \geq 6, n_{\mtx{\Omega}} - 4 \geq r \geq 2$ be two integers. Then for all $\gamma \geq 1$ with probability at least $1 - \gamma^{-(n_{\mtx{\Omega}} - r)}$
+    Suppose $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ is continuous and positive semi-definite in $t \in [a, b]$. Let $r \geq 2$ and $n_{\mtx{\Omega}} \geq r + 4$ be two integers. Then for all $\gamma \geq 1$ with probability at least $1 - \gamma^{-(n_{\mtx{\Omega}} - r)}$
     \begin{equation}
         \int_{a}^{b} \left| \Trace(\mtx{B}(t)) - \Trace(\Nystr{\mtx{\Omega}}{\mtx{B}}(t)) \right| ~\mathrm{d}t
         \leq \gamma^2 (1 + r) \int_{a}^{b} \sum_{i = r+1}^{n} \sigma_i(\mtx{B}(t)) ~\mathrm{d}t.
@@ -235,7 +235,7 @@ For symmetric positive semi-definite matrices whose singular values decay rapidl
 \end{theorem}
 
 \begin{proof}
-    Since $f$ is non-negative, $\mtx{B}(t)$ is positive semi-definite for all $t$. By \cite[lemma 2.1]{frangella-2023-randomized-nystrom}, $\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ is also positive semi-definite for all $t$. Therefore, for fixed $t \in [a, b]$
+    Since $\mtx{B}(t)$ is positive semi-definite for all $t$, then by \cite[lemma 2.1]{frangella-2023-randomized-nystrom}, $\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ is also positive semi-definite for all $t$. Therefore, for fixed $t \in [a, b]$
     \begin{equation}
         \left| \Trace(\mtx{B}(t)) - \Trace(\Nystr{\mtx{\Omega}}{\mtx{B}}(t)) \right|
         = \left| \Trace(\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)) \right|
@@ -249,7 +249,7 @@ For symmetric positive semi-definite matrices whose singular values decay rapidl
     Hence, by \cite[theorem 9]{kressner-2023-randomized-lowrank}, with $n_{\mtx{\Omega}} = p + r$, the result follows by noting $\sigma_i(\mtx{B}(t)^{\sfrac{1}{2}})^{2} = \sigma_i(\mtx{B}(t))$.
 \end{proof}
 
-\todo{Compare to constant matrix case: \cite[theorem 8.1]{tropp-2023-randomized-algorithms} (similar result)}
+Compared to the constant matrix case \cite[theorem 8.1]{tropp-2023-randomized-algorithms}, our bound also scales with the best rank-$r$ approximation error in the nuclear norm, albeit with a factor approximately proportional to $r$, which cannot be compensated for with large enough oversampling.
 
 The downside of the Nyström estimator is that it will -- in general -- not work well enough on matrices whose singular values do not decay, for example $\mtx{B}(t) \equiv \mtx{I}_n$.
 
@@ -645,7 +645,7 @@ We now analyze the error of the Chebyshev expansion of a Gaussian smoothing kern
     for all degrees $m \in \mathbb{N}$, smoothing parameters $\sigma > 0$, $t \in \mathbb{R}$, and $s \in [-1, 1]$.
 \end{lemma}
 
-The proof specializes Bernstein's theorem for Chebyshev interpolation to the case of a Gaussian smoothing kernel \refequ{equ:smoothing-kernel}. It loosely follows the proof give in the preprint of \cite[theorem 2]{lin-2017-randomized-estimation}, but reaches slightly different conclusion.
+The proof specializes Bernstein's theorem for Chebyshev interpolation to the case of a Gaussian smoothing kernel \refequ{equ:smoothing-kernel}. It loosely follows the proof give in the preprint of \cite[theorem 2]{lin-2017-randomized-estimation}, but attains a slightly different dependence on $\sigma$.
 
 \begin{proof}
     From Bernstein's theorem \cite[theorem 4.3]{trefethen-2008-gauss-quadrature} it follows that if $f$ is analytic within the Bernstein ellipse $\mathcal{E}_{\chi} \subset \mathbb{C}$ with foci $\{-1, +1\}$ and sum of semi-axes $\chi > 1$, then for any $m \in \mathbb{N}$
@@ -706,7 +706,7 @@ The proof specializes Bernstein's theorem for Chebyshev interpolation to the cas
     \end{equation}
 \end{proof}
 
-This theorem shows that for $\sigma \ll 1$, if we choose $m = \mathcal{O}(\sigma^{-1}(\log(\varepsilon^{-1}) + \log(\sigma^{-1})))$, the error we induce with the Chebyshev expansion is at most $\mathcal{O}(\varepsilon)$.
+This theorem shows that when $0 < \sigma \ll 1$, if we choose $m = \mathcal{O}(\sigma^{-1}(\log(\varepsilon^{-1}) + \log(\sigma^{-1})))$, the error we induce with the Chebyshev expansion is at most $\mathcal{O}(\varepsilon)$.
 
 \subsection{Chebyshev-Nyström++ method for spectral density approximation}
 \label{subsec:chebyshev-nystrom}
@@ -748,7 +748,7 @@ Thanks to the affine form of the Chebyshev expansion, we can rewrite the first m
 \end{equation}
 for which we first precompute the $n_{\mtx{\Omega}} \times n_{\mtx{\Omega}}$ matrices $\mtx{\Omega}^{\top} T_l(\mtx{A}) \mtx{\Omega}$ for $l=0, \dots, m$ using the recurrence \refequ{equ:chebyshev-recurrence} and then inexpensively sum them up with the corresponding coefficients $\mu_l(t)$ for all $t$ in which we want to evaluate the approximation. Thanks to the fast and exact squaring of Chebyshev expansions (cf. \refalg{alg:chebyshev-squaring}), the second part of \refequ{equ:cyclic-property} can be approximated in an equivalent way. Unlike expanding the squared smoothing kernel $g_{\sigma}^2$ separately \cite{lin-2017-randomized-estimation}, this approach is consistent, which we have observed to make a noticeable difference in terms of accuracy and does not hinder provability. Similar observations for the case when $\mtx{\Psi}$ is nonzero lead to the following algorithm.
 
-\begin{algo}{Chebyshev-Nystrom++}{nystrom-chebyshev-pp}
+\begin{algo}{Chebyshev-Nyström++}{nystrom-chebyshev-pp}
 \begin{algorithmic}[1]
     \Statex \textbf{Input:} Symmetric $\mtx{A} \in \mathbb{R}^{n \times n}$ with spectrum in $[-1, 1]$, points $\{t_i\}_{i=1}^{n_t} \subset \mathbb{R}$
     \Statex \textbf{Parameters:} Degree of expansion $m \in 2\mathbb{N}$, number of Girard-Hutchinson queries $n_{\mtx{\Psi}} \in \mathbb{N}_0$, Nyström sketch size $n_{\mtx{\Omega}} \in \mathbb{N}_0$,  smoothing parameter $\sigma > 0$
@@ -790,7 +790,7 @@ for which we first precompute the $n_{\mtx{\Omega}} \times n_{\mtx{\Omega}}$ mat
 \end{algorithmic}
 \end{algo}
 
-The dominating cost stems from the $(2m + 1)(n_{\mtx{\Psi}} + n_{\mtx{\Omega}})$ multiplications of $\mtx{A}$ with a vector and the cost associated with computing the estimate in each evaluation point $t_1, \dots, t_{n_t}$ given by $\mathcal{O}(m \log(m) + m (n_{\mtx{\Omega}}^2 + n_{\mtx{\Omega}} n_{\mtx{\Psi}} + 1) + (n_{\mtx{\Omega}}^3 + n_{\mtx{\Omega}} n_{\mtx{\Psi}}^2 + 1))$.
+The dominating cost stems from the $(2m + 1)(n_{\mtx{\Psi}} + n_{\mtx{\Omega}})$ matrix-vector multiplications with $\mtx{A}$ and the cost associated with computing the estimate in each evaluation point $t_1, \dots, t_{n_t}$ given by $\mathcal{O}(m \log(m) + m (n_{\mtx{\Omega}}^2 + n_{\mtx{\Omega}} n_{\mtx{\Psi}} + 1) + (n_{\mtx{\Omega}}^3 + n_{\mtx{\Omega}} n_{\mtx{\Psi}}^2 + 1))$.
 
 The algorithm also accomodates the two other estimators introduced in \refsec{sec:analysis}: For $n_{\mtx{\Omega}} = 0$ we recover the Girard-Hutchinson estimator \refequ{equ:hutchinson-trace-estimator}, and the complexity for each evaluation of the estimate decreases significantly. For $n_{\mtx{\Psi}} = 0$ we end up with the Nyström estimator \refequ{equ:nystrom-trace-estimator}, provided the implementation evaluates $0/0$ to $0$ in the second term on \reflin{lin:4-nystromchebyshev-nystrom-pp}.
 
@@ -808,7 +808,7 @@ What we have found to be crucial for a successful approximation of the full spec
 \subsubsection{Analysis}
 \label{subsubsec:chebyshev-nystrom-analysis}
 
-\todo{Summarize analysis (on one hand, half the degree $m$, but easier to interpolate because $\sigma \to \sqrt{2} \sigma$)}
+In this section, we will upper bound the output of the Chebyshev-Nyström++ method (see. \refalg{alg:nystrom-chebyshev-pp}). To this extent, we will first analyze the non-negative Chebyshev expansion.
 
 \begin{lemma}{Non-negative Chebyshev expansion error}{non-negative-chebyshev-error}
     The non-negative expansion $\underline{g}_{\sigma}^{(m)}$ of the Gaussian smoothing kernel satisfies
@@ -839,15 +839,17 @@ What we have found to be crucial for a successful approximation of the full spec
     from which follows the result with some minor simplifications.
 \end{proof}
 
+On one hand, in the non-negative expansion, the underlying computes Chebyshev expansion -- which is shown in \reflem{lem:chebyshev-error} to exponentially decay with its degree -- is only computed to degree $m/2$, whereas the standard expansion is of degree $m$. On the other hand, we approximate $\sqrt{g_{\sigma}}$ instead of $g_{\sigma}$, which is less \enquote{pointy} and therefore better approximated by polynomials. Overall, we will need to choose the degree $m$ of the expansion approximately a factor of $\sqrt{2}$ larger to match the error of the standard expansion.
+
 \begin{theorem}{Chebyshev-Nyström++ method}{chebyshev-nystrom}
-    Let $\phi_{\sigma}$ be the smooth spectral density of a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ whose spectrum is contained in $[-1, 1]$. Then the Chebyshev-Nyström++ estimate $\widetilde{\phi}_{\sigma}^{(m)}$ with \emph{even} degree $m = \mathcal{O}(\sigma^{-1}(\log(\varepsilon^{-1}) + \log(\sigma^{-1})))$, \emph{even} $n_{\mtx{\Omega}} = n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-1}\log(2\delta^{-1})^2)$, and smoothing parameter $\sigma > 0$ satisfies with probability at least $1 - \delta$
+    Let $\phi_{\sigma}$ be the smooth spectral density of a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ whose spectrum is contained in $[-1, 1]$. Then the Chebyshev-Nyström++ estimate $\widetilde{\phi}_{\sigma}^{(m)}$ with \emph{even} degree $m = \mathcal{O}(\sigma^{-1}(\log(\varepsilon^{-1}) + \log(\sigma^{-1})))$, \emph{even} $n_{\mtx{\Omega}} = n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-1}\log(2\delta^{-1})^2)$, and smoothing parameter $0 < \sigma \ll 1$ satisfies with probability at least $1 - \delta$
     \begin{equation}
         \int_{-1}^{1} \left| \phi_{\sigma}(t) - \widetilde{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t \leq \varepsilon
         \label{equ:chebyshev-nystrom-error}
         %\lVert  \phi_{\sigma} - \phi_{\sigma}^{(m)} \rVert _1 &\leq \frac{2\sqrt{2}}{\sigma^2} (1 + \sigma)^{-m}.
         %\label{equ:2-chebyshev-interpolation-error}
     \end{equation}
-    for all $0 < \varepsilon \leq 1$ and $\delta \in (0, e^{-\sfrac{1}{2}}/2)$.
+    for all $\varepsilon \in (0, 1)$ and $\delta \in (0, e^{-\sfrac{1}{2}}/2)$.
 \end{theorem}
 
 \begin{proof}
@@ -857,17 +859,19 @@ What we have found to be crucial for a successful approximation of the full spec
         &\leq \int_{-1}^{1} \left| \phi_{\sigma}(t) - \phi_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \int_{-1}^{1} \left| \phi^{(m)}_{\sigma}(t) - \widetilde{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t && \text{(triangle inequality)} \notag \\
         &\leq \int_{-1}^{1} \left| \phi_{\sigma}(t) - \phi_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \varepsilon \int_{-1}^{1} \left| \phi^{(m)}_{\sigma}(t) \right|~\mathrm{d}t && \text{(\refthm{thm:nystrom-pp} w.p. $\geq 1 - \delta$)} \notag \\
         &\leq (1 + \varepsilon) \int_{-1}^{1} \left| \phi_{\sigma}(t) - \phi_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \varepsilon \int_{-1}^{1} \left| \phi_{\sigma}(t) \right|~\mathrm{d}t && \text{(triangle inequality)} \notag \\
-        &\leq (1 + \varepsilon) 2 \underline{E}_{\sigma, m} + \varepsilon. && \text{(\reflem{lem:non-negative-chebyshev-error} and normalization)} \notag \\
+        &\leq (1 + \varepsilon) 2 \underline{E}_{\sigma, m} + \varepsilon. && \text{(\refthm{thm:chebyshev-error} and normalization)} \notag \\
     \end{align}
-    From \reflem{lem:non-negative-chebyshev-error} we see that choosing $m = \mathcal{O}(\sigma^{-1}(\log(\varepsilon^{-1}) + \log(\sigma^{-1})))$ ensures $\underline{E}_{\sigma, m} \leq \varepsilon$, and thus, since $\mathcal{\varepsilon} \leq 1$,
+    From \reflem{lem:non-negative-chebyshev-error} we see that if $\sigma \ll 1$, choosing $m = \mathcal{O}(\sigma^{-1}(\log(\varepsilon^{-1}) + \log(\sigma^{-1})))$ ensures $\underline{E}_{\sigma, m} \leq \varepsilon$, and thus, since $\mathcal{\varepsilon} \leq 1$,
     \begin{equation}
         \int_{-1}^{1} \left| \phi_{\sigma}(t) - \widetilde{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t \leq (1+\varepsilon) 2 \varepsilon + \varepsilon \leq 5 \varepsilon.
     \end{equation}
 \end{proof}
 
-\todo{Maybe specialize \refthm{thm:nystrom} to spectral densities?}
+%\todo{Maybe specialize \refthm{thm:nystrom} to spectral densities?}
 
-We now discuss what value to choose for $n_{\mtx{\Omega}}$ in the Nyström trace estimator introduced in \refsec{subsec:nystrom}. In order to guarantee a good approximation error based on \refthm{thm:nystrom}, we analyze the numerical rank of the matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$.
+%We now discuss what value to choose for $n_{\mtx{\Omega}}$ in the Nyström trace estimator introduced in \refsec{subsec:nystrom}. In order to guarantee an even better approximation error based on \refthm{thm:nystrom}, we analyze the numerical rank of the matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$.
+
+In practice, the approximation error is often significantly better than guaranteed in \refthm{thm:chebyshev-nystrom}, particularly when $n_{\mtx{\Omega}}$ is chosen rather large. This is because the singular values of the matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ decay so quickly that already the Nyström approximation alone is highly accurate (cf. \refthm{thm:nystrom}). To establish a relation between the singular value decay of $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ and what choice of $n_{\mtx{\Omega}}$ is needed to achieve a better approximation than what we show in \refthm{thm:chebyshev-nystrom}, we study the numerical rank of $g_{\sigma}(t\mtx{I}_n - \mtx{A})$.
 
 We can express the numerical rank of a matrix with respect to the nuclear norm in terms of its singular values $\sigma_1 \geq \dots \geq \sigma_n \geq 0$
 \begin{equation}
@@ -915,7 +919,7 @@ If we additionally assume the eigenvalues of the matrix $\mtx{A}$ to be evenly d
     \label{equ:gaussian-kernel-numerical-rank-uniform}
 \end{equation}
 
-\todo{Discuss how this informs choice of $n_{\mtx{\Omega}}$.}
+Hence, choosing \todo{how discuss how to choose n Omega}
 
 \section{Numerical results}
 \label{sec:results}
