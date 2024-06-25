@@ -256,15 +256,15 @@ The downside of the Nyström estimator is that it will -- in general -- not work
 \subsection{Nyström++ estimator for parameter-dependent matrices}
 \label{subsec:nystrom-pp}
 
-Just as in the constant matrix case, our goal is now to prove that the Nyström++ estimator \refequ{equ:nystrompp-trace-estimator} achieves an $\varepsilon$ relative error with just $\mathcal{O}(\varepsilon^{-1})$ random vectors to construct the estimate. To do so, we mimic the proof of a similar bound for the Hutch++ estimator \cite[theorem 3.1]{meyer-2021-hutch-optimal}. Correspondingly, we will need to show that with $n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-2})$ the Nyström approximation verifies $\int \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)\rVert _F~\mathrm{d}t \leq \varepsilon \int \Trace(\mtx{B}(t))~\mathrm{d}t$, regardless of the structure of the matrix $\mtx{B}(t)$. Just as in the corresponding proof for the Girard-Hutchinson estimator \refthm{thm:hutchinson}, we again bound the higher order moments of the approximation error for fixed $t$ and then use Minkowsi's integral inequality to carry over the results to the continuous case. We will do this in a sequence of three lemmas.
+Just as in the constant matrix case, our goal is now to prove that the Nyström++ estimator \refequ{equ:nystrompp-trace-estimator} achieves an $\varepsilon$-relative error with just $\mathcal{O}(\varepsilon^{-1})$ random vectors used to construct the estimate. To do so, we mimic the proof of a similar bound for the Hutch++ estimator \cite[theorem 3.1]{meyer-2021-hutch-optimal}. Correspondingly, we will need to show that with $n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-2})$ the Nyström approximation verifies $\int \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)\rVert _F~\mathrm{d}t \leq \varepsilon \int \Trace(\mtx{B}(t))~\mathrm{d}t$, regardless of the structure of the matrix $\mtx{B}(t)$. Just as in the corresponding proof for the Girard-Hutchinson estimator \refthm{thm:hutchinson}, we again bound the higher order moments of the approximation error for fixed $t$ and then use Minkowsi's integral inequality to carry over the results to the continuous case. We will do this in a sequence of three lemmas.
 
-For reasons which will become clear in the proof of \reflem{lem:nystrom}, we will need to bound $\mathbb{E}^{p}\left[\lVert \mtx{\Sigma} \mtx{\Omega} \rVert _2 \right]$ for a diagonal matrix $\mtx{\Sigma}$ and a standard Gaussian random matrix $\mtx{\Omega}$. Several ways of bounding the moments of $\mtx{\Omega}$ already exist, however, most of them are either not sufficient for our purposes \cite{chen-2005-condition-numbers, edelman-1988-eigenvalues-condition, james-1964-distributions-matrix}. The corresponding result for the Frobenius norm has already been shown in \cite{kressner-2023-randomized-lowrank}. In \cite[lemma B.1]{tropp-2023-randomized-algorithms} a bound is achieved for $p = 2$ and $p = 4$. We will now generalize this result for arbitrary $p \in \mathbb{N}$. We first show the bound for Gaussian random vectors and then extend it to Gaussian random matrices in \reflem{lem:spectral-norm-moment}.
+For reasons which will become clear in the proof of \reflem{lem:nystrom}, we will need to bound $\mathbb{E}^{p}\left[\lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]$ for a constant matrix $\mtx{A}$ and a standard Gaussian random matrix $\mtx{\Omega}$. The corresponding result for the Frobenius norm $\mathbb{E}^{p}\left[\lVert \mtx{A} \mtx{\Omega} \rVert _F^2 \right]$ has already been shown in \cite{kressner-2023-randomized-lowrank}. Several ways of separately bounding the spectral norm moments of the Wishart matrix $\mtx{\Omega} \mtx{\Omega}^{\top}$ already exist, however, most of them are not sufficient for our purposes \cite{chen-2005-condition-numbers, edelman-1988-eigenvalues-condition, james-1964-distributions-matrix}. In \cite[lemma B.1]{tropp-2023-randomized-algorithms} a bound is achieved for $p = 1$ and $p = 2$. We will now generalize this result for arbitrary $p \in \mathbb{N}$. To do so, we first show the bound for Gaussian random vectors and then extend it to Gaussian random matrices in \reflem{lem:spectral-norm-moment}.
 
 \begin{lemma}{Spectral norm moments of non-standard Gaussian random vector}{spectral-norm-moment-vector}
     The matrix $\mtx{A} \in \mathbb{R}^{m \times m}$ and the standard Gaussian random vector $\vct{\omega} \in \mathbb{R}^{m}$ satisfy for all $k,p \in \mathbb{N}$ 
     \begin{equation}
-        \mathbb{E}^{p}\left[ \lVert \mtx{A} \vct{\omega} \rVert _2^2 \right]
-        \leq  (k + 2p) \left( \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \right).
+        \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \vct{\omega} \rVert _2^2 \right]
+        \leq  (k + p) \left( \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \right).
     \end{equation}
     %\begin{equation}
     %    \mathbb{E}^{p}\left[ \lVert \mtx{\Sigma} \mtx{\Omega}_2\rVert _2 \right]
@@ -276,10 +276,11 @@ For reasons which will become clear in the proof of \reflem{lem:nystrom}, we wil
 \end{lemma}
 
 \begin{remark}
-    \todo{Add remark (need to maybe convert back appendix lemma to $p/2$)}
+    In particular, this result can also be used to bound
     \begin{equation}
         \mathbb{E}^{p}\left[ \lVert \mtx{A} \vct{\omega} \rVert _2 \right] = \sqrt{\mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \vct{\omega} \rVert _2^2 \right]} \leq \sqrt{k + p} \cdot \left(\lVert \mtx{A} \rVert _2 + \frac{1}{\sqrt{k}}\lVert \mtx{A} \rVert _F\right)
     \end{equation}
+    for any $k,p \in \mathbb{N}$.
 \end{remark}
 
 \begin{proof}
@@ -287,8 +288,8 @@ For reasons which will become clear in the proof of \reflem{lem:nystrom}, we wil
 
     First, we can rewrite
     \begin{equation}
-        \mathbb{E}^{p}\left[ \lVert \mtx{\Sigma} \vct{\omega} \rVert _2^2 \right]
-        = \mathbb{E}^{p}\left[ \sum_{i=1}^{m} \sigma_i^2 \omega_i^2 \right].
+        \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{\Sigma} \vct{\omega} \rVert _2^2 \right]
+        = \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{i=1}^{m} \sigma_i^2 \omega_i^2 \right].
         \label{equ:matvec-spectral-norm-simplification}
     \end{equation}
     Inspired by the proof of \cite[theorem 1]{cohen-2016-optimal-approximate}, we split the diagonal entries of $\mtx{\Sigma}$ into $\ell = \lceil m/k \rceil$ groups of size $k \geq 1$
@@ -308,12 +309,12 @@ For reasons which will become clear in the proof of \reflem{lem:nystrom}, we wil
     \end{equation}
     This allows us to bound
     \begin{align}
-        \mathbb{E}^{p}\left[ \sum_{i=1}^{m} \sigma_i^2 \omega_i^2 \right]
-        &= \mathbb{E}^{p}\Bigg[ \sum_{i=1}^{\ell} \sum_{j=1}^{k} \underbrace{\sigma_{j + (i-1)k}^2}_{\leq \sigma_{1 + (i-1)k}^2} \omega_{j + (i-1)k}^2 \Bigg] && \text{(separate sum into groups)} \notag \\
-        &\leq \mathbb{E}^{p}\left[ \sum_{i=1}^{\ell} \sigma_{1 + (i-1)k}^2 \sum_{j=1}^{k} \omega_{j + (i-1)k}^2 \right] && \text{($\sigma_{j + (i-1)k}^2 \leq \sigma_{1 + (i-1)k}^2$, $\forall i, j$)} \notag \\
-        &\leq \sum_{i=1}^{\ell} \sigma_{1 + (i-1)k}^2 ~ \mathbb{E}^{p}\left[ \sum_{j=1}^{k} \omega_{j + (i-1)k}^2 \right] && \text{(triangle inequality)} \notag \\
+        \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{i=1}^{m} \sigma_i^2 \omega_i^2 \right]
+        &= \mathbb{E}^{\sfrac{p}{2}}\Bigg[ \sum_{i=1}^{\ell} \sum_{j=1}^{k} \underbrace{\sigma_{j + (i-1)k}^2}_{\leq \sigma_{1 + (i-1)k}^2} \omega_{j + (i-1)k}^2 \Bigg] && \text{(separate sum into groups)} \notag \\
+        &\leq \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{i=1}^{\ell} \sigma_{1 + (i-1)k}^2 \sum_{j=1}^{k} \omega_{j + (i-1)k}^2 \right] && \text{($\sigma_{j + (i-1)k}^2 \leq \sigma_{1 + (i-1)k}^2$, $\forall i, j$)} \notag \\
+        &\leq \sum_{i=1}^{\ell} \sigma_{1 + (i-1)k}^2 ~ \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{j=1}^{k} \omega_{j + (i-1)k}^2 \right] && \text{(triangle inequality)} \notag \\
         %&\leq \left( \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2 \right) 2 \left( \frac{\Gamma(\frac{k}{2} + p)}{\Gamma(\frac{k}{2})} \right)^{\sfrac{1}{p}} && \text{(\refequ{equ:singular-value-group-bound} and \cite[theorem 3.3.2]{hogg-2013-introduction-mathematical})} \notag \\
-        &\leq \left( \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2 \right) (k + 2 p). && \text{(\refequ{equ:singular-value-group-bound} and \reflem{lem:gamma})}
+        &\leq \left( \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2 \right) (k + p). && \text{(\refequ{equ:singular-value-group-bound} and \reflem{lem:gamma})}
     \end{align}
     
     %The moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ can be bound with help of the proof of \cite[lemma B.3]{tropp-2023-randomized-algorithms}
@@ -334,10 +335,10 @@ For reasons which will become clear in the proof of \reflem{lem:nystrom}, we wil
 \end{proof}
 
 \begin{lemma}{Spectral norm moments of non-standard Gaussian random matrix}{spectral-norm-moment}
-    The matrix $\mtx{A} \in \mathbb{R}^{m \times m}$ and the standard Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{m \times k}$ satisfy for all $p \in \mathbb{N}$ 
+    The matrix $\mtx{A} \in \mathbb{R}^{m \times m}$ and the standard Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{m \times k}$ satisfy for all $p \in \mathbb{N}, p \geq 2$ 
     \begin{equation}
-        \mathbb{E}^{p}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]
-        \leq  (k + 2p) \left( 3 \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \right).
+        \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]
+        \leq  (k + p) \left( 3 \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \right).
     \end{equation}
     %\begin{equation}
     %    \mathbb{E}^{p}\left[ \lVert \mtx{\Sigma} \mtx{\Omega}_2\rVert _2 \right]
@@ -349,24 +350,25 @@ For reasons which will become clear in the proof of \reflem{lem:nystrom}, we wil
 \end{lemma}
 
 \begin{remark}
-    \todo{Add remark (need to maybe convert back appendix lemma to $p/2$)}
+    In particular, this result can also be used to bound
     \begin{equation}
-        \mathbb{E}^{p}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2 \right] = \sqrt{\mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]} \leq \sqrt{k + p} \cdot \left(3 \lVert \mtx{A} \rVert _2 + \frac{1}{\sqrt{k}}\lVert \mtx{A} \rVert _F \right)
+        \mathbb{E}^{p}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2 \right] = \sqrt{\mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]} \leq \sqrt{k + p} \cdot \left(\sqrt{3} \lVert \mtx{A} \rVert _2 + \frac{1}{\sqrt{k}}\lVert \mtx{A} \rVert _F\right)
     \end{equation}
+    for any $k,p \in \mathbb{N}, p \geq 2$.
 \end{remark}
 
-
 \begin{proof}
-    From the proof of \cite[lemma B.1]{tropp-2023-randomized-algorithms} we know that
+    From the proof of \cite[lemma B.1]{tropp-2023-randomized-algorithms} we know that for $p \geq 2$
     \begin{equation}
-        \mathbb{E}^p\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]
-        \leq \lVert \mtx{A} \rVert _2^2 \mathbb{E}^p\left[ \lVert \vct{\omega}_1 \rVert _2^2 \right] + \mathbb{E}^p\left[ \lVert \mtx{A} \vct{\omega}_2 \rVert _2^2 \right]
+        \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]
+        \leq \lVert \mtx{A} \rVert _2^2 \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \vct{\omega}_1 \rVert _2^2 \right] + \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \vct{\omega}_2 \rVert _2^2 \right]
     \end{equation}
     for independent standard Gaussian random vectors $\vct{\omega}_1 \in \mathbb{R}^{k}$ and $\vct{\omega}_2 \in \mathbb{R}^{m}$. Both moments can be bound using \reflem{lem:spectral-norm-moment-vector}, one of which with $\mtx{A} = \mtx{I}_k$, to get
-    \begin{equation}
-        \mathbb{E}^p\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2 \right]
-        \leq (k + 2p) \left( 3 \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \right).
-    \end{equation}
+    \begin{align}
+        \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]
+        &\leq \lVert \mtx{A} \rVert _2^2 (k + p) \left( \lVert \mtx{I}_k \rVert _2^2 + \frac{1}{k} \lVert \mtx{I}_k \rVert _F^2 \right) + (k + p) \left( \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \right) \notag \\
+        &\leq (k + p) \left( 3 \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \right).
+    \end{align}
 
     %The moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ can be bound with help of the proof of \cite[lemma B.3]{tropp-2023-randomized-algorithms}
     %\begin{align}
@@ -432,13 +434,13 @@ For reasons which will become clear in the proof of \reflem{lem:nystrom}, we wil
     \begin{align}
         \mathbb{E}^{p}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2 \right]
         &= \mathbb{E}^{p}\left[ \lVert (\mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} )( \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger})^{\top} \rVert _F \right] && \text{($\lVert \mtx{A} \rVert _{(4)}^2 = \lVert \mtx{A} \mtx{A}^{\top} \rVert _{F}$)} \notag \\
-        &\leq \mathbb{E}^{p}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _F \right] && \text{($\lVert \mtx{A} \mtx{B} \rVert _F \leq \lVert \mtx{A} \rVert _F \lVert \mtx{B} \rVert _2$)} \notag \\
+        &\leq \mathbb{E}^{p}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _F \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2 \right] && \text{($\lVert \mtx{A} \mtx{B} \rVert _F \leq \lVert \mtx{A} \rVert _F \lVert \mtx{B} \rVert _2$)} \notag \\
         &\leq \mathbb{E}^{p}\left[ \sqrt{k} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2^2 \right]  && \text{($\lVert \mtx{A} \rVert _F \leq \sqrt{k} \lVert \mtx{A} \rVert _2$)} \notag \\
         &\leq \mathbb{E}^{p}\left[ \sqrt{k} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2^2 \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^2 \right]  && \text{(submultiplicativity)} \notag \\
-        &\leq \sqrt{k} \mathbb{E}^{p}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2^2\right] \mathbb{E}^{p}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^2  \right]  && \text{(independence)}
+        &\leq \sqrt{k} \mathbb{E}^{p}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2^2\right] \mathbb{E}^{p}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^2  \right]. && \text{(independence)}
         \label{equ:nystrom-proof-processed-tail}
     \end{align}
-    We can apply \reflem{lem:spectral-norm-moment} to $\mtx{\Lambda}_2^{\sfrac{1}{2}}$ to bound
+    We can apply \reflem{lem:spectral-norm-moment} with $\mtx{A} = \mtx{\Lambda}_2^{\sfrac{1}{2}}$ to bound
     \begin{equation}
         \mathbb{E}^{p}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2^2 \right]
         \leq (n_{\mtx{\Omega}} + 2p) \left( 3 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{1}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \right).
@@ -452,19 +454,19 @@ For reasons which will become clear in the proof of \reflem{lem:nystrom}, we wil
         &\leq \frac{e^4}{2} \frac{n_{\mtx{\Omega}} + k}{(n_{\mtx{\Omega}} - k + 1)^2}.
         \label{equ:pinv-spectral-norm-bound}
     \end{align}
-    The last step follows by expanding exponential function $e^n = 1 + n + \dots + n^n/n! + \dots$ for $n \in \mathbb{N}$ to see $e^n \geq 1 + n$ and $e^n \geq n^n / n!$ for all $n \in \mathbb{N}$, from which $(1 + n)^{\sfrac{1}{n}} \leq e$ and $\left( 1/n! \right)^{\sfrac{1}{n}} \leq e/n$ follow respectively. Hence, plugging \refequ{equ:spectral-norm-bound-applied} and  \refequ{equ:pinv-spectral-norm-bound} into \refequ{equ:nystrom-proof-processed-tail} gives us
+    The last step follows from the expansion of the exponential function $e^n = 1 + n + \dots + n^n/n! + \dots$ for $n \in \mathbb{N}$ to see $e^n \geq 1 + n$ and $e^n \geq n^n / n!$, from which $(1 + n)^{\sfrac{1}{n}} \leq e$ and $\left( 1/n! \right)^{\sfrac{1}{n}} \leq e/n$ follow respectively. Hence, inserting \refequ{equ:spectral-norm-bound-applied} and  \refequ{equ:pinv-spectral-norm-bound} in \refequ{equ:nystrom-proof-processed-tail} gives
     \begin{equation}
         \mathbb{E}^{p}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2 \right]
-        \leq \sqrt{k} \frac{e^4}{2} \frac{(k + n_{\mtx{\Omega}})(2p + n_{\mtx{\Omega}})}{(n_{\mtx{\Omega}} - k + 1)^2}  \left( 3 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{1}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \right)
+        \leq \sqrt{k} \frac{e^4}{2} \frac{(k + n_{\mtx{\Omega}})(2p + n_{\mtx{\Omega}})}{(n_{\mtx{\Omega}} - k + 1)^2}  \left( 3 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{1}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \right).
     \end{equation}
     We can identify $\lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 = \lambda_{k+1}$ and $\lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 = \Trace(\mtx{\Lambda}_2)$, and just as in the proof of \cite[lemma 3.1]{meyer-2021-hutch-optimal} we bound $\lambda_{k+1} \leq \Trace(\mtx{B})/k$ and $\Trace(\mtx{\Lambda}_2) \leq \Trace(\mtx{B})$ to get 
     \begin{align}
         \mathbb{E}^{p}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2 \right]
         &\leq \sqrt{k} \frac{e^4}{2} \frac{(k + n_{\mtx{\Omega}})(2p + n_{\mtx{\Omega}})}{(n_{\mtx{\Omega}} - k + 1)^2}  \left( \frac{3}{k} \Trace(\mtx{B}) + \frac{1}{n_{\mtx{\Omega}}} \Trace(\mtx{B}) \right) \notag \\
-        &= \frac{e^4}{2} \left( \frac{(k + n_{\mtx{\Omega}})(2p + n_{\mtx{\Omega}})}{(n_{\mtx{\Omega}} - k + 1)^2} \frac{3n_{\mtx{\Omega}} + k}{n_{\mtx{\Omega}}\sqrt{k}} \right) \Trace(\mtx{B})
+        &= \frac{e^4}{2} \left( \frac{(k + n_{\mtx{\Omega}})(2p + n_{\mtx{\Omega}})}{(n_{\mtx{\Omega}} - k + 1)^2} \frac{3n_{\mtx{\Omega}} + k}{n_{\mtx{\Omega}}\sqrt{k}} \right) \Trace(\mtx{B}).
         \label{equ:nystrom-proof-tail-bound}
     \end{align}
-    To match the decay rate of the first term \refequ{equ:nystrom-proof-frobenius-trace}, we need to ensure that the term enclosed in parentheses is of order $\mathcal{O}(1 / \sqrt{k})$. We are free to choose $p > 1$ and $k \in \mathbb{N}$ such that $n_{\mtx{\Omega}} \geq k + 2p$. This is the case if we let $k = n_{\mtx{\Omega}}/2$ and $p = n_{\mtx{\Omega}}/4$, which will make the term in parentheses become $9\sqrt{2}(3 + 1/2) / \sqrt{n_{\mtx{\Omega}}}$. Then, using the triangle inequality for $\mathbb{E}^{p}[\cdot]$ and inserting \refequ{equ:nystrom-proof-tail-bound} along with \refequ{equ:nystrom-proof-frobenius-trace} in \refequ{equ:nystrom-proof-persson-bonud} we obtain
+    To match the decay rate of the first term \refequ{equ:nystrom-proof-frobenius-trace}, we need to ensure the term enclosed in parentheses is of order $\mathcal{O}(1 / \sqrt{k})$. We are free to choose $p > 1$ and $k \in \mathbb{N}$ such that $n_{\mtx{\Omega}} \geq k + 2p$. This is the case if we let $k = n_{\mtx{\Omega}}/2$ and $p = n_{\mtx{\Omega}}/4$, which will make the term in parentheses become $9\sqrt{2}(3 + 1/2) / \sqrt{n_{\mtx{\Omega}}}$. Then, using the triangle inequality for $\mathbb{E}^{p}[\cdot]$ and inserting \refequ{equ:nystrom-proof-tail-bound} along with \refequ{equ:nystrom-proof-frobenius-trace} in \refequ{equ:nystrom-proof-persson-bonud} we obtain
     \begin{equation}
         \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}} \left[\lVert \mtx{B} - \Nystr{\mtx{\Omega}}{\mtx{B}} \rVert _F \right]
         \leq \frac{c}{\sqrt{n_{\mtx{\Omega}}}} \Trace(\mtx{B}).
@@ -498,7 +500,7 @@ For reasons which will become clear in the proof of \reflem{lem:nystrom}, we wil
     %which is smaller than $\varepsilon$ if $\delta \leq e^{-e^{4 \varepsilon^2}}$from which follows the second part of the theorem when using $n_{\mtx{\Omega}} = 2k$.
 \end{proof}
 
-\todo{Compare to Nyström++}
+When compared to the equivalent result for constant matrices \cite[Lemma 3.2]{persson-2022-improved-variants}, our constant factor up front is around four times larger, and our failure probability decays half a power slower.
 
 Finally, we can combine the bound on the Girard-Hutchinson estimator \refthm{thm:hutchinson} and the one on the Nyström approximation \reflem{lem:nystrom} to obtain our main result.
 
@@ -987,9 +989,9 @@ with $v_0 = -4$ and $\lambda = 8$, centered in cells of side length $L=6$ which 
 \section{Proofs}
 
 \begin{lemma}{Moment bound of $\chi^2$-random variable}{gamma}
-    Let $X$ follow a $\chi^2$ distribution with $k$ degrees of freedom. Then for all $p \in \mathbb{N}$ it holds
+    Let $X$ follow a $\chi^2$ distribution with $k \in \mathbb{N}$ degrees of freedom. Then for all $p \in \mathbb{N}$ it holds
     \begin{equation}
-        \mathbb{E}^{p}[X] \leq k + 2p
+        \mathbb{E}^{\sfrac{p}{2}}[X] \leq k + p
         %\frac{\Gamma(\frac{k + p}{2})}{\Gamma(\frac{k}{2})} \leq \left( \frac{k + p}{2} \right)^{\sfrac{p}{2}}.
     \end{equation}
 \end{lemma}
@@ -997,18 +999,35 @@ with $v_0 = -4$ and $\lambda = 8$, centered in cells of side length $L=6$ which 
 \begin{proof}
     From \cite[theorem 3.3.2]{hogg-2013-introduction-mathematical} we know
     \begin{equation}
-        \mathbb{E}^{p}[X] = 2 \left( \frac{\Gamma(\frac{k}{2} + p)}{\Gamma(\frac{k}{2})} \right)^{\sfrac{1}{p}}.
+        \mathbb{E}^{\sfrac{p}{2}}[X] = 2 \left( \frac{\Gamma(\frac{k + p}{2})}{\Gamma(\frac{k}{2})} \right)^{\sfrac{2}{p}}.
     \end{equation}
-    We can use a telescoping product and the property $\Gamma(z+1)/\Gamma(z) = z$ to bound
+    We first treat the case $k=p=1$, for which indeed
+    \begin{equation}
+        2 \left( \frac{\Gamma(\frac{1+1}{2})}{\Gamma(\frac{1}{2})} \right)^2 = \frac{2}{\pi} \leq 2 = 1 + 1
+    \end{equation}
+    So we now assume $k + p \geq 3$. We can use a telescoping product and the property $\Gamma(z+1)/\Gamma(z) = z$ to bound
     \begin{align}
-        \frac{\Gamma(\frac{k}{2} + p)}{\Gamma(\frac{k}{2})} 
-        &= \frac{\Gamma(\frac{k}{2} + 1)}{\Gamma(\frac{k}{2})} \frac{\Gamma(\frac{k}{2} + 2)}{\Gamma(\frac{k}{2} + 1)} \cdots \frac{\Gamma(\frac{k}{2} + p)}{\Gamma(\frac{k}{2} + p - 1)} \notag \\
-        &= \left(\frac{k}{2}\right) \left(\frac{k}{2} + 1\right) \cdots \left( \frac{k}{2} + p - 1 \right) \notag \\
-        &\leq \left(\frac{k}{2} + p - 1\right)^{p} 
+        \frac{\Gamma(\frac{k + p}{2})}{\Gamma(\frac{k}{2})} 
+        &= \frac{\Gamma(\frac{k}{2} + 1)}{\Gamma(\frac{k}{2})} \frac{\Gamma(\frac{k}{2} + 2)}{\Gamma(\frac{k}{2} + 1)} \cdots \frac{\Gamma(\frac{k}{2} + \lfloor \frac{p}{2} \rfloor)}{\Gamma(\frac{k}{2} + \lfloor \frac{p}{2} \rfloor - 1)} \frac{\Gamma( \frac{k + p}{2})}{\Gamma(\frac{k}{2} + \lfloor \frac{p}{2} \rfloor)} \notag \\
+        &= \left(\frac{k}{2}\right) \left(\frac{k}{2} + 1\right) \cdots \left( \frac{k}{2} + \bigg\lfloor \frac{p}{2} \bigg\rfloor - 1 \right) \frac{\Gamma( \frac{k + p}{2})}{\Gamma(\frac{k}{2} + \lfloor \frac{p}{2} \rfloor)} \notag \\
+        &\leq \left(\frac{k}{2} + \bigg\lfloor \frac{p}{2} \bigg\rfloor - 1\right)^{\lfloor \sfrac{p}{2} \rfloor} \frac{\Gamma( \frac{k + p}{2})}{\Gamma(\frac{k}{2} + \lfloor \frac{p}{2} \rfloor)}
     \end{align}
+    If $p$ is even, then $\lfloor p/2 \rfloor = p/2$ and hence
+    \begin{equation}
+        \frac{\Gamma(\frac{k + p}{2})}{\Gamma(\frac{k}{2})} 
+        \leq \left( \frac{k + p}{2} - 1 \right)^{\sfrac{p}{2}}
+        \leq \left( \frac{k + p}{2}\right)^{\sfrac{p}{2}}.
+    \end{equation}
+    If $p$ is odd, then $\lfloor p/2 \rfloor = (p - 1)/2$, from which follows with Gautschi's inequality \cite{kershaw-1983-extensions-gautschi}
+    \begin{equation}
+        \frac{\Gamma(\frac{k + p}{2})}{\Gamma(\frac{k}{2})}
+        \leq \left(\frac{k + p}{2} - \frac{3}{2} \right)^{ \frac{p - 1}{2}} \frac{\Gamma( \frac{k + p}{2})}{\Gamma(\frac{k + p}{2} - \frac{1}{2})}
+        \leq \left(\frac{k + p}{2}\right)^{ \frac{p - 1}{2}} \left(\frac{k + p}{2}\right)^{\sfrac{1}{2}}
+        = \left(\frac{k + p}{2}\right)^{ \sfrac{p}{2}}
+    \end{equation}
     Hence,
     \begin{equation}
-        \mathbb{E}^{p}[X] \leq 2 \left( \frac{k}{2} + p - 1 \right) \leq k + 2p.
+        \mathbb{E}^{\sfrac{p}{2}}[X] \leq 2 \left( \frac{k + p}{2} \right) \leq k + p.
     \end{equation}
 \end{proof}
 
