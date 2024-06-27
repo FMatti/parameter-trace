@@ -24,7 +24,7 @@ m = 2000
 n_Vec_list = np.logspace(1.3, 2.8, 7).astype(int) 
 
 plt.style.use("paper/plots/stylesheet.mplstyle")
-colors = cm.magma(np.arange(3) / 2.5)
+colors = ["#FFB000", "#648FFF", "#DC267F"]
 markers = ["o", "^", "s"]
 labels = [r"$n_{\mathbf{\Omega}} = 0$",
           r"$n_{\mathbf{\Psi}} = n_{\mathbf{\Omega}}$",

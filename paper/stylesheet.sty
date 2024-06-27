@@ -49,10 +49,10 @@
 %%% PAGE THEME
 
 % Page layout
-\usepackage[textwidth=420pt,
+\usepackage[textwidth=440pt,
             textheight=640pt,
             headheight=15pt,
-            voffset=40pt]{geometry}
+            voffset=10pt]{geometry}
 
 % Section title styles
 \renewcommand\section{\@startsection{section}{1}{\z@}
@@ -80,13 +80,30 @@
 %%% REFERENCING
 
 % Bibliography management
-\usepackage[square, numbers]{natbib}
-\bibliographystyle{plainnat}
-\setcitestyle{authoryear}
+\usepackage[backend=bibtex,style=alphabetic,minalphanames=3, backref=true]{biblatex}
+\addbibresource{bibliography.bib}
+%\usepackage[square, numbers]{natbib}
+%\bibliographystyle{plainnat}
+%\setcitestyle{alphabetic}
 \newcommand*{\doi}[1]{DOI: \href{https://doi.org/#1}{#1}}
 \let\oldcite\cite
 \renewcommand{\cite}[2][]{\textcolor{linkcolor}{\bf \oldcite[#1]{#2}}}
 %\bibpunct{\color{linkcolor}[}{\color{linkcolor}]}{,}{n}{}{;}
+\DeclareLabelalphaTemplate{
+   \labelelement{
+     \field[final]{shorthand}
+     \field{label}
+     \field[strwidth=1,strside=left]{labelname}
+   }
+   \labelelement{
+     \field[strwidth=2,strside=right]{year}
+   }
+}
+ \DeclareLabelalphaNameTemplate{
+   \namepart[use=true, pre=true, strwidth=1, compound=true]{prefix} 
+   \namepart{family}
+}
+
 
 % Links
 \usepackage{url}
@@ -286,7 +303,7 @@
 
 %%% GLOSSARY
 
-\usepackage{glossaries}
+%\usepackage{glossaries}
 
-\makeglossaries
+%\makeglossaries
 

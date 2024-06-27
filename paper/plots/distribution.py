@@ -19,13 +19,13 @@ eigvals_st = spectral_transformation(eigvals, min_ev, max_ev)
 
 # Set parameter
 t = np.linspace(-1, 1, 100)
-sigma_list = np.logspace(-3.0, -1.0, 7)
+sigma_list = np.logspace(-3.5, -1.0, 7)
 n_Vec = 80
 n_Psi_list = np.arange(n_Vec + 1, step=20).astype(np.int64)
 n_Omega_list = n_Vec - n_Psi_list
 
 plt.style.use("paper/plots/stylesheet.mplstyle")
-colors = cm.magma(np.arange(5) / 4.5)
+colors = ["#FFB000", "#FE6100", "#DC267F", "#785EF0", "#648FFF"]
 markers = ["o", "^", "s", "p", "d"]
 labels = [r"$n_{\mathbf{\Psi}} = " + "{}$, ".format(n_Psi) + r"$n_{\mathbf{\Omega}} = " + "{}$".format(n_Omega) for n_Psi, n_Omega in zip(n_Psi_list, n_Omega_list)]
 
