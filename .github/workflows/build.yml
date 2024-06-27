@@ -35,7 +35,7 @@ jobs:
 #        run: python setup/generate_matrices.py
 
       - name: Generate plots and tables
-        run: python setup/generate_paper.py
+        run: python setup/generate_results.py
 
       - name: Obtain commit hash and time
         run: |
