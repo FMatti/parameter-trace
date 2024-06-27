@@ -2,7 +2,6 @@ import __context__
 
 import numpy as np
 import scipy as sp
-import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 from src.simple import spectral_density, spectral_transformation, form_spectral_density, gaussian_kernel
 
@@ -24,11 +23,9 @@ m = 2000
 n_Vec_list = np.logspace(1.3, 2.8, 7).astype(int) 
 
 plt.style.use("paper/plots/stylesheet.mplstyle")
-colors = ["#FFB000", "#648FFF", "#DC267F"]
-markers = ["o", "^", "s"]
-labels = [r"$n_{\mathbf{\Omega}} = 0$",
-          r"$n_{\mathbf{\Psi}} = n_{\mathbf{\Omega}}$",
-          r"$n_{\mathbf{\Psi}} = 0$"]
+colors = ["#648FFF", "#DC267F", "#FFB000"]
+markers = ["o", "s", "d"]
+labels = [r"$n_{\mathbf{\Omega}} = 0$", r"$n_{\mathbf{\Psi}} = n_{\mathbf{\Omega}}$", r"$n_{\mathbf{\Psi}} = 0$"]
 
 # Determine the baseline spectral density
 kernel = lambda x: gaussian_kernel(x, sigma=sigma)

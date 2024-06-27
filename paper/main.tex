@@ -24,15 +24,6 @@
 %}
 
 \todo{
-
-\paragraph{TODO}
-\begin{itemize}
-    \item Check that everywhere correct/consistent orders $\mathcal{O}(\varepsilon^{-2} + \log(\delta^{-1})$)
-    \item 
-\end{itemize}
-}
-
-\todo{
 \begin{abstract}
     Write abstract.
 \end{abstract}
@@ -731,7 +722,7 @@ Second, square this expansion with \refalg{alg:chebyshev-squaring} to obtain the
 With a complexity of $\mathcal{O}(m \log(m))$ this procedure is computationally inexpensive and allows for very similar convergence bounds to \reflem{lem:chebyshev-error}, which we will derive in \refsec{subsubsec:chebyshev-nystrom-analysis}. In \reftab{tab:chebyshev-timing-interpolation}, the non-negative expansion can be seen to only be slightly slower than the normal one.
 
 \begin{table}[ht]
-    \caption{Runtime in milliseconds for computing the coefficients of the Chebyshev expansion of the smoothing kernel $g_{\sigma}$ \refequ{equ:smoothing-kernel} with $\sigma=0.05$, at $n_t=1000$ points, and for various degrees $m$. We average over 7 runs of the algorithms and repeat these runs 1000 times to form the mean and standard deviation which are given in the below table.}
+    \caption{We compare the runtime in milliseconds for computing the coefficients of the Chebyshev expansion of the smoothing kernel $g_{\sigma}$ \refequ{equ:smoothing-kernel} in three different ways: as proposed in \cite[algorithm 1]{lin-2017-randomized-estimation} (\emph{oversampled FFT}), using the discrete cosine transform (\emph{DCT}), and computing a non-negative Chebyshev expansion with \refalg{alg:chebyshev-squaring} (\emph{non-negative DCT}). We use $\sigma=0.005$, $n_t=1000$ parameter values, and various degrees $m$. For stability, we average over 7 runs of the algorithms and repeat these runs 1000 times to form the mean and standard deviation which are given in the below table.}
     \label{tab:chebyshev-timing-interpolation}
    \input{tables/interpolation.tex}
 \end{table}
@@ -764,7 +755,7 @@ for which we can first precompute the small $n_{\mtx{\Omega}} \times n_{\mtx{\Om
 \begin{figure}[ht]
     \centering
     \input{plots/interpolation.pgf}
-    \caption{Difference in the accuracy when computing \refequ{equ:3-nystrom-spectral-density} using a separate expansion (interpolation) versus explicitly squaring the matrix function (squaring). With the NC, which we will introduce on the next few pages, the spectral density of a 2D model problem from \refsec{sec:5-experiments-density-function} is computed for a Gaussian smoothing-kernel with smoothing-parameter $=0.05$ and fixed sketch-size $=80$. An estimate of the relative error in the $L^1$-norm is computed based on num-evaluation-points $=100$ evaluation of the spectral density.}
+    \caption{Difference in the accuracy when computing the estimate \refequ{equ:cyclic-property} once by separately expanding the squared smoothing kernel $g_{\sigma}^2$ (\emph{inconsistent}), once by squaring the Chebyshev expansion $g_{\sigma}^{(m)}$ using \refalg{alg:chebyshev-squaring} (\emph{consistent}), and once with a non-negative Chebyshev expansion $\underline{g}_{\sigma}^{(m)}$ \refequ{equ:non-negative-chebyshev-expansion} which is also squared with \refalg{alg:chebyshev-squaring} (\emph{non-negative}). We use a small example matrix from \refsec{sec:results}, fix the size of the Nyström approximation to $n_{\mtx{\Omega}} = 80$, let $\sigma = 0.005$, and compute the $L^1$ error from the approximation of the spectral density at $n_t = 100$ uniformly spaced values of $t$.}
     \label{fig:interpolation-issue}
 \end{figure}
 
@@ -825,7 +816,14 @@ The algorithm also accomodates the two other estimators introduced in \refsec{se
 
 The pseudoinverses on \reflin{lin:4-nystromchebyshev-nystrom-pp} need to be computed with care. It is possible to reformulate the problem as a generalized eigenvalue problem and apply thresholding to the smallest eigenvalues of a certain matrix to enforce stability \cite{lin-2017-randomized-estimation, epperly-2022-theory-quantuma}. Since this renders the algorithm significantly more complicated but only improved the accuracy slightly during our experiments, we will instead evaluate these expressions in \reflin{lin:4-nystromchebyshev-nystrom-pp} using a least-squares solver which likewise uses a truncation of the smallest eigenvalues to enforce better conditioning.
 
-What we have found to be crucial for a successful approximation of the full spectral density was the detection of regions wherein lie no eigenvalues, i.e. regions where the spectral density nearly vanishes. For small smoothing parameters $\sigma$, the rapid decay of the Gaussian $g_{\sigma}$ will cause $\mtx{K}(t_i) \approx g_{\sigma}(t_i\mtx{I}_n - \mtx{A})$ to be close to the zero matrix for parameter values $t_i$ located in such regions. Hence, on line \reflin{lin:4-nystromchebyshev-nystrom-pp} we would compute the pseudoinverse of an almost zero matrix, which can be extremely unstable. Notice that $\Trace(\mtx{K}_1(t_i)) / n_{\mtx{\Omega}}$ is the $n_{\mtx{\Omega}}$-query Girard-Hutchinson estimator. We may use it as a rough indicator whether $t_i$ lies within a region where the spectral density nearly vanishes, and subsequently set $\widetilde{\phi}_{\sigma}(t_i) = 0$ instead of computing the full expression on \reflin{lin:4-nystromchebyshev-nystrom-pp}.
+What we have found to be crucial for a successful approximation of the full spectral density was the detection of regions wherein lie no eigenvalues, i.e. regions where the spectral density nearly vanishes. For small smoothing parameters $\sigma$, the rapid decay of the Gaussian $g_{\sigma}$ will cause $\mtx{K}(t_i) \approx g_{\sigma}(t_i\mtx{I}_n - \mtx{A})$ to be close to the zero matrix for parameter values $t_i$ located in such regions. Hence, on line \reflin{lin:4-nystromchebyshev-nystrom-pp} we would compute the pseudoinverse of an almost zero matrix, which can be extremely unstable (see \reffig{fig:zerocheck}). Notice that $\Trace(\mtx{K}_1(t_i)) / n_{\mtx{\Omega}}$ is the $n_{\mtx{\Omega}}$-query Girard-Hutchinson estimator. We may use it as a rough indicator whether $t_i$ lies within a region where the spectral density nearly vanishes, and subsequently set $\widetilde{\phi}_{\sigma}(t_i) = 0$ instead of computing the full expression on \reflin{lin:4-nystromchebyshev-nystrom-pp}.
+
+\begin{figure}[ht]
+    \centering
+    \input{plots/zerocheck.pgf}
+    \caption{The difference the non-zero check can make when approximating a spectral density using \refalg{alg:nystrom-chebyshev-pp}. Here, we used a matrix described in \refsec{sec:results} and ran the Chebyshev-Nyström++ method with and without estimating if the matrix function is zero before taking its pseudo-inverse. We let $m=2000$, $n_{\mtx{\Omega}}=80$, $n_{\mtx{\Psi}}=0$, and $\sigma = 0.004$.}
+    \label{fig:zerocheck}
+\end{figure}
 
 \subsubsection{Analysis}
 \label{subsubsec:chebyshev-nystrom-analysis}
@@ -938,10 +936,10 @@ with $d_{\varepsilon, \sigma} = \sigma \sqrt{-2 \log(\sqrt{2 \pi} \sigma \vareps
 
 If we additionally assume the eigenvalues of the matrix $\mtx{A}$ to be evenly distributed within $[-1, 1]$, that is, in any subinterval of fixed length in $[a, b]$, $-1 \leq a < b \leq 1$, we can expect to find roughly the same number of eigenvalues, then we can estimate the numerical rank of $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ to be
 \begin{equation}
-    r_{\varepsilon}(g_{\sigma}(t\mtx{I}_n - \mtx{A})) \lessapprox n d_{\varepsilon, \sigma} \approx n \sigma.
+    r_{\varepsilon}(g_{\sigma}(t\mtx{I}_n - \mtx{A})) \lessapprox n d_{\varepsilon, \sigma} \approx 6 n \sigma,
     \label{equ:gaussian-kernel-numerical-rank-uniform}
 \end{equation}
-Hence, choosing $n_{\mtx{\Omega}} = \mathcal{O}(n \sigma)$ will approximations which are significantly better than \refthm{thm:chebyshev-nystrom}.
+provided we set $\varepsilon = 10^{-16}$ and choose $\sigma$ roughly between $10^{-8}$ and $1$. Hence, choosing $n_{\mtx{\Omega}} = \mathcal{O}(n \sigma)$ will approximations which are significantly better than \refthm{thm:chebyshev-nystrom}.
 
 \section{Numerical results}
 \label{sec:results}

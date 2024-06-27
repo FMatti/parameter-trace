@@ -2,29 +2,51 @@ import __context__
 
 import numpy as np
 import matplotlib.pyplot as plt
-
-from src.algorithms import NC
-from src.matrices import ModES3D
-from src.plots import compute_spectral_density_errors, plot_spectral_density_errors
-
-plt.style.use("paper/plots/stylesheet.mplstyle")
+from src.matrices import hamiltonian
+from src.simple import spectral_density, spectral_transformation, form_spectral_density, gaussian_kernel
 
 np.random.seed(0)
 
-methods = NC
-labels = ["interpolation", "squaring", "non-negative"]
-fixed_parameters = [{"n_v": 80, "sigma": 0.05, "square_coefficients": "interpolation"},
-                    {"n_v": 80, "sigma": 0.05, "square_coefficients": "transformation"},
-                    {"n_v": 80, "sigma": 0.05, "square_coefficients": "transformation", "nonnegative": True}]
-variable_parameters = "m"
-variable_parameters_values = (np.logspace(2.3, 3.5, 7).astype(int) // 2) * 2
+# Load matrix
+A = hamiltonian(dim=2)
 
-A = ModES3D(dim=2)
-colors = ["#FFB000", "#648FFF", "#DC267F"]
-markers = ["o", "^", "s"]
-spectral_density_errors = compute_spectral_density_errors(A, methods, labels, variable_parameters, variable_parameters_values, fixed_parameters, n_t=100)
+# Perform spectral transform with A and its eigenvalues
+eigvals = np.linalg.eigvalsh(A.toarray())
+min_ev, max_ev = eigvals[0], eigvals[-1]
+A_st = spectral_transformation(A, min_ev, max_ev)
+eigvals_st = spectral_transformation(eigvals, min_ev, max_ev)
 
-fig, ax = plt.subplots(figsize=(4, 3))
-plot_spectral_density_errors(spectral_density_errors, fixed_parameters, variable_parameters, variable_parameters_values, ignored_parameters=["square_coefficients", "n_v", "sigma", "nonnegative"], colors=colors, error_metric_name="$L^1$ error", x_label="expansion degree $m$", markers=markers, ax=ax)
+# Set parameter
+t = np.linspace(-1, 1, 100)
+sigma = 0.005
+n_Omega = 80
+m_list = (np.logspace(1.8, 3.3, 7).astype(int) // 2) * 2
 
+plt.style.use("paper/plots/stylesheet.mplstyle")
+colors = ["#648FFF", "#DC267F", "#FFB000"]
+markers = ["o", "s", "d"]
+labels = ["inconsistent", "consistent", "non-negative"]
+
+# Determine the baseline spectral density
+kernel = lambda x: gaussian_kernel(x, sigma=sigma)
+baseline = form_spectral_density(eigvals_st, t, kernel)
+
+error = np.empty((3, len(m_list)))
+for j, m in enumerate(m_list):
+    estimate = spectral_density(A_st, t, m, 0, n_Omega, kernel, consistent=False)
+    error[0, j] = 2 * np.mean(np.abs(estimate - baseline))
+    estimate = spectral_density(A_st, t, m, 0, n_Omega, kernel)
+    error[1, j] = 2 * np.mean(np.abs(estimate - baseline))
+    estimate = spectral_density(A_st, t, m, 0, n_Omega, kernel, nonnegative=True)
+    error[2, j] = 2 * np.mean(np.abs(estimate - baseline))
+
+for i in range(3):
+    plt.plot(m_list, error[i], color=colors[i], marker=markers[i], label=labels[i])
+
+plt.grid(True, which="both")
+plt.ylabel(r"$L^1$ error")
+plt.xlabel(r"expansion degree $m$")
+plt.legend()
+plt.xscale("log")
+plt.yscale("log")
 plt.savefig("paper/plots/interpolation.pgf", bbox_inches="tight")

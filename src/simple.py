@@ -138,7 +138,7 @@ def square_chebyshev_expansion(mu):
 
     return nu
 
-def spectral_density(A, t=0, m=100, n_Psi=10, n_Omega=10, kernel=gaussian_kernel, nonnegative=False, kappa=1e-5, rcond=1e-5, seed=0):
+def spectral_density(A, t=0, m=100, n_Psi=10, n_Omega=10, kernel=gaussian_kernel, nonnegative=False, consistent=True, kappa=1e-5, rcond=1e-5, seed=0):
     """
     Chebyshev-Nyström++ method for estimating the spectral density.
 
@@ -184,7 +184,10 @@ def spectral_density(A, t=0, m=100, n_Psi=10, n_Omega=10, kernel=gaussian_kernel
 
     # Compute coefficients of Chebyshev expansion of the smoothing kernel
     mu = chebyshev_expansion(kernel, t, m, nonnegative=nonnegative)
-    nu = square_chebyshev_expansion(mu)
+    if consistent:
+        nu = square_chebyshev_expansion(mu)
+    else:
+        nu = chebyshev_expansion(lambda s: kernel(s) ** 2, t, 2 * m, nonnegative=nonnegative)
 
     # Generate Gaussian random matrices
     Omega = np.random.randn(n, n_Omega)

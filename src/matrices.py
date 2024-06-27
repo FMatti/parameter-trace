@@ -221,7 +221,7 @@ def periodic_gaussian_well(X, n=1, L=6, var=1.0, scaling_factor=1.0):
     return potential
 
 
-def ModES3D(n=1, L=6, h=0.6, dim=3, bc="periodic", beta=2.0, alpha=-4.0):
+def hamiltonian(n=1, L=6, h=0.6, dim=3, bc="periodic", beta=2.0, alpha=-4.0):
     """
     Generate the example matrices 'ModES3D_X' from [2].
 
