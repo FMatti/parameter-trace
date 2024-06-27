@@ -34,7 +34,6 @@
 import __context__
 
 import numpy as np
-import scipy as sp
 import matplotlib.pyplot as plt
 from src.simple import spectral_density, spectral_transformation, form_spectral_density, gaussian_kernel
 from src.matrices import hamiltonian
