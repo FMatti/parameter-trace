@@ -10,7 +10,6 @@ ytick.labelsize : 12
 pgf.texsystem : pdflatex
 text.usetex : True
 font.family : "serif"
-font.serif : "Palatino"
 font.size : 12
 
 legend.fontsize : 12

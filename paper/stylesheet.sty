@@ -82,13 +82,9 @@
 % Bibliography management
 \usepackage[backend=bibtex,style=alphabetic,minalphanames=3, backref=true]{biblatex}
 \addbibresource{bibliography.bib}
-%\usepackage[square, numbers]{natbib}
-%\bibliographystyle{plainnat}
-%\setcitestyle{alphabetic}
-\newcommand*{\doi}[1]{DOI: \href{https://doi.org/#1}{#1}}
+%\newcommand*{\doi}[1]{DOI: \href{https://doi.org/#1}{#1}}
 \let\oldcite\cite
 \renewcommand{\cite}[2][]{\textcolor{linkcolor}{\bf \oldcite[#1]{#2}}}
-%\bibpunct{\color{linkcolor}[}{\color{linkcolor}]}{,}{n}{}{;}
 \DeclareLabelalphaTemplate{
    \labelelement{
      \field[final]{shorthand}
