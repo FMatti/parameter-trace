@@ -26,7 +26,7 @@ n_Omega_list = n_Vec - n_Psi_list
 
 plt.style.use("paper/plots/stylesheet.mplstyle")
 colors = ["#FFB000", "#FE6100", "#DC267F", "#785EF0", "#648FFF"]
-markers = ["o", "^", "s", "p", "d"]
+markers = ["d", "p", "s", "^", "o"]
 labels = [r"$n_{\mathbf{\Psi}} = " + "{}$, ".format(n_Psi) + r"$n_{\mathbf{\Omega}} = " + "{}$".format(n_Omega) for n_Psi, n_Omega in zip(n_Psi_list, n_Omega_list)]
 
 error = np.empty((len(n_Psi_list), len(sigma_list)))

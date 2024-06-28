@@ -18,7 +18,7 @@ eigvals_st = spectral_transformation(eigvals, min_ev, max_ev)
 
 # Set parameter
 t = np.linspace(-1, 1, 500)
-sigma = 0.004
+sigma = 0.005
 m = 2000
 n_Omega = 80
 
