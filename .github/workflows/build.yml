@@ -29,13 +29,13 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Set up TeX environment
-        run: sudo apt-get update && sudo apt-get install texlive texlive-luatex texlive-publishers texlive-science texlive-fonts-extra cm-super dvipng
+        run: sudo apt-get update && sudo apt-get install texlive texlive-luatex texlive-publishers texlive-science texlive-fonts-extra texlive-bibtex-extra cm-super dvipng
 
 #      - name: Generate matrices
 #        run: python setup/generate_matrices.py
 
-      - name: Generate plots and tables
-        run: python setup/generate_results.py
+#      - name: Generate plots and tables
+#        run: python setup/generate_results.py
 
       - name: Obtain commit hash and time
         run: |
@@ -44,7 +44,7 @@ jobs:
 
       - name: Generate paper
         run: |
-          echo "This document, along with all included plots and tables, was generated from commit \href{${{ github.server_url }}/${{ github.repository }}/tree/${{ env.sha_short }}}{${{ env.sha_short }}}}} at \url{${{ github.server_url }}/${{ github.repository }}}}} on ${{ env.build_time }}." >> "${{ env.PAPER_DIR }}/re-pro-badge.tex"
+          echo "This document, along with all included plots and tables, was generated from commit \href{${{ github.server_url }}/${{ github.repository }}/tree/${{ env.sha_short }}}{${{ env.sha_short }}} at \url{${{ github.server_url }}/${{ github.repository }}} on ${{ env.build_time }}." >> "${{ env.PAPER_DIR }}/re-pro-badge.tex"
           python setup/generate_paper.py
 
       - name: Upload paper as PDF artifact
