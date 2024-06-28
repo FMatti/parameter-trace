@@ -1,6 +1,4 @@
-![Rand-SD Logo](thesis/plots/icon_github.png "Rand-SD")
-
-# Rand-SD
+# pTrace
 
 ![](https://img.shields.io/badge/-Compatibility-gray?style=flat-square) &ensp;
 ![](https://img.shields.io/badge/Python_3.8+-white?style=flat-square&logo=python&color=white&logoColor=white&labelColor=gray)
@@ -38,77 +36,72 @@ python -m install -r requirements.txt
 
 Reproduce the whole project with the following command
 ```[shell]
-python -m setup.py -a
+python -m reproduce.py -a
 ```
 > [!NOTE]
 > Reproducing the whole project might take up to three hours!
 
 ## Theoretical background
 
-We concern ourselves with the approximation of the smoothened spectral density 
+
+We consider parameter-dependent matrices of the form
 
 $$
-\phi_{\sigma}(t) = \sum_{i=1}^n g_{\sigma}(t - \lambda_i) = \mathrm{Tr}(g_{\sigma}(t\boldsymbol{I} - \boldsymbol{A}))
+    \boldsymbol{B}(t) = \begin{bmatrix}
+        b_{11}(t) & b_{12}(t) & \dots & b_{1n}(t) \\
+        b_{21}(t) & b_{22}(t) & \dots & b_{2n}(t) \\
+        \vdots & \vdots & \ddots & \vdots \\
+        b_{n1}(t) & b_{n2}(t) & \dots & b_{nn}(t) \\
+    \end{bmatrix} \in \mathbb{R}^{n \times n}
 $$
 
-of a large symmeric matrix $\boldsymbol{A} \in \mathbb{R}^{n \times n}$.
+where $b_{ij}(t)$ are functions depending continuously on the parameter $t$ which takes values in the interval $[a,b]$. The trace of such a matrix is defined as
+$$
+    \operatorname{Tr}(\boldsymbol{B}(t)) = \sum_{i=1}^{n} b_{ii}(t).
+$$
+However, we assume that we only have access to products of this matrix with vectors for each $t \in [a, b]$, so this definition will not be directly useful for computing the trace.
 
-### Chebyshev expansion
+### Girard-Hutchinson estimator
 
-In all methods, we first compute the Chebyshev expansion
+We can approximate the trace with the Girard-Hutchinson estimator: We take $n_{\boldsymbol{\Psi}}$ stochastically independent standard Gaussian random vectors $\boldsymbol{\psi}_1,\dots, \boldsymbol{\psi}_{n_{\boldsymbol{\Psi}}} \in \mathbb{R}^{n}$ to form
 
 $$
-g_{\sigma}(t\boldsymbol{I} - \boldsymbol{A}) \approx g_{\sigma}^{(m)}(t\boldsymbol{I} - \boldsymbol{A}) = \sum_{l=0}^{m} \mu_l(t) T_l(\boldsymbol{A}).
+    \operatorname{Tr}_{\boldsymbol{\Psi}}(\boldsymbol{B}(t))
+    = \frac{1}{n_{\boldsymbol{\Psi}}} \sum_{j=1}^{n_{\boldsymbol{\Psi}}} \boldsymbol{\psi}_j^{\top} \boldsymbol{B}(t) \boldsymbol{\psi}_j
+    = \frac{1}{n_{\boldsymbol{\Psi}}} \operatorname{Tr}( \boldsymbol{\Psi}^{\top} \boldsymbol{B}(t) \boldsymbol{\Psi})
 $$
 
-### Delta-Gauss-Chebyshev
+where $\boldsymbol{\Psi} = [\boldsymbol{\psi}_1 ~ \cdots ~ \boldsymbol{\psi}_{n_{\boldsymbol{\Psi}}}] \in \mathbb{R}^{n \times n_{\boldsymbol{\Psi}}}$. Other choices for the distribution of the random vectors are possible, for example by uniformly sampling from $\{-1, +1\}$ or from the $(n-1)$-sphere. However, our theoretical developments only hold in the Gaussian case.
 
-We directly estimate the trace using the Hutchinson's trace estimator with a standard Gaussian random matrix $\boldsymbol{\Psi} \in \mathbb{R}^{n \times n_{\Psi}}$ to obtain
+### Nyström estimator
+
+Alternatively, the trace of a symmetric matrix whose singular values decay quickly can be approximated well by using a Gaussian sketching matrix $\boldsymbol{\Omega} \in \mathbb{R}^{n \times n_{\boldsymbol{\Omega}}}$ to form the Nyström approximation
+$$
+    \boldsymbol{B}_{\boldsymbol{\Omega}}(t) = (\boldsymbol{B}(t) \boldsymbol{\Omega}) (\boldsymbol{\Omega}^{\top} \boldsymbol{B}(t) \boldsymbol{\Omega})^{\dagger} (\boldsymbol{B}(t) \boldsymbol{\Omega})^{\top}.
+$$
+Then we can estimate the trace as $\operatorname{Tr}(\boldsymbol{B}_{\boldsymbol{\Omega}}(t))$. Thanks to the invariance of the trace under cyclic permutation of its arguments and the symmetry of the matrix, we may rewrite this estimator as
 
 $$
-\phi_{\sigma}(t) \approx \widetilde \phi_{\sigma}^{(m)}(t) = \frac{1}{n_{\Psi}} \sum_{l=0}^{m} \mu_l(t) \mathrm{Tr}(\boldsymbol{\Psi}^{\top} T_l(\boldsymbol{A}) \boldsymbol{\Psi}).
+    \operatorname{Tr}(\boldsymbol{B}_{\boldsymbol{\Omega}}(t)) = \operatorname{Tr}( (\boldsymbol{\Omega}^{\top} \boldsymbol{B}(t) \boldsymbol{\Omega})^{\dagger} ( \boldsymbol{\Omega}^{\top} \boldsymbol{B}(t)^2 \boldsymbol{\Omega})).
 $$
 
-### Nyström-Chebyshev
+### Nyström++ estimator
 
-We compute the Nyström approximation with a standard Gaussian sketching matrix $\boldsymbol{\Omega} \in \mathbb{R}^{n \times n_{\Omega}}$
-
+Finally, an estimator which corrects for inaccuracies in the Nyström approximation by estimating the trace of its residual using the Girard-Hutchinson estimator is
 $$
-g_{\sigma}(t\boldsymbol{I}- \boldsymbol{A}) \approx \widehat g_{\sigma}^{(m)}(t\boldsymbol{I}- \boldsymbol{A}) =
-(g_{\sigma}^{(m)}(t\boldsymbol{I}- \boldsymbol{A}) \boldsymbol{\Omega})(\boldsymbol{\Omega}^{\top} g_{\sigma}^{(m)}(t\boldsymbol{I}- \boldsymbol{A}) \boldsymbol{\Omega})(g_{\sigma}^{(m)}(t\boldsymbol{I}- \boldsymbol{A}) \boldsymbol{\Omega})^{\top}
+    \operatorname{Tr}_{\boldsymbol{\Psi}, \boldsymbol{\Omega}}(\boldsymbol{B}(t)) = \operatorname{Tr}(\boldsymbol{B}_{\boldsymbol{\Omega}}(t)) + \operatorname{Tr}_{\boldsymbol{\Psi}}(\boldsymbol{B}(t) - \boldsymbol{B}_{\boldsymbol{\Omega}}(t)).
 $$
-
-and compute its trace
-
-$$
-\phi_{\sigma}(t) \approx \widehat \phi_{\sigma}^{(m)}(t) = \mathrm{Tr}(\widehat{g}_{\sigma}^{(m)}(t\boldsymbol{I}- \boldsymbol{A})).
-$$
-
-### Nyström-Chebyshev++
-
-We compute the Nyström approximation and apply the Hutchinson's to the residual of the approximation to get the trace 
-
-$$
-\phi_{\sigma}(t) \approx \breve \phi_{\sigma}^{(m)}(t) = \mathrm{Tr}(\widehat g_{\sigma}^{(m)}(t\boldsymbol{I} - \boldsymbol{A})) + \frac{1}{n_{\Psi}} \mathrm{Tr}(\boldsymbol{\Psi}^{\top} (g_{\sigma}^{(m)}(t\boldsymbol{I}- \boldsymbol{A}) - \widehat g_{\sigma}^{(m)}(t\boldsymbol{I} - \boldsymbol{A})) \boldsymbol{\Psi}).
-$$
+This is the parameter-dependent analogue of the Nyström++ estimator, which is based on the Hutch++ estimator.
 
 ## Project structure
 
 ```
-Rand-SD
+Rand-TRACE
 │   README.md           (file you are reading right now)
 |   requirements.txt    (python package requirements file)
-|   setup.py            (script for easy setup of project)
+|   reproduce.py        (script for easy setup of project)
 |
-└───examples            (folder with example jupyter notebooks for the project)
+└───paper               (the LaTeX project for the paper)
 └───setup               (scripts which help setup and reproduce project)
 └───src                 (the Python modules which were written for the project)
 ```
-
-## Contact
-
-In case of questions and unclarities, feel free to contact us through one of the following channels:
-
-[![Gmail](https://img.shields.io/badge/Mail-D14836?logo=gmail&logoColor=white)](mailto:somecallmefabio@gmail.ch)
-[![GitHub](https://img.shields.io/badge/GitHub-%23121011.svg?logo=github&logoColor=white)](https://github.com/FMatti)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/fmatti/)
