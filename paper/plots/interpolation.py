@@ -44,7 +44,7 @@ for i in range(3):
     plt.plot(m_list, error[i], color=colors[i], marker=markers[i], label=labels[i])
 
 plt.grid(True, which="both")
-plt.ylabel(r"$L^1$ error")
+plt.ylabel(r"$L^1$-error")
 plt.xlabel(r"expansion degree $m$")
 plt.legend()
 plt.xscale("log")

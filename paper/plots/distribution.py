@@ -45,7 +45,7 @@ for i in reversed(range(len(n_Psi_list))):
     plt.plot(sigma_list, error[i], color=colors[i], marker=markers[i], label=labels[i])
 
 plt.grid(True, which="both")
-plt.ylabel(r"$L^1$ error")
+plt.ylabel(r"$L^1$-error")
 plt.xlabel(r"smoothing parameter $\sigma$")
 plt.legend()
 plt.xscale("log")

@@ -50,7 +50,7 @@ plt.plot(n_Vec_list, 0.45/n_Vec_list**(0.5), linestyle="dashed", color="#7a7a7a"
 plt.text(6e+1, 9.5e-2, r"$\mathcal{O}(\varepsilon^{-2})$", color="#7a7a7a")
 
 plt.grid(True, which="both")
-plt.ylabel(r"$L^1$ error")
+plt.ylabel(r"$L^1$-error")
 plt.xlabel(r"estimator size $n_{\mathbf{\Psi}} + n_{\mathbf{\Omega}}$")
 plt.legend()
 plt.xscale("log")
