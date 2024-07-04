@@ -6,6 +6,10 @@
 ## Pickled objects
 *.pkl
 
+## Datasets
+*.gz
+*ubyte
+
 ### LATEX
 
 ## Core latex/pdflatex auxiliary files:
