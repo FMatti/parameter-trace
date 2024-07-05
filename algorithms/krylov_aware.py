@@ -60,8 +60,7 @@ def lanczos(A, X, k, reorth_tol : float = 0.7, return_matrix : bool = True, exte
         X = X[:, np.newaxis]
     n, m = X.shape
 
-    # Convert A to a function handle in case it is an array/matrix
-    matvec = (lambda x: A @ x) if isinstance(A, np.ndarray | sp.sparse.spmatrix) else A
+    # Determine the range of A in case it is not an array/matrix
     dtype = A.dtype if dtype is None else dtype
 
     # Initialize arrays for storing the block-tridiagonal elements
@@ -77,7 +76,7 @@ def lanczos(A, X, k, reorth_tol : float = 0.7, return_matrix : bool = True, exte
     for j in range(k):
 
         # Generate and orthogonalize next element(s) in Krylov-basis
-        w = matvec(U[j])
+        w = A @ U[j]
         a[j] = np.sum(U[j].conj() * w, axis=0)
         u_tilde = w - U[j] * a[j] - (U[j-1] * b[j] if j > 0 else 0)
 
@@ -160,8 +159,7 @@ def block_lanczos(A, X, k, reorth_steps : int = -1, return_matrix : bool = True,
         X = X[:, np.newaxis]
     n, m = X.shape
 
-    # Convert A to a function handle in case it is an array/matrix
-    matvec = (lambda x: A @ x) if isinstance(A, np.ndarray | sp.sparse.spmatrix) else A
+    # Determine the range of A in case it is not an array/matrix
     dtype = A.dtype if dtype is None else dtype
 
     # Initialize arrays for storing the block-tridiagonal elements
@@ -172,11 +170,10 @@ def block_lanczos(A, X, k, reorth_steps : int = -1, return_matrix : bool = True,
     # Specify initial iterate
     U[0], b[0] = np.linalg.qr(X)
 
-
     # Perform k iterations of the Lanczos algorithm
     for j in range(k):
 
-        w = matvec(U[j])
+        w = A @ U[j]
         a[j] = U[j].conj().T @ w
         u_tilde = w - U[j] @ a[j] - (U[j-1] @ b[j].conj().T if j > 0 else 0)
 
