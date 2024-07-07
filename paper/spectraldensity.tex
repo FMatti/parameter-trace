@@ -79,7 +79,7 @@ It is well known that the coefficients of a Chebyshev expansion of a function ca
     g_{\sigma}(t - \cos(s_i)) = \sum_{l=0}^{m} \mu_l(t) \cos\left(\frac{\pi i l}{m} \right)
     \label{equ:discrete-cosine-transform}
 \end{equation}
-between the expansion coefficients $\mu_l(t),~i=0,\dots,m$ and the function evaluations at the Chebyshev nodes $s_i = \cos(\pi i / m),~i=0,\dots,m$. This can be accomplished in $\mathcal{O}(m \log(m))$ operations. \cite[algorithm 1]{lin-2017-randomized-estimation} uses a slightly different approach, which only approximates the coefficients and is noticeably slower (cf. \reftab{tab:chebyshev-timing-interpolation}).
+between the expansion coefficients $\mu_l(t),~i=0,\dots,m$ and the function evaluations at the Chebyshev nodes $s_i = \cos(\pi i / m),~i=0,\dots,m$. This can be accomplished in $\mathcal{O}(m \log(m))$ operations. \cite[Algorithm 1]{lin-2017-randomized-estimation} uses a slightly different approach, which only approximates the coefficients and is noticeably slower (cf. \reftab{tab:chebyshev-timing-interpolation}).
 
 A highly useful property of the Chebyshev expansion -- of which we will make use twice in the following pages -- is the fact that we can square such an expansion in $\mathcal{O}(m \log(m))$ operations \cite{baszenski-1997-fast-polynomial}, which will be used in the below algorithm.
 
@@ -111,10 +111,10 @@ We now analyze what error we make when using the expanded spectral density $\phi
     for all degrees $m \in \mathbb{N}$, smoothing parameters $\sigma > 0$, and $s \in [-1, 1]$.
 \end{lemma}
 
-The proof specializes Bernstein's theorem for Chebyshev interpolation to the case of a Gaussian smoothing kernel \refequ{equ:smoothing-kernel}. It loosely follows the proof given in the arXiv preprint of \cite[theorem 2]{lin-2017-randomized-estimation}, but attains a slightly different dependence on $\sigma$.
+The proof specializes Bernstein's theorem for Chebyshev interpolation to the case of a Gaussian smoothing kernel \refequ{equ:smoothing-kernel}. It loosely follows the proof given in the arXiv preprint of \cite[Theorem 2]{lin-2017-randomized-estimation}, but attains a slightly different dependence on $\sigma$.
 
 \begin{proof}
-    From Bernstein's theorem \cite[theorem 4.3]{trefethen-2008-gauss-quadrature} it follows that if $f$ is analytic within the Bernstein ellipse $\mathcal{E}_{\chi} \subset \mathbb{C}$ with foci $\{-1, +1\}$ and sum of semi-axes $\chi > 1$, then for any $m \in \mathbb{N}$
+    From Bernstein's theorem \cite[Theorem 4.3]{trefethen-2008-gauss-quadrature} it follows that if $f$ is analytic within the Bernstein ellipse $\mathcal{E}_{\chi} \subset \mathbb{C}$ with foci $\{-1, +1\}$ and sum of semi-axes $\chi > 1$, then for any $m \in \mathbb{N}$
     \begin{equation}
         \sup_{s \in [-1, 1]} \left| f(s) - f^{(m)}(s) \right| \leq \frac{2}{\chi^m (\chi - 1)} \max_{z \in \mathcal{E}_{\chi}} |f(z)|.
         \label{equ:bernstein-bound}
@@ -138,7 +138,7 @@ The proof specializes Bernstein's theorem for Chebyshev interpolation to the cas
     \end{equation}
 \end{proof}
 
-\Reflem{lem:chebyshev-error} shows that when $0 < \sigma \ll 1$ and if we choose $m = \mathcal{O}(\sigma^{-1}(\log(\varepsilon^{-1}) + \log(\sigma^{-1})))$, the error we induce with the Chebyshev expansion is at most $\mathcal{O}(\varepsilon)$. It now also allows us to bound the error we make when expanding the spectral density.
+\reflem{lem:chebyshev-error} shows that when $0 < \sigma \ll 1$ and if we choose $m = \mathcal{O}(\sigma^{-1}(\log(\varepsilon^{-1}) + \log(\sigma^{-1})))$, the error we induce with the Chebyshev expansion is at most $\mathcal{O}(\varepsilon)$. It now also allows us to bound the error we make when expanding the spectral density.
 
 \begin{theorem}{$L^1$-error of Chebyshev expansion of spectral density}{chebyshev-error}
     Let $\phi_{\sigma}$ be the smoothed spectral density of a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ whose spectrum is contained in $[-1, 1]$. Then the spectal density with Chebyshev expansion $\phi_{\sigma}^{(m)}$ satisfies
@@ -189,7 +189,7 @@ Second, square this expansion with \refalg{alg:chebyshev-squaring} to obtain the
 With a complexity of $\mathcal{O}(m \log(m))$ this procedure is computationally inexpensive and allows for very similar convergence bounds to \reflem{lem:chebyshev-error}, which we will derive in \refsec{subsubsec:chebyshev-nystrom-analysis}. In \reftab{tab:chebyshev-timing-interpolation}, the non-negative expansion can be seen to only be slightly slower than the normal one.
 
 \begin{table}[ht]
-    \caption{We compare the runtime in milliseconds for computing the coefficients of the Chebyshev expansion of the smoothing kernel $g_{\sigma}$ \refequ{equ:smoothing-kernel} in three different ways: as proposed in \cite[algorithm 1]{lin-2017-randomized-estimation} (\emph{oversampled FFT}), using the discrete cosine transform (\emph{DCT}) \refequ{equ:discrete-cosine-transform}, and computing a non-negative Chebyshev expansion with \refalg{alg:chebyshev-squaring} (\emph{non-negative DCT}). We use $\sigma=0.005$, $n_t=1000$ parameter values, and various degrees $m$. For stability, we average over 7 runs of the algorithms and repeat these runs 1000 times to form the mean and standard deviation which are given in the below table.}
+    \caption{We compare the runtime in milliseconds for computing the coefficients of the Chebyshev expansion of the smoothing kernel $g_{\sigma}$ \refequ{equ:smoothing-kernel} in three different ways: as proposed in \cite[Algorithm 1]{lin-2017-randomized-estimation} (\emph{oversampled FFT}), using the discrete cosine transform (\emph{DCT}) \refequ{equ:discrete-cosine-transform}, and computing a non-negative Chebyshev expansion with \refalg{alg:chebyshev-squaring} (\emph{non-negative DCT}). We use $\sigma=0.005$, $n_t=1000$ parameter values, and various degrees $m$. For stability, we average over 7 runs of the algorithms and repeat these runs 1000 times to form the mean and standard deviation which are given in the below table.}
     \label{tab:chebyshev-timing-interpolation}
    \input{tables/interpolation.tex}
 \end{table}
@@ -272,7 +272,7 @@ Similar observations for the case when $\mtx{\Psi}$ is nonzero lead to the follo
 
 The dominating cost in \refalg{alg:nystrom-chebyshev-pp} stems from the $(2m + 1)(n_{\mtx{\Psi}} + n_{\mtx{\Omega}})$ matrix-vector multiplications with $\mtx{A}$ and the cost associated with computing the estimate in each evaluation point $t_1, \dots, t_{n_t}$ given by $\mathcal{O}(m \log(m) + m (n_{\mtx{\Omega}}^2 + n_{\mtx{\Omega}} n_{\mtx{\Psi}} + 1) + (n_{\mtx{\Omega}}^3 + n_{\mtx{\Omega}} n_{\mtx{\Psi}}^2 + 1))$.
 
-The algorithm also accomodates the two other estimators introduced in \refsec{sec:analysis}: For $n_{\mtx{\Omega}} = 0$ we recover the Girard-Hutchinson estimator \refequ{equ:hutchinson-trace-estimator}, and the complexity for each evaluation of the estimate decreases significantly. For $n_{\mtx{\Psi}} = 0$ we end up with the Nyström estimator \refequ{equ:nystrom-trace-estimator}, provided the implementation evaluates $0/0$ to $0$ in the second term on \reflin{lin:4-nystromchebyshev-nystrom-pp}. Notice that in this case, \refalg{alg:nystrom-chebyshev-pp} is equivalent to the \enquote{spectrum sweeping} method from \cite[algorithm 5]{lin-2017-randomized-estimation}, but has a significantly lower computational complexity.
+The algorithm also accomodates the two other estimators introduced in \refsec{sec:analysis}: For $n_{\mtx{\Omega}} = 0$ we recover the Girard-Hutchinson estimator \refequ{equ:hutchinson-trace-estimator}, and the complexity for each evaluation of the estimate decreases significantly. For $n_{\mtx{\Psi}} = 0$ we end up with the Nyström estimator \refequ{equ:nystrom-trace-estimator}, provided the implementation evaluates $0/0$ to $0$ in the second term on \reflin{lin:4-nystromchebyshev-nystrom-pp}. Notice that in this case, \refalg{alg:nystrom-chebyshev-pp} is equivalent to the \enquote{spectrum sweeping} method from \cite[Algorithm 5]{lin-2017-randomized-estimation}, but has a significantly lower computational complexity.
 
 %Chebyshev $\mathcal{O}(n_t (m \log(m) + m (n_{\mtx{\Omega}}^2 + n_{\mtx{\Omega}} n_{\mtx{\Psi}} + 1) + n_{\mtx{\Omega}}^3) + mn^2(n_{\mtx{\Psi}} + n_{\mtx{\Omega}}))$.
 
@@ -337,7 +337,7 @@ On one hand, in the non-negative expansion, the underlying computes Chebyshev ex
         %\lVert  \phi_{\sigma} - \phi_{\sigma}^{(m)} \rVert _1 &\leq \frac{2\sqrt{2}}{\sigma^2} (1 + \sigma)^{-m}.
         %\label{equ:2-chebyshev-interpolation-error}
     \end{equation}
-    for all $\varepsilon \in (0, 1)$ and $\delta \in (0, e^{-\sfrac{1}{2}}/2)$.
+    for all $\varepsilon \in (0, 1)$ and $\delta \in (0, 1/2)$.
 \end{theorem}
 
 \begin{proof}

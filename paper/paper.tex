@@ -29,10 +29,10 @@
 
 \textcolor{red}{TODO for Fabio:
 \begin{itemize}
- \item Capitalize references to algorithms, lemma etc (that is, Lemma 3.2 instead of lemma 3.2 [Lin17, Algorithm 1] instead of [Lin17, algorithm 1]), etc.
- \item Add full stops after paragraph titles.
- \item It is not great that the references occupy so much space (more than 4 pages); consider using a more condensed style. The paper needs to get strictly below 30 pages prior to submission. 
- \item Please include Acknowledgements as indicated in the comment.
+ \item Capitalize references to algorithms, lemma etc (that is, Lemma 3.2 instead of lemma 3.2 [Lin17, Algorithm 1] instead of [Lin17, algorithm 1]), etc. \textcolor{green}{Done.}
+ \item Add full stops after paragraph titles. \textcolor{green}{Done.}
+ \item It is not great that the references occupy so much space (more than 4 pages); consider using a more condensed style. The paper needs to get strictly below 30 pages prior to submission. \textcolor{green}{Journal abbreviations, max 2 authors, omit superfluous fields $\to$ 3 pages.}
+ \item Please include Acknowledgements as indicated in the comment. \textcolor{green}{Done.}
 \end{itemize}
 }
 \color{blue}
@@ -53,15 +53,12 @@
 \end{itemize}
 }
 
-% Acknowledge advice from David and Data/Parameters from Lin Lin, Michael Herbst?
+\paragraph{Acknowledgements.} The authors gratefully acknowledge the help of Lin Lin in reproducing the example in \refsec{subsec:hamiltonian}. They thank David Persson for many enlightening discussions relating the proofs in \refsec{subsec:nystrom-pp}.
 
-%\clearpage
-%\bibliography{bibliography.bib}
 \printbibliography
 
 \appendix
 
-%\clearpage
 \section{Proofs}
 
 \textcolor{red}{??? Need to check carefully that this result is not known ???}
@@ -75,7 +72,7 @@
 \end{lemma}
 
 \begin{proof}
-    From \cite[theorem 3.3.2]{hogg-2013-introduction-mathematical} we know
+    From \cite[Theorem 3.3.2]{hogg-2013-introduction-mathematical} we know
     \begin{equation}
         \mathbb{E}^{\sfrac{p}{2}}[X] = 2 \left( \frac{\Gamma(\frac{k + p}{2})}{\Gamma(\frac{k}{2})} \right)^{\sfrac{2}{p}}.
     \end{equation}
