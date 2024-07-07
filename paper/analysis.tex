@@ -1,0 +1,500 @@
+
+\section{Randomized trace estimators for parameter-dependent matrices}
+\label{sec:analysis}
+
+\color{blue}
+In this section, we consider a general parameter-dependent matrix
+\begin{equation*}
+    \mtx{B}(t) = \begin{bmatrix}
+        b_{11}(t) & b_{12}(t) & \dots & b_{1n}(t) \\
+        b_{21}(t) & b_{22}(t) & \dots & b_{2n}(t) \\
+        \vdots & \vdots & \ddots & \vdots \\
+        b_{n1}(t) & b_{n2}(t) & \dots & b_{nn}(t) \\
+    \end{bmatrix} \in \mathbb{R}^{n \times n},
+\end{equation*}
+where each entry $b_{ij}(t)$ is a continuous function on a bounded interval $[a,b]$. \emph{If} these entries are given explicitly, we can simply compute the trace by its definition 
+$\Trace(\mtx{B}(t)) = b_{11}(t)+ \cdots + b_{nn}(t)$. This becomes more difficult when $\mtx{B}(t)$ is given implicitly (e.g., as a matrix function) and can only be accessed through matrix-vector products. The common theme of all methods analyzed in this section is to extract trace estimates from multiplying $\mtx{B}(t)$ with fixed random vectors
+
+as we will see in Section ???.
+\color{black}
+
+\paragraph{Girard-Hutchinson estimator} We can approximate the trace with the Girard-Hutchinson estimator \cite{girard-1989-fast-montecarlo,hutchinson-1990-stochastic-estimator}: We take $n_{\mtx{\Psi}}$ stochastically independent standard Gaussian random vectors $\vct{\psi}_1,\dots, \vct{\psi}_{n_{\mtx{\Psi}}} \in \mathbb{R}^{n}$ to form
+\begin{equation}
+    \Hutch{\mtx{\Psi}}(\mtx{B}(t))
+    = \frac{1}{n_{\mtx{\Psi}}} \sum_{j=1}^{n_{\mtx{\Psi}}} \vct{\psi}_j^{\top} \mtx{B}(t) \vct{\psi}_j
+    = \frac{1}{n_{\mtx{\Psi}}} \Trace( \mtx{\Psi}^{\top} \mtx{B}(t) \mtx{\Psi})
+    \label{equ:hutchinson-trace-estimator}
+\end{equation}
+??? Gaussian random matrix define! ???
+where $\mtx{\Psi} = [\vct{\psi}_1 ~ \cdots ~ \vct{\psi}_{n_{\mtx{\Psi}}}] \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$. Other choices for the distribution of the random vectors are possible, for example by uniformly sampling from $\{-1, +1\}$ or from the $(n-1)$-sphere. However, our theoretical developments only hold in the Gaussian case.
+
+\color{black}
+
+\paragraph{Nyström estimator} Alternatively, the trace of a symmetric matrix whose singular values decay quickly can be approximated well by using a Gaussian sketching matrix $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ to form the Nyström approximation \cite{gittens-2013-revisiting-nystrom}
+\begin{equation}
+    \Nystr{\mtx{\Omega}}{\mtx{B}}(t) = (\mtx{B}(t) \mtx{\Omega}) (\mtx{\Omega}^{\top} \mtx{B}(t) \mtx{\Omega})^{\dagger} (\mtx{B}(t) \mtx{\Omega})^{\top}.
+    \label{equ:nystrom-approximation}
+\end{equation}
+Then we can estimate the trace as $\Trace(\Nystr{\mtx{\Omega}}{\mtx{B}}(t))$. Thanks to the invariance of the trace under cyclic permutation of its arguments and the symmetry of the matrix, we may rewrite this estimator as
+
+\begin{equation}
+    \Trace(\Nystr{\mtx{\Omega}}{\mtx{B}}(t)) = \Trace( (\mtx{\Omega}^{\top} \mtx{B}(t) \mtx{\Omega})^{\dagger} ( \mtx{\Omega}^{\top} \mtx{B}(t)^2 \mtx{\Omega})).
+    \label{equ:nystrom-trace-estimator}
+\end{equation}
+
+\paragraph{Nyström++ estimator} Finally, \cite{lin-2017-randomized-estimation} proposes an estimator which corrects for inaccuracies in the Nyström approximation \refequ{equ:nystrom-trace-estimator} by estimating the trace of its residual using the Girard-Hutchinson estimator \refequ{equ:hutchinson-trace-estimator}
+\begin{equation}
+    \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{B}(t)) = \Trace(\Nystr{\mtx{\Omega}}{\mtx{B}}(t)) + \Hutch{\mtx{\Psi}}(\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)).
+    \label{equ:nystrompp-trace-estimator}
+\end{equation}
+This is the parameter-dependent analogue of the Nyström++ estimator \cite{persson-2022-improved-variants}, which itself is based on the Hutch++ estimator \cite{meyer-2021-hutch-optimal}. %We can interpret this estimator as an interpolation between the trace of the Nyström approximation and the Girard-Hutchinson estimator.
+
+%In the remainder of this section, we will derive upper bounds on the error of these estimators.
+%
+%\begin{table}[ht]
+%\centering
+%\renewcommand{\arraystretch}{1.2}
+%\begin{tabular}{@{}lcc@{}}
+%\toprule
+%Estimator & Matrix & $m=1600$\\
+%\midrule
+%Girard-Hutchinson & symmetric & $\mathcal{O}(\varepsilon^{-2})%$ \\
+%Nyström & symmetric positive semi-definite & $\mathcal{O}%(\varepsilon^{-2})$ \\
+%Nyström++ & symmetric positive semi-definite & $\mathcal{O}%(\varepsilon^{-1})$  \\
+%\bottomrule
+%\end{tabular}
+%\end{table}
+
+\subsection{Girard-Hutchinson estimator for parameter-dependent matrices}
+\label{subsec:hutchinson}
+
+We first analyze the Girard-Hutchinson estimator \refequ{equ:hutchinson-trace-estimator}. We bound its $L^1$-error in terms of the $L^1$-norm of the Frobenius norm $\lVert \cdot \rVert _F$ of the matrix whose trace we approximate.
+
+??? START HERE ???`
+\begin{theorem}{Girard-Hutchinson estimator for parameter-dependent matrices}{hutchinson}
+    For symmetric $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ depending continuously on $t \in [a, b]$, consider the . Girard-Hutchinson estimator~\eqref{equ:hutchinson-trace-estimator} with an $n\times n_{\mtx{\Psi}}$ Gaussian random matrix $\mtx{\Psi}$. Then for any $k \in \mathbb{N}$ and $\gamma \geq 1$ the error bound 
+    \begin{equation}
+        \int_{a}^{b} \left| \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) \right| ~\mathrm{d}t \leq 2^4 \gamma k \frac{1}{\sqrt{n_{\mtx{\Psi}}}} \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F  ~\mathrm{d}t.
+    \end{equation}
+    holds with probability at least $1 - \gamma^{-2k}$
+    
+    
+    In particular, for any $\varepsilon > 0$ we have that $\int_{a}^{b} | \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) | ~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t$ holds 
+    with probability at least $1-\delta$ for $\delta \in (0, 1)$ when choosing $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2} \log(\delta^{-1})^2)$, then  for  and  we have .
+\end{theorem}
+
+The idea behind the proof is to bound the higher order moments of the residual $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))$ for fixed values of $t$ and then use Minkowski's integral inequality to extend the results to the continuous parameter case. We first only consider the $1$-query estimator and subsequently use a diagonal embedding trick to carry the result over to the general case.
+\begin{proof} 
+    We define the residual of the 1-query Girard-Hutchinson estimate 
+    \begin{equation}
+        r(\mtx{B}(t), \vct{\psi}) = \Trace(\mtx{B}(t)) - \vct{\psi}^{\top} \mtx{B}(t) \vct{\psi}
+    \end{equation}
+    for a symmetric parameter-dependent matrix $\mtx{B}(t)$ over the real numbers with the Gaussian random vector $\vct{\psi}$.
+
+    First, we consider $r(\mtx{B}(t), \vct{\psi})$ for a fixed $t \in [a,b]$ and therefore temporarily ignore the parameter-dependence. From the proof of \cite[lemma 3]{cortinovis-2022-randomized-trace} we know that $r(\mtx{B}, \vct{\psi})$ is sub-Gamma with parameters $(v, c) = (2 \lVert \mtx{B} \rVert _F^2, 2 \lVert \mtx{B} \rVert _2)$ where $\lVert \cdot \rVert _2$ denotes the spectral norm. Thus, by \cite[theorem 2.3]{boucheron-2013-basic-inequalities} this implies that for every $k \in \mathbb{N}$
+    \begin{align}
+        \mathbb{E}\left[ r(\mtx{B}, \vct{\psi})^{2 k} \right]
+        &\leq k! \left( 16 \lVert \mtx{B} \rVert _F^2 \right)^k + (2 k)! \left( 8 \lVert \mtx{B} \rVert _2 \right)^{2 k} \notag \\
+        &= k! 2^{4 k} \lVert \mtx{B} \rVert _F^{2 k} + (2 k)! 2^{6 k} \lVert \mtx{B} \rVert _2^{2 k}.
+    \end{align}
+    Because $\lVert \mtx{B} \rVert _2 \leq \lVert \mtx{B} \rVert _F$ and $k! 2^{4 k} + (2 k)! 2^{6 k} \leq \frac{9}{8}(2 k)! 2^{6 k}$ for any $k \in \mathbb{N}$, we can upper bound 
+    \begin{equation}
+        \mathbb{E}\left[ r(\mtx{B}, \vct{\psi})^{2 k} \right] \leq \frac{9}{8} (2 k)! 2^{6 k} \lVert \mtx{B} \rVert _F^{2k}.
+    \end{equation}
+    Stirling's approximation \cite{robbins-1955-remark-stirling} bonuds $(2 k)! < 2 \sqrt{\pi k}  e^{\sfrac{1}{24 k}} ( 2 k / e )^{2 k}$. Consequently, the moments $\mathbb{E}^{k}[\cdot] = \left(\mathbb{E}\left[ | \cdot |^{k} \right] \right)^{\sfrac{1}{k}}$ of $r(\mtx{B}, \vct{\psi})$ are limited by
+    \begin{equation}
+        \mathbb{E}^{2k}\left[ r(\mtx{B}, \vct{\psi}) \right]
+        \leq \left( \frac{9}{4} \sqrt{\pi k} e^{\sfrac{1}{24 k}} \right)^{\sfrac{1}{2k}} \left( \frac{2 k}{e}\right) 2^{3} \lVert \mtx{B} \rVert _F \leq 2^4 k \lVert \mtx{B} \rVert _F,
+        \label{equ:hutchinson-trace-onequery-fixed}
+    \end{equation}
+    since it can be checked that $(\frac{9}{4} \sqrt{\pi k} e^{\sfrac{1}{24 k}})^{\sfrac{1}{2k}} < e$, due to the monotonous decrease of this expression in $k \in \mathbb{N}$.
+
+    Now we make the transition to the continuous. Following \cite{kressner-2023-randomized-lowrank}, we can show that $r(\mtx{B}(t), \vct{\psi})$ is measurable. Therefore, Minkowski's integral inequality \cite[theorem 202]{hardy-1952-inequalities} allows us to apply \refequ{equ:hutchinson-trace-onequery-fixed} in the continuous setting: 
+    \begin{equation}
+        \mathbb{E}^{2 k}\left[ \int_{a}^{b} |r(\mtx{B}(t), \vct{\psi})|~\mathrm{d}t  \right]
+        \leq \int_{a}^{b} \mathbb{E}^{2 k}\left[ r(\mtx{B}(t), \vct{\psi}) \right]~\mathrm{d}t
+        \leq 2^4 k \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t.
+    \end{equation}
+    Consequently, by Markov's inequality, for any $k \in \mathbb{N}$ and $\gamma \geq 1$, it holds with probability at least $1 - \gamma^{-2 k}$
+    \begin{equation}
+        \int_{a}^{b} |r(\mtx{B}(t), \vct{\psi})|~\mathrm{d}t \leq 2^4 k \gamma \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t.
+        \label{equ:hutchinson-trace-onequery-uniform}
+    \end{equation}
+
+    To extend the bound to the $n_{\mtx{\Psi}}$-query quadratic trace estimator, we use a technique from the proof of \cite[theorem 1]{cortinovis-2022-randomized-trace}. Let
+    \begin{equation}
+        \widetilde{\mtx{B}}(t)
+        = \frac{1}{n_{\mtx{\Psi}}} \begin{pmatrix}
+            \mtx{B}(t) & & \\
+            & \ddots & \\
+            & & \mtx{B}(t)
+        \end{pmatrix}
+        \quad \text{and} \quad
+        \widetilde{\vct{\psi}} = \begin{pmatrix}
+            \vct{\psi}_1 \\
+            \vdots \\
+            \vct{\psi}_{n_{\mtx{\Psi}}}
+        \end{pmatrix}
+    \end{equation}
+    where $\vct{\psi}_1, \dots, \vct{\psi}_{n_{\mtx{\Psi}}} \in \mathbb{R}^{n}$ are independent Gaussian random vectors. Then $\lVert \widetilde{\mtx{B}}(t) \rVert _F = \lVert \mtx{B}(t) \rVert _F / \sqrt{n_{\mtx{\Psi}}}$, and
+    \begin{equation}
+        r(\widetilde{\mtx{B}}(t), \widetilde{\vct{\psi}}) = \Trace(\mtx{B}(t)) - \frac{1}{n_{\mtx{\Psi}}} \sum_{j=1}^{n_{\mtx{\Psi}}} \vct{\psi}_j^{\top} \mtx{B}(t) \vct{\psi}_j.
+    \end{equation}
+    Hence, by applying \refequ{equ:hutchinson-trace-onequery-uniform} to $r(\widetilde{\mtx{B}}(t), \widetilde{\vct{\psi}})$ we conclude that for any $k \in \mathbb{N}$ and $\gamma \geq 1$ with probability at least $1 - \gamma^{-2 k}$
+    \begin{equation}
+        \int_{a}^{b} \left| \Trace(\mtx{B}(t)) - \frac{1}{n_{\mtx{\Psi}}} \sum_{j=1}^{n_{\mtx{\Psi}}} \vct{\psi}_j^{\top} \mtx{B}(t) \vct{\psi}_j \right| ~ \mathrm{d}t
+        \leq 2^4 k \gamma \frac{1}{\sqrt{n_{\mtx{\Psi}}}} \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t.
+    \end{equation}
+
+    %Setting $\delta = \gamma^{-2 k}$ and choosing $k = \lceil \log(\delta^{-1}) %\rceil$, where $\lceil x \rceil$ is the ceiling function which returns the greatest %integer larger than or equal to $x$, we get that for all $\delta \in (0, e^{-\sfrac%{1}{2}})$
+    %\begin{equation}
+    %    k \gamma = \lceil \log(\delta^{-1}) \rceil \delta^{-\sfrac{1}{2\lceil \log%(\delta^{-1}) \rceil}}
+    %    = \lceil \log(\delta^{-1}) \rceil e^{\sfrac{1}{2}\frac{\log(\delta^{-1})}%{\lceil \log(\delta^{-1}) \rceil}}
+    %    \leq 2 \log(\delta^{-1}) e^{\sfrac{1}{2}},
+    %\end{equation}
+    %from which follows the second part of the theorem when $n_{\mtx{\Psi}} = (2^5 e^%{\sfrac{1}{2}} \varepsilon^{-1} \log(\delta^{-1}))^2$.
+
+    Setting $\gamma = e$ and choosing $k = \lfloor \log(\delta^{-1}) / 2 \rfloor$, where $\lfloor x \rfloor$ is the floor function which returns the largest integer smaller than or equal to $x$, we get that for all $\delta \in (0, 1)$ the second part of the theorem follows when taking $n_{\mtx{\Psi}} = \lceil (2^3 e \varepsilon^{-1} \log(\delta^{-1}))^2 \rceil$, where $\lceil x \rceil$ is the ceiling function which returns the smallest integer larger than or equal to $x$.
+
+    %Consequently, with probability $1 - \delta$ we have
+    %\begin{equation}
+    %    \int_{a}^{b} \left| \frac{1}{n_{\mtx{\Psi}}} \sum_{i=1}^{n_{\mtx{\Psi}}} \vct{\psi}_i^{\top} \mtx{B}(t) \vct{\psi}_i - \Trace(\mtx{B}(t)) \right| ~ \mathrm{d}t \leq 32 e^{\sfrac{1}{2}} \frac{\log(\delta^{-1})}{\sqrt{n_{\mtx{\Psi}}}} \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t
+    %\end{equation}
+\end{proof}
+
+%\begin{remark}
+%    If additionally $\mtx{B}(t)$ is nonzero and symmetric positive semi-definite for all $t \in [a, b]$, then it follows from the proof of \refthm{thm:hutchinson} that with probability at least $1 - \delta$
+%    \begin{equation}
+%        \int_{a}^{b} \frac{| \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) |}{\Trace(\mtx{B}(t))} ~\mathrm{d}t < \varepsilon,
+%    \end{equation}
+%    if $n_{\mtx{\Psi}} \geq 2^{10} \varepsilon^{-2} \log(\delta^{-1})^2 (\int_{a}^{b} \mu(t)^{\sfrac{1}{2}}~\mathrm{d}t)^2$ with $\mu(t) = \lVert \mtx{B}(t) \rVert _2 / \Trace(\mtx{B}(t))$. Compared to the constant matrix equivalent \cite[remark 2]{cortinovis-2022-randomized-trace} we mainly observe a larger constant and an additional factor of $\log(\delta^{-1})$.
+%\end{remark}
+
+Compared to the constant case \cite[lemma 2.1]{meyer-2021-hutch-optimal} we need to choose the number of queries $n_{\mtx{\Psi}}$ by a factor of $\log(\delta^{-1})$ larger to achieve the same guarantee.
+
+The Girard-Hutchinson estimator distinguishes itself for its simplicity. However, its bound does not take into account the structure of $\mtx{B}(t)$. The $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2})$ requirement implies that if we aim to increase the accuracy of the estimate by one digit, we would need to increase the number of queries by a factor of $100$. 
+
+\subsection{Nyström approximation for parameter-dependent matrices}
+\label{subsec:nystrom}
+
+For symmetric positive semi-definite matrices whose singular values decay rapidly, the Nyström estimate \refequ{equ:nystrom-trace-estimator} can be significantly better than the Girard-Hutchinson estimate. This is reflected in the following theorem.
+
+\begin{theorem}{Nyström estimator for parameter-dependent matrices}{nystrom}
+    Suppose $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ is continuous and positive semi-definite in $t \in [a, b]$. Let $r \geq 2$ and $n_{\mtx{\Omega}} \geq r + 4$ be two integers. Then for all $\gamma \geq 1$ with probability at least $1 - \gamma^{-(n_{\mtx{\Omega}} - r)}$
+    \begin{equation}
+        \int_{a}^{b} \left| \Trace(\mtx{B}(t)) - \Trace(\Nystr{\mtx{\Omega}}{\mtx{B}}(t)) \right| ~\mathrm{d}t
+        \leq \gamma^2 (1 + r) \int_{a}^{b} \sum_{i = r+1}^{n} \sigma_i(\mtx{B}(t)) ~\mathrm{d}t.
+    \end{equation}
+\end{theorem}
+
+\begin{proof}
+    Since $\mtx{B}(t)$ is positive semi-definite for all $t$, then by \cite[lemma 2.1]{frangella-2023-randomized-nystrom}, $\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ is also positive semi-definite for all $t$. Therefore, for fixed $t \in [a, b]$
+    \begin{equation}
+        \left| \Trace(\mtx{B}(t)) - \Trace(\Nystr{\mtx{\Omega}}{\mtx{B}}(t)) \right|
+        = \left| \Trace(\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)) \right|
+        = \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _{\ast},
+    \end{equation}
+    where $\lVert \cdot \rVert _{\ast}$ represents the nuclear norm.  From the proof of \cite[corollary 8.2]{tropp-2023-randomized-algorithms} it follows that
+    \begin{equation}
+        %\lVert f(\mtx{A}, t) - \widehat{f}(\mtx{A}, t) \rVert _{\ast} = \lVert (\mtx{I}_n - \mtx{\Pi}_{f(\mtx{A}, t)^{\sfrac{1}{2}} \mtx{\Omega}}) f(\mtx{A}, t)^{\sfrac{1}{2}} \rVert _2^2 \leq \lVert (\mtx{I}_n - \mtx{\Pi}_{f(\mtx{A}, t)^{\sfrac{1}{2}} \mtx{\Omega}}) f(\mtx{A}, t)^{\sfrac{1}{2}} \rVert _F^2
+        \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _{\ast} = \lVert (\mtx{I}_n - \mtx{\Pi}_{\mtx{B}(t)^{\sfrac{1}{2}} \mtx{\Omega}}) \mtx{B}(t)^{\sfrac{1}{2}} \rVert _F^2.
+    \end{equation}
+    Hence, by \cite[theorem 9]{kressner-2023-randomized-lowrank}, with $n_{\mtx{\Omega}} = p + r$, the result follows by noting $\sigma_i(\mtx{B}(t)^{\sfrac{1}{2}})^{2} = \sigma_i(\mtx{B}(t))$.
+
+\end{proof}
+
+Compared to the constant matrix case \cite[theorem 8.1]{tropp-2023-randomized-algorithms}, our bound also scales with the best rank-$r$ approximation error in the nuclear norm, albeit with a factor approximately proportional to $r$, which cannot be compensated for with large enough oversampling.
+
+The downside of the Nyström estimator is that it will -- in general -- not work well enough on matrices whose singular values do not decay quickly, for example $\mtx{B}(t) \equiv \mtx{I}_n$.
+
+\subsection{Nyström++ estimator for parameter-dependent matrices}
+\label{subsec:nystrom-pp}
+
+Just as in the constant matrix case, our goal is now to prove that the Nyström++ estimator \refequ{equ:nystrompp-trace-estimator} achieves an $\varepsilon$-relative error with just $\mathcal{O}(\varepsilon^{-1})$ random vectors used to construct the estimate. To do so, we mimic the proof of a similar bound for the Hutch++ estimator \cite[theorem 3.1]{meyer-2021-hutch-optimal}. Correspondingly, we will need to show that with $n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-2})$ random vectors, the Nyström approximation verifies $\int \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)\rVert _F~\mathrm{d}t \leq \varepsilon \int \Trace(\mtx{B}(t))~\mathrm{d}t$, regardless of the structure of the matrix $\mtx{B}(t)$. Just as in the corresponding proof for the Girard-Hutchinson estimator \refthm{thm:hutchinson}, we again bound the higher order moments of the approximation error for fixed $t$ and then use Minkowsi's integral inequality to carry over the results to the continuous case. We will do this in a sequence of three lemmas.
+
+For reasons which will become clear in the proof of the final and most interesting of these lemmas (\reflem{lem:nystrom}), we will need to bound $\mathbb{E}^{\sfrac{p}{2}}\left[\lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]$ for a constant matrix $\mtx{A} \in \mathbb{R}^{m \times m}$ and a standard Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{m \times k}$. The corresponding result for the Frobenius norm $\mathbb{E}^{\sfrac{p}{2}}\left[\lVert \mtx{A} \mtx{\Omega} \rVert _F^2 \right]$ has already been shown in \cite[lemma 7]{kressner-2023-randomized-lowrank}. Several ways of separately bounding the spectral norm moments of the Wishart matrix $\mtx{\Omega} \mtx{\Omega}^{\top}$, i.e. when $\mtx{A} = \mtx{I}_m$ already exist, however, all of them are not sufficient for our purposes because they scale with $m$ \cite{chen-2005-condition-numbers, edelman-1988-eigenvalues-condition, james-1964-distributions-matrix}. In \cite[lemma B.1]{tropp-2023-randomized-algorithms} a bound is achieved for $p = 2$ and $p = 4$. We will now generalize this result for arbitrary $p \in \mathbb{N}$. To do so, we first show the bound for Gaussian random vectors and then extend it to Gaussian random matrices in \reflem{lem:spectral-norm-moment}.
+
+\begin{lemma}{Spectral norm moments of non-standard Gaussian random vector}{spectral-norm-moment-vector}
+    The matrix $\mtx{A} \in \mathbb{R}^{m \times m}$ and the standard Gaussian random vector $\vct{\omega} \in \mathbb{R}^{m}$ satisfy for all $k,p \in \mathbb{N}$ 
+    \begin{equation}
+        \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \vct{\omega} \rVert _2^2 \right]
+        \leq  (k + p) \left( \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \right).
+    \end{equation}
+    %\begin{equation}
+    %    \mathbb{E}^{p}\left[ \lVert \mtx{\Sigma} \mtx{\Omega}_2\rVert _2 \right]
+    %    &\leq \sqrt{\frac{k + p}{2}} \cdot \left( 2 + \frac{1}{\sqrt{k}} \right) \cdot \lVert \mtx{\Sigma} \rVert _2 + \sqrt{\frac{k + p}{2k}} \cdot \lVert \mtx{\Sigma} \rVert _F. \notag \\
+    %    \mathbb{E}^{p}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
+    %    &\leq \frac{1}{2} \left( 1 + \frac{p}{k - r + 1 - p} \right)^{\sfrac{1}{p}} \left( \frac{k + r}{k - r + 2} \right).
+    %\end{equation}
+    %If we choose 
+\end{lemma}
+
+\begin{remark}
+    In particular, this result can also be used to bound
+    \begin{equation}
+        \mathbb{E}^{p}\left[ \lVert \mtx{A} \vct{\omega} \rVert _2 \right] = \sqrt{\mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \vct{\omega} \rVert _2^2 \right]} \leq \sqrt{k + p} \cdot \left(\lVert \mtx{A} \rVert _2 + \frac{1}{\sqrt{k}}\lVert \mtx{A} \rVert _F\right)
+    \end{equation}
+    for any $k,p \in \mathbb{N}$.
+\end{remark}
+
+\begin{proof}
+    With the singular value decomposition $\mtx{A} = \mtx{U} \mtx{\Sigma} \mtx{V}^{\top}$ and the unitary invariance of the spectral norm, it can be seen that $\lVert \mtx{A} \mtx{\omega} \rVert _2^2 = \lVert \mtx{\Sigma} \widetilde{\mtx{\omega}} \rVert _2^2$ where $\widetilde{\mtx{\omega}}$ is again a standard Gaussian random vector. Hence, it is enough to bound $\mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{\Sigma} \mtx{\omega} \rVert _2^2 \right]$ for a diagonal matrix $\mtx{\Sigma} = \operatorname{diag}(\sigma_1, \dots, \sigma_m)$ with $\sigma_1 \geq \dots \geq \sigma_m \geq 0$.
+
+    First, we can rewrite
+    \begin{equation}
+        \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{\Sigma} \vct{\omega} \rVert _2^2 \right]
+        = \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{i=1}^{m} \sigma_i^2 \omega_i^2 \right].
+        \label{equ:matvec-spectral-norm-simplification}
+    \end{equation}
+    Inspired by the proof of \cite[theorem 1]{cohen-2016-optimal-approximate}, we split the diagonal entries of $\mtx{\Sigma}$ into $\ell = \lceil m/k \rceil$ groups of size $k \geq 1$
+    \begin{equation}
+        \overbrace{\underbrace{\sigma_1, \dots, \sigma_k}_{\leq \sigma_1}}^{\geq \sigma_{k+1}}, \overbrace{\underbrace{\sigma_{k+1}, \dots, \sigma_{2k}}_{\leq \sigma_{k+1}}}^{\geq \sigma_{2k+1}}, \dots, \overbrace{\underbrace{\sigma_{(\ell - 1)k + 1}, \dots, \sigma_{\ell k}}_{\leq \sigma_{(\ell - 1)k + 1}}}^{\geq 0}.
+    \end{equation}
+    If $m$ is not a multiple of $k$, we let $\sigma_i = 0$ for $i > m$. Since $\sigma_1 \geq \dots \geq \sigma_{\ell k} \geq 0$,
+    \begin{equation}
+        \sigma_1^2 = \lVert \mtx{\Sigma} \rVert _2^2
+        \quad \text{and} \quad
+        \sigma_{(i-1)k + 1}^2 \leq \frac{1}{k} \sum_{j=1}^{k} \sigma_{(i-2)k + j}^2, i = 2, \dots, \ell,
+    \end{equation}
+    and therefore
+    \begin{equation}
+        \sum_{i=1}^{\ell} \sigma_{(i-1)k + 1}^2 = \lVert \mtx{\Sigma} \rVert _2^2 + \sum_{i=2}^{\ell} \sigma_{(i-1)k + 1}^2  \leq \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \sum_{n=1}^{(\ell - 1)k} \sigma_n^2 \leq \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2.
+        \label{equ:singular-value-group-bound}
+    \end{equation}
+    This allows us to bound
+    \begin{align}
+        \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{i=1}^{m} \sigma_i^2 \omega_i^2 \right]
+        &= \mathbb{E}^{\sfrac{p}{2}}\Bigg[ \sum_{i=1}^{\ell} \sum_{j=1}^{k} \underbrace{\sigma_{(i-1)k + j}^2}_{\leq \sigma_{(i-1)k + 1}^2} \omega_{(i-1)k + j}^2 \Bigg] && \text{(separate sum into groups)} \notag \\
+        &\leq \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{i=1}^{\ell} \sigma_{(i-1)k + 1}^2 \sum_{j=1}^{k} \omega_{(i-1)k + j}^2 \right] && \text{($\sigma_{(i-1)k + j}^2 \leq \sigma_{(i-1)k + 1}^2$, $\forall i, j$)} \notag \\
+        &\leq \sum_{i=1}^{\ell} \sigma_{(i-1)k + 1}^2 ~ \mathbb{E}^{\sfrac{p}{2}}\left[ \sum_{j=1}^{k} \omega_{(i-1)k + j}^2 \right] && \text{(triangle inequality)} \notag \\
+        %&\leq \left( \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2 \right) 2 \left( \frac{\Gamma(\frac{k}{2} + p)}{\Gamma(\frac{k}{2})} \right)^{\sfrac{1}{p}} && \text{(\refequ{equ:singular-value-group-bound} and \cite[theorem 3.3.2]{hogg-2013-introduction-mathematical})} \notag \\
+        &\leq (k + p) \sum_{i=1}^{\ell} \sigma_{(i-1)k + 1}^2 && \text{(\reflem{lem:gamma})} \notag \\
+        &\leq (k + p) \left( \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2 \right). && \text{(using \refequ{equ:singular-value-group-bound})}
+    \end{align}
+    
+    %The moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ can be bound with help of the proof of \cite[lemma B.3]{tropp-2023-randomized-algorithms}
+    %\begin{align}
+    %    \mathbb{E}^{p}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
+    %    &= \mathbb{E}\left[ \lVert ( \mtx{\Omega}_1 \mtx{\Omega}_1^{\top} )^{-1} \rVert _2^{\sfrac{p}{2}} \right]^{\sfrac{1}{p}} \notag \\
+    %    &\leq \left( 1 + \frac{p}{k - r + 1 - p} \right)^{\sfrac{1}{p}} \left( \frac{1}{\Gamma(k - r + 2)} \right)^{\frac{1}{k - r + 1}} \left( \frac{k + r}{2} \right) \notag \\
+    %    &\leq \frac{1}{2} \left( 1 + \frac{p}{k - r + 1 - p} \right)^{\sfrac{1}{p}} \left( \frac{k + r}{k - r + 2} \right)
+    %\end{align}
+    %With the Taylor series expansion of the exponential function it can be shown that $e^n \geq 1 + n$ and $e^n \geq \frac{n^n}{n!}$ for all $n \in \mathbb{N}$, from which $(n + 1)^{\sfrac{1}{n}} \leq e$ and $\left( \frac{1}{n!} \right)^{\sfrac{1}{n}} \leq \frac{e}{n}$ follow respectively. Hence,
+    %\begin{equation}
+    %    \mathbb{E}^{k}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
+    %    \leq \frac{e^2}{k + 1}\sqrt{ \frac{3k}{2} }
+    %    \leq e^2 \sqrt{\frac{3}{2k}}.
+    %    \label{equ:OSE-moment-bound-second}
+    %\end{equation}
+
+\end{proof}
+
+\begin{lemma}{Spectral norm moments of non-standard Gaussian random matrix}{spectral-norm-moment}
+    The matrix $\mtx{A} \in \mathbb{R}^{m \times m}$ and the standard Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{m \times k}$ satisfy for all $p \in \mathbb{N}$ 
+    \begin{equation}
+        \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]
+        \leq  (k + p) \left( 3 \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \right).
+    \end{equation}
+    %\begin{equation}
+    %    \mathbb{E}^{p}\left[ \lVert \mtx{\Sigma} \mtx{\Omega}_2\rVert _2 \right]
+    %    &\leq \sqrt{\frac{k + p}{2}} \cdot \left( 2 + \frac{1}{\sqrt{k}} \right) \cdot \lVert \mtx{\Sigma} \rVert _2 + \sqrt{\frac{k + p}{2k}} \cdot \lVert \mtx{\Sigma} \rVert _F. \notag \\
+    %    \mathbb{E}^{p}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
+    %    &\leq \frac{1}{2} \left( 1 + \frac{p}{k - r + 1 - p} \right)^{\sfrac{1}{p}} \left( \frac{k + r}{k - r + 2} \right).
+    %\end{equation}
+    %If we choose 
+\end{lemma}
+
+\begin{remark}
+    In particular, this result can also be used to bound
+    \begin{equation}
+        \mathbb{E}^{p}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2 \right] = \sqrt{\mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]} \leq \sqrt{k + p} \cdot \left(\sqrt{3} \lVert \mtx{A} \rVert _2 + \frac{1}{\sqrt{k}}\lVert \mtx{A} \rVert _F\right)
+    \end{equation}
+    for any $k,p \in \mathbb{N}$. For $p=2$ this bound is slightly less tight than its equivalent in \cite[lemma B.1]{tropp-2023-randomized-algorithms}.
+\end{remark}
+
+\begin{proof}
+    In the proof of \cite[lemma B.1]{tropp-2023-randomized-algorithms}, it is shown that Slepian's inequality \cite[theorem 7.2.1]{vershynin-2018-random-processes} applied to two appropriately constructed Gaussian random fields yields
+    \begin{equation}
+        \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]
+        \leq \lVert \mtx{A} \rVert _2^2 \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \vct{\omega}_1 \rVert _2^2 \right] + \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \vct{\omega}_2 \rVert _2^2 \right]
+    \end{equation}
+    for independent standard Gaussian random vectors $\vct{\omega}_1 \in \mathbb{R}^{k}$ and $\vct{\omega}_2 \in \mathbb{R}^{m}$. Both moments can be bound using \reflem{lem:spectral-norm-moment-vector}, one of which with $\mtx{A} = \mtx{I}_k$, to get
+    \begin{align}
+        \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]
+        &\leq \lVert \mtx{A} \rVert _2^2 (k + p) \left( \lVert \mtx{I}_k \rVert _2^2 + \frac{1}{k} \lVert \mtx{I}_k \rVert _F^2 \right) + (k + p) \left( \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \right) \notag \\
+        &\leq (k + p) \left( 3 \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \right).
+    \end{align}
+
+    %The moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ can be bound with help of the proof of \cite[lemma B.3]{tropp-2023-randomized-algorithms}
+    %\begin{align}
+    %    \mathbb{E}^{p}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
+    %    &= \mathbb{E}\left[ \lVert ( \mtx{\Omega}_1 \mtx{\Omega}_1^{\top} )^{-1} \rVert _2^{\sfrac{p}{2}} \right]^{\sfrac{1}{p}} \notag \\
+    %    &\leq \left( 1 + \frac{p}{k - r + 1 - p} \right)^{\sfrac{1}{p}} \left( \frac{1}{\Gamma(k - r + 2)} \right)^{\frac{1}{k - r + 1}} \left( \frac{k + r}{2} \right) \notag \\
+    %    &\leq \frac{1}{2} \left( 1 + \frac{p}{k - r + 1 - p} \right)^{\sfrac{1}{p}} \left( \frac{k + r}{k - r + 2} \right)
+    %\end{align}
+    %With the Taylor series expansion of the exponential function it can be shown that $e^n \geq 1 + n$ and $e^n \geq \frac{n^n}{n!}$ for all $n \in \mathbb{N}$, from which $(n + 1)^{\sfrac{1}{n}} \leq e$ and $\left( \frac{1}{n!} \right)^{\sfrac{1}{n}} \leq \frac{e}{n}$ follow respectively. Hence,
+    %\begin{equation}
+    %    \mathbb{E}^{k}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
+    %    \leq \frac{e^2}{k + 1}\sqrt{ \frac{3k}{2} }
+    %    \leq e^2 \sqrt{\frac{3}{2k}}.
+    %    \label{equ:OSE-moment-bound-second}
+    %\end{equation}
+
+\end{proof}
+
+\begin{lemma}{Nyström approximation for parameter-dependent matrices}{nystrom}
+    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. Then its Nyström approximation $\Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ with Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ for \emph{even} $n_{\mtx{\Omega}} \geq 4$ verifies with probability at least $1 - \gamma^{-\sfrac{n_{\mtx{\Omega}}}{4}}$
+    \begin{equation}
+        \int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \leq \gamma \frac{c}{\sqrt{n_{\mtx{\Omega}}}} \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t
+        \label{qu:nystrompp-theorem-bound}
+    \end{equation}
+    for any $\gamma \geq 1$ and a universal constant $c > 0$. In particular, if we choose $n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-2} + \log(\delta^{-1}))$, then with probability at least $1-\delta$ for $\delta \in (0, 1)$ and $\varepsilon > 0$ we have $\int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t$.
+\end{lemma}
+
+%\todo{Proof idea: structural bound, then higher order moment bound to apply Markov's inequality.}
+
+\begin{proof}
+    First, we temporarily omit the parameter dependence. Let $\mtx{B} = \mtx{U} \mtx{\Lambda} \mtx{U}^{\top}$ be the eigenvalue decomposition of a symmetric positive semi-definite matrix $\mtx{B} \in \mathbb{R}^{n \times n}$, i.e. $\mtx{\Lambda} = \operatorname{diag}(\lambda_1, \dots, \lambda_n)$ and $\mtx{U}^{\top} \mtx{U}= \mtx{I}_n$. We partition these matrices into
+    \begin{equation}
+        \rule[\dimexpr-2ex-\ht\strutbox]{0pt}{\dimexpr2ex+4ex+\baselineskip}
+        \mtx{U} = \begin{bmatrix}
+            \smash{\underbrace{\mtx{U}_1}_{n \times k}} & \smash{\underbrace{\mtx{U}_2}_{n \times (n-k)}}
+        \end{bmatrix}
+        \quad \text{and} \quad
+        \mtx{\Lambda} =
+        \begin{bmatrix}
+            \smash{\overbrace{\mtx{\Lambda}_1}^{k \times k}} & \\ & \smash{\underbrace{\mtx{\Lambda}_2}_{(n-k) \times (n-k)}}
+        \end{bmatrix}.
+    \end{equation}
+    Further, for a standard Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ we define $\mtx{\Omega}_1 = \mtx{U}_1^{\top} \mtx{\Omega} \in \mathbb{R}^{k \times n_{\mtx{\Omega}}}$ and $\mtx{\Omega}_2 = \mtx{U}_2^{\top} \mtx{\Omega} \in \mathbb{R}^{(n - k) \times n_{\mtx{\Omega}}}$, which are likewise standard Gaussian.
+
+    We can apply \cite[theorem B.1]{persson-2023-randomized-lowrank} with $f(x) = x$ to bound
+    \begin{equation}
+        \lVert \mtx{B} - \Nystr{\mtx{\Omega}}{\mtx{B}} \rVert _F 
+        \leq  \lVert \mtx{\Lambda}_2 \rVert _F + \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2,
+        \label{equ:nystrom-proof-persson-bonud}
+    \end{equation}
+    where $\lVert \cdot \rVert _{(4)}$ denotes the Schatten-4 norm.
+    
+    As in the proof of \cite[lemma 3]{meyer-2021-hutch-optimal}, the first term -- and its moments -- are limited by
+    \begin{equation}
+        \lVert \mtx{\Lambda}_2 \rVert _F
+        = \sqrt{\sum_{i=k+1}^{n} \lambda_i^2}
+        \leq \sqrt{ \lambda_{k+1} \sum_{i=k+1}^{n} \lambda_i}
+        \leq \sqrt{ \frac{\Trace(\mtx{B})}{k} \Trace(\mtx{B})}
+        \leq \frac{1}{\sqrt{k}} \Trace(\mtx{B}).
+        \label{equ:nystrom-proof-frobenius-trace}
+    \end{equation}
+    The $q$-th moment of the second term can be processed with standard matrix norm manipulations and the stochastic independence of $\mtx{\Omega}_1$ and $\mtx{\Omega}_2$ to
+    \begin{equation}
+        \mathbb{E}^{q}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2 \right]
+        %&= \mathbb{E}^{p}\left[ \lVert (\mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} )( \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger})^{\top} \rVert _F \right] && \text{($\lVert \mtx{A} \rVert _{(4)}^2 = \lVert \mtx{A} \mtx{A}^{\top} \rVert _{F}$)} \notag \\
+        %&\leq \mathbb{E}^{p}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _F \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2 \right] && \text{($\lVert \mtx{A} \mtx{B} \rVert _F \leq \lVert \mtx{A} \rVert _F \lVert \mtx{B} \rVert _2$)} \notag \\
+        \leq \mathbb{E}^{q}\left[ \sqrt{k} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2^2 \right]%  && \text{($\lVert \mtx{A} \rVert _{(4)}^2 \leq \sqrt{k} \lVert \mtx{A} \rVert _2^2$)} \notag \\
+        %\leq \mathbb{E}^{p}\left[ \sqrt{k} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2^2 \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^2 \right]%  && \text{(submultiplicativity)} \notag \\
+        \leq \sqrt{k} \mathbb{E}^{q}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2^2\right] \mathbb{E}^{q}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^2  \right].% && \text{(independence)}
+        \label{equ:nystrom-proof-processed-tail}
+    \end{equation}
+    To match the decay rate of the moments of the first term in \refequ{equ:nystrom-proof-persson-bonud}, we will need to ensure that this term also is of order $\mathcal{O}(\Trace(\mtx{B}) / \sqrt{k})$. To this purpose, and to simplify the notation, we choose $k = n_{\mtx{\Omega}}/2$ and $q = n_{\mtx{\Omega}}/4$ for even $n_{\mtx{\Omega}}$ to ensure $k \in \mathbb{N}$. We can apply \reflem{lem:spectral-norm-moment} with $\mtx{A} = \mtx{\Lambda}_2^{\sfrac{1}{2}}$ and $p = n_{\mtx{\Omega}}/2$ to bound
+    \begin{equation}
+        \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2^2 \right]
+        \leq n_{\mtx{\Omega}} \left( 3 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{2}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \right).
+        \label{equ:spectral-norm-bound-applied}
+    \end{equation}
+    The moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ can be bound with help of the proof of \cite[lemma B.3]{tropp-2023-randomized-algorithms}
+    \begin{equation}
+        \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^2 \right]
+        = \mathbb{E}\left[ \lVert ( \mtx{\Omega}_1 \mtx{\Omega}_1^{\top} )^{-1} \rVert _2^{\sfrac{n_{\mtx{\Omega}}}{4}} \right]^{\sfrac{4}{n_{\mtx{\Omega}}}}%  \notag \\
+        \leq \left( 1 + \frac{n_{\mtx{\Omega}}}{2} \right)^{\sfrac{4}{n_{\mtx{\Omega}}}} \left( \frac{1}{(\frac{n_{\mtx{\Omega}}}{2} + 1)!}\right)^{\frac{2}{\frac{n_{\mtx{\Omega}}}{2} + 1}} \left( \frac{3 n_{\mtx{\Omega}}}{4}\right).
+    \end{equation}
+    From the expansion of the exponential function as a power series $e^n = 1 + n + \dots + n^n/n! + \dots$ for $n \in \mathbb{N}$ we see $e^n \geq 1 + n$ and $e^n \geq n^n / n!$, from which $(1 + n)^{\sfrac{1}{n}} \leq e$ and $\left( 1/n! \right)^{\sfrac{1}{n}} \leq e/n$ follow respectively. Hence,
+    \begin{equation}
+        \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^2 \right]
+        \leq e^2 \frac{e^2}{(\frac{n_{\mtx{\Omega}}}{2}+ 1)^2} \left( \frac{3 n_{\mtx{\Omega}}}{4}\right)
+        \leq \frac{3 e^4}{n_{\mtx{\Omega}}}.
+        \label{equ:pinv-spectral-norm-bound}
+    \end{equation}
+    As opposed to \cite[lemma B.3]{tropp-2023-randomized-algorithms}, our bound holds for all even $n_{\mtx{\Omega}} \in \mathbb{N}$, at the cost of a factor of $e^2$. Inserting \refequ{equ:spectral-norm-bound-applied} and  \refequ{equ:pinv-spectral-norm-bound} in \refequ{equ:nystrom-proof-processed-tail} with $k = n_{\mtx{\Omega}} / 2$ gives
+    \begin{equation}
+        \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2 \right]
+        \leq \frac{3 e^4}{\sqrt{2}}  \sqrt{n_{\mtx{\Omega}}} \left( 3 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{2}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \right).
+        %\leq \sqrt{k} \frac{e^4}{2} \frac{(k + n_{\mtx{\Omega}})(2p + n_{\mtx{\Omega}})}{(n_{\mtx{\Omega}} - k + 1)^2}  \left( 3 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{1}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \right).
+    \end{equation}
+    We can identify $\lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 = \lambda_{k+1}$ and $\lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 = \Trace(\mtx{\Lambda}_2)$, and just as in the proof of \cite[lemma 3.1]{meyer-2021-hutch-optimal} we bound $\lambda_{k+1} \leq \Trace(\mtx{B})/k$ and $\Trace(\mtx{\Lambda}_2) \leq \Trace(\mtx{B})$ -- remembering $k = n_{\mtx{\Omega}}/2$ -- to get 
+    \begin{equation}
+        \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2 \right]
+        \leq \frac{3 e^4}{\sqrt{2}}  \sqrt{n_{\mtx{\Omega}}} \left( \frac{6}{n_{\mtx{\Omega}}} \Trace(\mtx{B}) + \frac{2}{n_{\mtx{\Omega}}} \Trace(\mtx{B}) \right)
+        \leq 12 \sqrt{2} e^4 \frac{1}{\sqrt{n_{\mtx{\Omega}}}} \Trace(\mtx{B}).
+        \label{equ:nystrom-proof-tail-bound}
+        %\leq \sqrt{k} \frac{e^4}{2} \frac{(k + n_{\mtx{\Omega}})(2p + n_{\mtx{\Omega}})}{(n_{\mtx{\Omega}} - k + 1)^2}  \left( 3 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{1}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \right).
+    \end{equation}
+    Inserting \refequ{equ:nystrom-proof-tail-bound} along with \refequ{equ:nystrom-proof-frobenius-trace} in \refequ{equ:nystrom-proof-persson-bonud} and using the triangle inequality for $\mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}[\cdot]$ we obtain
+    \begin{equation}
+        \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}} \left[\lVert \mtx{B} - \Nystr{\mtx{\Omega}}{\mtx{B}} \rVert _F \right]
+        \leq \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}} \left[ \lVert \mtx{\Lambda}_2 \rVert _F \right] + \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}} \left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2 \right]
+        \leq \frac{c}{\sqrt{n_{\mtx{\Omega}}}} \Trace(\mtx{B}).
+    \end{equation}
+    where $c = 1 + 12 \sqrt{2} e^4 $.
+
+    As in \cite{kressner-2023-randomized-lowrank}, we can show that the error $\lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F$ is measurable and by the Minkowski's integral inequality \cite[theorem 202]{hardy-1952-inequalities}, we get for $n_{\mtx{\Omega}} \geq 4$
+    \begin{align}
+        \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \right] 
+        &\leq \int_{a}^{b} \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}} \left[\lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F \right] ~\mathrm{d}t \notag \\
+        %&\leq \mathbb{E}^{\sfrac{k}{2}} \left[ \frac{1}{\sqrt{k}} \int_{a}^{b} \Trace(\mtx{B}(t)) + \sqrt{k} \lVert \mtx{\Lambda}_2(t)^{\sfrac{1}{2}} \mtx{\Omega}_2(t) \mtx{\Omega}_1(t)^{\dagger} \rVert _2^2~\mathrm{d}t  \right] && \text{(\refequ{xy})} \notag \\
+        %&\leq \frac{1}{\sqrt{k}} \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t + \mathbb{E}^{\sfrac{k}{2}} \left[ \int_{a}^{b}  \sqrt{k} \lVert \mtx{\Lambda}_2(t)^{\sfrac{1}{2}} \mtx{\Omega}_2(t) \mtx{\Omega}_1(t)^{\dagger} \rVert _2^2~\mathrm{d}t  \right] \notag \\
+        %&\leq \frac{1}{\sqrt{k}} \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t + \sqrt{k} \int_{a}^{b} \mathbb{E}^{\sfrac{k}{2}} \left[ \lVert \mtx{\Lambda}_2(t)^{\sfrac{1}{2}} \mtx{\Omega}_2(t) \mtx{\Omega}_1(t)^{\dagger} \rVert _2^2 \right]  ~\mathrm{d}t \notag \\
+        &\leq \frac{c}{\sqrt{n_{\mtx{\Omega}}}} \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t.
+    \end{align}
+    From Markov's inequality follows with probability at least $1 - \gamma^{-\sfrac{n_{\mtx{\Omega}}}{4}}$
+    \begin{equation}
+        \int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \leq \gamma \frac{c}{\sqrt{n_{\mtx{\Omega}}}} \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t,
+    \end{equation}
+    from which follows the first statement.
+
+    Fixing $\gamma = e$ and letting $n_{\mtx{\Omega}} = \lceil(c e \varepsilon)^{-2}  + 4 \log(\delta^{-1}) \rceil$ gives us the second part of the theorem.
+
+    %Setting $\delta = \gamma^{-\sfrac{k}{4}}$ and choosing $k = \lceil \varepsilon^{-2}\log(\delta^{-1}) \rceil$ we get
+    %\begin{align}
+    %    \gamma \frac{1}{\sqrt{k}}
+    %    &= \delta^{-\sfrac{2}{\lceil \varepsilon^{-2} \log(\delta^{-1}) \rceil}} \frac{1}{\sqrt{\lceil \varepsilon^{-2} \log(\delta^{-1}) \rceil}} && \text{(definition of $\delta$ and choice of $k$)} \notag \\
+    %    &= e^{2\varepsilon^{2} \frac{\varepsilon^{-2}\log(\delta^{-1})}{\lceil \varepsilon^{-2} \log(\delta^{-1}) \rceil}} \frac{1}{\sqrt{\lceil \varepsilon^{-2} \log(\delta^{-1}) \rceil}} && \text{($\delta = e^{-\log(\delta^{-1})}$)} \notag \\ 
+    %    &\leq e^{2\varepsilon^{2}} \frac{\varepsilon}{\sqrt{ \log(\delta^{-1})}} && \text{($\lceil x \rceil \geq x$ if $x \geq 0$)}
+    %\end{align}
+    %which is smaller than $\varepsilon$ if $\delta \leq e^{-e^{4 \varepsilon^2}}$from which follows the second part of the theorem when using $n_{\mtx{\Omega}} = 2k$.
+\end{proof}
+
+When compared to the equivalent result for constant matrices \cite[Lemma 3.2]{persson-2022-improved-variants}, our constant factor up front is around three times larger and our failure probability decays half a power slower.
+
+Finally, we can now combine the bound on the Girard-Hutchinson estimator (\refthm{thm:hutchinson}) and the one on the Nyström approximation (\reflem{lem:nystrom}) to obtain our main result.
+
+\begin{theorem}{Nyström++ trace estimator for parameter-dependent matrices}{nystrom-pp}
+    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. If $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-1} \log(\delta^{-1})^2)$ with \emph{even} $n_{\mtx{\Omega}}$, then for $\delta \in (0, 1/2)$ and $\varepsilon > 0$ with probability at least $1 - \delta$ 
+    \begin{equation}
+        \int_{a}^{b} | \Trace(\mtx{B}(t)) - \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{B}(t)) |~\mathrm{d}t
+        \leq \varepsilon \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t.
+    \end{equation}
+\end{theorem}
+
+\begin{proof}
+    By choosing $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\tilde{\varepsilon}^{-2} \log(\tilde{\delta}^{-1})^2)$ we get
+    \begin{align}
+        &\int_{a}^{b} | \Trace(\mtx{B}(t)) - \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{B}(t)) |~\mathrm{d}t \notag \\
+        &= \int_{a}^{b} | \Trace(\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)) |~\mathrm{d}t && \text{(by definition of estimators)} \notag \\
+        &\leq \tilde{\varepsilon} \int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F ~\mathrm{d}t && \text{(\refthm{thm:hutchinson} w.p. $\geq 1 - \tilde{\delta}$)} \notag \\
+        &\leq \tilde{\varepsilon}^2 \int_{a}^{b} \Trace(\mtx{B}(t)) ~\mathrm{d}t && \text{(\reflem{lem:nystrom} w.p. $\geq 1 - \tilde{\delta}$)} 
+    \end{align}
+    with probability at least $1 - 2\tilde{\delta}$ by a union bound. Taking $\varepsilon = \tilde{\varepsilon}^2$ and $\delta = 2 \tilde{\delta}$ we conclude the result.
+
+\end{proof}
+
+Comparing \refthm{thm:nystrom-pp} with its equivalent for constant matrices \cite[theorem 3.4]{persson-2022-improved-variants}, we notice a less favorable scaling of the required number of random vectors $n_{\mtx{\Omega}}$ and $n_{\mtx{\Psi}}$ in terms of $\log(\delta^{-1})$.
+
+% \begin{proof}
+%     Combining with union bound.
+%     \begin{align}
+%         &\int_{a}^{b} | \Trace(\mtx{B}(t)) - \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{B}(t)) |~\mathrm{d}t \notag \\
+%         &= \int_{a}^{b} | \Hutch{\mtx{\Psi}}(\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{A}}(t)) - \Trace(\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{A}}(t)) |~\mathrm{d}t && \text{(definition of estimators)} \notag \\
+%         &= \todo{c} \frac{1}{\sqrt{n_{\mtx{\Psi}}}} \int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{A}}(t) \rVert _F ~\mathrm{d}t && \text{(with probability $1 - \delta$ if $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-1})$)} \notag \\
+%         &= \todo{c} \frac{1}{\sqrt{n_{\mtx{\Psi}} n_{\mtx{\Omega}}}} \int_{a}^{b} \Trace(\mtx{B}(t)) ~\mathrm{d}t
+%     \end{align}
+% \end{proof}

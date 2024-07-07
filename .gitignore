@@ -465,3 +465,5 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+paper/paper.pdf
