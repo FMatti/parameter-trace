@@ -157,7 +157,7 @@ def chebyshev_nystrom(A, t=0, m=100, n_Psi=10, n_Omega=10, kernel=gaussian_kerne
             K_2[i] += nu[i, l] * X
 
         # Chebyshev recurrence
-        V_3, W_3 = (2 - (l == 0)) * A @ V_2 - V_1, (2 - (l == 0)) * A @ W_2 - W_1
+        V_3, W_3 = (2 - (l == 0)) * (A @ V_2) - V_1, (2 - (l == 0)) * (A @ W_2) - W_1
         V_1, W_1 = V_2, W_2
         V_2, W_2 = V_3, W_3
 
