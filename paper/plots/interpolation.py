@@ -2,8 +2,9 @@ import __context__
 
 import numpy as np
 import matplotlib.pyplot as plt
-from src.matrices import hamiltonian
-from src.simple import spectral_density, spectral_transformation, form_spectral_density, gaussian_kernel
+from matrices.electronic_structure import hamiltonian
+from algorithms.chebyshev_nystrom import chebyshev_nystrom
+from algorithms.helpers import spectral_transformation, form_spectral_density, gaussian_kernel
 
 np.random.seed(0)
 
@@ -33,11 +34,11 @@ baseline = form_spectral_density(eigvals_st, t, kernel)
 
 error = np.empty((3, len(m_list)))
 for j, m in enumerate(m_list):
-    estimate = spectral_density(A_st, t, m, 0, n_Omega, kernel, consistent=False)
+    estimate = chebyshev_nystrom(A_st, t, m, 0, n_Omega, kernel, consistent=False)
     error[0, j] = 2 * np.mean(np.abs(estimate - baseline))
-    estimate = spectral_density(A_st, t, m, 0, n_Omega, kernel)
+    estimate = chebyshev_nystrom(A_st, t, m, 0, n_Omega, kernel)
     error[1, j] = 2 * np.mean(np.abs(estimate - baseline))
-    estimate = spectral_density(A_st, t, m, 0, n_Omega, kernel, nonnegative=True)
+    estimate = chebyshev_nystrom(A_st, t, m, 0, n_Omega, kernel, nonnegative=True)
     error[2, j] = 2 * np.mean(np.abs(estimate - baseline))
 
 for i in range(3):

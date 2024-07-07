@@ -1,10 +1,10 @@
 import __context__
 
 import numpy as np
-import scipy as sp
 import matplotlib.pyplot as plt
-from src.simple import spectral_density, spectral_transformation, form_spectral_density, gaussian_kernel
-from src.matrices import hamiltonian
+from algorithms.chebyshev_nystrom import chebyshev_nystrom
+from algorithms.helpers import spectral_transformation, form_spectral_density, gaussian_kernel
+from matrices.electronic_structure import hamiltonian
 
 np.random.seed(0)
 
@@ -34,11 +34,11 @@ baseline = form_spectral_density(eigvals_st, t, kernel)
 
 error = np.empty((3, len(n_Vec_list)))
 for j, n_Vec in enumerate(n_Vec_list):
-    estimate = spectral_density(A_st, t, m, n_Vec, 0, kernel)
+    estimate = chebyshev_nystrom(A_st, t, m, n_Vec, 0, kernel)
     error[0, j] = 2 * np.mean(np.abs(estimate - baseline))
-    estimate = spectral_density(A_st, t, m, n_Vec // 2, n_Vec // 2, kernel)
+    estimate = chebyshev_nystrom(A_st, t, m, n_Vec // 2, n_Vec // 2, kernel)
     error[1, j] = 2 * np.mean(np.abs(estimate - baseline))
-    estimate = spectral_density(A_st, t, m, 0, n_Vec, kernel)
+    estimate = chebyshev_nystrom(A_st, t, m, 0, n_Vec, kernel)
     error[2, j] = 2 * np.mean(np.abs(estimate - baseline))
 
 for i in range(3):

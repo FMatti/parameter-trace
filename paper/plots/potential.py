@@ -2,7 +2,7 @@ import __context__
 
 import matplotlib.pyplot as plt
 
-from src.matrices import regular_grid, periodic_gaussian_well
+from matrices.electronic_structure import regular_grid, periodic_gaussian_well
 
 plt.style.use("paper/plots/stylesheet.mplstyle")
 

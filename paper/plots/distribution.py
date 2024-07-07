@@ -1,10 +1,10 @@
 import __context__
 
 import numpy as np
-import scipy as sp
 import matplotlib.pyplot as plt
-from src.simple import spectral_density, spectral_transformation, form_spectral_density, gaussian_kernel
-from src.matrices import hamiltonian
+from algorithms.chebyshev_nystrom import chebyshev_nystrom
+from algorithms.helpers import spectral_transformation, form_spectral_density, gaussian_kernel
+from matrices.electronic_structure import hamiltonian
 
 np.random.seed(0)
 
@@ -38,7 +38,7 @@ for j, sigma in enumerate(sigma_list):
     m = int(16 / sigma)  # Double-check this, i.e. use error estimate for this
 
     for i, (n_Psi, n_Omega) in enumerate(zip(n_Psi_list, n_Omega_list)):
-        estimate = spectral_density(A_st, t, m, n_Psi, n_Omega, kernel)
+        estimate = chebyshev_nystrom(A_st, t, m, n_Psi, n_Omega, kernel)
         error[i, j] = 2 * np.mean(np.abs(estimate - baseline))
 
 for i in reversed(range(len(n_Psi_list))):
