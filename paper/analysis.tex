@@ -97,7 +97,6 @@ for a Gaussian random vector $\vct{\psi}$.
 %    First, we consider $r(\mtx{B}(t), \vct{\psi})$ for a fixed $t \in [a,b]$ and therefore temporarily ignore the parameter-dependence.
 The proof of \cite[Lemma 3]{cortinovis-2022-randomized-trace} shows that $r(\mtx{B}, \vct{\psi})$ is sub-Gamma with parameters $(v, c) = (2 \lVert \mtx{B} \rVert _F^2, 2 \lVert \mtx{B} \rVert _2)$ where $\lVert \cdot \rVert _2$ denotes the spectral norm. By \cite[Theorem 2.3]{Boucheron2013} this implies for every $k \in \mathbb{N}$ that
     \begin{align*}
-
         \mathbb{E}\left[ r(\mtx{B}, \vct{\psi})^{2 k} \right]
         &\leq k! \left( 16 \lVert \mtx{B} \rVert _F^2 \right)^k + (2 k)! \left( 8 \lVert \mtx{B} \rVert _2 \right)^{2 k}  \\
         &\le \big( k! 2^{4 k} + (2 k)! 2^{6 k}\big) \lVert \mtx{B} \rVert _F^{2 k} 
@@ -183,7 +182,7 @@ The proof of \cite[Lemma 3]{cortinovis-2022-randomized-trace} shows that $r(\mtx
 %    if $n_{\mtx{\Psi}} \geq 2^{10} \varepsilon^{-2} \log(\delta^{-1})^2 (\int_{a}^{b} \mu(t)^{\sfrac{1}{2}}~\mathrm{d}t)^2$ with $\mu(t) = \lVert \mtx{B}(t) \rVert _2 / \Trace(\mtx{B}(t))$. Compared to the constant matrix equivalent \cite[Remark 2]{cortinovis-2022-randomized-trace} we mainly observe a larger constant and an additional factor of $\log(\delta^{-1})$.
 %\end{remark}
 
-Compared to the analogous result for the constant case~\cite[Lemma 2.1]{meyer-2021-hutch-optimal}, the result of~\Refthm{thm:hutchinson} requires one to choose the number of queries $n_{\mtx{\Psi}}$ by a factor $\log(\delta^{-1})$ larger to yield the same guarantee.
+Compared to the analogous result for the constant case~\cite[Lemma 2.1]{meyer-2021-hutch-optimal}, the result of~\refthm{thm:hutchinson} requires one to choose the number of queries $n_{\mtx{\Psi}}$ by a factor $\log(\delta^{-1})$ larger to yield the same guarantee.
 
 \subsection{Nyström approximation for parameter-dependent matrices}
 \label{subsec:nystrom}
