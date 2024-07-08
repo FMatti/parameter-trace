@@ -82,25 +82,25 @@
 %%% REFERENCING
 
 % Bibliography management
-\usepackage[backend=bibtex,style=alphabetic,minalphanames=3, backref=true]{biblatex}
+\usepackage[backend=bibtex,style=alphabetic-verb,maxbibnames=2,minalphanames=2,firstinits=true]{biblatex}
 \addbibresource{bibliography.bib}
 %\newcommand*{\doi}[1]{DOI: \href{https://doi.org/#1}{#1}}
 \let\oldcite\cite
 \renewcommand{\cite}[2][]{\textcolor{linkcolor}{\bf \oldcite[#1]{#2}}}
-\DeclareLabelalphaTemplate{
-   \labelelement{
-     \field[final]{shorthand}
-     \field{label}
-     \field[strwidth=1,strside=left]{labelname}
-   }
-   \labelelement{
-     \field[strwidth=2,strside=right]{year}
-   }
-}
- \DeclareLabelalphaNameTemplate{
-   \namepart[use=true, pre=true, strwidth=1, compound=true]{prefix} 
-   \namepart{family}
-}
+%\DeclareLabelalphaTemplate{
+%   \labelelement{
+%     \field[final]{shorthand}
+%     \field{label}
+%     \field[strwidth=1,strside=left]{labelname}
+%   }
+%   \labelelement{
+%     \field[strwidth=2,strside=right]{year}
+%   }
+%}
+% \DeclareLabelalphaNameTemplate{
+%   \namepart[use=true, pre=true, strwidth=1, compound=true]{prefix} 
+%   \namepart{family}
+%}
 
 
 % Links
@@ -118,26 +118,15 @@
 \usepackage[list=true, listformat=simple]{subcaption}
 
 % Reference commands
-\newcommand{\reffig}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf figure \ref*{#1}}}}
-\newcommand{\Reffig}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Figure \ref*{#1}}}}
-\newcommand{\reftab}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf table \ref*{#1}}}}
-\newcommand{\Reftab}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Table \ref*{#1}}}}
-\newcommand{\refdef}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf definition \ref*{#1}}}}
-\newcommand{\Refdef}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Definition \ref*{#1}}}}
-\newcommand{\reflem}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf lemma \ref*{#1}}}}
-\newcommand{\Reflem}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Lemma \ref*{#1}}}}
-\newcommand{\refthm}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf theorem \ref*{#1}}}}
-\newcommand{\Refthm}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Theorem \ref*{#1}}}}
-\newcommand{\refalg}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf algorithm \ref*{#1}}}}
-\newcommand{\Refalg}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Algorithm \ref*{#1}}}}
-\newcommand{\refsec}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf section \ref*{#1}}}}
-\newcommand{\Refsec}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Section \ref*{#1}}}}
-\newcommand{\refchp}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf section \ref*{#1}}}}
-\newcommand{\Refchp}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf section \ref*{#1}}}}
-\newcommand{\refapp}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf appendix \ref*{#1}}}}
-\newcommand{\Refapp}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Appendix \ref*{#1}}}}
-\newcommand{\reflin}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf line \ref*{#1}}}}
-\newcommand{\Reflin}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Line \ref*{#1}}}}
+\newcommand{\reffig}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Figure \ref*{#1}}}}
+\newcommand{\reftab}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Table \ref*{#1}}}}
+\newcommand{\refdef}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Definition \ref*{#1}}}}
+\newcommand{\reflem}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Lemma \ref*{#1}}}}
+\newcommand{\refthm}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Theorem \ref*{#1}}}}
+\newcommand{\refalg}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Algorithm \ref*{#1}}}}
+\newcommand{\refsec}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Section \ref*{#1}}}}
+\newcommand{\refapp}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Appendix \ref*{#1}}}}
+\newcommand{\reflin}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Line \ref*{#1}}}}
 \newcommand{\refequ}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf (\ref*{#1})}}}
 
 
@@ -293,9 +282,9 @@
 %  boxrule=1pt,
 %}{rem}
 
-\renewenvironment{proof}{\noindent\paragraph{\bfseries Proof:}}{\qed}
+\renewenvironment{proof}{\noindent\paragraph{\bfseries Proof.}}{\qed}
 
-\newenvironment{remark}{\noindent\paragraph{\bfseries Remark:}}{\\}
+\newenvironment{remark}{\noindent\paragraph{\bfseries Remark.}}{\\}
 
 
 

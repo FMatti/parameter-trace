@@ -1,6 +1,6 @@
 """
-hessian_density.py
-------------------
+neural_network.py
+-----------------
 
 Spectral density of Hessian matrix.
 """
@@ -8,7 +8,7 @@ Spectral density of Hessian matrix.
 import torch
 import time
 import numpy as np
-from .krylov_aware import lanczos
+from algorithms.krylov_aware import lanczos
 
 def compute_jacobian(model, loss_function, data):
     input, target = data
