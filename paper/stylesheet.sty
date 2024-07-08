@@ -82,7 +82,7 @@
 %%% REFERENCING
 
 % Bibliography management
-\usepackage[backend=bibtex,style=alphabetic-verb,maxbibnames=2,minalphanames=2,firstinits=true]{biblatex}
+\usepackage[backend=bibtex,style=alphabetic-verb,minalphanames=2,firstinits=true]{biblatex}
 \addbibresource{bibliography.bib}
 %\newcommand*{\doi}[1]{DOI: \href{https://doi.org/#1}{#1}}
 \let\oldcite\cite
@@ -128,6 +128,16 @@
 \newcommand{\refapp}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Appendix \ref*{#1}}}}
 \newcommand{\reflin}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Line \ref*{#1}}}}
 \newcommand{\refequ}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf (\ref*{#1})}}}
+\newcommand{\Reffig}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Figure \ref*{#1}}}}
+\newcommand{\Reftab}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Table \ref*{#1}}}}
+\newcommand{\Refdef}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Definition \ref*{#1}}}}
+\newcommand{\Reflem}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Lemma \ref*{#1}}}}
+\newcommand{\Refthm}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Theorem \ref*{#1}}}}
+\newcommand{\Refalg}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Algorithm \ref*{#1}}}}
+\newcommand{\Refsec}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Section \ref*{#1}}}}
+\newcommand{\Refapp}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Appendix \ref*{#1}}}}
+\newcommand{\Reflin}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Line \ref*{#1}}}}
+\newcommand{\Refequ}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf (\ref*{#1})}}}
 
 
 %%% FLOATS

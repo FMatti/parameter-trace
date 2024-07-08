@@ -34,7 +34,7 @@ where $\mathcal{S}$ represents an appropriately chosen space of test functions. 
 \subsection{Chebyshev expansion of smoothing kernel}
 \label{subsec:chebyshev-expansion}
 
-To estimate the trace in \refequ{equ:smooth-spectral-density}, we first need to evaluate the involved matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$. However, doing this exactly would require us to first diagonalize $\mtx{A}$, which is often a prohibitively expensive operation. For algorithmic reasons (see \refsec{subsubsec:chebyshev-nystrom-implementation}), we seek for approximations of this matrix function in terms of affine expansions \todo{explain more}, of which the Chebyshev expansion was determined to be most suitable due to its approximation error guarantees and ease of manipulation. In every $t \in \mathbb{R}$ we expand 
+To estimate the trace in \refequ{equ:smooth-spectral-density}, we first need to evaluate the involved matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$. However, doing this exactly would require us to first diagonalize $\mtx{A}$, which is often a prohibitively expensive operation. For algorithmic reasons (see \refsec{subsubsec:chebyshev-nystrom-implementation}), we seek for approximations of this matrix function in terms of affine linear expansions, of which the Chebyshev expansion was determined to be most suitable due to its approximation error guarantees and ease of manipulation. In every $t \in \mathbb{R}$ we expand 
 \begin{equation}
     g_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A}) = \sum_{l=0}^{m} \mu_l(t) T_l(\mtx{A})
     \label{equ:matrix-expansion}

@@ -111,7 +111,7 @@ The proof proceeds by bounding moments for fixed values of $t$ and then use Mink
 for a Gaussian random vector $\vct{\psi}$.
 %
 %    First, we consider $r(\mtx{B}(t), \vct{\psi})$ for a fixed $t \in [a,b]$ and therefore temporarily ignore the parameter-dependence.
-The proof of \cite[Lemma 3]{cortinovis-2022-randomized-trace} shows that $r(\mtx{B}, \vct{\psi})$ is sub-Gamma with parameters $(v, c) = (2 \lVert \mtx{B} \rVert _F^2, 2 \lVert \mtx{B} \rVert _2)$ where $\lVert \cdot \rVert _2$ denotes the spectral norm. By \cite[Theorem 2.3]{Boucheron2013} this implies for every $k \in \mathbb{N}$ that
+The proof of \cite[Lemma 3]{cortinovis-2022-randomized-trace} shows that $r(\mtx{B}, \vct{\psi})$ is sub-Gamma with parameters $(v, c) = (2 \lVert \mtx{B} \rVert _F^2, 2 \lVert \mtx{B} \rVert _2)$ where $\lVert \cdot \rVert _2$ denotes the spectral norm. By \cite[Theorem 2.3]{boucheron-2013-concentration-inequalities} this implies for every $k \in \mathbb{N}$ that
     \begin{align*}
         \mathbb{E}\left[ r(\mtx{B}, \vct{\psi})^{2 k} \right]
         &\leq k! \left( 16 \lVert \mtx{B} \rVert _F^2 \right)^k + (2 k)! \left( 8 \lVert \mtx{B} \rVert _2 \right)^{2 k}  \\
@@ -212,7 +212,7 @@ Using that $\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ is positive semi-defi
         = \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _{\ast} \\
         & = \lVert (\mtx{I}_n - \mtx{\Pi}_{\mtx{B}(t)^{\sfrac{1}{2}} \mtx{\Omega}}) \mtx{B}(t)^{\sfrac{1}{2}} \rVert _F^2,
     \end{align*}
-    where $\lVert \cdot \rVert _{\ast}$ denotes the nuclear norm and we used a \textcolor{red}{result from the proof of \cite[Corollary 8.2]{tropp-2023-randomized-algorithms} ??? Is this really the original source. Have a look whether David P mentions this somewhere? Also, this may be contained in the original Gittens Mahoney paper but I am not sure ???} in the last equality. This allows us to apply \textcolor{red}{Theorem 9 ??? be careful that the theorem numbering may be different when the paper is published in NLAA ???} from \cite{kressner-2023-randomized-lowrank}, which immediately implies the statement claimed by the theorem.
+    where $\lVert \cdot \rVert _{\ast}$ denotes the nuclear norm and we used a \textcolor{red}{result from the proof of \cite[Corollary 8.2]{tropp-2023-randomized-algorithms} ??? Is this really the original source. Have a look whether David P mentions this somewhere? Also, this may be contained in the original Gittens Mahoney paper but I am not sure ???} \textcolor{green}{The original is in Gittens' arXiv preprint \cite[Theorem 1]{gittens-2011-spectral-norm} but also in Gittens/Mahoney \cite[Equation 4]{gittens-2013-revisiting-nystrom}} in the last equality. This allows us to apply \textcolor{red}{Theorem 9 ??? be careful that the theorem numbering may be different when the paper is published in NLAA ???} from \cite{kressner-2023-randomized-lowrank}, which immediately implies the statement claimed by the theorem.
 \end{proof}
 
 \color{black}
