@@ -215,14 +215,18 @@ Using that $\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ is positive semi-defi
     where $\lVert \cdot \rVert _{\ast}$ denotes the nuclear norm and we used a \textcolor{red}{result from the proof of \cite[Corollary 8.2]{tropp-2023-randomized-algorithms} ??? Is this really the original source. Have a look whether David P mentions this somewhere? Also, this may be contained in the original Gittens Mahoney paper but I am not sure ???} \textcolor{green}{The original is in Gittens' arXiv preprint \cite[Theorem 1]{gittens-2011-spectral-norm} but also in Gittens/Mahoney \cite[Equation 4]{gittens-2013-revisiting-nystrom}} in the last equality. This allows us to apply \textcolor{red}{Theorem 9 ??? be careful that the theorem numbering may be different when the paper is published in NLAA ???} from \cite{kressner-2023-randomized-lowrank}, which immediately implies the statement claimed by the theorem.
 \end{proof}
 
-\color{black}
-
 Compared to the constant case~\cite[Theorem 8.1]{tropp-2023-randomized-algorithms}, the bound of Theorem~\ref{thm:nystrom} features an additional factor $1+r$, which cannot be compensated with oversampling.
 
 \subsection{Nyström++ estimator for parameter-dependent matrices}
 \label{subsec:nystrom-pp}
 
-Just as in the constant matrix case, our goal is now to prove that the Nyström++ estimator \refequ{equ:nystrompp-trace-estimator} achieves an $\varepsilon$-relative error with just $\mathcal{O}(\varepsilon^{-1})$ random vectors used to construct the estimate. To do so, we mimic the proof of a similar bound for the Hutch++ estimator \cite[Theorem 3.1]{meyer-2021-hutch-optimal}. Correspondingly, we will need to show that with $n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-2})$ random vectors, the Nyström approximation verifies $\int \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)\rVert _F~\mathrm{d}t \leq \varepsilon \int \Trace(\mtx{B}(t))~\mathrm{d}t$, regardless of the structure of the matrix $\mtx{B}(t)$. Just as in the corresponding proof for the Girard-Hutchinson estimator \refthm{thm:hutchinson}, we again bound the higher order moments of the approximation error for fixed $t$ and then use Minkowsi's integral inequality to carry over the results to the continuous case. We will do this in a sequence of three lemmas.
+
+\refthm{thm:hutchinson} has established a relative $\varepsilon$-error for the Girard-Hutchinson estimator with $\mathcal{O}(\varepsilon^{-2})$ queries. The aim of this section is to show that the Nyström++ estimator~\refequ{equ:nystrompp-trace-estimator} improves this to $\mathcal{O}(\varepsilon^{-1})$ matrix-vector products with random vectors, \emph{without} requiring any assumption on the singular values of $\mtx{B}(t)$. This parallels existing results for the constant case
+for Hutch++\cite[Theorem 3.1]{meyer-2021-hutch-optimal} and Nyström++\textcolor{red}{??? Include specific result ???}.
+
+\color{black}
+
+To do so, we mimic the proof of a similar bound for the Hutch++ estimator . Correspondingly, we will need to show that with $n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-2})$ random vectors, the Nyström approximation verifies $\int \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)\rVert _F~\mathrm{d}t \leq \varepsilon \int \Trace(\mtx{B}(t))~\mathrm{d}t$, regardless of the structure of the matrix $\mtx{B}(t)$. Just as in the corresponding proof for the Girard-Hutchinson estimator \refthm{thm:hutchinson}, we again bound the higher order moments of the approximation error for fixed $t$ and then use Minkowsi's integral inequality to carry over the results to the continuous case. We will do this in a sequence of three lemmas.
 
 For reasons which will become clear in the proof of the final and most interesting of these lemmas (\reflem{lem:nystrom}), we will need to bound $\mathbb{E}^{\sfrac{p}{2}}\left[\lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]$ for a constant matrix $\mtx{A} \in \mathbb{R}^{m \times m}$ and a standard Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{m \times k}$. The corresponding result for the Frobenius norm $\mathbb{E}^{\sfrac{p}{2}}\left[\lVert \mtx{A} \mtx{\Omega} \rVert _F^2 \right]$ has already been shown in \cite[Lemma 7]{kressner-2023-randomized-lowrank}. Several ways of separately bounding the spectral norm moments of the Wishart matrix $\mtx{\Omega} \mtx{\Omega}^{\top}$, i.e. when $\mtx{A} = \mtx{I}_m$ already exist, however, all of them are not sufficient for our purposes because they scale with $m$ \cite{chen-2005-condition-numbers, edelman-1988-eigenvalues-condition, james-1964-distributions-matrix}. In \cite[Lemma B.1]{tropp-2023-randomized-algorithms} a bound is achieved for $p = 2$ and $p = 4$. We will now generalize this result for arbitrary $p \in \mathbb{N}$. To do so, we first show the bound for Gaussian random vectors and then extend it to Gaussian random matrices in \reflem{lem:spectral-norm-moment}.
 
@@ -330,7 +334,7 @@ For reasons which will become clear in the proof of the final and most interesti
         \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]
         \leq \lVert \mtx{A} \rVert _2^2 \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \vct{\omega}_1 \rVert _2^2 \right] + \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \vct{\omega}_2 \rVert _2^2 \right]
     \end{equation}
-    for independent standard Gaussian random vectors $\vct{\omega}_1 \in \mathbb{R}^{k}$ and $\vct{\omega}_2 \in \mathbb{R}^{m}$. Both moments can be bound using \reflem{lem:spectral-norm-moment-vector}, one of which with $\mtx{A} = \mtx{I}_k$, to get
+    for independent standard Gaussian random vectors $\vct{\omega}_1 \in \mathbb{R}^{k}$ and $\vct{\omega}_2 \in \mathbb{R}^{m}$. \textcolor{red}{Doesn't A.1 give a tighter bound for the first term?} Both moments can be bound using \reflem{lem:spectral-norm-moment-vector}, one of which with $\mtx{A} = \mtx{I}_k$, to get
     \begin{align}
         \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]
         &\leq \lVert \mtx{A} \rVert _2^2 (k + p) \left( \lVert \mtx{I}_k \rVert _2^2 + \frac{1}{k} \lVert \mtx{I}_k \rVert _F^2 \right) + (k + p) \left( \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \right) \notag \\
@@ -354,13 +358,17 @@ For reasons which will become clear in the proof of the final and most interesti
 
 \end{proof}
 
+\color{blue}
+
 \begin{lemma}{Nyström approximation for parameter-dependent matrices}{nystrom}
-    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. Then its Nyström approximation $\Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ with Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ for \emph{even} $n_{\mtx{\Omega}} \geq 4$ verifies with probability at least $1 - \gamma^{-\sfrac{n_{\mtx{\Omega}}}{4}}$
+    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. Consider the Nyström approximation $\Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ with a Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ and \emph{even} $n_{\mtx{\Omega}} \geq 4$.
+    Then for any $\gamma \geq 1$ the bound
     \begin{equation}
         \int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \leq \gamma \frac{c}{\sqrt{n_{\mtx{\Omega}}}} \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t
         \label{qu:nystrompp-theorem-bound}
     \end{equation}
-    for any $\gamma \geq 1$ and a universal constant $c > 0$. In particular, if we choose $n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-2} + \log(\delta^{-1}))$, then with probability at least $1-\delta$ for $\delta \in (0, 1)$ and $\varepsilon > 0$ we have $\int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t$.
+        holds with probability at least $1 - \gamma^{-\sfrac{n_{\mtx{\Omega}}}{4}}$ for 
+        a universal constant $c > 0$. In particular, given $\varepsilon > 0$ and $\delta \in (0, 1)$, the bound $\int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t$ holds with probability at least $1-\delta$ if $n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-2} + \log(\delta^{-1}))$.
 \end{lemma}
 
 %\todo{Proof idea: structural bound, then higher order moment bound to apply Markov's inequality.}
