@@ -216,7 +216,7 @@ Using that $\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ is positive semi-defi
         = \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _{\ast} \\
         & = \lVert (\mtx{I}_n - \mtx{\Pi}_{\mtx{B}(t)^{\sfrac{1}{2}} \mtx{\Omega}}) \mtx{B}(t)^{\sfrac{1}{2}} \rVert _F^2,
     \end{align*}
-    where $\lVert \cdot \rVert _{\ast}$ denotes the nuclear norm and we used a \textcolor{red}{result from the proof of \cite[Corollary 8.2]{tropp-2023-randomized-algorithms} ??? Is this really the original source. Have a look whether David P mentions this somewhere? Also, this may be contained in the original Gittens Mahoney paper but I am not sure ???} \textcolor{green}{The original is in Gittens' arXiv preprint \cite[Theorem 1]{gittens-2011-spectral-norm} but also in Gittens/Mahoney \cite[Equation 4]{gittens-2013-revisiting-nystrom}} in the last equality. This allows us to apply \textcolor{red}{Theorem 9 ??? be careful that the theorem numbering may be different when the paper is published in NLAA ???} from \cite{kressner-2023-randomized-lowrank}, which immediately implies the statement claimed by the theorem.
+    where $\lVert \cdot \rVert _{\ast}$ denotes the nuclear norm and we used a \textcolor{red}{result from the proof of \cite[Corollary 8.2]{tropp-2023-randomized-algorithms} ??? Is this really the original source. Have a look whether David P mentions this somewhere? Also, this may be contained in the original Gittens Mahoney paper but I am not sure ???} \textcolor{green}{The original is in Gittens' arXiv preprint \cite[Theorem 1]{gittens-2011-spectral-norm} but also in Gittens/Mahoney \cite[Equation 4]{gittens-2013-revisiting-nystrom}} in the last equality. This allows us to apply \textcolor{red}{Theorem 9 ??? be careful that the theorem numbering may be different when the paper is published in NLAA ???} \textcolor{green}{changed it to Theorem 5} from \cite[Theorem 5]{kressner-2024-randomized-lowrank}, which immediately implies the statement claimed by the theorem.
 \end{proof}
 
 Compared to the constant case~\cite[Theorem 8.1]{tropp-2023-randomized-algorithms}, the bound of Theorem~\ref{thm:nystrom} features an additional factor $1+r$ that cannot be compensated with oversampling.
@@ -295,7 +295,7 @@ To do so, we mimic the proof of a similar bound for the Hutch++ estimator . Corr
     To match the decay rate of the moments of the first term in \refequ{equ:nystrom-proof-persson-bonud}, we will need to ensure that this term also is of order $\mathcal{O}(\Trace(\mtx{B}) / \sqrt{k})$. To this purpose, and to simplify the notation, we choose $k = n_{\mtx{\Omega}}/2$ and $q = n_{\mtx{\Omega}}/4$ for even $n_{\mtx{\Omega}}$ to ensure $k \in \mathbb{N}$. We can apply \reflem{lem:spectral-norm-moment} with $\mtx{A} = \mtx{\Lambda}_2^{\sfrac{1}{2}}$ and $p = n_{\mtx{\Omega}}/2$ to bound
     \begin{equation}
         \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2^2 \right]
-        \leq n_{\mtx{\Omega}} \left( 3 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{2}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \right).
+        \leq n_{\mtx{\Omega}} \left( 2 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{2}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \right).
         \label{equ:spectral-norm-bound-applied}
     \end{equation}
     The moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ can be bound with help of the proof of \cite[Lemma B.3]{tropp-2023-randomized-algorithms}
@@ -314,14 +314,14 @@ To do so, we mimic the proof of a similar bound for the Hutch++ estimator . Corr
     As opposed to \cite[Lemma B.3]{tropp-2023-randomized-algorithms}, our bound holds for all even $n_{\mtx{\Omega}} \in \mathbb{N}$, at the cost of a factor of $e^2$. Inserting \refequ{equ:spectral-norm-bound-applied} and  \refequ{equ:pinv-spectral-norm-bound} in \refequ{equ:nystrom-proof-processed-tail} with $k = n_{\mtx{\Omega}} / 2$ gives
     \begin{equation}
         \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2 \right]
-        \leq \frac{3 e^4}{\sqrt{2}}  \sqrt{n_{\mtx{\Omega}}} \left( 3 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{2}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \right).
+        \leq \frac{3 e^4}{\sqrt{2}}  \sqrt{n_{\mtx{\Omega}}} \left( 2 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{2}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \right).
         %\leq \sqrt{k} \frac{e^4}{2} \frac{(k + n_{\mtx{\Omega}})(2p + n_{\mtx{\Omega}})}{(n_{\mtx{\Omega}} - k + 1)^2}  \left( 3 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{1}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \right).
     \end{equation}
     We can identify $\lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 = \lambda_{k+1}$ and $\lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 = \Trace(\mtx{\Lambda}_2)$, and just as in the proof of \cite[Lemma 3.1]{meyer-2021-hutch-optimal} we bound $\lambda_{k+1} \leq \Trace(\mtx{B})/k$ and $\Trace(\mtx{\Lambda}_2) \leq \Trace(\mtx{B})$ -- remembering $k = n_{\mtx{\Omega}}/2$ -- to get 
     \begin{equation}
         \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2 \right]
-        \leq \frac{3 e^4}{\sqrt{2}}  \sqrt{n_{\mtx{\Omega}}} \left( \frac{6}{n_{\mtx{\Omega}}} \Trace(\mtx{B}) + \frac{2}{n_{\mtx{\Omega}}} \Trace(\mtx{B}) \right)
-        \leq 12 \sqrt{2} e^4 \frac{1}{\sqrt{n_{\mtx{\Omega}}}} \Trace(\mtx{B}).
+        \leq \frac{3 e^4}{\sqrt{2}}  \sqrt{n_{\mtx{\Omega}}} \left( \frac{4}{n_{\mtx{\Omega}}} \Trace(\mtx{B}) + \frac{2}{n_{\mtx{\Omega}}} \Trace(\mtx{B}) \right)
+        \leq 9 \sqrt{2} e^4 \frac{1}{\sqrt{n_{\mtx{\Omega}}}} \Trace(\mtx{B}).
         \label{equ:nystrom-proof-tail-bound}
         %\leq \sqrt{k} \frac{e^4}{2} \frac{(k + n_{\mtx{\Omega}})(2p + n_{\mtx{\Omega}})}{(n_{\mtx{\Omega}} - k + 1)^2}  \left( 3 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{1}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \right).
     \end{equation}
@@ -331,9 +331,9 @@ To do so, we mimic the proof of a similar bound for the Hutch++ estimator . Corr
         \leq \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}} \left[ \lVert \mtx{\Lambda}_2 \rVert _F \right] + \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}} \left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2 \right]
         \leq \frac{c}{\sqrt{n_{\mtx{\Omega}}}} \Trace(\mtx{B}).
     \end{equation}
-    where $c = 1 + 12 \sqrt{2} e^4 $.
+    where $c = 1 + 9 \sqrt{2} e^4$.
 
-    As in \cite{kressner-2023-randomized-lowrank}, we can show that the error $\lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F$ is measurable and by the Minkowski's integral inequality \cite[Theorem 202]{hardy-1952-inequalities}, we get for $n_{\mtx{\Omega}} \geq 4$
+    As in \cite{kressner-2024-randomized-lowrank}, we can show that the error $\lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F$ is measurable and by the Minkowski's integral inequality \cite[Theorem 202]{hardy-1952-inequalities}, we get for $n_{\mtx{\Omega}} \geq 4$
     \begin{align}
         \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \right] 
         &\leq \int_{a}^{b} \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}} \left[\lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F \right] ~\mathrm{d}t \notag \\
@@ -360,7 +360,7 @@ To do so, we mimic the proof of a similar bound for the Hutch++ estimator . Corr
     %which is smaller than $\varepsilon$ if $\delta \leq e^{-e^{4 \varepsilon^2}}$from which follows the second part of the theorem when using $n_{\mtx{\Omega}} = 2k$.
 \end{proof}
 
-When compared to the equivalent result for constant matrices \cite[Lemma 3.2]{persson-2022-improved-variants}, our constant factor up front is around three times larger and our failure probability decays half a power slower.
+When compared to the equivalent result for constant matrices \cite[Lemma 3.2]{persson-2022-improved-variants}, our constant factor up front is a bit more than two times larger and our failure probability decays half a power slower.
 
 Finally, we can now combine the bound on the Girard-Hutchinson estimator (\refthm{thm:hutchinson}) and the one on the Nyström approximation (\reflem{lem:nystrom}) to obtain our main result.
 

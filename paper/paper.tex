@@ -63,7 +63,7 @@
 
 \section{Moment bounds for non-standard Gaussian random vectors and matrices}
 
-The goal of this section is to establish moment bounds for $\lVert \mtx{A} \mtx{\Omega} \rVert _2^2$ with a fixed matrix $\mtx{A}$ and a Gaussian random matrix $\mtx{\Omega}$. These bounds are needed in the proof of \reflem{lem:nystrom}, but may also be of independent interest. For reasons which will become clear in the proof of the final and most interesting of these lemmas (\reflem{lem:nystrom}), we will need to bound $\mathbb{E}^{\sfrac{p}{2}}\left[\lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]$ for a constant matrix $\mtx{A} \in \mathbb{R}^{m \times m}$ and a standard Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{m \times k}$. The corresponding result for the Frobenius norm $\mathbb{E}^{\sfrac{p}{2}}\left[\lVert \mtx{A} \mtx{\Omega} \rVert _F^2 \right]$ has already been shown in \cite[Lemma 7]{kressner-2023-randomized-lowrank}. Several ways of separately bounding the spectral norm moments of the Wishart matrix $\mtx{\Omega} \mtx{\Omega}^{\top}$, i.e. when $\mtx{A} = \mtx{I}_m$ already exist, however, all of them are not sufficient for our purposes because they scale with $m$ \cite{chen-2005-condition-numbers, edelman-1988-eigenvalues-condition, james-1964-distributions-matrix}. In \cite[Lemma B.1]{tropp-2023-randomized-algorithms} a bound is achieved for $p = 2$ and $p = 4$. We will now generalize this result for arbitrary $p \in \mathbb{N}$. To do so, we first show the bound for Gaussian random vectors and then extend it to Gaussian random matrices in \reflem{lem:spectral-norm-moment}.
+The goal of this section is to establish moment bounds for $\lVert \mtx{A} \mtx{\Omega} \rVert _2^2$ with a fixed matrix $\mtx{A}$ and a Gaussian random matrix $\mtx{\Omega}$. These bounds are needed in the proof of \reflem{lem:nystrom}, but may also be of independent interest. For reasons which will become clear in the proof of the final and most interesting of these lemmas (\reflem{lem:nystrom}), we will need to bound $\mathbb{E}^{\sfrac{p}{2}}\left[\lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]$ for a constant matrix $\mtx{A} \in \mathbb{R}^{m \times m}$ and a standard Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{m \times k}$. The corresponding result for the Frobenius norm $\mathbb{E}^{\sfrac{p}{2}}\left[\lVert \mtx{A} \mtx{\Omega} \rVert _F^2 \right]$ has already been shown in \cite[Lemma 3]{kressner-2024-randomized-lowrank}. Several ways of separately bounding the spectral norm moments of the Wishart matrix $\mtx{\Omega} \mtx{\Omega}^{\top}$, i.e. when $\mtx{A} = \mtx{I}_m$ already exist, however, all of them are not sufficient for our purposes because they scale with $m$ \cite{chen-2005-condition-numbers, edelman-1988-eigenvalues-condition, james-1964-distributions-matrix}. In \cite[Lemma B.1]{tropp-2023-randomized-algorithms} a bound is achieved for $p = 2$ and $p = 4$. We will now generalize this result for arbitrary $p \in \mathbb{N}$. To do so, we first show the bound for Gaussian random vectors and then extend it to Gaussian random matrices in \reflem{lem:spectral-norm-moment}.
 
 
 \textcolor{red}{??? Need to check carefully that this result is not known ???} \textcolor{green}{I haven't found anything so far. The fact that also Bujanović/Grubišić/Kressner/Lam in Lemma 20 use a very similar technique, but merely to bound $\Gamma(\frac{p+1}{2})$ makes me suspect there's not much, except for Stirling approximation at the cost of some simplicity. Will keep investigating.}
@@ -192,7 +192,7 @@ The goal of this section is to establish moment bounds for $\lVert \mtx{A} \mtx{
     The matrix $\mtx{A} \in \mathbb{R}^{m \times m}$ and the standard Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{m \times k}$ satisfy for all $p \in \mathbb{N}$ 
     \begin{equation}
         \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]
-        \leq  (k + p) \left( 3 \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \right).
+        \leq  (k + p) \left( 2 \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \right).
     \end{equation}
     %\begin{equation}
     %    \mathbb{E}^{p}\left[ \lVert \mtx{\Sigma} \mtx{\Omega}_2\rVert _2 \right]
@@ -206,7 +206,7 @@ The goal of this section is to establish moment bounds for $\lVert \mtx{A} \mtx{
 \begin{remark}
     In particular, this result can also be used to bound
     \begin{equation}
-        \mathbb{E}^{p}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2 \right] = \sqrt{\mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]} \leq \sqrt{k + p} \cdot \left(\sqrt{3} \lVert \mtx{A} \rVert _2 + \frac{1}{\sqrt{k}}\lVert \mtx{A} \rVert _F\right)
+        \mathbb{E}^{p}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2 \right] = \sqrt{\mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]} \leq \sqrt{k + p} \cdot \left(\sqrt{2} \lVert \mtx{A} \rVert _2 + \frac{1}{\sqrt{k}}\lVert \mtx{A} \rVert _F\right)
     \end{equation}
     for any $k,p \in \mathbb{N}$. For $p=2$ this bound is slightly less tight than its equivalent in \cite[Lemma B.1]{tropp-2023-randomized-algorithms}.
 \end{remark}
@@ -217,11 +217,11 @@ The goal of this section is to establish moment bounds for $\lVert \mtx{A} \mtx{
         \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]
         \leq \lVert \mtx{A} \rVert _2^2 \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \vct{\omega}_1 \rVert _2^2 \right] + \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \vct{\omega}_2 \rVert _2^2 \right]
     \end{equation}
-    for independent standard Gaussian random vectors $\vct{\omega}_1 \in \mathbb{R}^{k}$ and $\vct{\omega}_2 \in \mathbb{R}^{m}$. \textcolor{red}{Doesn't A.1 give a tighter bound for the first term?} Both moments can be bound using \reflem{lem:spectral-norm-moment-vector}, one of which with $\mtx{A} = \mtx{I}_k$, to get
+    for independent standard Gaussian random vectors $\vct{\omega}_1 \in \mathbb{R}^{k}$ and $\vct{\omega}_2 \in \mathbb{R}^{m}$. \textcolor{red}{Doesn't A.1 give a tighter bound for the first term?} \textcolor{green}{Yes. Fixed it.} The first moment can be bound using \reflem{lem:gamma} and the second using \reflem{lem:spectral-norm-moment-vector} to get
     \begin{align}
         \mathbb{E}^{\sfrac{p}{2}}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]
-        &\leq \lVert \mtx{A} \rVert _2^2 (k + p) \left( \lVert \mtx{I}_k \rVert _2^2 + \frac{1}{k} \lVert \mtx{I}_k \rVert _F^2 \right) + (k + p) \left( \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \right) \notag \\
-        &\leq (k + p) \left( 3 \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \right).
+        &\leq \lVert \mtx{A} \rVert _2^2 (k + p)  + (k + p) \left( \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \right) \notag \\
+        &\leq (k + p) \left( 2 \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \right).
     \end{align}
 
     %The moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ can be bound with help of the proof of \cite[Lemma B.3]{tropp-2023-randomized-algorithms}
