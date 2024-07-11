@@ -19,16 +19,16 @@ as we will see in Section ???.
 \color{black}
 
 \subsection{Methods}
+\label{subsec:methods}
 
-\paragraph{Girard-Hutchinson estimator.} We can approximate the trace with the Girard-Hutchinson estimator \cite{girard-1989-fast-montecarlo,hutchinson-1990-stochastic-estimator}: We take $n_{\mtx{\Psi}}$ stochastically independent standard Gaussian random vectors $\vct{\psi}_1,\dots, \vct{\psi}_{n_{\mtx{\Psi}}} \in \mathbb{R}^{n}$ to form
+\paragraph{Girard-Hutchinson estimator.} We can approximate the trace with the Girard-Hutchinson estimator \cite{girard-1989-fast-montecarlo,hutchinson-1990-stochastic-estimator}: We take $n_{\mtx{\Psi}}$ stochastically independent standard Gaussian random vectors $\vct{\psi}_1,\dots, \vct{\psi}_{n_{\mtx{\Psi}}} \in \mathbb{R}^{n}$, i.e. vectors whose entries are independent standard Gaussian random variables, to form
 \begin{equation}
     \Hutch{\mtx{\Psi}}(\mtx{B}(t))
     = \frac{1}{n_{\mtx{\Psi}}} \sum_{j=1}^{n_{\mtx{\Psi}}} \vct{\psi}_j^{\top} \mtx{B}(t) \vct{\psi}_j
     = \frac{1}{n_{\mtx{\Psi}}} \Trace( \mtx{\Psi}^{\top} \mtx{B}(t) \mtx{\Psi})
     \label{equ:hutchinson-trace-estimator}
 \end{equation}
-??? Gaussian random matrix define! ???
-where $\mtx{\Psi} = [\vct{\psi}_1 ~ \cdots ~ \vct{\psi}_{n_{\mtx{\Psi}}}] \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$. Other choices for the distribution of the random vectors are possible, for example by uniformly sampling from $\{-1, +1\}$ or from the $(n-1)$-sphere. However, our theoretical developments only hold in the Gaussian case.
+where $\mtx{\Psi} = [\vct{\psi}_1 ~ \cdots ~ \vct{\psi}_{n_{\mtx{\Psi}}}] \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$ is a standard Gaussian random matrix. Other choices for the distribution of the random vectors are possible, for example by uniformly sampling from $\{-1, +1\}$ or from the $(n-1)$-sphere. However, our theoretical developments only hold in the Gaussian case.
 
 \color{black}
 
@@ -88,6 +88,8 @@ This is the parameter-dependent analogue of the Nyström++ estimator \cite{perss
 
 \subsection{Error bounds}
 
+\textcolor{green}{In the following pages, we will upper bound the $L^1$-error of each of the trace estimators from \refsec{subsec:methods} with a suitable quantity which parallels the corresponding result in the constant case. As in \cite{kressner-2024-randomized-lowrank}, this often requires us to bound the high order moments $\mathbb{E}^p[X] = (\mathbb{E}[|X|^p])^{\sfrac{1}{p}}$ of certain random variables $X$.}
+
 \subsubsection{Girard-Hutchinson estimator}
 \label{subsec:hutchinson}
 
@@ -127,7 +129,7 @@ The proof of \cite[Lemma 3]{cortinovis-2022-randomized-trace} shows that $r(\mtx
 %     \begin{equation}
 %         \mathbb{E}\left[ r(\mtx{B}, \vct{\psi})^{2 k} \right] \leq 
 %     \end{equation}
-    Stirling's approximation \cite{robbins-1955-remark-stirling} gives $(2 k)! < 2 \sqrt{\pi k}  e^{\sfrac{1}{24 k}} ( 2 k / e )^{2 k}$. \textcolor{red}{??? this norm should be defined more prominently somewhere else ???} Consequently, the $L^{2k}$ norm $\mathbb{E}^{2k}[\cdot] = \left(\mathbb{E}\left[ | \cdot |^{2k} \right] \right)^{\sfrac{1}{2k}}$ of $r(\mtx{B}, \vct{\psi})$ is bounded by
+    Stirling's approximation \cite{robbins-1955-remark-stirling} gives $(2 k)! < 2 \sqrt{\pi k}  e^{\sfrac{1}{24 k}} ( 2 k / e )^{2 k}$. \textcolor{red}{??? this norm should be defined more prominently somewhere else Consequently, the $L^{2k}$ norm $\mathbb{E}^{2k}[\cdot] = \left(\mathbb{E}\left[ | \cdot |^{2k} \right] \right)^{\sfrac{1}{2k}}$ ??? } \textcolor{green}{Moved it to start of section.} Consequently, the high order moments of $r(\mtx{B}, \vct{\psi})$ are bounded by
     \begin{equation}
         \mathbb{E}^{2k}\left[ r(\mtx{B}, \vct{\psi}) \right]
         \leq \left( \frac{9}{4} \sqrt{\pi k} e^{\sfrac{1}{24 k}} \right)^{\sfrac{1}{2k}} \left( \frac{2 k}{e}\right) 2^{3} \lVert \mtx{B} \rVert _F \leq 2^4 k \lVert \mtx{B} \rVert _F,
@@ -199,7 +201,7 @@ Compared to the analogous result for the constant case~\cite[Lemma 2.1]{meyer-20
 \subsubsection{Nyström approximation}
 \label{subsec:nystrom}
 
-A consequence of~\cite{kressner-2024-randomized-lowrank}, the following result confirms the inituition that the Nystr\"om approximation is very well suited in the presence of decaying singular values: If the nuclear norm error to the best rank-$r$ approximation to $B(t)$ is bounded by $\varepsilon$ for every $t$ then the trace of the Nystr\"om approximation (with a bit of oversampling) results, with high probability, in an error that is only modestly larger than $\varepsilon$.
+As a consequence of~\cite{kressner-2024-randomized-lowrank}, the following result confirms the inituition that the Nystr\"om approximation is very well suited in the presence of decaying singular values: If the nuclear norm error to the best rank-$r$ approximation to $B(t)$ is bounded by $\varepsilon$ for every $t$ then the trace of the Nystr\"om approximation (with a bit of oversampling) results, with high probability, in an error that is only modestly larger than $\varepsilon$.
 
 \begin{theorem}{Nyström estimator for parameter-dependent matrices}{nystrom}
     Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuous for $t \in [a, b]$. For integers $r \geq 2$ and $n_{\mtx{\Omega}} \geq r + 4$, consider the Nystr\"om approximation $\Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ defined in~\eqref{equ:nystrom-approximation} with an $n\times n_{\mtx{\Omega}}$ Gaussian random matrix $\mtx{\Omega}$. Then for any $\gamma \geq 1$ the bound 
@@ -217,17 +219,16 @@ Using that $\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ is positive semi-defi
         = \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _{\ast} \\
         & = \lVert (\mtx{I}_n - \mtx{\Pi}_{\mtx{B}(t)^{\sfrac{1}{2}} \mtx{\Omega}}) \mtx{B}(t)^{\sfrac{1}{2}} \rVert _F^2,
     \end{align*}
-    where $\lVert \cdot \rVert _{\ast}$ denotes the nuclear norm and we used a \textcolor{red}{result from the proof of \cite[Corollary 8.2]{tropp-2023-randomized-algorithms} ??? Is this really the original source. Have a look whether David P mentions this somewhere? Also, this may be contained in the original Gittens Mahoney paper but I am not sure ???} \textcolor{green}{The original is in Gittens' arXiv preprint \cite[Theorem 1]{gittens-2011-spectral-norm} but also in Gittens/Mahoney \cite[Equation 4]{gittens-2013-revisiting-nystrom}} in the last equality. This allows us to apply \textcolor{red}{Theorem 9 ??? be careful that the theorem numbering may be different when the paper is published in NLAA ???} \textcolor{green}{changed it to Theorem 5} from \cite[Theorem 5]{kressner-2024-randomized-lowrank}, which immediately implies the statement claimed by the theorem.
+    where $\lVert \cdot \rVert _{\ast}$ denotes the nuclear norm and we used \cite[Theorem 1]{gittens-2011-spectral-norm} in the last equality. This allows us to apply \cite[Theorem 5]{kressner-2024-randomized-lowrank}, which immediately implies the statement claimed by the theorem.
 \end{proof}
 
-Compared to the constant case~\cite[Theorem 8.1]{tropp-2023-randomized-algorithms}, the bound of Theorem~\ref{thm:nystrom} features an additional factor $1+r$ that cannot be compensated with oversampling.
+Compared to the constant case~\cite[Theorem 8.1]{tropp-2023-randomized-algorithms}, the bound of \refthm{thm:nystrom} features an additional factor $1+r$ that cannot be compensated with oversampling.
 
 \subsection{Nyström++ estimator for parameter-dependent matrices}
 \label{subsec:nystrom-pp}
 
 
-\refthm{thm:hutchinson} shows that the the Girard-Hutchinson estimator achieves a relative $\varepsilon$-error when using $\mathcal{O}(\varepsilon^{-2})$ queries. The aim of this section is to show that the Nyström++ estimator~\refequ{equ:nystrompp-trace-estimator} improves this to $\mathcal{O}(\varepsilon^{-1})$ queries (that is, matrix-vector products with random vectors), \emph{without} requiring any assumption on the singular values of $\mtx{B}(t)$. This parallels existing results for the constant case
-for Hutch++\cite[Theorem 3.1]{meyer-2021-hutch-optimal} and Nyström++\textcolor{red}{??? Include specific result ???}. Indeed, our proof follows the strategy from~\cite{meyer-2021-hutch-optimal}, by first showing that the parameter-dependent Nyström approximation achieves a relative $\varepsilon$-error when using $\mathcal{O}(\varepsilon^{-2})$ queries.
+\refthm{thm:hutchinson} shows that the the Girard-Hutchinson estimator achieves a relative $\varepsilon$-error when using $\mathcal{O}(\varepsilon^{-2})$ queries. The aim of this section is to show that the Nyström++ estimator~\refequ{equ:nystrompp-trace-estimator} improves this to $\mathcal{O}(\varepsilon^{-1})$ queries (that is, matrix-vector products with random vectors), \emph{without} requiring any assumption on the singular values of $\mtx{B}(t)$. This parallels existing results for the constant case for the Hutch++~\cite[Theorem 3.1]{meyer-2021-hutch-optimal} and Nyström++ estimators \cite[Theorem 3.4]{persson-2022-improved-variants}. \textcolor{red}{?? Include specific result ???} \textcolor{green}{Specifically, a bound of the form $|\Trace(\mtx{B}) - \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{B})| \leq \varepsilon \Trace(\mtx{B})$ for any constant symmetric positive semi-definite matrix $\mtx{B}$ is shown to hold with high probability for the Nyström++ estimator $\Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{B})$ \refequ{equ:nystrompp-trace-estimator} when $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-1})$ }. Indeed, our proof follows the strategy from~\cite{meyer-2021-hutch-optimal}, by first showing that the parameter-dependent Nyström approximation achieves a relative $\varepsilon$-error when using $\mathcal{O}(\varepsilon^{-2})$ queries.
 
 \color{blue}
 
@@ -273,10 +274,10 @@ Applying Theorem B.1 from~\cite{persson-2023-randomized-lowrank} for $f(x) = x$ 
         \leq \Trace(\mtx{B}) / \sqrt{k}.
         \label{equ:nystrom-proof-frobenius-trace}
     \end{equation}
-    \textcolor{red}{??? STOPPED HERE: Not clear to me why $n_\Omega/4$ should be the optimal exponent for the tail bound ???}
-
+    \textcolor{red}{??? STOPPED HERE: Not clear to me why $n_\Omega/4$ should be the optimal exponent for the tail bound ???} \textcolor{green}{I rearranged and reformulated things a bit to hopefully make it clearer:}
+    
     \color{black}
-    The $q$-th moment of the second term can be processed with standard matrix norm manipulations and the stochastic independence of $\mtx{\Omega}_1$ and $\mtx{\Omega}_2$ to
+    The $q$-th moment of the second term in \refequ{equ:nystrom-proof-persson-bonud} can be processed with standard matrix norm manipulations and the stochastic independence of $\mtx{\Omega}_1$ and $\mtx{\Omega}_2$ to
     \begin{equation}
         \mathbb{E}^{q}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2 \right]
         %&= \mathbb{E}^{p}\left[ \lVert (\mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} )( \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger})^{\top} \rVert _F \right] && \text{($\lVert \mtx{A} \rVert _{(4)}^2 = \lVert \mtx{A} \mtx{A}^{\top} \rVert _{F}$)} \notag \\
@@ -286,13 +287,8 @@ Applying Theorem B.1 from~\cite{persson-2023-randomized-lowrank} for $f(x) = x$ 
         \leq \sqrt{k} \mathbb{E}^{q}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2^2\right] \mathbb{E}^{q}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^2  \right].% && \text{(independence)}
         \label{equ:nystrom-proof-processed-tail}
     \end{equation}
-    To match the decay rate of the moments of the first term in \refequ{equ:nystrom-proof-persson-bonud}, we will need to ensure that this term also is of order $\mathcal{O}(\Trace(\mtx{B}) / \sqrt{k})$. To this purpose, and to simplify the notation, we choose $k = n_{\mtx{\Omega}}/2$ and $q = n_{\mtx{\Omega}}/4$ for even $n_{\mtx{\Omega}}$ to ensure $k \in \mathbb{N}$. We can apply \reflem{lem:spectral-norm-moment} with $\mtx{A} = \mtx{\Lambda}_2^{\sfrac{1}{2}}$ and $p = n_{\mtx{\Omega}}/2$ to bound
-    \begin{equation}
-        \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2^2 \right]
-        \leq n_{\mtx{\Omega}} \left( 2 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{2}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \right).
-        \label{equ:spectral-norm-bound-applied}
-    \end{equation}
-    The moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ can be bound with help of the proof of \cite[Lemma B.3]{tropp-2023-randomized-algorithms}
+    \textcolor{green}{
+    To match the decay rate of the moments of the first term in \refequ{equ:nystrom-proof-persson-bonud}, we will need to ensure that this term also is of order $\mathcal{O}(\Trace(\mtx{B}) / \sqrt{k})$. We bound the moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ similarly to \cite[Lemma B.3]{tropp-2023-randomized-algorithms}, but without restricting the moments to $0 \leq q \leq 18$. The explicit integration of \cite[Equation B.7]{tropp-2023-randomized-algorithms} imposes the condition $n_{\mtx{\Omega}} - k - 2q \geq 0$. Both $n_{\mtx{\Omega}}$ and $k$ are integers and must be of the same order to ensure a decay of $\mathcal{O}(\Trace(\mtx{B}) / \sqrt{k})$. To avoid restricting the choice of $n_{\mtx{\Omega}}$ too much, we let it be even and set $k = n_{\mtx{\Omega}}/2$. The moment $q$ should be chosen as large as possible to ensure a fast decay of the failure probability, so we fix it to $q = n_{\mtx{\Omega}}/4$. Therefore, we get
     \begin{equation}
         \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^2 \right]
         = \mathbb{E}\left[ \lVert ( \mtx{\Omega}_1 \mtx{\Omega}_1^{\top} )^{-1} \rVert _2^{\sfrac{n_{\mtx{\Omega}}}{4}} \right]^{\sfrac{4}{n_{\mtx{\Omega}}}}%  \notag \\
@@ -305,7 +301,45 @@ Applying Theorem B.1 from~\cite{persson-2023-randomized-lowrank} for $f(x) = x$ 
         \leq \frac{3 e^4}{n_{\mtx{\Omega}}}.
         \label{equ:pinv-spectral-norm-bound}
     \end{equation}
-    As opposed to \cite[Lemma B.3]{tropp-2023-randomized-algorithms}, our bound holds for all even $n_{\mtx{\Omega}} \in \mathbb{N}$, at the cost of a factor of $e^2$. Inserting \refequ{equ:spectral-norm-bound-applied} and  \refequ{equ:pinv-spectral-norm-bound} in \refequ{equ:nystrom-proof-processed-tail} with $k = n_{\mtx{\Omega}} / 2$ gives
+    As opposed to \cite[Lemma B.3]{tropp-2023-randomized-algorithms}, our bound holds for all even $n_{\mtx{\Omega}} \in \mathbb{N}$, at the cost of a factor of $e^2$.}
+
+    The remaining term can dealt with using \reflem{lem:spectral-norm-moment} with $\mtx{A} = \mtx{\Lambda}_2^{\sfrac{1}{2}}$ and $p = n_{\mtx{\Omega}}/2$
+    \begin{equation}
+        \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2^2 \right]
+        \leq n_{\mtx{\Omega}} \left( 2 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{2}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \right).
+        \label{equ:spectral-norm-bound-applied}
+    \end{equation}
+
+    %The $q$-th moment of the second term can be processed with standard matrix norm manipulations and the stochastic independence of $\mtx{\Omega}_1$ and $\mtx{\Omega}_2$ to
+    %\begin{equation}
+    %    \mathbb{E}^{q}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2 \right]
+        %&= \mathbb{E}^{p}\left[ \lVert (\mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} )( \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger})^{\top} \rVert _F \right] && \text{($\lVert \mtx{A} \rVert _{(4)}^2 = \lVert \mtx{A} \mtx{A}^{\top} \rVert _{F}$)} \notag \\
+        %&\leq \mathbb{E}^{p}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _F \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2 \right] && \text{($\lVert \mtx{A} \mtx{B} \rVert _F \leq \lVert \mtx{A} \rVert _F \lVert \mtx{B} \rVert _2$)} \notag \\
+    %    \leq \mathbb{E}^{q}\left[ \sqrt{k} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _2^2 \right]%  && \text{($\lVert \mtx{A} \rVert _{(4)}^2 \leq \sqrt{k} \lVert \mtx{A} \rVert _2^2$)} \notag \\
+        %\leq \mathbb{E}^{p}\left[ \sqrt{k} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2^2 \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^2 \right]%  && \text{(submultiplicativity)} \notag \\
+    %    \leq \sqrt{k} \mathbb{E}^{q}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2^2\right] \mathbb{E}^{q}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^2  \right].% && \text{(independence)}
+    %    \label{equ:nystrom-proof-processed-tail}
+    %\end{equation}
+    %To match the decay rate of the moments of the first term in \refequ{equ:nystrom-proof-persson-bonud}, we will need to ensure that this term also is of order $\mathcal{O}(\Trace(\mtx{B}) / \sqrt{k})$. To this purpose, and to simplify the notation, we choose $k = n_{\mtx{\Omega}}/2$ and $q = n_{\mtx{\Omega}}/4$ for even $n_{\mtx{\Omega}}$ to ensure $k \in \mathbb{N}$. We can apply \reflem{lem:spectral-norm-moment} with $\mtx{A} = \mtx{\Lambda}_2^{\sfrac{1}{2}}$ and $p = n_{\mtx{\Omega}}/2$ to bound
+    %\begin{equation}
+    %    \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2^2 \right]
+    %    \leq n_{\mtx{\Omega}} \left( 2 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{2}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \right).
+    %    \label{equ:spectral-norm-bound-applied}
+    %\end{equation}
+    %The moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ can be bound with help of the proof of \cite[Lemma B.3]{tropp-2023-randomized-algorithms}
+    %\begin{equation}
+    %    \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^2 \right]
+    %    = \mathbb{E}\left[ \lVert ( \mtx{\Omega}_1 \mtx{\Omega}_1^{\top} )^{-1} \rVert _2^{\sfrac{n_{\mtx{\Omega}}}{4}} \right]^{\sfrac{4}{n_{\mtx{\Omega}}}}%  \notag \\
+    %    \leq \left( 1 + \frac{n_{\mtx{\Omega}}}{2} \right)^{\sfrac{4}{n_{\mtx{\Omega}}}} \left( \frac{1}{(\frac{n_{\mtx{\Omega}}}{2} + 1)!}\right)^{\frac{2}{\frac{n_{\mtx{\Omega}}}{2} + 1}} \left( \frac{3 n_{\mtx{\Omega}}}{4}\right).
+    %\end{equation}
+    %From the expansion of the exponential function as a power series $e^n = 1 + n + \dots + n^n/n! + \dots$ for $n \in \mathbb{N}$ we see $e^n \geq 1 + n$ and $e^n \geq n^n / n!$, from which $(1 + n)^{\sfrac{1}{n}} \leq e$ and $\left( 1/n! \right)^{\sfrac{1}{n}} \leq e/n$ follow respectively. Hence,
+    %\begin{equation}
+    %    \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^2 \right]
+    %    \leq e^2 \frac{e^2}{(\frac{n_{\mtx{\Omega}}}{2}+ 1)^2} \left( \frac{3 n_{\mtx{\Omega}}}{4}\right)
+    %    \leq \frac{3 e^4}{n_{\mtx{\Omega}}}.
+    %    \label{equ:pinv-spectral-norm-bound}
+    %\end{equation}
+    Inserting \refequ{equ:spectral-norm-bound-applied} and  \refequ{equ:pinv-spectral-norm-bound} in \refequ{equ:nystrom-proof-processed-tail} with $k = n_{\mtx{\Omega}} / 2$ gives
     \begin{equation}
         \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2 \right]
         \leq \frac{3 e^4}{\sqrt{2}}  \sqrt{n_{\mtx{\Omega}}} \left( 2 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{2}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \right).

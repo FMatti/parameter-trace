@@ -5,7 +5,7 @@
 
 The goal of this section is to establish moment bounds for $\lVert \mtx{A} \mtx{\Omega} \rVert _2^2$ with a fixed matrix $\mtx{A}$ and a Gaussian random matrix $\mtx{\Omega}$. These bounds are needed in the proof of \reflem{lem:nystrom}, but may also be of independent interest.
 %For reasons which will become clear in the proof of the final and most interesting of these lemmas (\reflem{lem:nystrom}), we will need to bound $\mathbb{E}^{\sfrac{p}{2}}\left[\lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]$ for a constant matrix $\mtx{A} \in \mathbb{R}^{m \times m}$ and a standard Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{m \times k}$.
-The corresponding result for the Frobenius norm can be found in~\cite[Lemma 7]{kressner-2023-randomized-lowrank}. For the spectral norm, moment bounds for $\lVert \mtx{\Omega} \rVert _2^2$ (that is, $\mtx{A} = \mtx{I}$) are well established\cite{chen-2005-condition-numbers, edelman-1988-eigenvalues-condition, james-1964-distributions-matrix}. In \cite[Lemma B.1]{tropp-2023-randomized-algorithms} bounds on the first- and second-order moments for general $\mtx{A}$ are derived. In the following, we will generalize this result to moments of arbitrary high order. To do so, we first establish two preliminary results.
+The corresponding result for the Frobenius norm can be found in~\cite[Lemma 3]{kressner-2024-randomized-lowrank}. For the spectral norm, moment bounds for $\lVert \mtx{\Omega} \rVert _2^2$ (that is, $\mtx{A} = \mtx{I}$) are well established\cite{chen-2005-condition-numbers, edelman-1988-eigenvalues-condition, james-1964-distributions-matrix}. In \cite[Lemma B.1]{tropp-2023-randomized-algorithms} bounds on the first- and second-order moments for general $\mtx{A}$ are derived. In the following, we will generalize this result to moments of arbitrary high order. To do so, we first establish two preliminary results.
 
 \begin{lemma}{Moment bound of $\chi^2$-random variable}{gamma}
     Let $X$ follow a $\chi^2$ distribution with $k \ge 2$, $k\in \mathbb{N}$, degrees of freedom. Then 
@@ -20,8 +20,7 @@ It is well known that
 %    From \cite[Theorem 3.3.2]{hogg-2013-introduction-mathematical} we know
     $
         \mathbb{E}^{p}[X] = 2 \Big( \frac{\Gamma(k/2+p)}{\Gamma(k/2)} \Big)^{\sfrac{1}{p}}.
-    $ For every $\alpha \ge 0$, $\beta \ge 2$ the bound $\frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha + 1)} \le (\alpha+\beta/2)^{\beta-1}$ holds~\cite[Eqn (2.2)]{LaForgia1984} \textcolor{red}{??? Please insert bib item for A. Laforgia, “Further inequalities for the gamma function,” Mathematics of Computation, vol. 42, no.
-166, pp. 597–600, 1984. ???}. The result of the lemma follows by using this bound with $\alpha = k/2-1$ and $\beta = p+1$.
+    $ For every $\alpha \ge 0$, $\beta \ge 2$ the bound $\frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha + 1)} \le (\alpha+\beta/2)^{\beta-1}$ holds~\cite[Equation 2.2]{laforgia-1984-further-inequalities}. The result of the lemma follows by using this bound with $\alpha = k/2-1$ and $\beta = p+1$.
 %     We first treat the case $k=p=1$, for which indeed
 %     \begin{equation}
 %         2 \left( \frac{\Gamma(\frac{1+1}{2})}{\Gamma(\frac{1}{2})} \right)^2 = \frac{2}{\pi} \leq 2 = 1 + 1
@@ -87,7 +86,7 @@ Following the proof of \cite[Theorem 1]{cohen-2016-optimal-approximate}, we spli
     %\begin{equation}
      %   \sigma_1^2 = \lVert \mtx{\Sigma} \rVert _2^2
       %  \quad \text{and} \quad
-        $\sigma_{ik + 1}^2 \leq ( \sigma_{(i-1)k + 1} + \cdots \sigma_{ik - 1} + \sigma_{ik} ) / k$ for $i = 1,\ldots, \ell-1$, we get
+        $\sigma_{ik + 1}^2 \leq ( \sigma_{(i-1)k + 1} + \cdots + \sigma_{ik - 1} + \sigma_{ik} ) / k$ for $i = 1,\ldots, \ell-1$, we get
     \begin{equation}
         \sum_{i=0}^{\ell-1} \sigma_{ik + 1}^2 = \lVert \mtx{\Sigma} \rVert _2^2 + \sum_{i=1}^{\ell-1} \sigma_{ik + 1}^2  \leq \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \sum_{j=1}^{(\ell - 1)k} \sigma_j^2 \leq \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2.
         \label{equ:singular-value-group-bound}
@@ -96,10 +95,10 @@ Following the proof of \cite[Theorem 1]{cohen-2016-optimal-approximate}, we spli
     \begin{align*}
     \mathbb{E}^{p}\big[ \lVert \mtx{\Sigma} \vct{\omega} \rVert _2^2 \big] & = 
         \mathbb{E}^{p}\Big[ \sum_{i=1}^{m} \sigma_i^2 \omega_i^2 \Big]
-        = \mathbb{E}^{p}\Big[ \sum_{i=1}^{\ell} \sum_{j=1}^{k} \sigma_{(i-1)k + j}^2 \omega_{(i-1)k + j}^2 \Big] \\
-        &\leq \mathbb{E}^{p}\Big[ \sum_{i=1}^{\ell} \sigma_{(i-1)k + 1}^2 \sum_{j=1}^{k} \omega_{(i-1)k + j}^2 \Big] 
-        \leq \sum_{i=1}^{\ell} \sigma_{(i-1)k + 1}^2 ~ \mathbb{E}^{p}\Big[ \sum_{j=1}^{k} \omega_{(i-1)k + j}^2 \Big] \\
-        &\leq (k + p) \sum_{i=1}^{\ell} \sigma_{(i-1)k + 1}^2 \leq (k + p) \left( \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2 \right), 
+        = \mathbb{E}^{p}\Big[ \sum_{i=0}^{\ell - 1} \sum_{j=1}^{k} \sigma_{ik + j}^2 \omega_{ik + j}^2 \Big] \\
+        &\leq \mathbb{E}^{p}\Big[ \sum_{i=0}^{\ell - 1} \sigma_{ik + 1}^2 \sum_{j=1}^{k} \omega_{ik + j}^2 \Big] 
+        \leq \sum_{i=0}^{\ell - 1} \sigma_{ik + 1}^2 ~ \mathbb{E}^{p}\Big[ \sum_{j=1}^{k} \omega_{ik + j}^2 \Big] \\
+        &\leq (k + p - 1) \sum_{i=0}^{\ell - 1} \sigma_{ik + 1}^2 \leq (k + p - 1) \left( \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2 \right), 
     \end{align*}
     where we used the triangle inequality, \reflem{lem:gamma}, and \refequ{equ:singular-value-group-bound} for the last three inequalities.
     %The moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ can be bound with help of the proof of \cite[Lemma B.3]{tropp-2023-randomized-algorithms}
