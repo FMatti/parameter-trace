@@ -140,7 +140,7 @@ Following the proof of \cite[Theorem 1]{cohen-2016-optimal-approximate}, we spli
         \mathbb{E}^{p}\big[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \big]
         \leq \lVert \mtx{A} \rVert _2^2 \mathbb{E}^{p}\big[ \lVert \vct{\omega}_1 \rVert _2^2 \big] + \mathbb{E}^{p}\big[ \lVert \mtx{A} \vct{\omega}_2 \rVert _2^2 \big]
     \end{equation}
-    for independent standard Gaussian random vectors $\vct{\omega}_1 \in \mathbb{R}^{k}$ and $\vct{\omega}_2 \in \mathbb{R}^{m}$. \textcolor{red}{Doesn't A.1 give a tighter bound for the first term?} The claimed result follows from applying \reflem{lem:gamma} and \reflem{lem:spectral-norm-moment-vector}:
+    for independent standard Gaussian random vectors $\vct{\omega}_1 \in \mathbb{R}^{k}$ and $\vct{\omega}_2 \in \mathbb{R}^{m}$. The claimed result follows from applying \reflem{lem:gamma} and \reflem{lem:spectral-norm-moment-vector}:
     \[
         \mathbb{E}^{p}\big[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \big]
         \leq (k + p - 1) \lVert \mtx{A} \rVert _2^2  + (k + p - 1) \left( \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \right).
