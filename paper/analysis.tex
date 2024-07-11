@@ -98,59 +98,18 @@ This is the parameter-dependent analogue of the Nyström++ estimator \cite{perss
 We start our analysis of the methods presented above by deriving an $L^1$-error bound for the Girard-Hutchinson estimator~\refequ{equ:hutchinson-trace-estimator} that is relative to the $L^1$-norm of the Frobenius norm $\lVert \mtx{B}(t) \rVert _F$.
 
 \begin{theorem}{Girard-Hutchinson estimator for parameter-dependent matrices}{hutchinson}
-    For a symmetric matrix $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ that depends continuously on $t \in [a, b]$, consider the  Girard-Hutchinson estimator~\eqref{equ:hutchinson-trace-estimator} with an $n\times n_{\mtx{\Psi}}$ Gaussian random matrix $\mtx{\Psi}$. Then for any $k \in \mathbb{N}$ and $\gamma \geq 1$ the bound 
+    For a symmetric matrix $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ that depends continuously on $t \in [a, b]$, consider the  Girard-Hutchinson estimator~\eqref{equ:hutchinson-trace-estimator} with an $n\times n_{\mtx{\Psi}}$ Gaussian random matrix $\mtx{\Psi}$. Then for any $p \geq 1, p \in \mathbb{R}$ and $\gamma \geq 1$ the bound 
     \begin{equation} \label{eq:ghbound}
-        \int_{a}^{b} \left| \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) \right| ~\mathrm{d}t \leq 2^4 \gamma k \frac{1}{\sqrt{n_{\mtx{\Psi}}}} \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F  ~\mathrm{d}t.
+        \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq c \gamma \max\left\{ \sqrt{\frac{p}{n_{\mtx{\Psi}}}}, \frac{p}{n_{\mtx{\Psi}}}  \right\} \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t.
     \end{equation}
-    holds with probability at least $1 - \gamma^{-2k}$.
-    In particular, given $\varepsilon > 0$ and $\delta \in (0, 1)$, the bound $\int_{a}^{b} | \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) | ~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t$ holds 
-    with probability at least $1-\delta$ if $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2} \log(\delta^{-1})^2)$.
+    holds with probability at least $1 - \gamma^{-p}$.
+    In particular, given $\varepsilon \in (0, ce)$ and $\delta \in (0, e^{-1})$, the bound $\int_{a}^{b} | \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) | ~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t$ holds 
+    with probability at least $1-\delta$ if $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2} \log(\delta^{-1}))$.
 \end{theorem}
 
-%The idea behind the proof is to bound  to extend the results to the continuous parameter case. We first only consider the $1$-query estimator and subsequently use a diagonal embedding trick to carry the result over to the general case.
-\begin{proof} 
-\textcolor{red}{??? I feel that the block diagonal embedding trick should come first, like in the proof of Meyer et al. Hopefully, this gets rid of the additional $\log \delta$ factor ???}
-The proof proceeds by bounding moments for fixed values of $t$ and then use Minkowski's integral inequality. We start by considering the residual of the 1-query Girard-Hutchinson estimator for a fixed matrix $\mtx{B}$: 
-    \begin{equation}
-        r(\mtx{B}, \vct{\psi}) := \Trace(\mtx{B}) - \vct{\psi}^{\top} \mtx{B} \vct{\psi}
-    \end{equation}
-%    for a symmetric parameter-dependent matrix $\mtx{B}(t)$ over the real numbers
-for a Gaussian random vector $\vct{\psi}$.
-%
-%    First, we consider $r(\mtx{B}(t), \vct{\psi})$ for a fixed $t \in [a,b]$ and therefore temporarily ignore the parameter-dependence.
-The proof of \cite[Lemma 3]{cortinovis-2022-randomized-trace} shows that $r(\mtx{B}, \vct{\psi})$ is sub-Gamma with parameters $(v, c) = (2 \lVert \mtx{B} \rVert _F^2, 2 \lVert \mtx{B} \rVert _2)$ where $\lVert \cdot \rVert _2$ denotes the spectral norm. By \cite[Theorem 2.3]{boucheron-2013-concentration-inequalities} this implies for every $k \in \mathbb{N}$ that
-    \begin{align*}
-        \mathbb{E}\left[ r(\mtx{B}, \vct{\psi})^{2 k} \right]
-        &\leq k! \left( 16 \lVert \mtx{B} \rVert _F^2 \right)^k + (2 k)! \left( 8 \lVert \mtx{B} \rVert _2 \right)^{2 k}  \\
-        &\le \big( k! 2^{4 k} + (2 k)! 2^{6 k}\big) \lVert \mtx{B} \rVert _F^{2 k} 
-        \le \frac{9}{8} (2 k)! 2^{6 k} \lVert \mtx{B} \rVert _F^{2k}.
-    \end{align*}
-%     Because $\lVert \mtx{B} \rVert _2 \leq \lVert \mtx{B} \rVert _F$ and $k! 2^{4 k} + (2 k)! 2^{6 k} \leq \frac{9}{8}(2 k)! 2^{6 k}$ for any $k \in \mathbb{N}$, we can upper bound 
-%     \begin{equation}
-%         \mathbb{E}\left[ r(\mtx{B}, \vct{\psi})^{2 k} \right] \leq 
-%     \end{equation}
-    Stirling's approximation \cite{robbins-1955-remark-stirling} gives $(2 k)! < 2 \sqrt{\pi k}  e^{\sfrac{1}{24 k}} ( 2 k / e )^{2 k}$. \textcolor{red}{??? this norm should be defined more prominently somewhere else Consequently, the $L^{2k}$ norm $\mathbb{E}^{2k}[\cdot] = \left(\mathbb{E}\left[ | \cdot |^{2k} \right] \right)^{\sfrac{1}{2k}}$ ??? } \textcolor{green}{Moved it to start of section.} Consequently, the high order moments of $r(\mtx{B}, \vct{\psi})$ are bounded by
-    \begin{equation}
-        \mathbb{E}^{2k}\left[ r(\mtx{B}, \vct{\psi}) \right]
-        \leq \left( \frac{9}{4} \sqrt{\pi k} e^{\sfrac{1}{24 k}} \right)^{\sfrac{1}{2k}} \left( \frac{2 k}{e}\right) 2^{3} \lVert \mtx{B} \rVert _F \leq 2^4 k \lVert \mtx{B} \rVert _F,
-        \label{equ:hutchinson-trace-onequery-fixed}
-    \end{equation}
-    using the inequality $(\frac{9}{4} \sqrt{\pi k} e^{\sfrac{1}{24 k}})^{\sfrac{1}{2k}} < e$, which can be verified using the monotonic decrease of the left-hand side with respect to $k \in \mathbb{N}$.
-
-    To address the parameter-dependent case, we first note that the continuity assumption implies that $r(\mtx{B}(t), \vct{\psi})$ is measurable. Therefore, we can apply Minkowski's integral inequality~\cite[Theorem 202]{hardy-1952-inequalities} to conclude from~\refequ{equ:hutchinson-trace-onequery-fixed} that
-    \begin{equation}
-        \mathbb{E}^{2 k}\left[ \int_{a}^{b} |r(\mtx{B}(t), \vct{\psi})|~\mathrm{d}t  \right]
-        \leq \int_{a}^{b} \mathbb{E}^{2 k}\left[ r(\mtx{B}(t), \vct{\psi}) \right]~\mathrm{d}t
-        \leq 2^4 k \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t.
-    \end{equation}
-    Consequently, by Markov's inequality,  the inequality 
-    \begin{equation} 
-        \int_{a}^{b} |r(\mtx{B}(t), \vct{\psi})|~\mathrm{d}t \leq 2^4 k \gamma \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t.
-        \label{equ:hutchinson-trace-onequery-uniform}
-    \end{equation}
-    holds for any $\gamma \geq 1$ with probability at least $1 - \gamma^{-2 k}$. 
-
-    To extend the bound~\eqref{equ:hutchinson-trace-onequery-uniform} from $1$ to $n_{\mtx{\Psi}}$ queries, we use a standard embedding trick (see, e.g.,~\cite[Theorem 1]{cortinovis-2022-randomized-trace}). Letting
+\color{black}
+\begin{proof}
+    The proof proceeds by bounding moments for fixed values of $t$ and then uses Minkowski's integral inequality. We start with a standard embedding trick (see, e.g.,~\cite[Theorem 1]{cortinovis-2022-randomized-trace}) for which we define
     \begin{equation}
         \widetilde{\mtx{B}}(t)
         = \frac{1}{n_{\mtx{\Psi}}} \begin{pmatrix}
@@ -163,41 +122,130 @@ The proof of \cite[Lemma 3]{cortinovis-2022-randomized-trace} shows that $r(\mtx
             \vct{\psi}_1 \\
             \vdots \\
             \vct{\psi}_{n_{\mtx{\Psi}}}
-        \end{pmatrix},
+        \end{pmatrix}.
     \end{equation}
-    we note that $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) = r(\widetilde{\mtx{B}}(t), \widetilde{\vct{\psi}})$ and $\lVert \widetilde{\mtx{B}}(t) \rVert _F = \lVert \mtx{B}(t) \rVert _F / \sqrt{n_{\mtx{\Psi}}}$ hold. Thus, the claimed probabilistic bound~\eqref{eq:ghbound} follows from applying~\eqref{equ:hutchinson-trace-onequery-uniform} to $r(\widetilde{\mtx{B}}(t), \widetilde{\vct{\psi}})$.
-%     Then 
-%     where $\vct{\psi}_1, \dots, \vct{\psi}_{n_{\mtx{\Psi}}} \in \mathbb{R}^{n}$ are independent Gaussian random vectors. Then $\lVert \widetilde{\mtx{B}}(t) \rVert _F = \lVert \mtx{B}(t) \rVert _F / \sqrt{n_{\mtx{\Psi}}}$, and
-%     \begin{equation}
-%         r(\widetilde{\mtx{B}}(t), \widetilde{\vct{\psi}}) = \Trace(\mtx{B}(t)) - \frac{1}{n_{\mtx{\Psi}}} \sum_{j=1}^{n_{\mtx{\Psi}}} \vct{\psi}_j^{\top} \mtx{B}(t) \vct{\psi}_j.
-%     \end{equation}
-%     Hence, by applying \refequ{equ:hutchinson-trace-onequery-uniform} to $r(\widetilde{\mtx{B}}(t), \widetilde{\vct{\psi}})$ we conclude that for any $k \in \mathbb{N}$ and $\gamma \geq 1$ with probability at least $1 - \gamma^{-2 k}$
-%     \begin{equation}
-%         \int_{a}^{b} \left| \Trace(\mtx{B}(t)) - \frac{1}{n_{\mtx{\Psi}}} \sum_{j=1}^{n_{\mtx{\Psi}}} \vct{\psi}_j^{\top} \mtx{B}(t) \vct{\psi}_j \right| ~ \mathrm{d}t
-%         \leq 2^4 k \gamma \frac{1}{\sqrt{n_{\mtx{\Psi}}}} \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t.
-%     \end{equation}
+    Note that $\Trace(\widetilde{\mtx{B}}(t)) - \widetilde{\vct{\psi}}^{\top} \widetilde{\mtx{B}}(t) \widetilde{\vct{\psi}} = \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))$, $\lVert \widetilde{\mtx{B}}(t) \rVert _2 = \lVert \mtx{B}(t) \rVert _2 / n_{\mtx{\Psi}}$ and $\lVert \widetilde{\mtx{B}}(t) \rVert _F = \lVert \mtx{B}(t) \rVert _F / \sqrt{n_{\mtx{\Psi}}}$ hold. Therefore, by \reflem{lem:hanson-wright-moments} we have
+    \begin{align}
+        \mathbb{E}^{p}[\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))]
+        &= \mathbb{E}^{p}[\Trace(\widetilde{\mtx{B}}(t)) - \widetilde{\vct{\psi}}^{\top} \widetilde{\mtx{B}}(t) \widetilde{\vct{\psi}}] \notag \\
+        &\leq c \max\left\{ \sqrt{p} \lVert \widetilde{\mtx{B}}(t) \rVert _F, p \lVert \widetilde{\mtx{B}}(t) \rVert _2 \right\} \notag \\
+        &= c \max\left\{ \sqrt{\frac{p}{n_{\mtx{\Psi}}}} \lVert \mtx{B}(t) \rVert _F, \frac{p}{n_{\mtx{\Psi}}} \lVert \mtx{B}(t) \rVert _2 \right\} \notag \\
+        &\leq c \max\left\{ \sqrt{\frac{p}{n_{\mtx{\Psi}}}}, \frac{p}{n_{\mtx{\Psi}}} \right\}  \lVert \mtx{B}(t) \rVert _F.
+        \label{equ:moment-bound-hanson-wright}
+    \end{align}
 
-    %Setting $\delta = \gamma^{-2 k}$ and choosing $k = \lceil \log(\delta^{-1}) %\rceil$, where $\lceil x \rceil$ is the ceiling function which returns the greatest %integer larger than or equal to $x$, we get that for all $\delta \in (0, e^{-\sfrac%{1}{2}})$
-    %\begin{equation}
-    %    k \gamma = \lceil \log(\delta^{-1}) \rceil \delta^{-\sfrac{1}{2\lceil \log%(\delta^{-1}) \rceil}}
-    %    = \lceil \log(\delta^{-1}) \rceil e^{\sfrac{1}{2}\frac{\log(\delta^{-1})}%{\lceil \log(\delta^{-1}) \rceil}}
-    %    \leq 2 \log(\delta^{-1}) e^{\sfrac{1}{2}},
-    %\end{equation}
-    %from which follows the second part of the theorem when $n_{\mtx{\Psi}} = (2^5 e^%{\sfrac{1}{2}} \varepsilon^{-1} \log(\delta^{-1}))^2$.
+    To address the parameter-dependent case, we first note that the continuity assumption implies that $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))$ is measurable. Therefore, we can apply Minkowski's integral inequality~\cite[Theorem 202]{hardy-1952-inequalities} to conclude from~\refequ{equ:moment-bound-hanson-wright} that
+    \begin{align}
+        \mathbb{E}^{p}\left[ \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t  \right]
+        &\leq \int_{a}^{b} \mathbb{E}^{p}\left[ \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) \right]~\mathrm{d}t \notag \\
+        &\leq c \max\left\{ \sqrt{\frac{p}{n_{\mtx{\Psi}}}}, \frac{p}{n_{\mtx{\Psi}}}  \right\} \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t .
+    \end{align}
+    Consequently, by Markov's inequality,  the inequality 
+    \begin{equation} 
+        \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq c \gamma \max\left\{ \sqrt{\frac{p}{n_{\mtx{\Psi}}}}, \frac{p}{n_{\mtx{\Psi}}}  \right\} \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t
+    \end{equation}
+    holds for any $\gamma \geq 1$ with probability at least $1 - \gamma^{-p}$. 
 
-    Setting $\gamma = e$ and choosing $k = \lfloor \log(\delta^{-1}) / 2 \rfloor$,
+    Setting $\gamma = e$ and choosing $p = \log(\delta^{-1}) \geq 1$, the second part of the theorem follows when taking $n_{\mtx{\Psi}} = \lceil c^2 e^2 \log(\delta^{-1}) \varepsilon^{-2} \rceil$ and restricting $\varepsilon \leq c e$.
     %where $\lfloor x \rfloor$ is the floor function which returns the largest integer smaller than or equal to %$x$,
     %we get that for all $\delta \in (0, 1)$
-    the second part of the theorem follows when taking $n_{\mtx{\Psi}} = \lceil (2^3 e \varepsilon^{-1} \log(\delta^{-1}))^2 \rceil$.
-    %where $\lceil x \rceil$ is the ceiling function which returns the smallest integer larger than or equal to $x$.
-    %Consequently, with probability $1 - \delta$ we have
-    %\begin{equation}
-    %    \int_{a}^{b} \left| \frac{1}{n_{\mtx{\Psi}}} \sum_{i=1}^{n_{\mtx{\Psi}}} \vct{\psi}_i^{\top} \mtx{B}(t) \vct{\psi}_i - \Trace(\mtx{B}(t)) \right| ~ \mathrm{d}t \leq 32 e^{\sfrac{1}{2}} \frac{\log(\delta^{-1})}{\sqrt{n_{\mtx{\Psi}}}} \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t
-    %\end{equation}
 \end{proof}
 
-Compared to the analogous result for the constant case~\cite[Lemma 2.1]{meyer-2021-hutch-optimal}, the number of queries $n_{\mtx{\Psi}}$ needed by~\refthm{thm:hutchinson} is roughly a factor $\log(\delta^{-1})$ larger.
+\refthm{thm:hutchinson} coincides with the analogous result for the constant case~\cite[Lemma 2.1]{meyer-2021-hutch-optimal}, except for a slightly more restricted choice of $\varepsilon$ and $\delta$.
 
+\color{blue}
+
+%The idea behind the proof is to bound  to extend the results to the continuous parameter case. We first only consider the $1$-query estimator and subsequently use a diagonal embedding trick to carry the result over to the general case.
+%\begin{proof} 
+%\textcolor{red}{??? I feel that the block diagonal embedding trick should come first, like in the proof of Meyer et al. Hopefully, this gets rid of the additional $\log \delta$ factor ???}
+%The proof proceeds by bounding moments for fixed values of $t$ and then use Minkowski's integral inequality. We start by considering the residual of the 1-query Girard-Hutchinson estimator for a fixed matrix $\mtx{B}$: 
+%    \begin{equation}
+%        r(\mtx{B}, \vct{\psi}) := \Trace(\mtx{B}) - \vct{\psi}^{\top} \mtx{B} \vct{\psi}
+%    \end{equation}
+%%    for a symmetric parameter-dependent matrix $\mtx{B}(t)$ over the real numbers
+%for a Gaussian random vector $\vct{\psi}$.
+%%
+%%    First, we consider $r(\mtx{B}(t), \vct{\psi})$ for a fixed $t \in [a,b]$ and therefore temporarily ignore the parameter-dependence.
+%The proof of \cite[Lemma 3]{cortinovis-2022-randomized-trace} shows that $r(\mtx{B}, \vct{\psi})$ is sub-Gamma with parameters $(v, c) = (2 \lVert \mtx{B} \rVert _F^2, 2 \lVert \mtx{B} \rVert _2)$ where $\lVert \cdot \rVert _2$ denotes the spectral norm. By \cite[Theorem 2.3]{boucheron-2013-concentration-inequalities} this implies for every $k \in \mathbb{N}$ that
+%    \begin{align*}
+%        \mathbb{E}\left[ r(\mtx{B}, \vct{\psi})^{2 k} \right]
+%        &\leq k! \left( 16 \lVert \mtx{B} \rVert _F^2 \right)^k + (2 k)! \left( 8 \lVert \mtx{B} \rVert _2 \right)^{2 k}  \\
+%        &\le \big( k! 2^{4 k} + (2 k)! 2^{6 k}\big) \lVert \mtx{B} \rVert _F^{2 k} 
+%        \le \frac{9}{8} (2 k)! 2^{6 k} \lVert \mtx{B} \rVert _F^{2k}.
+%    \end{align*}
+%%     Because $\lVert \mtx{B} \rVert _2 \leq \lVert \mtx{B} \rVert _F$ and $k! 2^{4 k} + (2 k)! 2^{6 k} \leq \frac{9}{8}(2 k)! 2^{6 k}$ for any $k \in \mathbb{N}$, we can upper bound 
+%%     \begin{equation}
+%%         \mathbb{E}\left[ r(\mtx{B}, \vct{\psi})^{2 k} \right] \leq 
+%%     \end{equation}
+%    Stirling's approximation \cite{robbins-1955-remark-stirling} gives $(2 k)! < 2 \sqrt{\pi k}  e^{\sfrac{1}{24 k}} ( 2 k / e )^{2 k}$. \textcolor{red}{??? this norm should be defined more prominently somewhere else Consequently, the $L^{2k}$ norm $\mathbb{E}^{2k}[\cdot] = \left(\mathbb{E}\left[ | \cdot |^{2k} \right] \right)^{\sfrac{1}{2k}}$ ??? } \textcolor{green}{Moved it to start of section.} Consequently, the high order moments of $r(\mtx{B}, \vct{\psi})$ are bounded by
+%    \begin{equation}
+%        \mathbb{E}^{2k}\left[ r(\mtx{B}, \vct{\psi}) \right]
+%        \leq \left( \frac{9}{4} \sqrt{\pi k} e^{\sfrac{1}{24 k}} \right)^{\sfrac{1}{2k}} \left( \frac{2 k}{e}\right) 2^{3} \lVert \mtx{B} \rVert _F \leq 2^4 k \lVert \mtx{B} \rVert _F,
+%        \label{equ:hutchinson-trace-onequery-fixed}
+%    \end{equation}
+%    using the inequality $(\frac{9}{4} \sqrt{\pi k} e^{\sfrac{1}{24 k}})^{\sfrac{1}{2k}} < e$, which can be verified using the monotonic decrease of the left-hand side with respect to $k \in \mathbb{N}$.
+%
+%    To address the parameter-dependent case, we first note that the continuity assumption implies that $r(\mtx{B}(t), \vct{\psi})$ is measurable. Therefore, we can apply Minkowski's integral inequality~\cite[Theorem 202]{hardy-1952-inequalities} to conclude from~\refequ{equ:hutchinson-trace-onequery-fixed} that
+%    \begin{equation}
+%        \mathbb{E}^{2 k}\left[ \int_{a}^{b} |r(\mtx{B}(t), \vct{\psi})|~\mathrm{d}t  \right]
+%        \leq \int_{a}^{b} \mathbb{E}^{2 k}\left[ r(\mtx{B}(t), \vct{\psi}) \right]~\mathrm{d}t
+%        \leq 2^4 k \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t.
+%    \end{equation}
+%    Consequently, by Markov's inequality,  the inequality 
+%    \begin{equation} 
+%        \int_{a}^{b} |r(\mtx{B}(t), \vct{\psi})|~\mathrm{d}t \leq 2^4 k \gamma \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t.
+%        \label{equ:hutchinson-trace-onequery-uniform}
+%    \end{equation}
+%    holds for any $\gamma \geq 1$ with probability at least $1 - \gamma^{-2 k}$. 
+%
+%    To extend the bound~\eqref{equ:hutchinson-trace-onequery-uniform} from $1$ to $n_{\mtx{\Psi}}$ queries, we use a standard embedding trick (see, e.g.,~\cite[Theorem 1]{cortinovis-2022-randomized-trace}). Letting
+%    \begin{equation}
+%        \widetilde{\mtx{B}}(t)
+%        = \frac{1}{n_{\mtx{\Psi}}} \begin{pmatrix}
+%            \mtx{B}(t) & & \\
+%            & \ddots & \\
+%            & & \mtx{B}(t)
+%        \end{pmatrix}
+%        \quad \text{and} \quad
+%        \widetilde{\vct{\psi}} = \begin{pmatrix}
+%            \vct{\psi}_1 \\
+%            \vdots \\
+%            \vct{\psi}_{n_{\mtx{\Psi}}}
+%        \end{pmatrix},
+%    \end{equation}
+%    we note that $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) = r(\widetilde{\mtx{B}}(t), \widetilde{\vct{\psi}})$ and $\lVert \widetilde{\mtx{B}}(t) \rVert _F = \lVert \mtx{B}(t) \rVert _F / \sqrt{n_{\mtx{\Psi}}}$ hold. Thus, the claimed probabilistic bound~\eqref{eq:ghbound} follows from applying~\eqref{equ:hutchinson-trace-onequery-uniform} to $r(\widetilde{\mtx{B}}(t), \widetilde{\vct{\psi}})$.
+%%     Then 
+%%     where $\vct{\psi}_1, \dots, \vct{\psi}_{n_{\mtx{\Psi}}} \in \mathbb{R}^{n}$ are independent Gaussian random vectors. Then $\lVert \widetilde{\mtx{B}}(t) \rVert _F = \lVert \mtx{B}(t) \rVert _F / \sqrt{n_{\mtx{\Psi}}}$, and
+%%     \begin{equation}
+%%         r(\widetilde{\mtx{B}}(t), \widetilde{\vct{\psi}}) = \Trace(\mtx{B}(t)) - \frac{1}{n_{\mtx{\Psi}}} \sum_{j=1}^{n_{\mtx{\Psi}}} \vct{\psi}_j^{\top} \mtx{B}(t) \vct{\psi}_j.
+%%     \end{equation}
+%%     Hence, by applying \refequ{equ:hutchinson-trace-onequery-uniform} to $r(\widetilde{\mtx{B}}(t), \widetilde{\vct{\psi}})$ we conclude that for any $k \in \mathbb{N}$ and $\gamma \geq 1$ with probability at least $1 - \gamma^{-2 k}$
+%%     \begin{equation}
+%%         \int_{a}^{b} \left| \Trace(\mtx{B}(t)) - \frac{1}{n_{\mtx{\Psi}}} \sum_{j=1}^{n_{\mtx{\Psi}}} \vct{\psi}_j^{\top} \mtx{B}(t) \vct{\psi}_j \right| ~ \mathrm{d}t
+%%         \leq 2^4 k \gamma \frac{1}{\sqrt{n_{\mtx{\Psi}}}} \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t.
+%%     \end{equation}
+%
+%    %Setting $\delta = \gamma^{-2 k}$ and choosing $k = \lceil \log(\delta^{-1}) %\rceil$, where $\lceil x \rceil$ is the ceiling function which returns the greatest %integer larger than or equal to $x$, we get that for all $\delta \in (0, e^{-\sfrac%{1}{2}})$
+%    %\begin{equation}
+%    %    k \gamma = \lceil \log(\delta^{-1}) \rceil \delta^{-\sfrac{1}{2\lceil \log%(\delta^{-1}) \rceil}}
+%    %    = \lceil \log(\delta^{-1}) \rceil e^{\sfrac{1}{2}\frac{\log(\delta^{-1})}%{\lceil \log(\delta^{-1}) \rceil}}
+%    %    \leq 2 \log(\delta^{-1}) e^{\sfrac{1}{2}},
+%    %\end{equation}
+%    %from which follows the second part of the theorem when $n_{\mtx{\Psi}} = (2^5 e^%{\sfrac{1}{2}} \varepsilon^{-1} \log(\delta^{-1}))^2$.
+%
+%    Setting $\gamma = e$ and choosing $k = \lfloor \log(\delta^{-1}) / 2 \rfloor$,
+%    %where $\lfloor x \rfloor$ is the floor function which returns the largest integer smaller than or equal to %$x$,
+%    %we get that for all $\delta \in (0, 1)$
+%    the second part of the theorem follows when taking $n_{\mtx{\Psi}} = \lceil (2^3 e \varepsilon^{-1} \log(\delta^{-1}))^2 \rceil$.
+%    %where $\lceil x \rceil$ is the ceiling function which returns the smallest integer larger than or equal to $x$.
+%    %Consequently, with probability $1 - \delta$ we have
+%    %\begin{equation}
+%    %    \int_{a}^{b} \left| \frac{1}{n_{\mtx{\Psi}}} \sum_{i=1}^{n_{\mtx{\Psi}}} \vct{\psi}_i^{\top} \mtx{B}(t) \vct{\psi}_i - \Trace(\mtx{B}(t)) \right| ~ \mathrm{d}t \leq 32 e^{\sfrac{1}{2}} \frac{\log(\delta^{-1})}{\sqrt{n_{\mtx{\Psi}}}} \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t
+%    %\end{equation}
+%\end{proof}
+%
+%Compared to the analogous result for the constant case~\cite[Lemma 2.1]{meyer-2021-hutch-optimal}, the number of queries $n_{\mtx{\Psi}}$ needed by~\refthm{thm:hutchinson} is roughly a factor $\log(\delta^{-1})$ larger.
+%
 \subsubsection{Nyström approximation}
 \label{subsec:nystrom}
 
@@ -287,7 +335,6 @@ Applying Theorem B.1 from~\cite{persson-2023-randomized-lowrank} for $f(x) = x$ 
         \leq \sqrt{k} \mathbb{E}^{q}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2^2\right] \mathbb{E}^{q}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^2  \right].% && \text{(independence)}
         \label{equ:nystrom-proof-processed-tail}
     \end{equation}
-    \textcolor{green}{
     To match the decay rate of the moments of the first term in \refequ{equ:nystrom-proof-persson-bonud}, we will need to ensure that this term also is of order $\mathcal{O}(\Trace(\mtx{B}) / \sqrt{k})$. We bound the moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ similarly to \cite[Lemma B.3]{tropp-2023-randomized-algorithms}, but without restricting the moments to $0 \leq q \leq 18$. The explicit integration of \cite[Equation B.7]{tropp-2023-randomized-algorithms} imposes the condition $n_{\mtx{\Omega}} - k - 2q \geq 0$. Both $n_{\mtx{\Omega}}$ and $k$ are integers and must be of the same order to ensure a decay of $\mathcal{O}(\Trace(\mtx{B}) / \sqrt{k})$. To avoid restricting the choice of $n_{\mtx{\Omega}}$ too much, we let it be even and set $k = n_{\mtx{\Omega}}/2$. The moment $q$ should be chosen as large as possible to ensure a fast decay of the failure probability, so we fix it to $q = n_{\mtx{\Omega}}/4$. Therefore, we get
     \begin{equation}
         \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^2 \right]
@@ -301,7 +348,7 @@ Applying Theorem B.1 from~\cite{persson-2023-randomized-lowrank} for $f(x) = x$ 
         \leq \frac{3 e^4}{n_{\mtx{\Omega}}}.
         \label{equ:pinv-spectral-norm-bound}
     \end{equation}
-    As opposed to \cite[Lemma B.3]{tropp-2023-randomized-algorithms}, our bound holds for all even $n_{\mtx{\Omega}} \in \mathbb{N}$, at the cost of a factor of $e^2$.}
+    As opposed to \cite[Lemma B.3]{tropp-2023-randomized-algorithms}, our bound holds for all even $n_{\mtx{\Omega}} \in \mathbb{N}$, at the cost of a factor of $e^2$.
 
     The remaining term can dealt with using \reflem{lem:spectral-norm-moment} with $\mtx{A} = \mtx{\Lambda}_2^{\sfrac{1}{2}}$ and $p = n_{\mtx{\Omega}}/2$
     \begin{equation}
@@ -396,7 +443,7 @@ When compared to the equivalent result for constant matrices \cite[Lemma 3.2]{pe
 Finally, we can now combine the bound on the Girard-Hutchinson estimator (\refthm{thm:hutchinson}) and the one on the Nyström approximation (\reflem{lem:nystrom}) to obtain our main result.
 
 \begin{theorem}{Nyström++ trace estimator for parameter-dependent matrices}{nystrom-pp}
-    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. If $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-1} \log(\delta^{-1})^2)$ with \emph{even} $n_{\mtx{\Omega}}$, then for $\delta \in (0, 1/2)$ and $\varepsilon > 0$ with probability at least $1 - \delta$ 
+    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. If $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-1} \log(\delta^{-1}))$ with \emph{even} $n_{\mtx{\Omega}} \geq 4$, then for $\delta \in (0, 2e^{-1})$ and $\varepsilon \in (0, \min\{1, c^2e^2\})$ with probability at least $1 - \delta$ 
     \begin{equation}
         \int_{a}^{b} | \Trace(\mtx{B}(t)) - \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{B}(t)) |~\mathrm{d}t
         \leq \varepsilon \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t.
@@ -404,7 +451,7 @@ Finally, we can now combine the bound on the Girard-Hutchinson estimator (\refth
 \end{theorem}
 
 \begin{proof}
-    By choosing $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\tilde{\varepsilon}^{-2} \log(\tilde{\delta}^{-1})^2)$ we get
+    By choosing $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\tilde{\varepsilon}^{-2} \log(\tilde{\delta}^{-1}))$ we get
     \begin{align}
         &\int_{a}^{b} | \Trace(\mtx{B}(t)) - \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{B}(t)) |~\mathrm{d}t \notag \\
         &= \int_{a}^{b} | \Trace(\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)) |~\mathrm{d}t && \text{(by definition of estimators)} \notag \\
@@ -415,7 +462,7 @@ Finally, we can now combine the bound on the Girard-Hutchinson estimator (\refth
 
 \end{proof}
 
-Comparing \refthm{thm:nystrom-pp} with its equivalent for constant matrices \cite[Theorem 3.4]{persson-2022-improved-variants}, we notice a less favorable scaling of the required number of random vectors $n_{\mtx{\Omega}}$ and $n_{\mtx{\Psi}}$ in terms of $\log(\delta^{-1})$.
+Comparing \refthm{thm:nystrom-pp} with its equivalent for constant matrices \cite[Theorem 3.4]{persson-2022-improved-variants}, we notice an additional factor of $\sqrt{\log(\delta^{-1})}$ in the required number of random vectors $n_{\mtx{\Omega}}$ and $n_{\mtx{\Psi}}$.
 
 % \begin{proof}
 %     Combining with union bound.

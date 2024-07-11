@@ -166,3 +166,36 @@ In passing, we note that \reflem{lem:spectral-norm-moment}  yields the bound
         \mathbb{E}^{p}\big[ \lVert \mtx{A} \mtx{\Omega} \rVert _2 \big] = \sqrt{\mathbb{E}^{p/2}\big[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \big]} \leq \sqrt{k + p/2-1} \cdot \Big(\sqrt{2} \lVert \mtx{A} \rVert _2 + \frac{1}{\sqrt{k}}\lVert \mtx{A} \rVert_F\Big)
     \end{equation}
     with $k\ge 2, p\ge 2$. For $p = 2$, this nearly matches the corresponding bound from~\cite[Lemma B.1]{tropp-2023-randomized-algorithms}, except for the additional factor $\sqrt{2}$.
+
+\color{black}
+\section{Moment bound for simple trace estimator}
+
+In this section we will bound the high order moments of single-query Girard-Hutchinson estimator \refequ{equ:hutchinson-trace-estimator}, i.e. when $n_{\mtx{\Psi}} = 1$. This bound is used in the proof of \refthm{thm:hutchinson}.
+
+\begin{lemma}{Moment bound for single-query Girard-Hutchinson estimator}{hanson-wright-moments}
+    Given a symmetric $\mtx{A} \in \mathbb{R}^{m \times m}$ and a standard Gaussian random vector $\vct{\psi} \in \mathbb{R}^{m}$, then
+    \begin{equation}
+        \mathbb{E}^{p}\left[\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}\right] \leq c \max\{ \sqrt{p} \lVert \mtx{A} \rVert _F, p \lVert \mtx{A} \rVert _2 \}
+    \end{equation}
+    holds for any $p \geq 1, p \in \mathbb{R}$ and a universal constant $c > 0$.
+\end{lemma}
+
+From \cite[Theorem 1.1]{rudelson-2013-hansonwright-inequality} it holds
+\begin{equation}
+    \mathbb{P}(|\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}| > t) \leq 2 \exp \left( - c \min \left\{ \frac{t^2}{\lVert \mtx{A} \rVert _F^2},  \frac{t}{\lVert \mtx{A} \rVert _2} \right\} \right)
+\end{equation}
+for some universal constant $c > 0$. Therefore we can directly compute the high-order moments with an integral
+\begin{align}
+    &\mathbb{E}\left[ |\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}|^p \right] \notag \\
+    &= p \int_{0}^{\infty} t^{p-1} \mathbb{P}(|\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}| > t) \mathrm{d}t \notag \\
+    &\leq 2 p \int_{0}^{\infty} t^{p-1} \exp \left( - c \min \left\{ \frac{t^2}{\lVert \mtx{A} \rVert _F^2},  \frac{t}{\lVert \mtx{A} \rVert _2} \right\} \right) \mathrm{d}t \notag \\
+    &\leq 4 p \max\left\{ \int_{0}^{\infty} t^{p-1} \exp \left( - c \frac{t^2}{\lVert \mtx{A} \rVert _F^2} \right) \mathrm{d}t, \int_{0}^{\infty} t^{p-1} \exp \left( - c \frac{t}{\lVert \mtx{A} \rVert _2} \right) \mathrm{d}t \right\} \notag \\
+    %&\leq 4 p \max\left\{ \int_{0}^{\infty} t^{p-1} \exp \left( - c \frac{t^2}{\lVert \mtx{A} \rVert _F^2} \right) \mathrm{d}t, \int_{0}^{\infty} t^{p-1} \exp \left( - c \frac{t}{\lVert \mtx{A} \rVert _2} \right) \mathrm{d}t \right\} \notag \\
+    &=  4 p \max\left\{ \frac{1}{2} \left( \frac{\lVert \mtx{A} \rVert _F}{\sqrt{c}} \right)^p \Gamma\left(\frac{p}{2}\right), \left(\frac{\lVert \mtx{A} \rVert _2}{c} \right)^p \Gamma(p) \right\}
+\end{align}
+Since $\Gamma(p)^{\sfrac{1}{p}} \leq p$ and $\Gamma(p/2)^{\sfrac{1}{p}} \leq \sqrt{p \pi}$ for $p \geq 1$ , we have 
+\begin{equation}
+    \mathbb{E}^p\left[ \Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi} \right]
+    \leq \widetilde{c} \max\{ \sqrt{p} \lVert \mtx{A} \rVert _F, p \lVert \mtx{A} \rVert _2 \}
+\end{equation}
+for some other universal constant $\widetilde{c} > 0$.
