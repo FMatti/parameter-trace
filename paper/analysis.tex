@@ -21,54 +21,51 @@ as we will see in Section ???.
 \subsection{Methods}
 \label{subsec:methods}
 
-\paragraph{Girard-Hutchinson estimator.} We can approximate the trace with the Girard-Hutchinson estimator \cite{girard-1989-fast-montecarlo,hutchinson-1990-stochastic-estimator}: We take $n_{\mtx{\Psi}}$ stochastically independent standard Gaussian random vectors $\vct{\psi}_1,\dots, \vct{\psi}_{n_{\mtx{\Psi}}} \in \mathbb{R}^{n}$, i.e. vectors whose entries are independent standard Gaussian random variables, to form
+\paragraph{Girard-Hutchinson estimator.} The trace of a parameter-dependent matrix can be approximated with the Girard-Hutchinson estimator \cite{girard-1989-fast-montecarlo,hutchinson-1990-stochastic-estimator}: We take $n_{\mtx{\Psi}}$ stochastically independent standard Gaussian random vectors $\vct{\psi}_1,\dots, \vct{\psi}_{n_{\mtx{\Psi}}} \in \mathbb{R}^{n}$, i.e. vectors whose entries are independent standard Gaussian random variables, to form
 \begin{equation}
     \Hutch{\mtx{\Psi}}(\mtx{B}(t))
     = \frac{1}{n_{\mtx{\Psi}}} \sum_{j=1}^{n_{\mtx{\Psi}}} \vct{\psi}_j^{\top} \mtx{B}(t) \vct{\psi}_j
     = \frac{1}{n_{\mtx{\Psi}}} \Trace( \mtx{\Psi}^{\top} \mtx{B}(t) \mtx{\Psi})
     \label{equ:hutchinson-trace-estimator}
 \end{equation}
-where $\mtx{\Psi} = [\vct{\psi}_1 ~ \cdots ~ \vct{\psi}_{n_{\mtx{\Psi}}}] \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$ is a standard Gaussian random matrix. Other choices for the distribution of the random vectors are possible, for example by uniformly sampling from $\{-1, +1\}$ or from the $(n-1)$-sphere. However, our theoretical developments only hold in the Gaussian case.
+where $\mtx{\Psi} = [\vct{\psi}_1 ~ \cdots ~ \vct{\psi}_{n_{\mtx{\Psi}}}] \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$ is a standard Gaussian random matrix. Other choices for the distribution of the random vectors are possible, for example by uniformly sampling from $\{-1, +1\}$ or from the $(n-1)$-sphere. Our theoretical developments only hold in the Gaussian case.
 
-\color{black}
+The Girard-Hutchinson estimator distinguishes itself for its simplicity. It has already been used to approximate traces of parameter-dependent matrices for spectral density estimation in the Haydock method \cite{haydock-1972-electronic-structure}, as well as the Delta-Gauss-Legendre and Delta-Gauss-Chebyshev methods of \cite{lin-2016-approximating-spectral, lin-2017-randomized-estimation}. However, as a Monte Carlo estimate, its accuracy is often quite disappointing: if we aim to increase the accuracy of the estimate by one digit, we would need to increase the number of queries by a factor of one hundred.
 
-\textcolor{red}{Moved from below: The Girard-Hutchinson estimator distinguishes itself for its simplicity. However, its bound does not take into account the structure of $\mtx{B}(t)$. The $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2})$ requirement implies that if we aim to increase the accuracy of the estimate by one digit, we would need to increase the number of queries by a factor of $100$.   }
-
-\paragraph{Nyström estimator}
-
-
-Write:
-\begin{itemize}
- \item fast singular value decay, intuitively sufficient to consider a low-rank approximation
- \item motivated by our application we only consider symmetric positive semi-definite case here (smoothing kernels are positive) for which Nystroem approximation is the right choice
-\end{itemize}
-
-
-\textcolor{red}{Moved from below:
-For symmetric positive semi-definite matrices whose singular values decay rapidly, the Nyström estimate \refequ{equ:nystrom-trace-estimator} can be significantly better than the Girard-Hutchinson estimate. This is reflected in the following theorem.}
-
-
-Alternatively, the trace of a symmetric matrix whose singular values decay quickly can be approximated well by using a Gaussian sketching matrix $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ to form the Nyström approximation \cite{gittens-2013-revisiting-nystrom}
-
+\paragraph{Nyström estimator.} Matrices with fast singular value decay can well be approximated with a low-rank approximation. Intuitively, it should be sufficient to approximate the trace of a quadratic matrix with the trace of a good low-rank approximation. Our application, the spectral density estimation (\refsec{sec:application}) of symmetric matrices, requires us to approximate the trace of a symmetric positive semi-definite matrix, originating from a non-negative smoothing kernel. In this scenario, the Nyström approximation is the most suitable low-rank approximation \cite{gittens-2013-revisiting-nystrom}. For a standard Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$, it is defined as
 \begin{equation}
     \Nystr{\mtx{\Omega}}{\mtx{B}}(t) = (\mtx{B}(t) \mtx{\Omega}) (\mtx{\Omega}^{\top} \mtx{B}(t) \mtx{\Omega})^{\dagger} (\mtx{B}(t) \mtx{\Omega})^{\top}.
     \label{equ:nystrom-approximation}
 \end{equation}
-Then we can estimate the trace as $\Trace(\Nystr{\mtx{\Omega}}{\mtx{B}}(t))$. Thanks to the invariance of the trace under cyclic permutation of its arguments and the symmetry of the matrix, we may rewrite this estimator as
-
+We can estimate the trace of $\mtx{B}(t)$ with $\Trace(\Nystr{\mtx{\Omega}}{\mtx{B}}(t))$. Thanks to the invariance of the trace under cyclic permutation of its arguments and the symmetry of the matrix, we may rewrite this estimator as
 \begin{equation}
     \Trace(\Nystr{\mtx{\Omega}}{\mtx{B}}(t)) = \Trace( (\mtx{\Omega}^{\top} \mtx{B}(t) \mtx{\Omega})^{\dagger} ( \mtx{\Omega}^{\top} \mtx{B}(t)^2 \mtx{\Omega})).
     \label{equ:nystrom-trace-estimator}
 \end{equation}
+This estimator forms the basis of the so-called spectrum sweeping method \cite{lin-2017-randomized-estimation}. 
 
-\textcolor{red}{Moved from below: The downside of the Nyström estimator is that it will -- in general -- not work well enough on matrices whose singular values do not decay quickly, for example $\mtx{B}(t) \equiv \mtx{I}_n$.}
+Two different low-rank approximation algorithms for general parameter-dependent matrices have already been analyzed in \cite{kressner-2024-randomized-lowrank}. However, the downside of the low-rank approximation approach is that it will -- in general -- not work well enough on matrices whose singular values do not decay quickly.
+%Write:
+%\begin{itemize}
+% \item fast singular value decay, intuitively sufficient to consider a low-rank %approximation
+% \item motivated by our application we only consider symmetric positive %semi-definite case here (smoothing kernels are positive) for which Nystroem %approximation is the right choice
+%\end{itemize}
 
-\paragraph{Nyström++ estimator.} Finally, \cite{lin-2017-randomized-estimation} proposes an estimator which corrects for inaccuracies in the Nyström approximation \refequ{equ:nystrom-trace-estimator} by estimating the trace of its residual using the Girard-Hutchinson estimator \refequ{equ:hutchinson-trace-estimator}
+%\textcolor{red}{Moved from below:
+%For symmetric positive semi-definite matrices whose singular values decay %rapidly, the Nyström estimate \refequ{equ:nystrom-trace-estimator} can be %significantly better than the Girard-Hutchinson estimate. This is reflected in %the following theorem.}
+%
+%
+%Alternatively, the trace of a symmetric matrix whose singular values decay %quickly can be approximated well by using a Gaussian sketching matrix $\mtx%{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ to form the Nyström %approximation \cite{gittens-2013-revisiting-nystrom}
+
+\paragraph{Nyström++ estimator.} Finally, \cite{lin-2017-randomized-estimation} proposes an estimator which is more accurate than the Girard-Hutchinson estimator and, unlike the Nyström approximation, does not rely on a fast singular value decay of $\mtx{B}(t)$. The estimator first computes the trace of the Nyström approximation \refequ{equ:nystrom-trace-estimator} of the matrix. Because this result may not always be satisfactory, the estimator then corrects for eventual inaccuracies in the Nyström approximation by estimating the trace of the approximation residual with the Girard-Hutchinson estimator \refequ{equ:hutchinson-trace-estimator}. The full estimator is
 \begin{equation}
-    \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{B}(t)) = \Trace(\Nystr{\mtx{\Omega}}{\mtx{B}}(t)) + \Hutch{\mtx{\Psi}}(\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)).
+    \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{B}(t)) = \Trace(\Nystr{\mtx{\Omega}}{\mtx{B}}(t)) + \Hutch{\mtx{\Psi}}(\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)),
     \label{equ:nystrompp-trace-estimator}
 \end{equation}
-This is the parameter-dependent analogue of the Nyström++ estimator \cite{persson-2022-improved-variants}, which itself is based on the Hutch++ estimator \cite{meyer-2021-hutch-optimal}. %We can interpret this estimator as an interpolation between the trace of the Nyström approximation and the Girard-Hutchinson estimator.
+where the matrix indices again emphasize the use of a constant standard Gaussian random matrix $\mtx{\Psi} \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$ for the Girard-Hutchinson estimator and the dimension reduction matrix $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ for the Nyström approximation.
+
+This estimator is the parameter-dependent analogue of the Nyström++ estimator \cite{persson-2022-improved-variants}, which itself is based on the Hutch++ estimator \cite{meyer-2021-hutch-optimal}. For constant matrices $\mtx{B}$, these estimators were both shown to achieve a relative $\varepsilon$-error with just using $\mathcal{O}(\varepsilon^{-1})$ matrix-vector products, independent of the singular value decay of $\mtx{B}$.
+%We can interpret this estimator as an interpolation between the trace of the Nyström approximation and the Girard-Hutchinson estimator.
 
 %In the remainder of this section, we will derive upper bounds on the error of these estimators.
 %
@@ -335,7 +332,7 @@ Applying Theorem B.1 from~\cite{persson-2023-randomized-lowrank} for $f(x) = x$ 
         \leq \sqrt{k} \mathbb{E}^{q}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \rVert _2^2\right] \mathbb{E}^{q}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^2  \right].% && \text{(independence)}
         \label{equ:nystrom-proof-processed-tail}
     \end{equation}
-    To match the decay rate of the moments of the first term in \refequ{equ:nystrom-proof-persson-bonud}, we will need to ensure that this term also is of order $\mathcal{O}(\Trace(\mtx{B}) / \sqrt{k})$. We bound the moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ similarly to \cite[Lemma B.3]{tropp-2023-randomized-algorithms}, but without restricting the moments to $0 \leq q \leq 18$. The explicit integration of \cite[Equation B.7]{tropp-2023-randomized-algorithms} imposes the condition $n_{\mtx{\Omega}} - k - 2q \geq 0$. Both $n_{\mtx{\Omega}}$ and $k$ are integers and must be of the same order to ensure a decay of $\mathcal{O}(\Trace(\mtx{B}) / \sqrt{k})$. To avoid restricting the choice of $n_{\mtx{\Omega}}$ too much, we let it be even and set $k = n_{\mtx{\Omega}}/2$. The moment $q$ should be chosen as large as possible to ensure a fast decay of the failure probability, so we fix it to $q = n_{\mtx{\Omega}}/4$. Therefore, we get
+    To match the decay rate of the moments of the first term in \refequ{equ:nystrom-proof-persson-bonud}, we will need to ensure that this term also is of order $\mathcal{O}(\Trace(\mtx{B}) / \sqrt{k})$. We bound the moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ similarly to \cite[Lemma B.3]{tropp-2023-randomized-algorithms}, but without restricting $q$ to be smaller than $18$. The explicit integration of \cite[Equation B.7]{tropp-2023-randomized-algorithms} imposes the condition $n_{\mtx{\Omega}} - k - 2q \geq 0$. Both $n_{\mtx{\Omega}}$ and $k$ are integers and must be of the same order to ensure a decay of $\mathcal{O}(\Trace(\mtx{B}) / \sqrt{k})$. To avoid restricting the choice of $n_{\mtx{\Omega}}$ too much, we let it be even and set $k = n_{\mtx{\Omega}}/2$. The moment $q$ should be chosen as large as possible to ensure a fast decay of the failure probability, so we fix it to $q = n_{\mtx{\Omega}}/4$. Therefore, we get
     \begin{equation}
         \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2^2 \right]
         = \mathbb{E}\left[ \lVert ( \mtx{\Omega}_1 \mtx{\Omega}_1^{\top} )^{-1} \rVert _2^{\sfrac{n_{\mtx{\Omega}}}{4}} \right]^{\sfrac{4}{n_{\mtx{\Omega}}}}%  \notag \\
@@ -439,7 +436,7 @@ Applying Theorem B.1 from~\cite{persson-2023-randomized-lowrank} for $f(x) = x$ 
 
 
 When compared to the equivalent result for constant matrices \cite[Lemma 3.2]{persson-2022-improved-variants}, our constant factor up front is a bit more than two times larger and our failure probability decays half a power slower.
-
+ 
 Finally, we can now combine the bound on the Girard-Hutchinson estimator (\refthm{thm:hutchinson}) and the one on the Nyström approximation (\reflem{lem:nystrom}) to obtain our main result.
 
 \begin{theorem}{Nyström++ trace estimator for parameter-dependent matrices}{nystrom-pp}
