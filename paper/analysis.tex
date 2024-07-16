@@ -94,13 +94,23 @@ This estimator is the parameter-dependent analogue of the Nyström++ estimator \
 
 We start our analysis of the methods presented above by deriving an $L^1$-error bound for the Girard-Hutchinson estimator~\refequ{equ:hutchinson-trace-estimator} that is relative to the $L^1$-norm of the Frobenius norm $\lVert \mtx{B}(t) \rVert _F$.
 
+%\begin{theorem}{Girard-Hutchinson estimator for parameter-dependent matrices}{hutchinson}
+%    For a symmetric matrix $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ that depends continuously on $t \in [a, b]$, consider the  Girard-Hutchinson estimator~\eqref{equ:hutchinson-trace-estimator} with an $n\times n_{\mtx{\Psi}}$ Gaussian random matrix $\mtx{\Psi}$. Then for any $p \geq 1, p \in \mathbb{R}$ and $\gamma \geq 1$ the bound 
+%    \begin{equation} \label{eq:ghbound}
+%        \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq c \gamma \max\left\{ \sqrt{\frac{p}{n_{\mtx{\Psi}}}}, \frac{p}{n_{\mtx{\Psi}}}  \right\} \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t.
+%    \end{equation}
+%    holds with probability at least $1 - \gamma^{-p}$.
+%    In particular, given $\varepsilon \in (0, ce)$ and $\delta \in (0, e^{-1})$, the bound $\int_{a}^{b} | \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) | ~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t$ holds 
+%    with probability at least $1-\delta$ if $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2} \log(\delta^{-1}))$.
+%\end{theorem}
+
 \begin{theorem}{Girard-Hutchinson estimator for parameter-dependent matrices}{hutchinson}
     For a symmetric matrix $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ that depends continuously on $t \in [a, b]$, consider the  Girard-Hutchinson estimator~\eqref{equ:hutchinson-trace-estimator} with an $n\times n_{\mtx{\Psi}}$ Gaussian random matrix $\mtx{\Psi}$. Then for any $p \geq 1, p \in \mathbb{R}$ and $\gamma \geq 1$ the bound 
     \begin{equation} \label{eq:ghbound}
-        \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq c \gamma \max\left\{ \sqrt{\frac{p}{n_{\mtx{\Psi}}}}, \frac{p}{n_{\mtx{\Psi}}}  \right\} \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t.
+        \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq C \gamma \left( \sqrt{\frac{p}{n_{\mtx{\Psi}}}} + \frac{p}{n_{\mtx{\Psi}}}  \right) \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t.
     \end{equation}
-    holds with probability at least $1 - \gamma^{-p}$.
-    In particular, given $\varepsilon \in (0, ce)$ and $\delta \in (0, e^{-1})$, the bound $\int_{a}^{b} | \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) | ~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t$ holds 
+    holds with probability at least $1 - \gamma^{-p}$ and with $C = 8 e^{1/e} (1 + \sqrt{\pi}/2)$.
+    In particular, given $\varepsilon \in (0, 1)$ and $\delta \in (0, e^{-1})$, the bound $\int_{a}^{b} | \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) | ~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t$ holds 
     with probability at least $1-\delta$ if $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2} \log(\delta^{-1}))$.
 \end{theorem}
 
@@ -121,34 +131,74 @@ We start our analysis of the methods presented above by deriving an $L^1$-error 
             \vct{\psi}_{n_{\mtx{\Psi}}}
         \end{pmatrix}.
     \end{equation}
-    Note that $\Trace(\widetilde{\mtx{B}}(t)) - \widetilde{\vct{\psi}}^{\top} \widetilde{\mtx{B}}(t) \widetilde{\vct{\psi}} = \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))$, $\lVert \widetilde{\mtx{B}}(t) \rVert _2 = \lVert \mtx{B}(t) \rVert _2 / n_{\mtx{\Psi}}$ and $\lVert \widetilde{\mtx{B}}(t) \rVert _F = \lVert \mtx{B}(t) \rVert _F / \sqrt{n_{\mtx{\Psi}}}$ hold. Therefore, by \reflem{lem:hanson-wright-moments} we have
-    \begin{align}
-        \mathbb{E}^{p}[\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))]
-        &= \mathbb{E}^{p}[\Trace(\widetilde{\mtx{B}}(t)) - \widetilde{\vct{\psi}}^{\top} \widetilde{\mtx{B}}(t) \widetilde{\vct{\psi}}] \notag \\
-        &\leq c \max\left\{ \sqrt{p} \lVert \widetilde{\mtx{B}}(t) \rVert _F, p \lVert \widetilde{\mtx{B}}(t) \rVert _2 \right\} \notag \\
-        &= c \max\left\{ \sqrt{\frac{p}{n_{\mtx{\Psi}}}} \lVert \mtx{B}(t) \rVert _F, \frac{p}{n_{\mtx{\Psi}}} \lVert \mtx{B}(t) \rVert _2 \right\} \notag \\
-        &\leq c \max\left\{ \sqrt{\frac{p}{n_{\mtx{\Psi}}}}, \frac{p}{n_{\mtx{\Psi}}} \right\}  \lVert \mtx{B}(t) \rVert _F.
-        \label{equ:moment-bound-hanson-wright}
-    \end{align}
+    Note that $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) =  \Trace(\widetilde{\mtx{B}}(t)) - \widetilde{\vct{\psi}}^{\top} \widetilde{\mtx{B}}(t) \widetilde{\vct{\psi}}$, $\lVert \widetilde{\mtx{B}}(t) \rVert _2 = \lVert \mtx{B}(t) \rVert _2 / n_{\mtx{\Psi}}$ and $\lVert \widetilde{\mtx{B}}(t) \rVert _F = \lVert \mtx{B}(t) \rVert _F / \sqrt{n_{\mtx{\Psi}}}$ hold. Therefore, by \reflem{lem:hutchinson-sub-exponential}, $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))$ is a centered, $(2 \lVert \mtx{B}(t) \rVert _F^2 \frac{1}{1 - 1/c} / n_{\mtx{\Psi}}, 2 \lVert \mtx{A} \rVert _2 c / n_{\mtx{\Psi}})$-sub-exponential random variable for any $c > 1$. Thus, we can apply \reflem{lem:sub-exponential-moments} to bound
+    \begin{equation}
+        \mathbb{E}^{p}[\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))] \leq 2 e^{1/e} \left(\frac{\sqrt{\pi}}{1-1/c} \sqrt{\frac{p}{n_{\mtx{\Psi}}}} \lVert \mtx{B}(t) \rVert _F + 4 c \frac{p}{n_{\mtx{\Psi}}} \lVert \mtx{B}(t) \rVert _2 \right).
+    \end{equation}
+    Bounding $\lVert \mtx{B}(t) \rVert _2 \leq \lVert \mtx{B}(t) \rVert _F$ and letting $c = 1 + \sqrt{\pi} / 2$ we get
+    \begin{equation}
+        \mathbb{E}^{p}[\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))] \leq \underbrace{8 e^{1/e} (1 + \sqrt{\pi} / 2)}_{=~C} \left( \sqrt{\frac{p}{n_{\mtx{\Psi}}}} + \frac{p}{n_{\mtx{\Psi}}} \right) \lVert \mtx{B}(t) \rVert _F.
+        \label{equ:moment-bound-hutchinson}
+    \end{equation}
 
-    To address the parameter-dependent case, we first note that the continuity assumption implies that $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))$ is measurable. Therefore, we can apply Minkowski's integral inequality~\cite[Theorem 202]{hardy-1952-inequalities} to conclude from~\refequ{equ:moment-bound-hanson-wright} that
+    To address the parameter-dependent case, we first note that the continuity assumption implies that $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))$ is measurable. Therefore, we can apply Minkowski's integral inequality~\cite[Theorem 202]{hardy-1952-inequalities} to conclude from the moment bound~\refequ{equ:moment-bound-hutchinson} that
     \begin{align}
         \mathbb{E}^{p}\left[ \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t  \right]
         &\leq \int_{a}^{b} \mathbb{E}^{p}\left[ \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) \right]~\mathrm{d}t \notag \\
-        &\leq c \max\left\{ \sqrt{\frac{p}{n_{\mtx{\Psi}}}}, \frac{p}{n_{\mtx{\Psi}}}  \right\} \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t .
+        &\leq C \left( \sqrt{\frac{p}{n_{\mtx{\Psi}}}} + \frac{p}{n_{\mtx{\Psi}}}  \right) \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t .
     \end{align}
-    Consequently, by Markov's inequality,  the inequality 
+    Consequently, by Markov's inequality, the inequality 
     \begin{equation} 
-        \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq c \gamma \max\left\{ \sqrt{\frac{p}{n_{\mtx{\Psi}}}}, \frac{p}{n_{\mtx{\Psi}}}  \right\} \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t
+        \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq \gamma C \left( \sqrt{\frac{p}{n_{\mtx{\Psi}}}} + \frac{p}{n_{\mtx{\Psi}}}  \right) \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t
     \end{equation}
     holds for any $\gamma \geq 1$ with probability at least $1 - \gamma^{-p}$. 
 
-    Setting $\gamma = e$ and choosing $p = \log(\delta^{-1}) \geq 1$, the second part of the theorem follows when taking $n_{\mtx{\Psi}} = \lceil c^2 e^2 \log(\delta^{-1}) \varepsilon^{-2} \rceil$ and restricting $\varepsilon \leq c e$.
-    %where $\lfloor x \rfloor$ is the floor function which returns the largest integer smaller than or equal to %$x$,
-    %we get that for all $\delta \in (0, 1)$
+    Setting $\gamma = e$ and choosing $p = \log(\delta^{-1}) \geq 1$, the second part of the theorem follows when taking $n_{\mtx{\Psi}} = \lceil 2 C^2 e^2 \log(\delta^{-1}) \varepsilon^{-2} \rceil$.
 \end{proof}
+%\begin{proof}
+%    The proof proceeds by bounding moments for fixed values of $t$ and then uses Minkowski's integral inequality. We start with a standard embedding trick (see, e.g.,~\cite[Theorem 1]{cortinovis-2022-randomized-trace}) for which we define
+%    \begin{equation}
+%        \widetilde{\mtx{B}}(t)
+%        = \frac{1}{n_{\mtx{\Psi}}} \begin{pmatrix}
+%            \mtx{B}(t) & & \\
+%            & \ddots & \\
+%            & & \mtx{B}(t)
+%        \end{pmatrix}
+%        \quad \text{and} \quad
+%        \widetilde{\vct{\psi}} = \begin{pmatrix}
+%            \vct{\psi}_1 \\
+%            \vdots \\
+%            \vct{\psi}_{n_{\mtx{\Psi}}}
+%        \end{pmatrix}.
+%    \end{equation}
+%    Note that $\Trace(\widetilde{\mtx{B}}(t)) - \widetilde{\vct{\psi}}^{\top} \widetilde{\mtx{B}}(t) \widetilde{\vct{\psi}} = \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))$, $\lVert \widetilde{\mtx{B}}(t) \rVert _2 = \lVert \mtx{B}(t) \rVert _2 / n_{\mtx{\Psi}}$ and $\lVert \widetilde{\mtx{B}}(t) \rVert _F = \lVert \mtx{B}(t) \rVert _F / \sqrt{n_{\mtx{\Psi}}}$ hold. Therefore, by \reflem{lem:hanson-wright-moments} we have
+%    \begin{align}
+%        \mathbb{E}^{p}[\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))]
+%        &= \mathbb{E}^{p}[\Trace(\widetilde{\mtx{B}}(t)) - \widetilde{\vct{\psi}}^{\top} \widetilde{\mtx{B}}(t) \widetilde{\vct{\psi}}] \notag \\
+%        &\leq c \max\left\{ \sqrt{p} \lVert \widetilde{\mtx{B}}(t) \rVert _F, p \lVert \widetilde{\mtx{B}}(t) \rVert _2 \right\} \notag \\
+%        &= c \max\left\{ \sqrt{\frac{p}{n_{\mtx{\Psi}}}} \lVert \mtx{B}(t) \rVert _F, \frac{p}{n_{\mtx{\Psi}}} \lVert \mtx{B}(t) \rVert _2 \right\} \notag \\
+%        &\leq c \max\left\{ \sqrt{\frac{p}{n_{\mtx{\Psi}}}}, \frac{p}{n_{\mtx{\Psi}}} \right\}  \lVert \mtx{B}(t) \rVert _F.
+%        \label{equ:moment-bound-hanson-wright}
+%    \end{align}
+%
+%    To address the parameter-dependent case, we first note that the continuity assumption implies that $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))$ is measurable. Therefore, we can apply Minkowski's integral inequality~\cite[Theorem 202]{hardy-1952-inequalities} to conclude from~\refequ{equ:moment-bound-hanson-wright} that
+%    \begin{align}
+%        \mathbb{E}^{p}\left[ \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t  \right]
+%        &\leq \int_{a}^{b} \mathbb{E}^{p}\left[ \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) \right]~\mathrm{d}t \notag \\
+%        &\leq c \max\left\{ \sqrt{\frac{p}{n_{\mtx{\Psi}}}}, \frac{p}{n_{\mtx{\Psi}}}  \right\} \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t .
+%    \end{align}
+%    Consequently, by Markov's inequality,  the inequality 
+%    \begin{equation} 
+%        \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq c \gamma \max\left\{ \sqrt{\frac{p}{n_{\mtx{\Psi}}}}, \frac{p}{n_{\mtx{\Psi}}}  \right\} \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t
+%    \end{equation}
+%    holds for any $\gamma \geq 1$ with probability at least $1 - \gamma^{-p}$. 
+%
+%    Setting $\gamma = e$ and choosing $p = \log(\delta^{-1}) \geq 1$, the second part of the theorem follows when taking $n_{\mtx{\Psi}} = \lceil c^2 e^2 \log(\delta^{-1}) \varepsilon^{-2} \rceil$ and restricting $\varepsilon \leq c e$.
+%    %where $\lfloor x \rfloor$ is the floor function which returns the largest integer smaller than or equal to %$x$,
+%    %we get that for all $\delta \in (0, 1)$
+%\end{proof}
 
-\refthm{thm:hutchinson} coincides with the analogous result for the constant case~\cite[Lemma 2.1]{meyer-2021-hutch-optimal}, except for a slightly more restricted choice of $\varepsilon$ and $\delta$.
+\refthm{thm:hutchinson} coincides with the analogous result for the constant case~\cite[Lemma 2.1]{meyer-2021-hutch-optimal}, except for a slightly more restricted choice of $\delta$.
 
 \color{blue}
 
@@ -440,7 +490,7 @@ When compared to the equivalent result for constant matrices \cite[Lemma 3.2]{pe
 Finally, we can now combine the bound on the Girard-Hutchinson estimator (\refthm{thm:hutchinson}) and the one on the Nyström approximation (\reflem{lem:nystrom}) to obtain our main result.
 
 \begin{theorem}{Nyström++ trace estimator for parameter-dependent matrices}{nystrom-pp}
-    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. If $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-1} \log(\delta^{-1}))$ with \emph{even} $n_{\mtx{\Omega}} \geq 4$, then for $\delta \in (0, 2e^{-1})$ and $\varepsilon \in (0, \min\{1, c^2e^2\})$ with probability at least $1 - \delta$ 
+    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. If $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-1} \log(\delta^{-1}))$ with \emph{even} $n_{\mtx{\Omega}} \geq 4$, then for $\delta \in (0, 2e^{-1})$ and $\varepsilon \in (0, 1)$ with probability at least $1 - \delta$ 
     \begin{equation}
         \int_{a}^{b} | \Trace(\mtx{B}(t)) - \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{B}(t)) |~\mathrm{d}t
         \leq \varepsilon \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t.

@@ -168,34 +168,119 @@ In passing, we note that \reflem{lem:spectral-norm-moment}  yields the bound
     with $k\ge 2, p\ge 2$. For $p = 2$, this nearly matches the corresponding bound from~\cite[Lemma B.1]{tropp-2023-randomized-algorithms}, except for the additional factor $\sqrt{2}$.
 
 \color{black}
-\section{Moment bound for simple trace estimator}
+%\section{Moment bound for simple trace estimator}
+%
+%In this section we will bound the high order moments of the residual of the single-query Girard-Hutchinson estimator \refequ{equ:hutchinson-trace-estimator}, i.e. when $n_{\mtx{\Psi}} = 1$. This bound is needed in the proof of \refthm{thm:hutchinson}.
+%
+%\begin{lemma}{Moment bound for single-query Girard-Hutchinson estimator}{hanson-wright-moments}
+%    Given a symmetric $\mtx{A} \in \mathbb{R}^{m \times m}$ and a standard Gaussian random vector $\vct{\psi} \in \mathbb{R}^{m}$, then
+%    \begin{equation}
+%        \mathbb{E}^{p}\left[\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}\right] \leq c \max\{ \sqrt{p} \lVert \mtx{A} \rVert _F, p \lVert \mtx{A} \rVert _2 \}
+%    \end{equation}
+%    holds for any $p \geq 1, p \in \mathbb{R}$ and a universal constant $c > 0$.
+%\end{lemma}
+%
+%From \cite[Theorem 1.1]{rudelson-2013-hansonwright-inequality} it holds
+%\begin{equation}
+%    \mathbb{P}(|\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}| > t) \leq 2 \exp \left( - c \min \left\{ \frac{t^2}{\lVert \mtx{A} \rVert _F^2},  \frac{t}{\lVert \mtx{A} \rVert _2} \right\} \right)
+%\end{equation}
+%for some universal constant $c > 0$. Therefore we can directly compute the high-order moments with an integral
+%\begin{align}
+%    &\mathbb{E}\left[ |\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}|^p \right] \notag \\
+%    &= p \int_{0}^{\infty} t^{p-1} \mathbb{P}(|\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}| > t) \mathrm{d}t \notag \\
+%    &\leq 2 p \int_{0}^{\infty} t^{p-1} \exp \left( - c \min \left\{ \frac{t^2}{\lVert \mtx{A} \rVert _F^2},  \frac{t}{\lVert \mtx{A} \rVert _2} \right\} \right) \mathrm{d}t \notag \\
+%    &\leq 4 p \max\left\{ \int_{0}^{\infty} t^{p-1} \exp \left( - c \frac{t^2}{\lVert \mtx{A} \rVert _F^2} \right) \mathrm{d}t, \int_{0}^{\infty} t^{p-1} \exp \left( - c \frac{t}{\lVert \mtx{A} \rVert _2} \right) \mathrm{d}t \right\} \notag \\
+%    %&\leq 4 p \max\left\{ \int_{0}^{\infty} t^{p-1} \exp \left( - c \frac{t^2}{\lVert \mtx{A} \rVert _F^2} \right) \mathrm{d}t, \int_{0}^{\infty} t^{p-1} \exp \left( - c \frac{t}{\lVert \mtx{A} \rVert _2} \right) \mathrm{d}t \right\} \notag \\
+%    &=  4 p \max\left\{ \frac{1}{2} \left( \frac{\lVert \mtx{A} \rVert _F}{\sqrt{c}} \right)^p \Gamma\left(\frac{p}{2}\right), \left(\frac{\lVert \mtx{A} \rVert _2}{c} \right)^p \Gamma(p) \right\}
+%\end{align}
+%Since $\Gamma(p)^{\sfrac{1}{p}} \leq p$ and $\Gamma(p/2)^{\sfrac{1}{p}} \leq \sqrt{p \pi}$ for $p \geq 1$, we have 
+%\begin{equation}
+%    \mathbb{E}^p\left[ \Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi} \right]
+%    \leq \widetilde{c} \max\{ \sqrt{p} \lVert \mtx{A} \rVert _F, p \lVert \mtx{A} \rVert _2 \}
+%\end{equation}
+%for some other universal constant $\widetilde{c} > 0$.
 
-In this section we will bound the high order moments of single-query Girard-Hutchinson estimator \refequ{equ:hutchinson-trace-estimator}, i.e. when $n_{\mtx{\Psi}} = 1$. This bound is used in the proof of \refthm{thm:hutchinson}.
+\section{Moment bound for sub-exponential random variables}
 
-\begin{lemma}{Moment bound for single-query Girard-Hutchinson estimator}{hanson-wright-moments}
-    Given a symmetric $\mtx{A} \in \mathbb{R}^{m \times m}$ and a standard Gaussian random vector $\vct{\psi} \in \mathbb{R}^{m}$, then
+\begin{lemma}{Moment bound for sub-exponential random variable}{sub-exponential-moments}
+    Let $X$ be a centered, $(\nu^2, \alpha)$-sub-exponential random variable. Then for any $p \geq 1$
     \begin{equation}
-        \mathbb{E}^{p}\left[\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}\right] \leq c \max\{ \sqrt{p} \lVert \mtx{A} \rVert _F, p \lVert \mtx{A} \rVert _2 \}
+        \mathbb{E}^p[X] \leq e^{1/e} (\nu \sqrt{2 \pi p} + \alpha 4 p)
     \end{equation}
-    holds for any $p \geq 1, p \in \mathbb{R}$ and a universal constant $c > 0$.
 \end{lemma}
 
-From \cite[Theorem 1.1]{rudelson-2013-hansonwright-inequality} it holds
-\begin{equation}
-    \mathbb{P}(|\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}| > t) \leq 2 \exp \left( - c \min \left\{ \frac{t^2}{\lVert \mtx{A} \rVert _F^2},  \frac{t}{\lVert \mtx{A} \rVert _2} \right\} \right)
-\end{equation}
-for some universal constant $c > 0$. Therefore we can directly compute the high-order moments with an integral
-\begin{align}
-    &\mathbb{E}\left[ |\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}|^p \right] \notag \\
-    &= p \int_{0}^{\infty} t^{p-1} \mathbb{P}(|\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}| > t) \mathrm{d}t \notag \\
-    &\leq 2 p \int_{0}^{\infty} t^{p-1} \exp \left( - c \min \left\{ \frac{t^2}{\lVert \mtx{A} \rVert _F^2},  \frac{t}{\lVert \mtx{A} \rVert _2} \right\} \right) \mathrm{d}t \notag \\
-    &\leq 4 p \max\left\{ \int_{0}^{\infty} t^{p-1} \exp \left( - c \frac{t^2}{\lVert \mtx{A} \rVert _F^2} \right) \mathrm{d}t, \int_{0}^{\infty} t^{p-1} \exp \left( - c \frac{t}{\lVert \mtx{A} \rVert _2} \right) \mathrm{d}t \right\} \notag \\
-    %&\leq 4 p \max\left\{ \int_{0}^{\infty} t^{p-1} \exp \left( - c \frac{t^2}{\lVert \mtx{A} \rVert _F^2} \right) \mathrm{d}t, \int_{0}^{\infty} t^{p-1} \exp \left( - c \frac{t}{\lVert \mtx{A} \rVert _2} \right) \mathrm{d}t \right\} \notag \\
-    &=  4 p \max\left\{ \frac{1}{2} \left( \frac{\lVert \mtx{A} \rVert _F}{\sqrt{c}} \right)^p \Gamma\left(\frac{p}{2}\right), \left(\frac{\lVert \mtx{A} \rVert _2}{c} \right)^p \Gamma(p) \right\}
-\end{align}
-Since $\Gamma(p)^{\sfrac{1}{p}} \leq p$ and $\Gamma(p/2)^{\sfrac{1}{p}} \leq \sqrt{p \pi}$ for $p \geq 1$ , we have 
-\begin{equation}
-    \mathbb{E}^p\left[ \Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi} \right]
-    \leq \widetilde{c} \max\{ \sqrt{p} \lVert \mtx{A} \rVert _F, p \lVert \mtx{A} \rVert _2 \}
-\end{equation}
-for some other universal constant $\widetilde{c} > 0$.
+\begin{proof}
+    In \cite[Proposition 2.9]{wainwright-2019-highdimensional-statistics} it is shown that any $(\nu^2, \alpha)$-sub-exponential random variable satisfies
+    \begin{equation}
+        \mathbb{P}(|X| > t) \leq 2 \exp\left(-\frac{1}{2}\min\left\{\frac{t^2}{\nu^2}, \frac{t}{\alpha}\right\}\right).
+    \end{equation}
+    Hence, we can use integration by parts to bound
+    \begin{align}
+        \mathbb{E}[|X|^p] 
+        &= p \int_{0}^{\infty} t^{p-1} \mathbb{P}(|X| > t)~\mathrm{d}t \notag \\
+        &\leq 2 p \int_{0}^{\infty} t^{p-1} \exp\left(-\frac{1}{2}\min\left\{\frac{t^2}{\nu^2}, \frac{t}{\alpha}\right\}\right)~\mathrm{d}t  \notag \\ 
+        &= 2 p \int_{0}^{\nu^2 / \alpha} t^{p-1} \exp\left(-\frac{1}{2} \frac{t^2}{\nu^2} \right)~\mathrm{d}t + 2 p \int_{\nu^2 / \alpha}^{\infty} t^{p-1} \exp\left(-\frac{1}{2} \frac{t}{\alpha} \right)~\mathrm{d}t \notag \\
+        &\leq p 2^{p/2} \nu^p \cdot \Gamma\left(\frac{p}{2}\right) + p 2^{p+1} \alpha^p \cdot \Gamma\left(p\right).
+    \end{align}
+    Consequently, using $(a + b)^{1/p} \leq a^{1/p} + b^{1/p}$ for all $a,b \geq 0$ when $p \geq 1$ we get
+    \begin{equation}
+        \mathbb{E}^p[X] 
+        \leq p^{1/p} \sqrt{2} \nu \cdot \Gamma\left(\frac{p}{2}\right)^{1/p} + p^{1/p} 2^{(p+1)/p} \alpha \cdot \Gamma\left(p\right)^{1/p}.
+    \end{equation}
+    For $p \geq 1$ we can bound $\Gamma\left(\frac{p}{2}\right)^{1/p} \leq \sqrt{\pi p}$ and $\Gamma\left(p\right)^{1/p} \leq p$, as well as $p^{1/p} \leq e^{1/e}$ and $2^{(p-1)/p} \leq 4$. Thus, we end up with the bound
+    \begin{equation}
+        \mathbb{E}^p[X] \leq e^{1/e} (\nu \sqrt{2 \pi p} + \alpha 4 p).
+    \end{equation} 
+\end{proof}
+
+\begin{lemma}{Residual of $1$-query Girard-Hutchinson estimator is sub-exponential}{hutchinson-sub-exponential}
+    Let $\mtx{A} \in \mathbb{R}^{m \times m}$ be symmetric and $\vct{\psi} \in \mathbb{R}^m$ a standard Gaussian random vector. Then the real random variable $\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$ is $(2 \lVert \mtx{A} \rVert _F^2 (1 - 1/c)^{-1}, 2 \lVert \mtx{A} \rVert _2 c )$-sub-exponential and centered for any $c > 1$.
+\end{lemma}
+
+\begin{proof}
+    Let $X = \Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$. $X$ is centered, since $\mathbb{E}[\vct{\psi}^{\top} \mtx{A} \vct{\psi}] = \operatorname{Tr}(\mtx{A})$. The eigenvalue decomposition of $\mtx{A} = \mtx{U} \mtx{\Lambda} \mtx{U}^{\top}$ helps us rewrite
+    \begin{equation}
+        X = \Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{U}\mtx{\Lambda} \mtx{U}^{\top} \vct{\psi}  \sim \Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{\Lambda} \vct{\psi}  = \sum_{i=1}^{m} \lambda_i (1 - \psi_i^2) = \sum_{i=1}^{m} Y_i
+    \end{equation}
+    for the independent random variables $Y_i = \lambda_i(1 - \psi_i^2)$ which use the standard Gaussian random variables $\psi_i$ with $i=1, \dots, m$. Following the proof of \cite[Lemma 3]{cortinovis-2022-randomized-trace}, a simple integration shows that if $t \lambda_i > - 1/2$ then
+    \begin{equation}
+        \mathbb{E}[\exp(t Y_i)] = \frac{\exp\left(t \lambda_i\right) }{\sqrt{\log(1 + 2t \lambda_i)}} = \exp\left(t \lambda_i - \frac{1}{2} \log(1 + 2t \lambda_i) \right).
+    \end{equation}
+    We let $\alpha_i := 2 |\lambda_i| c$ for any $c > 1$. Hence, for all $|t| < 1 / \alpha_i$ (where $1/0$ should be understood as $+ \infty$)
+    \begin{equation}
+        t \lambda_i - \frac{1}{2} \log(1 + 2t \lambda_i) \leq \frac{t^2 \nu_i^2}{2}
+    \end{equation}
+    if we ensure
+    \begin{equation}
+        \nu_i^2 \geq \max_{|t| \leq 1 / \alpha_i} \frac{2 \lambda_i^2}{1 + 2 t \lambda_i} = \frac{2 \lambda_i^2}{1 - 2 |\lambda_i| / \alpha_i} = \frac{2 \lambda_i^2}{1 - 1 / c}.
+    \end{equation}
+    This shows that $Y_i$ are $(\nu_i^2, \alpha_i)$-sub-exponential for any $c > 1$.
+
+    The sum of independent $(\nu_i, \alpha_i)$-sub-exponential random variables is $(\sum_i \nu_i^2, \max_i \alpha_i)$-sub-exponential. Therefore, $X$ is $(2 \lVert \mtx{A} \rVert _F^2 (1 - 1/c)^{-1}, 2 \lVert \mtx{A} \rVert _2 c)$-sub-exponential for any $c > 1$.
+
+%    We will need
+%    \begin{equation}
+%        \leq \frac{\mu_i^2 t^2}{2} \implies \mathbb{E}[\exp(t Y_i)] \leq \exp\left(\frac{\mu_i^2 t^2}{2}\right)
+%    \end{equation}
+%    \todo{cite \cite[Lemma 3]{cortinovis-2022-randomized-trace}}
+%    where we needed to choose $\mu_i^2 \geq 2 (1 - 2t)^{-1}$ (this restriction can be shown by evaluating the above expression at $t=0$ and analyzing its derivatives).
+%
+%    Consequently, from the independence of $Y_i$, and by restricting $|t| < (2 \lVert \boldsymbol{A} \rVert _2)^{-1}$ (such that we can ensure $|t \lambda_i| < 1/2$ for all $i$)
+%    \begin{align*}
+%        \mathbb{E}[\exp(tX)]
+%        &= \mathbb{E}[\exp(t \sum_{i=1}^{n} \lambda_i Y_i)] \\
+%        &= \prod_{i=1}^{n} \mathbb{E}[\exp(t \lambda_i Y_i)] \\
+%        &\leq \prod_{i=1}^{n} \exp\left(\frac{\mu^2 t^2 \lambda_i^2}{2}\right) \\
+%        &= \exp\left(\frac{\mu^2 t^2 \lVert \boldsymbol{A} \rVert _F^2}{2}\right)
+%    \end{align*}
+%
+%    for (a different) $\mu^2 \geq \max_i\{ 2 (1 - 2 \lambda_i t)^{-1}\} =  2 (1 - 2 \lVert \boldsymbol{A} \rVert _2 t)^{-1}$.
+%
+%
+%    Now, since the "constant" $\mu^2$ still depends on $t$, and technically needs to be $+\infty$ at the maximum admissible value for $t$, we choose a (possibly smaller) sub-exponential parameter $\alpha := d \cdot (2 \lVert \boldsymbol{A} \rVert _2)$ for any constant $d > 1$, such that we can then restrict our view to $|t| \leq \alpha^{-1} < (2 \lVert \boldsymbol{A} \rVert _2)^{-1}$. The other parameter is fixed as $\nu^2 := (1 - 1/d)^{-1} \cdot (2\lVert \boldsymbol{A} \rVert _F^2)$ such that
+%    \begin{equation*}
+%    \nu^2 / \lVert \boldsymbol{A} \rVert _F^2 = \frac{2}{1 - 1/d} = \frac{2}{1 - 2 \lVert \boldsymbol{A} \rVert _2 / \alpha} \geq \frac{2}{1 - 2 \lVert \boldsymbol{A} \rVert _2 |t| } \geq \frac{2}{1 - 2 \lVert \boldsymbol{A} \rVert _2 t} 
+%    \end{equation*}
+%
+%    as is required.
+\end{proof}
