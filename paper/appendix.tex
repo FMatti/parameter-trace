@@ -202,61 +202,65 @@ In passing, we note that \reflem{lem:spectral-norm-moment}  yields the bound
 
 \section{Moment bound for sub-exponential random variables}
 
+In this section we will establish a bound on the high order moments of sub-exponential random variables. Further, we will show that the residual of the single-query Girard-Hutchinson estimator \refequ{equ:hutchinson-trace-estimator}, i.e. when $n_{\mtx{\Psi}} = 1$, is a sub-exponential random variable. The combination of these two results will then be used in the proof of \refthm{thm:hutchinson}.
+
 \begin{lemma}{Moment bound for sub-exponential random variable}{sub-exponential-moments}
-    Let $X$ be a centered, $(\nu^2, \alpha)$-sub-exponential random variable. Then for any $p \geq 1$
+    Let $X$ be a centered, $(\nu^2, \alpha)$-sub-exponential random variable. Then
     \begin{equation}
-        \mathbb{E}^p[X] \leq e^{1/e} (\nu \sqrt{2 \pi p} + \alpha 4 p)
+        \mathbb{E}^p[X] \leq e^{1/e} (\sqrt{2 \pi p} \nu + 4 p \alpha)
     \end{equation}
+    holds for any $p \geq 1, p \in \mathbb{R}$.
 \end{lemma}
 
 \begin{proof}
-    In \cite[Proposition 2.9]{wainwright-2019-highdimensional-statistics} it is shown that any $(\nu^2, \alpha)$-sub-exponential random variable satisfies
+    In \cite[Proposition 2.9]{wainwright-2019-highdimensional-statistics} it is shown that any centered, $(\nu^2, \alpha)$-sub-exponential random variable satisfies
     \begin{equation}
         \mathbb{P}(|X| > t) \leq 2 \exp\left(-\frac{1}{2}\min\left\{\frac{t^2}{\nu^2}, \frac{t}{\alpha}\right\}\right).
     \end{equation}
-    Hence, we can use integration by parts to bound
+    Hence, we can use this result with an integration by parts to bound
     \begin{align}
         \mathbb{E}[|X|^p] 
         &= p \int_{0}^{\infty} t^{p-1} \mathbb{P}(|X| > t)~\mathrm{d}t \notag \\
         &\leq 2 p \int_{0}^{\infty} t^{p-1} \exp\left(-\frac{1}{2}\min\left\{\frac{t^2}{\nu^2}, \frac{t}{\alpha}\right\}\right)~\mathrm{d}t  \notag \\ 
         &= 2 p \int_{0}^{\nu^2 / \alpha} t^{p-1} \exp\left(-\frac{1}{2} \frac{t^2}{\nu^2} \right)~\mathrm{d}t + 2 p \int_{\nu^2 / \alpha}^{\infty} t^{p-1} \exp\left(-\frac{1}{2} \frac{t}{\alpha} \right)~\mathrm{d}t \notag \\
-        &\leq p 2^{p/2} \nu^p \cdot \Gamma\left(\frac{p}{2}\right) + p 2^{p+1} \alpha^p \cdot \Gamma\left(p\right).
+        &\leq p 2^{p/2} \nu^p \Gamma\left(\frac{p}{2}\right) + p 2^{p+1} \alpha^p \Gamma\left(p\right).
     \end{align}
-    Consequently, using $(a + b)^{1/p} \leq a^{1/p} + b^{1/p}$ for all $a,b \geq 0$ when $p \geq 1$ we get
+    Consequently, using $(a + b)^{1/p} \leq a^{1/p} + b^{1/p}$ for all $a,b \geq 0$ and when $p \geq 1$, we can bound
     \begin{equation}
         \mathbb{E}^p[X] 
-        \leq p^{1/p} \sqrt{2} \nu \cdot \Gamma\left(\frac{p}{2}\right)^{1/p} + p^{1/p} 2^{(p+1)/p} \alpha \cdot \Gamma\left(p\right)^{1/p}.
+        \leq p^{1/p} \sqrt{2} \nu \Gamma\left(\frac{p}{2}\right)^{1/p} + p^{1/p} 2^{(p+1)/p} \alpha \Gamma\left(p\right)^{1/p}.
     \end{equation}
-    For $p \geq 1$ we can bound $\Gamma\left(\frac{p}{2}\right)^{1/p} \leq \sqrt{\pi p}$ and $\Gamma\left(p\right)^{1/p} \leq p$, as well as $p^{1/p} \leq e^{1/e}$ and $2^{(p-1)/p} \leq 4$. Thus, we end up with the bound
+    For $p \geq 1$ we can bound $p^{1/p} \leq e^{1/e}$ and $2^{(p-1)/p} \leq 4$, as well as $\Gamma\left(\frac{p}{2}\right)^{1/p} \leq \sqrt{\pi p}$ and $\Gamma\left(p\right)^{1/p} \leq p$. Thus, we conclude with
     \begin{equation}
-        \mathbb{E}^p[X] \leq e^{1/e} (\nu \sqrt{2 \pi p} + \alpha 4 p).
+        \mathbb{E}^p[X] \leq e^{1/e} (\sqrt{2 \pi p} \nu + 4 p \alpha).
     \end{equation} 
 \end{proof}
 
 \begin{lemma}{Residual of $1$-query Girard-Hutchinson estimator is sub-exponential}{hutchinson-sub-exponential}
-    Let $\mtx{A} \in \mathbb{R}^{m \times m}$ be symmetric and $\vct{\psi} \in \mathbb{R}^m$ a standard Gaussian random vector. Then the real random variable $\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$ is $(2 \lVert \mtx{A} \rVert _F^2 (1 - 1/c)^{-1}, 2 \lVert \mtx{A} \rVert _2 c )$-sub-exponential and centered for any $c > 1$.
+    Let $\mtx{A} \in \mathbb{R}^{m \times m}$ be symmetric and $\vct{\psi} \in \mathbb{R}^m$ a standard Gaussian random vector. Then the real random variable $\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$ is centered and $(2 \lVert \mtx{A} \rVert _F^2 (1 - 1/c)^{-1}, 2 \lVert \mtx{A} \rVert _2 c )$-sub-exponential for any $c > 1, c \in \mathbb{R}$.
 \end{lemma}
 
 \begin{proof}
-    Let $X = \Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$. $X$ is centered, since $\mathbb{E}[\vct{\psi}^{\top} \mtx{A} \vct{\psi}] = \operatorname{Tr}(\mtx{A})$. The eigenvalue decomposition of $\mtx{A} = \mtx{U} \mtx{\Lambda} \mtx{U}^{\top}$ helps us rewrite
+    The proof starts similarly as the proof of \cite[Lemma 3]{cortinovis-2022-randomized-trace}. We let $X = \Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$, which is centered because $\mathbb{E}[\vct{\psi}^{\top} \mtx{A} \vct{\psi}] = \operatorname{Tr}(\mtx{A})$. The eigenvalue decomposition of $\mtx{A} = \mtx{U} \mtx{\Lambda} \mtx{U}^{\top}$, and since for orthonormal $\mtx{U}$, $\mtx{U}^{\top} \vct{\psi}$ is again a standard Gaussian random vector, we can rewrite
     \begin{equation}
-        X = \Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{U}\mtx{\Lambda} \mtx{U}^{\top} \vct{\psi}  \sim \Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{\Lambda} \vct{\psi}  = \sum_{i=1}^{m} \lambda_i (1 - \psi_i^2) = \sum_{i=1}^{m} Y_i
+        X = \Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{U}\mtx{\Lambda} \mtx{U}^{\top} \vct{\psi}  \sim \Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{\Lambda} \vct{\psi}  = \sum_{i=1}^{m} \lambda_i (1 - \psi_i^2) = \sum_{i=1}^{m} Y_i.
     \end{equation}
-    for the independent random variables $Y_i = \lambda_i(1 - \psi_i^2)$ which use the standard Gaussian random variables $\psi_i$ with $i=1, \dots, m$. Following the proof of \cite[Lemma 3]{cortinovis-2022-randomized-trace}, a simple integration shows that if $t \lambda_i > - 1/2$ then
+    The random variables $Y_i = \lambda_i(1 - \psi_i^2)$ are independent and defined using the standard Gaussian random variables $\psi_i$ for $i=1, \dots, m$. A simple integration shows that if $t \lambda_i > - 1/2$ then
     \begin{equation}
         \mathbb{E}[\exp(t Y_i)] = \frac{\exp\left(t \lambda_i\right) }{\sqrt{\log(1 + 2t \lambda_i)}} = \exp\left(t \lambda_i - \frac{1}{2} \log(1 + 2t \lambda_i) \right).
     \end{equation}
-    We let $\alpha_i := 2 |\lambda_i| c$ for any $c > 1$. Hence, for all $|t| < 1 / \alpha_i$ (where $1/0$ should be understood as $+ \infty$)
+    We define $\alpha_i := 2 |\lambda_i| c$ for any $c > 1, c \in \mathbb{R}$ which we can freely choose. Then for all $|t| < 1 / \alpha_i$ (where $1/0$ should be understood as $+ \infty$), some standard manipulations show
     \begin{equation}
-        t \lambda_i - \frac{1}{2} \log(1 + 2t \lambda_i) \leq \frac{t^2 \nu_i^2}{2}
+        t \lambda_i - \frac{1}{2} \log(1 + 2t \lambda_i) \leq \frac{t^2 \nu_i^2}{2},
     \end{equation}
-    if we ensure
+    as long as we ensure
     \begin{equation}
-        \nu_i^2 \geq \max_{|t| \leq 1 / \alpha_i} \frac{2 \lambda_i^2}{1 + 2 t \lambda_i} = \frac{2 \lambda_i^2}{1 - 2 |\lambda_i| / \alpha_i} = \frac{2 \lambda_i^2}{1 - 1 / c}.
+        \nu_i^2 \geq \sup_{|t| < 1 / \alpha_i} \frac{2 \lambda_i^2}{1 + 2 t \lambda_i} = \frac{2 \lambda_i^2}{1 - 2 |\lambda_i| / \alpha_i} = \frac{2 \lambda_i^2}{1 - 1 / c}.
     \end{equation}
-    This shows that $Y_i$ are $(\nu_i^2, \alpha_i)$-sub-exponential for any $c > 1$.
+    This shows that $Y_i$ are $(\nu_i^2, \alpha_i)$-sub-exponential for any $c > 1, c \in \mathbb{R}$.
 
-    The sum of independent $(\nu_i, \alpha_i)$-sub-exponential random variables is $(\sum_i \nu_i^2, \max_i \alpha_i)$-sub-exponential. Therefore, $X$ is $(2 \lVert \mtx{A} \rVert _F^2 (1 - 1/c)^{-1}, 2 \lVert \mtx{A} \rVert _2 c)$-sub-exponential for any $c > 1$.
+    The sum of independent $(\nu_i^2, \alpha_i)$-sub-exponential random variables is $(\sum_i \nu_i^2, \max_i \alpha_i)$-sub-exponential. Therefore, $X$ is $(2 \lVert \mtx{A} \rVert _F^2 (1 - 1/c)^{-1}, 2 \lVert \mtx{A} \rVert _2 c)$-sub-exponential for any $c > 1, c \in \mathbb{R}$.
+\end{proof}
 
 %    We will need
 %    \begin{equation}
@@ -283,4 +287,3 @@ In passing, we note that \reflem{lem:spectral-norm-moment}  yields the bound
 %    \end{equation*}
 %
 %    as is required.
-\end{proof}

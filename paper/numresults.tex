@@ -48,6 +48,8 @@ While theoretically an important tool, we waive using the non-negative Chebyshev
 
 Indeed, we observe that for $n_{\mtx{\Omega}} = 0$, we require $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2})$ to achieve an error of order $\varepsilon$, as shown in \refthm{thm:hutchinson}. Because the eigenvalues of the matrix are quite uniformly distributed, we observe the stronger convergence of the Nyström approximation discussed in the end of \refsec{sec:application} once $n_{\mtx{\Omega}}$ exceeds the numerical rank \refequ{equ:gaussian-kernel-numerical-rank-uniform}, which in this case would be somewhat larger than $30$.
 
+For a fixed budget of random vectors $n_{\mtx{\Omega}} + n_{\mtx{\Psi}}$, \reffig{fig:distribution} visualizes how for different values of the smoothing parameter $\sigma$ the random vectors should either be invested into the Nyström approximation $n_{\mtx{\Omega}}$ or the estimation of the residual trace $n_{\mtx{\Psi}}$. Again, since for small $\sigma$ the matrix function $g_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})$ has a small numerical rank, a Nyström approximation alone is already enough to achieve a good approximation. On the other hand, when $\sigma$ is large, the Nyström approximation alone is not effective, and the correction with the residual trace becomes indispensable.
+
 \begin{figure}[ht]
     \centering
     \input{plots/distribution.pgf}
