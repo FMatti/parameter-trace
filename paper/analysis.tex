@@ -95,7 +95,7 @@ This estimator is the parameter-dependent analogue of the Nyström++ estimator \
 We start our analysis of the methods presented above by deriving an $L^1$-error bound for the Girard-Hutchinson estimator~\refequ{equ:hutchinson-trace-estimator} that is relative to the $L^1$-norm of the Frobenius norm $\lVert \mtx{B}(t) \rVert _F$.
 
 %\begin{theorem}{Girard-Hutchinson estimator for parameter-dependent matrices}{hutchinson}
-%    For a symmetric matrix $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ that depends continuously on $t \in [a, b]$, consider the  Girard-Hutchinson estimator~\eqref{equ:hutchinson-trace-estimator} with an $n\times n_{\mtx{\Psi}}$ Gaussian random matrix $\mtx{\Psi}$. Then for any $p \geq 1, p \in \mathbb{R}$ and $\gamma \geq 1$ the bound 
+%    For a symmetric matrix $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ that depends continuously on $t \in [a, b]$, consider the  Girard-Hutchinson estimator~\refequ{equ:hutchinson-trace-estimator} with an $n\times n_{\mtx{\Psi}}$ Gaussian random matrix $\mtx{\Psi}$. Then for any $p \geq 1, p \in \mathbb{R}$ and $\gamma \geq 1$ the bound 
 %    \begin{equation} \label{eq:ghbound}
 %        \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq c \gamma \max\left\{ \sqrt{\frac{p}{n_{\mtx{\Psi}}}}, \frac{p}{n_{\mtx{\Psi}}}  \right\} \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t.
 %    \end{equation}
@@ -105,7 +105,7 @@ We start our analysis of the methods presented above by deriving an $L^1$-error 
 %\end{theorem}
 
 \begin{theorem}{Girard-Hutchinson estimator for parameter-dependent matrices}{hutchinson}
-    For a symmetric matrix $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ that depends continuously on $t \in [a, b]$, consider the  Girard-Hutchinson estimator~\eqref{equ:hutchinson-trace-estimator} with an $n\times n_{\mtx{\Psi}}$ Gaussian random matrix $\mtx{\Psi}$. Then for any $p \geq 1, p \in \mathbb{R}$ and $\gamma \geq 1$ the bound 
+    For a symmetric matrix $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ that depends continuously on $t \in [a, b]$, consider the  Girard-Hutchinson estimator~\refequ{equ:hutchinson-trace-estimator} with an $n\times n_{\mtx{\Psi}}$ Gaussian random matrix $\mtx{\Psi}$. Then for any $p \geq 1, p \in \mathbb{R}$ and $\gamma \geq 1$ the bound 
     \begin{equation} \label{eq:ghbound}
         \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq \gamma c \left( \sqrt{\frac{p}{n_{\mtx{\Psi}}}} + \frac{p}{n_{\mtx{\Psi}}}  \right) \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t.
     \end{equation}
@@ -131,13 +131,13 @@ We start our analysis of the methods presented above by deriving an $L^1$-error 
             \vct{\psi}_{n_{\mtx{\Psi}}}
         \end{pmatrix}.
     \end{equation}
-    Note that $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) =  \Trace(\widetilde{\mtx{B}}(t)) - \widetilde{\vct{\psi}}^{\top} \widetilde{\mtx{B}}(t) \widetilde{\vct{\psi}}$, $\lVert \widetilde{\mtx{B}}(t) \rVert _2 = \lVert \mtx{B}(t) \rVert _2 / n_{\mtx{\Psi}}$ and $\lVert \widetilde{\mtx{B}}(t) \rVert _F = \lVert \mtx{B}(t) \rVert _F / \sqrt{n_{\mtx{\Psi}}}$ hold. Therefore, by \reflem{lem:hutchinson-sub-exponential}, $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))$ is a centered and $(2 \lVert \mtx{B}(t) \rVert _F^2 (1 - 1/\beta)^{-1} / n_{\mtx{\Psi}}, 2 \lVert \mtx{A} \rVert _2 \beta / n_{\mtx{\Psi}})$-sub-exponential random variable for any $\beta > 1$. Thus, we can apply \reflem{lem:sub-exponential-moments} to bound
+    Note that $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) =  \Trace(\widetilde{\mtx{B}}(t)) - \widetilde{\vct{\psi}}^{\top} \widetilde{\mtx{B}}(t) \widetilde{\vct{\psi}}$, $\lVert \widetilde{\mtx{B}}(t) \rVert _2 = \lVert \mtx{B}(t) \rVert _2 / n_{\mtx{\Psi}}$ and $\lVert \widetilde{\mtx{B}}(t) \rVert _F = \lVert \mtx{B}(t) \rVert _F / \sqrt{n_{\mtx{\Psi}}}$ hold. Therefore, by \reflem{lem:hutchinson-sub-exponential}, $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))$ is a centered and $(2 \lVert \mtx{B}(t) \rVert _F^2 (1 - 1/\beta)^{-1} / n_{\mtx{\Psi}}, 2 \lVert \mtx{B}(t) \rVert _2 \beta / n_{\mtx{\Psi}})$-sub-exponential random variable for any $\beta > 1$. Thus, we can apply \reflem{lem:sub-exponential-moments} to bound
     \begin{equation}
-        \mathbb{E}^{p}[\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))] \leq 2 e^{\sfrac{1}{e}} \left(\frac{\sqrt{\pi}}{1-1/\beta} \sqrt{\frac{p}{n_{\mtx{\Psi}}}} \lVert \mtx{B}(t) \rVert _F + 4 \beta \frac{p}{n_{\mtx{\Psi}}} \lVert \mtx{B}(t) \rVert _2 \right).
+        \mathbb{E}^{p}[\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))] \leq 2 \left(\sqrt{\frac{\pi}{1-1/\beta}} \sqrt{\frac{p}{n_{\mtx{\Psi}}}} \lVert \mtx{B}(t) \rVert _F + 4 \beta \frac{p}{n_{\mtx{\Psi}}} \lVert \mtx{B}(t) \rVert _2 \right).
     \end{equation}
-    Bounding $\lVert \mtx{B}(t) \rVert _2 \leq \lVert \mtx{B}(t) \rVert _F$ and letting $\beta = 1 + \sqrt{\pi} / 2$ we get
+    Bounding $\lVert \mtx{B}(t) \rVert _2 \leq \lVert \mtx{B}(t) \rVert _F$ and letting $\beta = (1 + \sqrt{1 + \pi/4}) / 2$ we get
     \begin{equation}
-        \mathbb{E}^{p}[\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))] \leq \underbrace{8 e^{\sfrac{1}{e}} (1 + \sqrt{\pi} / 2)}_{=~c} \left( \sqrt{\frac{p}{n_{\mtx{\Psi}}}} + \frac{p}{n_{\mtx{\Psi}}} \right) \lVert \mtx{B}(t) \rVert _F.
+        \mathbb{E}^{p}[\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))] \leq \underbrace{4 (1 + \sqrt{1 + \pi/4})}_{=~c} \left( \sqrt{\frac{p}{n_{\mtx{\Psi}}}} + \frac{p}{n_{\mtx{\Psi}}} \right) \lVert \mtx{B}(t) \rVert _F.
         \label{equ:moment-bound-hutchinson}
     \end{equation}
 
@@ -245,7 +245,7 @@ We start our analysis of the methods presented above by deriving an $L^1$-error 
 %    \end{equation}
 %    holds for any $\gamma \geq 1$ with probability at least $1 - \gamma^{-2 k}$. 
 %
-%    To extend the bound~\eqref{equ:hutchinson-trace-onequery-uniform} from $1$ to $n_{\mtx{\Psi}}$ queries, we use a standard embedding trick (see, e.g.,~\cite[Theorem 1]{cortinovis-2022-randomized-trace}). Letting
+%    To extend the bound~\refequ{equ:hutchinson-trace-onequery-uniform} from $1$ to $n_{\mtx{\Psi}}$ queries, we use a standard embedding trick (see, e.g.,~\cite[Theorem 1]{cortinovis-2022-randomized-trace}). Letting
 %    \begin{equation}
 %        \widetilde{\mtx{B}}(t)
 %        = \frac{1}{n_{\mtx{\Psi}}} \begin{pmatrix}
@@ -260,7 +260,7 @@ We start our analysis of the methods presented above by deriving an $L^1$-error 
 %            \vct{\psi}_{n_{\mtx{\Psi}}}
 %        \end{pmatrix},
 %    \end{equation}
-%    we note that $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) = r(\widetilde{\mtx{B}}(t), \widetilde{\vct{\psi}})$ and $\lVert \widetilde{\mtx{B}}(t) \rVert _F = \lVert \mtx{B}(t) \rVert _F / \sqrt{n_{\mtx{\Psi}}}$ hold. Thus, the claimed probabilistic bound~\eqref{eq:ghbound} follows from applying~\eqref{equ:hutchinson-trace-onequery-uniform} to $r(\widetilde{\mtx{B}}(t), \widetilde{\vct{\psi}})$.
+%    we note that $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) = r(\widetilde{\mtx{B}}(t), \widetilde{\vct{\psi}})$ and $\lVert \widetilde{\mtx{B}}(t) \rVert _F = \lVert \mtx{B}(t) \rVert _F / \sqrt{n_{\mtx{\Psi}}}$ hold. Thus, the claimed probabilistic bound~\refequ{eq:ghbound} follows from applying~\refequ{equ:hutchinson-trace-onequery-uniform} to $r(\widetilde{\mtx{B}}(t), \widetilde{\vct{\psi}})$.
 %%     Then 
 %%     where $\vct{\psi}_1, \dots, \vct{\psi}_{n_{\mtx{\Psi}}} \in \mathbb{R}^{n}$ are independent Gaussian random vectors. Then $\lVert \widetilde{\mtx{B}}(t) \rVert _F = \lVert \mtx{B}(t) \rVert _F / \sqrt{n_{\mtx{\Psi}}}$, and
 %%     \begin{equation}
@@ -299,7 +299,7 @@ We start our analysis of the methods presented above by deriving an $L^1$-error 
 As a consequence of~\cite{kressner-2024-randomized-lowrank}, the following result confirms the inituition that the Nystr\"om approximation is very well suited in the presence of decaying singular values: If the nuclear norm error to the best rank-$r$ approximation to $B(t)$ is bounded by $\varepsilon$ for every $t$ then the trace of the Nystr\"om approximation (with a bit of oversampling) results, with high probability, in an error that is only modestly larger than $\varepsilon$.
 
 \begin{theorem}{Nyström estimator for parameter-dependent matrices}{nystrom}
-    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuous for $t \in [a, b]$. For integers $r \geq 2$ and $n_{\mtx{\Omega}} \geq r + 4$, consider the Nystr\"om approximation $\Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ defined in~\eqref{equ:nystrom-approximation} with an $n\times n_{\mtx{\Omega}}$ Gaussian random matrix $\mtx{\Omega}$. Then for any $\gamma \geq 1$ the bound 
+    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuous for $t \in [a, b]$. For integers $r \geq 2$ and $n_{\mtx{\Omega}} \geq r + 4$, consider the Nystr\"om approximation $\Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ defined in~\refequ{equ:nystrom-approximation} with an $n\times n_{\mtx{\Omega}}$ Gaussian random matrix $\mtx{\Omega}$. Then for any $\gamma \geq 1$ the bound 
     \[
         \int_{a}^{b} \big| \Trace(\mtx{B}(t)) - \Trace(\Nystr{\mtx{\Omega}}{\mtx{B}}(t)) \big| ~\mathrm{d}t
         \leq \gamma^2 (1 + r) \int_{a}^{b} \sum_{i = r+1}^{n} \sigma_i(\mtx{B}(t)) ~\mathrm{d}t.
