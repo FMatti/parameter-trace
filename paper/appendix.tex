@@ -267,16 +267,17 @@ In this section we show that the residual of the single-query Girard-Hutchinson 
 A similar bound is shown in \cite[Theorem 2.3]{boucheron-2013-concentration-inequalities} for sub-gamma random variables and for when $p = 2q$ for $q \in \mathbb{N}$. From \cite[Lemma 3]{cortinovis-2022-randomized-trace} we know that $\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$ is $(2 \lVert \mtx{A} \rVert _F^2, 2\lVert \mtx{A} \rVert _2)$-sub-gamma. Therefore, applying \cite[Theorem 2.3]{boucheron-2013-concentration-inequalities} gives
 \begin{equation}
     \mathbb{E}[(\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi})^{2q}] \leq q! (16 \lVert \mtx{A} \rVert _F^2)^q + (2q)! (8 \lVert \mtx{A} \rVert _2)^{2q}.
+    \label{equ:sub-gamma-moment-bound}
 \end{equation}
-In this case, in the proof of \reflem{lem:sub-exponential-moments} we would not have to pay the factor of $2$ when bounding $\mathbb{P}(|X| > t)$ instead of $\mathbb{P}(X > t)$ with \cite[Proposition 2.9]{wainwright-2019-highdimensional-statistics}. As a consequence, \refequ{equ:sub-exponential-moment-bound} reads
+In this case where $p = 2q$ for a $q \in \mathbb{N}$, we would not have to pay the factor of $2$ in the proof of \reflem{lem:sub-exponential-moments} by bounding $\mathbb{P}(X > t)$ instead of $\mathbb{P}(|X| > t)$ with \cite[Proposition 2.9]{wainwright-2019-highdimensional-statistics}. As a consequence, \refequ{equ:sub-exponential-moment-bound} reads
 \begin{equation}
     \mathbb{E}[X^{2q}] \leq q! (2 \nu^2)^q + (2q)! (2 \alpha)^{2q}.
 \end{equation}
-For example, if we choose $\beta = 2$ in \reflem{lem:hutchinson-sub-exponential}, we know that $\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$ is $(4 \lVert \mtx{A} \rVert _F^2, 4 \lVert \mtx{A} \rVert _2)$-sub-exponential. Thus,
+For example, if we choose $\beta = 3/2$ in \reflem{lem:hutchinson-sub-exponential}, we know that $\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$ is $(6 \lVert \mtx{A} \rVert _F^2, 3 \lVert \mtx{A} \rVert _2)$-sub-exponential. Thus,
 \begin{equation}
-    \mathbb{E}[(\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi})^{2q}] \leq q! (8 \lVert \mtx{A} \rVert _F^2)^q + (2q)! (8 \lVert \mtx{A} \rVert _2)^{2q},
+    \mathbb{E}[(\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi})^{2q}] \leq q! (12 \lVert \mtx{A} \rVert _F^2)^q + (2q)! (6 \lVert \mtx{A} \rVert _2)^{2q},
 \end{equation}
-which is slightly tighter.
+which is slightly tighter than \refequ{equ:sub-gamma-moment-bound}.
 
 %    We will need
 %    \begin{equation}

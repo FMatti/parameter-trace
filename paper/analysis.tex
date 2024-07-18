@@ -109,7 +109,7 @@ We start our analysis of the methods presented above by deriving an $L^1$-error 
     \begin{equation} \label{eq:ghbound}
         \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq \gamma c \left( \sqrt{\frac{p}{n_{\mtx{\Psi}}}} + \frac{p}{n_{\mtx{\Psi}}}  \right) \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t.
     \end{equation}
-    holds with probability at least $1 - \gamma^{-p}$ and for $c = 8 e^{\sfrac{1}{e}} (1 + \sqrt{\pi}/2)$.
+    holds with probability at least $1 - \gamma^{-p}$ and for $c = 4 (1 + \sqrt{1 + \pi/4})$.
     In particular, given $\varepsilon \in (0, 1)$ and $\delta \in (0, e^{-1})$, the bound $\int_{a}^{b} | \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) | ~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t$ holds 
     with probability at least $1-\delta$ if $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2} \log(\delta^{-1}))$.
 \end{theorem}

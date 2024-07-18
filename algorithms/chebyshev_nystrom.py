@@ -35,11 +35,11 @@ def chebyshev_expansion(kernel, t, m, nonnegative=False):
     if nonnegative:
         m = m // 2
         kernel_ = kernel # Avoid recursion
-        kernel = lambda x: np.sqrt(kernel_(x))
+        kernel = lambda t, x: np.sqrt(kernel_(t, x))
 
     # Compute the coefficients mu for all t and l simultaneously with DCT
     chebyshev_nodes = np.cos(np.arange(m + 1) * np.pi / m)
-    mu = sp.fft.idct(kernel(np.subtract.outer(t, chebyshev_nodes)), type=1)
+    mu = sp.fft.idct(kernel(t, chebyshev_nodes), type=1)
 
     # Rescale coefficients due to type-1 DCT convention
     mu[..., 1:-1] *= 2
@@ -97,7 +97,7 @@ def chebyshev_nystrom(A, t=0, m=100, n_Psi=10, n_Omega=10, kernel=gaussian_kerne
         Number of queries with Girard-Hutchinson estimator.
     n_Omega : int > 0
         Size of sketching matrix in Nyström approximation.
-    kernel : function
+    kernel : callable
         Smoothing kernel.
     nonnegative : bool
         Use non-negative Chebyshev expansion.
@@ -130,7 +130,7 @@ def chebyshev_nystrom(A, t=0, m=100, n_Psi=10, n_Omega=10, kernel=gaussian_kerne
     if consistent:
         nu = square_chebyshev_expansion(mu)
     else:
-        nu = chebyshev_expansion(lambda s: kernel(s) ** 2, t, 2 * m, nonnegative=nonnegative)
+        nu = chebyshev_expansion(lambda t, x: kernel(t, x) ** 2, t, 2 * m, nonnegative=nonnegative)
 
     # Generate Gaussian random matrices
     Omega = np.random.randn(n, n_Omega)

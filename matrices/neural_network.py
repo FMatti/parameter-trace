@@ -158,7 +158,8 @@ def hessian_transpose_product(gradient, params, x):
     ----------
     [1] TODO
     """
-    htp = torch.autograd.grad(gradient, params, x.T, retain_graph=True, is_grads_batched=X.ndim > 1)
+    htp = torch.autograd.grad(gradient, params, x.T, retain_graph=True, is_grads_batched=x.ndim > 1)
+    htp = torch.cat([e.reshape(x.shape[-1], -1) for e in htp], dim=1)
     return htp.T
 
 
@@ -223,8 +224,7 @@ class hessian(object):
         # Compute the product of the Hessian transpose with x
         htp = hessian_transpose_product(self.gradient, self.parameters, x)
 
-        # Flatten and rescale the result (for normalized Hessian)
-        htp = torch.cat([e.reshape(x.shape[-1], -1) for e in htp], dim=1)
+        # Rescale the result (for normalized Hessian)
         htp /= self.scaling_parameter
 
         # Convert back to numpy array

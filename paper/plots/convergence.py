@@ -29,7 +29,7 @@ markers = ["o", "s", "d"]
 labels = [r"$n_{\mathbf{\Omega}} = 0$", r"$n_{\mathbf{\Psi}} = n_{\mathbf{\Omega}}$", r"$n_{\mathbf{\Psi}} = 0$"]
 
 # Determine the baseline spectral density
-kernel = lambda x: gaussian_kernel(x, sigma=sigma)
+kernel = lambda t, x: gaussian_kernel(t, x, sigma=sigma)
 baseline = form_spectral_density(eigvals_st, t, kernel)
 
 error = np.empty((3, len(n_Vec_list)))

@@ -35,23 +35,27 @@ def spectral_transformation(A, min_ev=None, max_ev=None):
 
     return A_st
 
-def gaussian_kernel(s, sigma=0.1):
+def gaussian_kernel(t, x=None, sigma=0.1):
     """
     Gaussian kernel.
 
     Parameters
     ----------
-    s : int, float, or np.ndarray of shape (n, m)
-        Point(s) where the Gaussian should be evaluated.
+    t : int, float, or np.ndarray of shape (n, m)
+        Parameter value(s) where the Gaussian should be evaluated.
+    x : int, float, or np.ndarray of shape (n, m)
+        Value(s) outer-subtracted from paramter value(s) 
     sigma : int or float
         Standard deviation of the Gaussian.
 
     Returns
     -------
-    g(s) : np.ndarray of shape (n, dim)
-        The Gaussian kernel evaulated at all points s.
+    g(t, x) : np.ndarray of shape (n, dim)
+        The Gaussian kernel evaulated at all combinations of points t - x
     """
-    return np.exp(- s**2 / (2 * sigma**2)) / (np.sqrt(2 * np.pi) * sigma)
+    if x is not None:
+        t = np.subtract.outer(t, x)
+    return np.exp(- t**2 / (2 * sigma**2)) / (np.sqrt(2 * np.pi) * sigma)
 
 def form_spectral_density(eigvals, t, kernel=gaussian_kernel):
     """
@@ -72,4 +76,4 @@ def form_spectral_density(eigvals, t, kernel=gaussian_kernel):
     spectral_density : np.ndarray of shape (n_t,)
         The value of the spectral density evaluated at the grid points.
     """
-    return kernel(np.subtract.outer(t, eigvals)).sum(axis=1) / len(eigvals)
+    return kernel(t, eigvals).sum(axis=1) / len(eigvals)
