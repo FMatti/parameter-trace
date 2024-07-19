@@ -1,3 +1,9 @@
+"""
+quantum_spin.py
+
+TODO: Maybe try smaller range of betas, or only Hutchinsons? (find example of A ill behaved and f(A) low-rank)
+"""
+
 import __context__
 
 import scipy as sp
