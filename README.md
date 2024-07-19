@@ -56,9 +56,11 @@ $$
 $$
 
 where $b_{ij}(t)$ are functions depending continuously on the parameter $t$ which takes values in the interval $[a,b]$. The trace of such a matrix is defined as
+
 $$
-    \operatorname{Tr}(\boldsymbol{B}(t)) = \sum_{i=1}^{n} b_{ii}(t).
+    \mathrm{Tr}(\boldsymbol{B}(t)) = \sum_{i=1}^{n} b_{ii}(t).
 $$
+
 However, we assume that we only have access to products of this matrix with vectors for each $t \in [a, b]$, so this definition will not be directly useful for computing the trace.
 
 ### Girard-Hutchinson estimator
@@ -66,9 +68,9 @@ However, we assume that we only have access to products of this matrix with vect
 We can approximate the trace with the Girard-Hutchinson estimator: We take $n_{\boldsymbol{\Psi}}$ stochastically independent standard Gaussian random vectors $\boldsymbol{\psi}_1,\dots, \boldsymbol{\psi}_{n_{\boldsymbol{\Psi}}} \in \mathbb{R}^{n}$ to form
 
 $$
-    \operatorname{Tr}_{\boldsymbol{\Psi}}(\boldsymbol{B}(t))
+    \mathrm{Tr}_{\boldsymbol{\Psi}}(\boldsymbol{B}(t))
     = \frac{1}{n_{\boldsymbol{\Psi}}} \sum_{j=1}^{n_{\boldsymbol{\Psi}}} \boldsymbol{\psi}_j^{\top} \boldsymbol{B}(t) \boldsymbol{\psi}_j
-    = \frac{1}{n_{\boldsymbol{\Psi}}} \operatorname{Tr}( \boldsymbol{\Psi}^{\top} \boldsymbol{B}(t) \boldsymbol{\Psi})
+    = \frac{1}{n_{\boldsymbol{\Psi}}} \mathrm{Tr}( \boldsymbol{\Psi}^{\top} \boldsymbol{B}(t) \boldsymbol{\Psi})
 $$
 
 where $\boldsymbol{\Psi} = [\boldsymbol{\psi}_1 ~ \cdots ~ \boldsymbol{\psi}_{n_{\boldsymbol{\Psi}}}] \in \mathbb{R}^{n \times n_{\boldsymbol{\Psi}}}$. Other choices for the distribution of the random vectors are possible, for example by uniformly sampling from $\{-1, +1\}$ or from the $(n-1)$-sphere. However, our theoretical developments only hold in the Gaussian case.
@@ -76,21 +78,25 @@ where $\boldsymbol{\Psi} = [\boldsymbol{\psi}_1 ~ \cdots ~ \boldsymbol{\psi}_{n_
 ### Nyström estimator
 
 Alternatively, the trace of a symmetric matrix whose singular values decay quickly can be approximated well by using a Gaussian sketching matrix $\boldsymbol{\Omega} \in \mathbb{R}^{n \times n_{\boldsymbol{\Omega}}}$ to form the Nyström approximation
+
 $$
     \boldsymbol{B}_{\boldsymbol{\Omega}}(t) = (\boldsymbol{B}(t) \boldsymbol{\Omega}) (\boldsymbol{\Omega}^{\top} \boldsymbol{B}(t) \boldsymbol{\Omega})^{\dagger} (\boldsymbol{B}(t) \boldsymbol{\Omega})^{\top}.
 $$
-Then we can estimate the trace as $\operatorname{Tr}(\boldsymbol{B}_{\boldsymbol{\Omega}}(t))$. Thanks to the invariance of the trace under cyclic permutation of its arguments and the symmetry of the matrix, we may rewrite this estimator as
+
+Then we can estimate the trace as $\mathrm{Tr}(\boldsymbol{B}_{\boldsymbol{\Omega}}(t))$. Thanks to the invariance of the trace under cyclic permutation of its arguments and the symmetry of the matrix, we may rewrite this estimator as
 
 $$
-    \operatorname{Tr}(\boldsymbol{B}_{\boldsymbol{\Omega}}(t)) = \operatorname{Tr}( (\boldsymbol{\Omega}^{\top} \boldsymbol{B}(t) \boldsymbol{\Omega})^{\dagger} ( \boldsymbol{\Omega}^{\top} \boldsymbol{B}(t)^2 \boldsymbol{\Omega})).
+    \mathrm{Tr}(\boldsymbol{B}_{\boldsymbol{\Omega}}(t)) = \mathrm{Tr}( (\boldsymbol{\Omega}^{\top} \boldsymbol{B}(t) \boldsymbol{\Omega})^{\dagger} ( \boldsymbol{\Omega}^{\top} \boldsymbol{B}(t)^2 \boldsymbol{\Omega})).
 $$
 
 ### Nyström++ estimator
 
 Finally, an estimator which corrects for inaccuracies in the Nyström approximation by estimating the trace of its residual using the Girard-Hutchinson estimator is
+
 $$
-    \operatorname{Tr}_{\boldsymbol{\Psi}, \boldsymbol{\Omega}}(\boldsymbol{B}(t)) = \operatorname{Tr}(\boldsymbol{B}_{\boldsymbol{\Omega}}(t)) + \operatorname{Tr}_{\boldsymbol{\Psi}}(\boldsymbol{B}(t) - \boldsymbol{B}_{\boldsymbol{\Omega}}(t)).
+    \mathrm{Tr}_{\boldsymbol{\Psi}, \boldsymbol{\Omega}}(\boldsymbol{B}(t)) = \mathrm{Tr}(\boldsymbol{B}_{\boldsymbol{\Omega}}(t)) + \mathrm{Tr}_{\boldsymbol{\Psi}}(\boldsymbol{B}(t) - \boldsymbol{B}_{\boldsymbol{\Omega}}(t)).
 $$
+
 This is the parameter-dependent analogue of the Nyström++ estimator, which is based on the Hutch++ estimator.
 
 ## Project structure
@@ -102,6 +108,7 @@ Rand-TRACE
 |   reproduce.py        (script for easy setup of project)
 |
 └───paper               (the LaTeX project for the paper)
-└───setup               (scripts which help setup and reproduce project)
-└───src                 (the Python modules which were written for the project)
+└───reproduce           (scripts which help setup and reproduce project)
+└───algorithms          (the algorithms introduced in the paper)
+└───matrices            (the example matrices used for the numerical results)
 ```

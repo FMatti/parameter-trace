@@ -1,5 +1,6 @@
-numpy
-scipy
-matplotlib
 torch
 torchvision
+matplotlib
+scipy
+numpy
+ipykernel

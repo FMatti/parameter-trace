@@ -241,8 +241,8 @@ def krylov_aware(A, t=0, n_iter=10, n_reorth=5, n_Omega=10, n_Psi=10, kernel=gau
         weights = np.append(weights, weights_)
 
     if kernel is None:
-        fun = lambda x: x
+        fun = lambda t, x: x
     else:
-        fun = lambda x: kernel(x) / A.shape[0]
+        fun = lambda t, x: kernel(t, x) / A.shape[0]
 
-    return fun(nodes) @ weights
+    return fun(t, nodes) @ weights
