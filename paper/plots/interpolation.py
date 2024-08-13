@@ -29,7 +29,7 @@ markers = ["o", "s", "d"]
 labels = ["inconsistent", "consistent", "non-negative"]
 
 # Determine the baseline spectral density
-kernel = lambda t, x: gaussian_kernel(t, x, sigma=sigma)
+kernel = lambda t, x: gaussian_kernel(t, x, sigma=sigma, n=A.shape[0])
 baseline = form_spectral_density(eigvals_st, t, kernel)
 
 error = np.empty((3, len(m_list)))
