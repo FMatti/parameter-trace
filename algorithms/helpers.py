@@ -35,7 +35,7 @@ def spectral_transformation(A, min_ev=None, max_ev=None):
 
     return A_st
 
-def gaussian_kernel(t, x=None, sigma=0.1):
+def gaussian_kernel(t, x=None, sigma=0.1, n=1):
     """
     Gaussian kernel.
 
@@ -47,6 +47,9 @@ def gaussian_kernel(t, x=None, sigma=0.1):
         Value(s) outer-subtracted from paramter value(s) 
     sigma : int or float
         Standard deviation of the Gaussian.
+    n : int
+        Normalization "g(t, x) / n" for simpler spectral density computations.
+        Here, n is the size of the matrix.
 
     Returns
     -------
@@ -55,7 +58,7 @@ def gaussian_kernel(t, x=None, sigma=0.1):
     """
     if x is not None:
         t = np.subtract.outer(t, x)
-    return np.exp(- t**2 / (2 * sigma**2)) / (np.sqrt(2 * np.pi) * sigma)
+    return np.exp(- t**2 / (2 * sigma**2)) / (np.sqrt(2 * np.pi) * sigma * n)
 
 def form_spectral_density(eigvals, t, kernel=gaussian_kernel):
     """
@@ -76,4 +79,4 @@ def form_spectral_density(eigvals, t, kernel=gaussian_kernel):
     spectral_density : np.ndarray of shape (n_t,)
         The value of the spectral density evaluated at the grid points.
     """
-    return kernel(t, eigvals).sum(axis=1) / len(eigvals)
+    return kernel(t, eigvals).sum(axis=1)

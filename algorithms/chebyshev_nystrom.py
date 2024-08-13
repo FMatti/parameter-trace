@@ -152,8 +152,8 @@ def chebyshev_nystrom(A, t=0, m=100, n_Psi=10, n_Omega=10, kernel=gaussian_kerne
             # Accumulation
             if l <= m:
                 K_1[i] += mu[i, l] * X
-                L_1[i] += mu[i, l] * Y
                 l_2[i] += mu[i, l] * z
+                L_1[i] += mu[i, l] * Y
             K_2[i] += nu[i, l] * X
 
         # Chebyshev recurrence
@@ -169,8 +169,8 @@ def chebyshev_nystrom(A, t=0, m=100, n_Psi=10, n_Omega=10, kernel=gaussian_kerne
         if n_Omega and np.trace(K_1[i]) <= kappa * n_Omega:
             continue
 
-        phi[i] = np.trace(np.linalg.lstsq(K_1[i], K_2[i], rcond=rcond)[0]) / n
+        phi[i] = np.trace(np.linalg.lstsq(K_1[i], K_2[i], rcond=rcond)[0])
         if n_Psi > 0:
-            phi[i] += (l_2[i] - np.trace(L_1[i].T @ np.linalg.lstsq(K_1[i], L_1[i], rcond=rcond)[0])) / (n * n_Psi)
+            phi[i] += (l_2[i] - np.trace(L_1[i].T @ np.linalg.lstsq(K_1[i], L_1[i], rcond=rcond)[0])) / n_Psi
 
     return phi

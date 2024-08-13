@@ -65,7 +65,7 @@ n_Psi = 10
 plt.style.use("paper/plots/stylesheet.mplstyle")
 
 # Approximate the Hessian's spectral density
-kernel = lambda x: gaussian_kernel(x, sigma=sigma)
+kernel = lambda x: gaussian_kernel(x, sigma=sigma, n=H.shape[0])
 phi = chebyshev_nystrom(H, t, m, n_Psi, n_Omega, kernel)
 
 plt.plot(t, phi, color="#648FFF")

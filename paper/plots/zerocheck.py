@@ -29,7 +29,7 @@ labels = ["baseline", "without zero-check", "with zero-check"]
 kappa_list = [-1, 1e-5]
 
 # Determine the baseline spectral density
-kernel = lambda t, x: gaussian_kernel(t, x, sigma=sigma)
+kernel = lambda t, x: gaussian_kernel(t, x, sigma=sigma, n=A.shape[0])
 baseline = form_spectral_density(eigvals_st, t, kernel)
 
 estimate = [baseline]
