@@ -33,7 +33,7 @@ error = np.empty((len(n_Psi_list), len(sigma_list)))
 for j, sigma in enumerate(sigma_list):
 
     # Determine the baseline spectral density
-    kernel = lambda x: gaussian_kernel(x, sigma=sigma, n=A.shape[0])
+    kernel = lambda t, x: gaussian_kernel(t, x, sigma=sigma, n=A.shape[0])
     baseline = form_spectral_density(eigvals_st, t, kernel)
     m = int(16 / sigma)  # Double-check this, i.e. use error estimate for this
 
