@@ -107,7 +107,7 @@ We start our analysis of the methods presented above by deriving an $L^1$-error 
 \begin{theorem}{Girard-Hutchinson estimator for parameter-dependent matrices}{hutchinson}
     For a symmetric matrix $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ that depends continuously on $t \in [a, b]$, consider the  Girard-Hutchinson estimator~\refequ{equ:hutchinson-trace-estimator} with an $n\times n_{\mtx{\Psi}}$ Gaussian random matrix $\mtx{\Psi}$. Then for any $p \geq 1, p \in \mathbb{R}$ and $\gamma \geq 1$ the bound 
     \begin{equation} \label{eq:ghbound}
-        \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq \gamma c \left( \sqrt{\frac{p}{n_{\mtx{\Psi}}}} + \frac{p}{n_{\mtx{\Psi}}}  \right) \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t.
+        \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq \gamma c \left( \sqrt{\frac{p}{n_{\mtx{\Psi}}}} + \frac{p}{n_{\mtx{\Psi}}}  \right) \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t
     \end{equation}
     holds with probability at least $1 - \gamma^{-p}$ and for $c = 4 (1 + \sqrt{1 + \pi/4})$.
     In particular, given $\varepsilon \in (0, 1)$ and $\delta \in (0, e^{-1})$, the bound $\int_{a}^{b} | \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) | ~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t$ holds 
@@ -199,6 +199,14 @@ We start our analysis of the methods presented above by deriving an $L^1$-error 
 %\end{proof}
 
 \refthm{thm:hutchinson} coincides with the analogous result for the constant case~\cite[Lemma 2.1]{meyer-2021-hutch-optimal}, except for a slightly more restricted choice of $\delta$.
+
+\begin{remark}
+    If $\mtx{A}(t)$ is nonzero and symmetric positive semi-definite for all $t \in [a, b]$, then it follows that with probability at least $1 - \delta$
+    \begin{equation}
+        \int_{a}^{b} \frac{| \Trace(\mtx{A}(t)) - \Hutch{\mtx{\Psi}}(\mtx{A}(t)) |}{\Trace(\mtx{A}(t))} ~\mathrm{d}t < \varepsilon,
+    \end{equation}
+    if $n_{\mtx{\Psi}} \geq 2 c^2 e^2 \log(\delta^{-1}) \varepsilon^{-2} (\int_{a}^{b} \mu(t)^{\sfrac{1}{2}}~\mathrm{d}t)^2$ where $\mu(t) = \lVert \mtx{A}(t) \rVert _2 / \Trace(\mtx{A}(t))$. Up to constant factors, this matches the equivalent result for constant matrices from \cite[Remark 2]{cortinovis-2022-randomized-trace}.
+\end{remark}
 
 \color{blue}
 
