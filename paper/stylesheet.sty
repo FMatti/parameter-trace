@@ -82,7 +82,11 @@
 %%% REFERENCING
 
 % Bibliography management
-\usepackage[backend=bibtex,style=alphabetic-verb,minalphanames=2,giveninits=true]{biblatex}
+\usepackage[backend=bibtex,style=ext-alphabetic-verb,minalphanames=2,giveninits=true]{biblatex}
+%\DeclareFieldFormat[article,inproceedings,misc]{title}{}
+\DeclareFieldFormat[article,inproceedings,misc]{citetitle}{#1}
+\DeclareFieldFormat[article,inproceedings,misc]{titlecase:title}{\MakeSentenceCase*{#1}} 
+\DeclareFieldFormat[article,inproceedings,misc]{title}{#1} 
 \addbibresource{bibliography.bib}
 %\newcommand*{\doi}[1]{DOI: \href{https://doi.org/#1}{#1}}
 \let\oldcite\cite
