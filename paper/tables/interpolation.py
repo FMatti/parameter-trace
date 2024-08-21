@@ -133,13 +133,15 @@ labels = ["oversampled FFT", "DCT", "non-negative DCT"]
 n_t = 1000
 t = np.arange(-1, 1, n_t)
 sigma = 0.005
-g = lambda x: gaussian_kernel(x, sigma=sigma)
-parameters = [{"t": t, "m": 800, "kernel": g},
-              {"t": t, "m": 1600, "kernel": g},
-              {"t": t, "m": 2400, "kernel": g},
-              {"t": t, "m": 3200, "kernel": g}]
+kernel = lambda t, x: gaussian_kernel(t, x, sigma=sigma)
+    
+parameters = [{"t": t, "m": 800, "kernel": kernel},
+              {"t": t, "m": 1600, "kernel": kernel},
+              {"t": t, "m": 2400, "kernel": kernel},
+              {"t": t, "m": 3200, "kernel": kernel}]
 
-means = np.empty((len(methods), len(parameters)))
+means = np.em
+pty((len(methods), len(parameters)))
 errors = np.empty((len(methods), len(parameters)))
 
 for i in range(len(methods)):
