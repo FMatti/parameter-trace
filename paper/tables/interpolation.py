@@ -140,8 +140,7 @@ parameters = [{"t": t, "m": 800, "kernel": kernel},
               {"t": t, "m": 2400, "kernel": kernel},
               {"t": t, "m": 3200, "kernel": kernel}]
 
-means = np.em
-pty((len(methods), len(parameters)))
+means = np.empty((len(methods), len(parameters)))
 errors = np.empty((len(methods), len(parameters)))
 
 for i in range(len(methods)):
