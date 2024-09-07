@@ -118,9 +118,8 @@ def chebyshev_coefficients_quadrature(t, m, kernel, n_theta=None):
 
     theta = np.arange(2 * n_theta) * np.pi / n_theta
 
-    # Can be computed via Fourier transform:
-    t_minus_theta = np.subtract.outer(t, np.cos(theta))
-    mu = np.real(np.fft.fft(kernel(t_minus_theta), axis=1)[:, :m+1])
+    # Can be computed via Fourier transform
+    mu = np.real(np.fft.fft(kernel(t, np.cos(theta)), axis=1)[:, :m+1])
 
     # Rescale the coefficients (as required by the definition)
     mu[:, 0] /= 2 * n_theta
