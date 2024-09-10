@@ -21,7 +21,7 @@ eigvals_st = spectral_transformation(eigvals, min_ev, max_ev)
 t = np.linspace(-1, 1, 100)
 sigma = 0.005
 m = 2000
-n_Vec_list = np.logspace(1.3, 2.8, 7).astype(int) 
+n_Vec_list = np.logspace(0.8, 2.8, 7).astype(int) 
 
 plt.style.use("paper/plots/stylesheet.mplstyle")
 colors = ["#648FFF", "#DC267F", "#FFB000"]
