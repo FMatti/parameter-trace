@@ -205,7 +205,7 @@ We start our analysis of the methods presented above by deriving an $L^1$-error 
     \begin{equation}
         \int_{a}^{b} \frac{| \Trace(\mtx{A}(t)) - \Hutch{\mtx{\Psi}}(\mtx{A}(t)) |}{\Trace(\mtx{A}(t))} ~\mathrm{d}t < \varepsilon,
     \end{equation}
-    if $n_{\mtx{\Psi}} \geq 2 c^2 e^2 \log(\delta^{-1}) \varepsilon^{-2} (\int_{a}^{b} \mu(t)^{\sfrac{1}{2}}~\mathrm{d}t)^2$ where $\mu(t) = \lVert \mtx{A}(t) \rVert _2 / \Trace(\mtx{A}(t))$. Up to constant factors, this matches the equivalent result for constant matrices from \cite[Remark 2]{cortinovis-2022-randomized-trace}.
+    if $n_{\mtx{\Psi}} \geq 2 c^2 e^2 \log(\delta^{-1}) \varepsilon^{-2} (\int_{a}^{b} \eta(t)~\mathrm{d}t)^2$ where $\eta(t) = \lVert \mtx{A}(t) \rVert _F / \Trace(\mtx{A}(t))$. The quantity $\eta(t) \in [1/\sqrt{n}, 1]$ is small when the spectrum of $\mtx{A}(t)$ decays slowly and large when $\mtx{A}(t)$ when it decays quickly, i.e. $\mtx{A}(t)$ has low numerical rank. This parallels a similar result for constant matrices in~\cite[Remark 2]{cortinovis-2022-randomized-trace}.
 \end{remark}
 
 \color{blue}
