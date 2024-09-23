@@ -202,7 +202,7 @@ In passing, we note that \reflem{lem:spectral-norm-moment}  yields the bound
 
 \section{Moment bound for sub-exponential random variables}
 
-In this section we show that the residual of the single-query Girard-Hutchinson estimator \refequ{equ:hutchinson-trace-estimator}, i.e. when $n_{\mtx{\Psi}} = 1$, is a sub-exponential random variable. Further, we establish a bound on the high order moments of sub-exponential random variables. The combination of these two results will then be used in the proof of \refthm{thm:hutchinson}.
+In this section we show that the residual of the single-query Girard-Hutchinson estimator \refequ{equ:hutchinson-trace-estimator}, i.e. when $n_{\mtx{\Psi}} = 1$, is a sub-exponential random variable. Further, we establish a bound on the high order moments of sub-exponential random variables. A similar bound is available in \cite[Proposition 2.7.1]{vershynin-2018-highdimensional-probability} but does not explicitly determine the constants. The combination of these two results will then be used in the proof of \refthm{thm:hutchinson}.
 
 \begin{lemma}{Residual of $1$-query Girard-Hutchinson estimator is sub-exponential}{hutchinson-sub-exponential}
     Let $\mtx{A} \in \mathbb{R}^{m \times m}$ be symmetric and $\vct{\psi} \in \mathbb{R}^m$ a standard Gaussian random vector. Then the real random variable $\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$ is centered and $(2 \lVert \mtx{A} \rVert _F^2 (1 - 1/\beta)^{-1}, 2 \lVert \mtx{A} \rVert _2 \beta )$-sub-exponential for any $\beta > 1, \beta \in \mathbb{R}$.
@@ -263,21 +263,6 @@ In this section we show that the residual of the single-query Girard-Hutchinson 
     \end{equation}
     where we made use of basic bounds for the Gamma function in the last step.
 \end{proof}
-
-A similar bound is shown in \cite[Theorem 2.3]{boucheron-2013-concentration-inequalities} for sub-gamma random variables and for when $p = 2q$ for $q \in \mathbb{N}$. From \cite[Lemma 3]{cortinovis-2022-randomized-trace} we know that $\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$ is $(2 \lVert \mtx{A} \rVert _F^2, 2\lVert \mtx{A} \rVert _2)$-sub-gamma. Therefore, applying \cite[Theorem 2.3]{boucheron-2013-concentration-inequalities} gives
-\begin{equation}
-    \mathbb{E}[(\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi})^{2q}] \leq q! (16 \lVert \mtx{A} \rVert _F^2)^q + (2q)! (8 \lVert \mtx{A} \rVert _2)^{2q}.
-    \label{equ:sub-gamma-moment-bound}
-\end{equation}
-In this case where $p = 2q$ for a $q \in \mathbb{N}$, we would not have to pay the factor of $2$ in the proof of \reflem{lem:sub-exponential-moments} by bounding $\mathbb{P}(X > t)$ instead of $\mathbb{P}(|X| > t)$ with \cite[Proposition 2.9]{wainwright-2019-highdimensional-statistics}. As a consequence, \refequ{equ:sub-exponential-moment-bound} reads
-\begin{equation}
-    \mathbb{E}[X^{2q}] \leq q! (2 \nu^2)^q + (2q)! (2 \alpha)^{2q}.
-\end{equation}
-For example, if we choose $\beta = 3/2$ in \reflem{lem:hutchinson-sub-exponential}, we know that $\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$ is $(6 \lVert \mtx{A} \rVert _F^2, 3 \lVert \mtx{A} \rVert _2)$-sub-exponential. Thus,
-\begin{equation}
-    \mathbb{E}[(\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi})^{2q}] \leq q! (12 \lVert \mtx{A} \rVert _F^2)^q + (2q)! (6 \lVert \mtx{A} \rVert _2)^{2q},
-\end{equation}
-which is slightly tighter than \refequ{equ:sub-gamma-moment-bound}.
 
 %    We will need
 %    \begin{equation}

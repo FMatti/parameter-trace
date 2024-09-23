@@ -147,7 +147,7 @@ We start our analysis of the methods presented above by deriving an $L^1$-error 
         &\leq \int_{a}^{b} \mathbb{E}^{p}\left[ \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) \right]~\mathrm{d}t \notag \\
         &\leq c \left( \sqrt{\frac{p}{n_{\mtx{\Psi}}}} + \frac{p}{n_{\mtx{\Psi}}}  \right) \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t .
     \end{align}
-    Consequently, by Markov's inequality, the inequality 
+    Consequently, by Markov's inequality, the bound 
     \begin{equation} 
         \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq \gamma c \left( \sqrt{\frac{p}{n_{\mtx{\Psi}}}} + \frac{p}{n_{\mtx{\Psi}}}  \right) \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t
     \end{equation}
@@ -201,11 +201,15 @@ We start our analysis of the methods presented above by deriving an $L^1$-error 
 \refthm{thm:hutchinson} coincides with the analogous result for the constant case~\cite[Lemma 2.1]{meyer-2021-hutch-optimal}, except for a slightly more restricted choice of $\delta$.
 
 \begin{remark}
-    If $\mtx{A}(t)$ is nonzero and symmetric positive semi-definite for all $t \in [a, b]$, then it follows that with probability at least $1 - \delta$
+    A slightly different version of \refthm{thm:hutchinson} can be derived when $\mtx{B}(t)$ is nonzero and symmetric positive semi-definite for all $t \in [a, b]$: after dividing both sides of \refequ{equ:moment-bound-hutchinson} by $\Trace(\mtx{B}(t))$, one can apply the remaining steps in the proof to deduce with probability at least $1 - \delta$
     \begin{equation}
-        \int_{a}^{b} \frac{| \Trace(\mtx{A}(t)) - \Hutch{\mtx{\Psi}}(\mtx{A}(t)) |}{\Trace(\mtx{A}(t))} ~\mathrm{d}t < \varepsilon,
+        \int_{a}^{b} \frac{| \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) |}{\Trace(\mtx{B}(t))} ~\mathrm{d}t < \varepsilon,
     \end{equation}
-    if $n_{\mtx{\Psi}} \geq 2 c^2 e^2 \log(\delta^{-1}) \varepsilon^{-2} (\int_{a}^{b} \eta(t)~\mathrm{d}t)^2$ where $\eta(t) = \lVert \mtx{A}(t) \rVert _F / \Trace(\mtx{A}(t))$. The quantity $\eta(t) \in [1/\sqrt{n}, 1]$ is small when the spectrum of $\mtx{A}(t)$ decays slowly and large when $\mtx{A}(t)$ when it decays quickly, i.e. $\mtx{A}(t)$ has low numerical rank. This parallels a similar result for constant matrices in~\cite[Remark 2]{cortinovis-2022-randomized-trace}.
+    if $n_{\mtx{\Psi}} \geq 2 c^2 e^2 \log(\delta^{-1}) \varepsilon^{-2} \rho^2$, where we identify
+    \begin{equation}
+        \rho = \int_{a}^{b} \frac{\lVert \mtx{B}(t) \rVert _F}{\Trace(\mtx{B}(t))} ~\mathrm{d}t
+    \end{equation}
+    The quantity $\rho$ is small when on the interval $[a, b]$ the singular values of $\mtx{B}(t)$ decay slowly and large when they decay quickly. This parallels a similar result for constant matrices in~\cite[Remark 2]{cortinovis-2022-randomized-trace}.
 \end{remark}
 
 \color{blue}
