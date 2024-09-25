@@ -74,6 +74,7 @@ We run an optimized implementation of the Krylov-aware stochastic trace estimato
         \vspace{-35pt}
         \input{tables/krylov_aware_density_KA.tex}
         \newline
+        \vspace{15pt}
         \newline
         \input{tables/krylov_aware_density_CN.tex}
         %\renewcommand{\arraystretch}{1.2}
@@ -112,7 +113,7 @@ To demonstrate that the Chebyshev-Nyström++ estimator is also effective on prob
         \vspace{-35pt}
         \input{tables/krylov_aware_spin_KA.tex}
         \newline
-        \vspace{13pt}
+        \vspace{15pt}
         \newline
         \input{tables/krylov_aware_spin_CN.tex}
     \end{minipage}
@@ -126,3 +127,8 @@ Unlike in the spectral density example from \refsec{subsec:hamiltonian}, the num
 \label{subsec:hessian}
 
 \todo{Hessian spectrum analysis?}
+\begin{figure}
+    \input{plots/hessian_density.pgf}
+    \caption{Hessian spectral density}
+    \label{fig:hessian-density}
+\end{figure}

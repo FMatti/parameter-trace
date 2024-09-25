@@ -215,6 +215,9 @@ class hessian(object):
         Q, T = lanczos(self, x, k, dtype=np.float64)
         return np.max(np.linalg.eigvalsh(T[0, :-1, :])) + np.linalg.norm(T[0, -1, -1] * Q[:, :, -1])
 
+    def update(self, model, loss_function, data):
+        self.gradient = compute_gradient(model, loss_function, data)
+
     def __matmul__(self, x):
         # Convert numpy array to torch tensor
         is_numpy = isinstance(x, np.ndarray)

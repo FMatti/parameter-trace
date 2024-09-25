@@ -225,13 +225,18 @@ def krylov_aware(A, t=0, n_iter=10, n_reorth=5, n_Omega=10, n_Psi=10, kernel=gau
         Estimation". SIAM Journal on Matrix Analysis and Applications.
         Vol. 44 (3). doi:10.1137/22M1494257.
     """
-    Omega = np.random.randn(A.shape[0], n_Omega)
-    Q, T = block_lanczos(A, Omega, n_iter, extend_matrix=False, reorth_steps=n_reorth)
-    nodes, T_evec = np.linalg.eigh(T.toarray())
-    weights = np.linalg.norm(T_evec[:(n_reorth + 1) * n_Omega], axis=0)**2
+    if n_Omega > 0:
+        Omega = np.random.randn(A.shape[0], n_Omega)
+        Q, T = block_lanczos(A, Omega, n_iter, extend_matrix=False, reorth_steps=n_reorth)
+        nodes, T_evec = np.linalg.eigh(T.toarray())
+        weights = np.linalg.norm(T_evec[:(n_reorth + 1) * n_Omega], axis=0)**2
+    else:
+        nodes = []
+        weights = []
 
     Psi = np.random.randn(A.shape[0], n_Psi)
-    Psi -= Q[:, :(n_reorth + 1) * n_Omega] @ (Q[:, :(n_reorth + 1) * n_Omega].T @ Psi)
+    if n_Omega > 0:
+        Psi -= Q[:, :(n_reorth + 1) * n_Omega] @ (Q[:, :(n_reorth + 1) * n_Omega].T @ Psi)
 
     _, a_rem, b_rem = lanczos(A, Psi, n_iter, extend_matrix=False, return_matrix=False, reorth_tol=0)
     for a, b in zip(a_rem, b_rem):

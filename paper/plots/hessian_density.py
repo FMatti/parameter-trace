@@ -26,8 +26,8 @@ model = torch.nn.Sequential(
 )
 
 # For now, don't execute this
-if __name__ == "__main__":
-    exit()
+#if __name__ == "__main__":
+#    exit()
 
 np.random.seed(0)
 
@@ -47,30 +47,43 @@ test_loader = torch.utils.data.DataLoader(torchvision.datasets.MNIST("matrices/m
                                           shuffle=False
 )
 
-# Train the model on the MNIST data set
-loss_function = lambda x, y: torch.nn.MSELoss()(x, torch.nn.functional.one_hot(y, num_classes=10).to(dtype=torch.float))
-validator = lambda model: accuracy_validator(model, test_loader)
-train(model, train_loader, loss_function, validator=validator, n_epochs=5)
-
-data = next(iter(train_loader))
-H = hessian(model, loss_function, data, spectral_transform=True)
 
 # Set parameter
-t = np.linspace(-0.02, 0.02, 30)
-sigma = 0.003
-m = 1500
+t = np.linspace(0.2, 1.0, 100)
+sigma = 0.005
+m = 500
 n_Omega = 30
 n_Psi = 10
+data = next(iter(train_loader))
 
 plt.style.use("paper/plots/stylesheet.mplstyle")
 
+# Train the model on the MNIST data set
+loss_function = lambda x, y: torch.nn.MSELoss()(x, torch.nn.functional.one_hot(y, num_classes=10).to(dtype=torch.float))
+validator = lambda model: accuracy_validator(model, test_loader)
+
 # Approximate the Hessian's spectral density
-kernel = lambda x: gaussian_kernel(x, sigma=sigma, n=H.shape[0])
+kernel = lambda t, x: gaussian_kernel(t, x, sigma=sigma, n=H.shape[0])
+H = hessian(model, loss_function, data, spectral_transform=True)
 phi = chebyshev_nystrom(H, t, m, n_Psi, n_Omega, kernel)
 
-plt.plot(t, phi, color="#648FFF")
+plt.plot(t, phi, color="#648FFF", label=r"untrained")
 
+train(model, train_loader, loss_function, validator=validator, n_epochs=5)
+
+H.update(model, loss_function, data)
+phi = chebyshev_nystrom(H, t, m, n_Psi, n_Omega, kernel)
+
+plt.plot(t, phi, color="#DC267F", label=r"epoch $5$")
+
+train(model, train_loader, loss_function, validator=validator, n_epochs=5)
+
+H.update(model, loss_function, data)
+phi = chebyshev_nystrom(H, t, m, n_Psi, n_Omega, kernel)
+
+plt.plot(t, phi, color="#FFB000", label=r"epoch $10$")
 plt.grid(True, which="both")
 plt.ylabel(r"smoothed spectral density $\phi_{\sigma}(t)$")
 plt.xlabel(r"spectral parameter $t$")
+plt.legend()
 plt.savefig("paper/plots/hessian_density.pgf", bbox_inches="tight")
