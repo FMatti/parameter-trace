@@ -65,24 +65,36 @@ The Krylov-aware stochastic trace estimation \cite{chen-2023-krylovaware-stochas
 We run an optimized implementation of the Krylov-aware stochastic trace estimator \cite[Algorithm 3.1]{chen-2023-krylovaware-stochastic} in multiple configurations on the example from \refsec{subsec:hamiltonian} and plot their approximation errors for various values of the smoothing parameter $\sigma$ in \reffig{fig:krylov-aware-density}. For reference, we add the error of the Chebyshev-Nyström++ method on parameters which lead to a comparable run-time.
 
 \begin{figure}[ht]
-    \begin{minipage}[c]{.45\linewidth}
+    \begin{minipage}[c]{.475\linewidth}
         \centering
         \input{plots/krylov_aware_density.pgf}
     \end{minipage}\hfill%
-    \begin{minipage}[c]{.45\linewidth}
+    \begin{minipage}[c]{.475\linewidth}
         %\label{tab:krylov-aware-density}
-        \renewcommand{\arraystretch}{1.2}
-        \begin{tabular}{@{}lccccc@{}}
-        \toprule
-        & $b$ & $q$ & $m$ & $n$ & $t$ (s)\\
-        \midrule
-        KA I & 10 & 30 & 60 & 20 & 9.13 \\
-        KA II & 20 & 30 & 30 & 20 & 9.13 \\
-        KA III & 10 & 60 & 30 & 40 & 9.13 \\
-        KA IV & 10 & 30 & 30 & 20 & 9.13 \\
-        CN++ & 10 & - & - & 20 & 9.13 \\
-        \bottomrule
-        \end{tabular}
+        \vspace{-35pt}
+        \input{tables/krylov_aware_density_KA.tex}
+        \newline
+        \newline
+        \input{tables/krylov_aware_density_CN.tex}
+        %\renewcommand{\arraystretch}{1.2}
+        %\begin{tabular}{@{}lccccc@{}}
+        %\toprule
+        %& $n_{\mtx{\Omega}}$ & $n_{\mtx{\Psi}}$ & $q$ & $n$ & runtime (s)\\
+        %\midrule
+        %KA I & 10 & 60 & 30 & 20 & 9.13 \\
+        %KA II & 20 & 30 & 30 & 20 & 9.13 \\
+        %KA III & 10 & 30 & 60 & 40 & 9.13 \\
+        %KA IV & 10 & 30 & 30 & 20 & 9.13 \\
+        %\bottomrule
+        %\end{tabular}
+        %\begin{tabular}{@{}lcccc@{}}
+        %\\
+        %\toprule
+        %& $n_{\mtx{\Omega}}$ & $n_{\mtx{\Psi}}$ & $m$ & runtime (s)\\
+        %\midrule
+        %CN++ & 40  & 40 & 2000 & 9.13 \\
+        %\bottomrule
+        %\end{tabular}
         %\caption{Comparison with Krylov-Aware stochastic trace estimation.}
     \end{minipage}
     \caption{Comparison with Krylov-Aware stochastic trace estimation.}
@@ -92,8 +104,18 @@ We run an optimized implementation of the Krylov-aware stochastic trace estimato
 To demonstrate that the Chebyshev-Nyström++ estimator is also effective on problems unrelated to spectral density estimation, we consider the problem of approximating $\Trace(\exp(-\beta \mtx{A}))$ for the Hamiltonian $\mtx{A}$ of a planar Heisenberg spin chain \cite{chen-2023-krylovaware-stochastic}. We compute the pointwise error from the analytic solution as a function of the temperature $\beta^{-1}$ and compare it to the error achieved by the Krylov-aware trace estimator in \reffig{fig:krylov-aware-spin}.
 
 \begin{figure}[ht]
-    \centering
-    \input{plots/krylov_aware_spin.pgf}
+    \begin{minipage}[c]{.475\linewidth}
+        \centering
+        \input{plots/krylov_aware_spin.pgf}
+    \end{minipage}\hfill%
+    \begin{minipage}[c]{.475\linewidth}
+        \vspace{-35pt}
+        \input{tables/krylov_aware_spin_KA.tex}
+        \newline
+        \vspace{13pt}
+        \newline
+        \input{tables/krylov_aware_spin_CN.tex}
+    \end{minipage}
     \caption{Comparison with Krylov-Aware stochastic trace estimation.}
     \label{fig:krylov-aware-spin}
 \end{figure}

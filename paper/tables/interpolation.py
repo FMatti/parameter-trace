@@ -4,8 +4,7 @@ import timeit
 import numpy as np
 
 from algorithms.chebyshev_nystrom import chebyshev_expansion
-from algorithms.helpers import gaussian_kernel
-
+from algorithms.helpers import gaussian_kernel, generate_tex_tabular
 
 def time_method(method, parameters, num_times=1000, num_repeats=10):
     """
@@ -31,55 +30,6 @@ def time_method(method, parameters, num_times=1000, num_repeats=10):
     mean = np.mean(times)
     error = np.std(times)
     return mean, error
-
-
-def generate_tex_tabular(values, filepath, headline=None, row_labels=None, errors=None, fmt=r"${:.3f}$"):
-    """
-    Generate a LaTeX tabular from a numpy array.
-
-    Parameters
-    ----------
-    values : np.ndarray (n, m)
-        The values to be displayed in the tabular.
-    filepath : str 
-        The path to the file in which the table should be stored.
-    headline : list of str, int, or float (m,)
-        The values in the headline (column labels).
-    row_labels : list of str (n,)
-        The labels of the rows.
-    errors : np.ndarray (n, m)
-        The errors associated to the values.
-    fmt : str 
-        The format in which the values are displayed in the table.
-    """
-    f = open(filepath, "w")
-
-    num_rows = values.shape[0]
-    num_cols = values.shape[1]
-
-    f.write(r"\centering" + "\n")
-    f.write(r"\renewcommand{\arraystretch}{1.2}" + "\n")
-    f.write(r"\begin{tabular}{@{}" + ("l" if row_labels else "") + num_cols*"c" + r"@{}}" + "\n")
-    f.write(r"\toprule" + "\n")
-    if headline:
-        f.write(r" & ".join(headline) + r"\\" + "\n")
-        f.write(r"\midrule" + "\n")
-
-    for i in range(num_rows):
-        if row_labels:
-            f.write(row_labels[i] + r" & ")
-        for j in range(num_cols):
-            f.write(fmt.format(values[i, j]))
-            if errors is not None:
-                f.write(r" $\pm$ " + fmt.format(errors[i, j]))
-            if j < num_cols - 1:
-                f.write(r" & ")
-        f.write(r" \\" + "\n")
-
-    f.write(r"\bottomrule" + "\n")
-    f.write(r"\end{tabular}" + "\n")
-
-    f.close()
 
 
 def chebyshev_coefficients_quadrature(t, m, kernel, n_theta=None):

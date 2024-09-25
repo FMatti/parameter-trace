@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from algorithms.chebyshev_nystrom import chebyshev_nystrom
 from algorithms.krylov_aware import krylov_aware
-from algorithms.helpers import spectral_transformation, form_spectral_density, gaussian_kernel
+from algorithms.helpers import spectral_transformation, form_spectral_density, gaussian_kernel, generate_tex_tabular
 from matrices.electronic_structure import hamiltonian
 
 np.random.seed(0)
@@ -22,8 +22,8 @@ eigvals_st = spectral_transformation(eigvals, min_ev, max_ev)
 # Set parameter
 t = np.linspace(-1, 1, 100)
 sigma_list = np.logspace(-3.5, -1.0, 7)
-n_Psi_list = np.array([ 60, 30, 30, 30, 40])    # m
 n_Omega_list = np.array([ 10, 20, 10, 10, 40])    # b
+n_Psi_list = np.array([ 60, 30, 30, 30, 40])    # m
 n_iter_list = np.array([ 30, 30, 60, 30, None])  # q
 n_reorth_list = np.array([20, 20, 20, 40, None])  # n
 m = 2000
@@ -32,7 +32,7 @@ plt.style.use("paper/plots/stylesheet.mplstyle")
 plt.figure(figsize=(3, 3))
 colors = ["#FFB000", "#FE6100", "#785EF0", "#648FFF", "#DC267F"]
 markers = ["d", "p", "^", "o", "s"]
-labels = ["KA I", "KA II", "KA III", "KA IV", "CN++"]
+labels = ["KA (I)", "KA (II)", "KA (III)", "KA (IV)", "CN++"]
 
 error = np.empty((len(n_Psi_list), len(sigma_list)))
 times = np.zeros(len(n_Psi_list))
@@ -62,4 +62,14 @@ plt.xscale("log")
 plt.yscale("log")
 plt.savefig("paper/plots/krylov_aware_density.pgf", bbox_inches="tight")
 
-print(times)
+headline = ["", r"$n_{\mtx{\Omega}}$", r"$n_{\mtx{\Psi}}$", r"$q$", r"$n$", r"time (s)"]
+fmt = [r"${:0.0f}$", r"${:0.0f}$", r"${:0.0f}$", r"${:0.0f}$", r"${:.2f}$"]
+values = np.vstack((n_Omega_list[:-1], n_Psi_list[:-1], n_iter_list[:-1], n_reorth_list[:-1], times[:-1])).T
+
+generate_tex_tabular(values, "paper/tables/krylov_aware_density_KA.tex", headline, labels[:-1], fmt=fmt)
+
+headline = ["", r"$n_{\mtx{\Omega}}$", r"$n_{\mtx{\Psi}}$", r"$m$", r"time (s)"]
+fmt = [r"${:0.0f}$", r"${:0.0f}$", r"${:0.0f}$", r"${:.2f}$"]
+values = np.vstack((n_Omega_list[-1], n_Psi_list[-1], m, times[-1])).T
+
+generate_tex_tabular(values, "paper/tables/krylov_aware_density_CN.tex", headline, labels[-1:], fmt=fmt)
