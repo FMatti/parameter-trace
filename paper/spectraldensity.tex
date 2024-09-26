@@ -381,7 +381,7 @@ where $\varepsilon$ is usually taken to be the double machine precision, i.e. $1
 %    \todo{TODO}
 %\end{proof}
 
-When using a Gaussian smoothing-kernel, we can explicitly write the singular values of $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ as
+When using a Gaussian smoothing-kernel, we can explicitly write the singular values of $n^{-1} g_{\sigma}(t\mtx{I}_n - \mtx{A})$ as
 \begin{equation}
     \sigma_i(t) = n^{-1} g_{\sigma}(t - \lambda_{(i)}) = \frac{1}{n \sqrt{2 \pi \sigma^2}} e^{-\sfrac{(t - \lambda_{(i)})^2}{2 \sigma^2}},
     \label{equ:gaussian-kernel-eigenvalues}

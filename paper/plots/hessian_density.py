@@ -49,9 +49,9 @@ test_loader = torch.utils.data.DataLoader(torchvision.datasets.MNIST("matrices/m
 
 
 # Set parameter
-t = np.linspace(0.2, 1.0, 100)
+t = np.linspace(0.1, 1.0, 150)
 sigma = 0.005
-m = 500
+m = 1000
 n_Omega = 30
 n_Psi = 10
 data = next(iter(train_loader))
@@ -67,23 +67,37 @@ kernel = lambda t, x: gaussian_kernel(t, x, sigma=sigma, n=H.shape[0])
 H = hessian(model, loss_function, data, spectral_transform=True)
 phi = chebyshev_nystrom(H, t, m, n_Psi, n_Omega, kernel)
 
-plt.plot(t, phi, color="#648FFF", label=r"untrained")
+plt.plot(t * H.scaling_parameter, phi, color="#648FFF", label=r"untrained")
 
-train(model, train_loader, loss_function, validator=validator, n_epochs=5)
-
-H.update(model, loss_function, data)
-phi = chebyshev_nystrom(H, t, m, n_Psi, n_Omega, kernel)
-
-plt.plot(t, phi, color="#DC267F", label=r"epoch $5$")
-
-train(model, train_loader, loss_function, validator=validator, n_epochs=5)
+train(model, train_loader, loss_function, validator=validator, n_epochs=2)
 
 H.update(model, loss_function, data)
 phi = chebyshev_nystrom(H, t, m, n_Psi, n_Omega, kernel)
 
-plt.plot(t, phi, color="#FFB000", label=r"epoch $10$")
+plt.plot(t * H.scaling_parameter, phi, color="#785EF0", label=r"epoch $2$")
+
+train(model, train_loader, loss_function, validator=validator, n_epochs=2)
+
+H.update(model, loss_function, data)
+phi = chebyshev_nystrom(H, t, m, n_Psi, n_Omega, kernel)
+
+plt.plot(t * H.scaling_parameter, phi, color="#DC267F", label=r"epoch $4$")
+
+train(model, train_loader, loss_function, validator=validator, n_epochs=2)
+
+H.update(model, loss_function, data)
+phi = chebyshev_nystrom(H, t, m, n_Psi, n_Omega, kernel)
+
+plt.plot(t * H.scaling_parameter, phi, color="#FE6100", label=r"epoch $6$")
+
+train(model, train_loader, loss_function, validator=validator, n_epochs=2)
+
+H.update(model, loss_function, data)
+phi = chebyshev_nystrom(H, t, m, n_Psi, n_Omega, kernel)
+
+plt.plot(t * H.scaling_parameter, phi, color="#FFB000", label=r"epoch $8$")
 plt.grid(True, which="both")
 plt.ylabel(r"smoothed spectral density $\phi_{\sigma}(t)$")
 plt.xlabel(r"spectral parameter $t$")
 plt.legend()
-plt.savefig("paper/plots/hessian_density.pgf", bbox_inches="tight")
+plt.savefig("paper/plots/hessian_density_.pgf", bbox_inches="tight")

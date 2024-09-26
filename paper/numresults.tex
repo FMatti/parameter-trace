@@ -70,35 +70,14 @@ We run an optimized implementation of the Krylov-aware stochastic trace estimato
         \input{plots/krylov_aware_density.pgf}
     \end{minipage}\hfill%
     \begin{minipage}[c]{.475\linewidth}
-        %\label{tab:krylov-aware-density}
         \vspace{-35pt}
         \input{tables/krylov_aware_density_KA.tex}
         \newline
         \vspace{15pt}
         \newline
         \input{tables/krylov_aware_density_CN.tex}
-        %\renewcommand{\arraystretch}{1.2}
-        %\begin{tabular}{@{}lccccc@{}}
-        %\toprule
-        %& $n_{\mtx{\Omega}}$ & $n_{\mtx{\Psi}}$ & $q$ & $n$ & runtime (s)\\
-        %\midrule
-        %KA I & 10 & 60 & 30 & 20 & 9.13 \\
-        %KA II & 20 & 30 & 30 & 20 & 9.13 \\
-        %KA III & 10 & 30 & 60 & 40 & 9.13 \\
-        %KA IV & 10 & 30 & 30 & 20 & 9.13 \\
-        %\bottomrule
-        %\end{tabular}
-        %\begin{tabular}{@{}lcccc@{}}
-        %\\
-        %\toprule
-        %& $n_{\mtx{\Omega}}$ & $n_{\mtx{\Psi}}$ & $m$ & runtime (s)\\
-        %\midrule
-        %CN++ & 40  & 40 & 2000 & 9.13 \\
-        %\bottomrule
-        %\end{tabular}
-        %\caption{Comparison with Krylov-Aware stochastic trace estimation.}
     \end{minipage}
-    \caption{Comparison with Krylov-Aware stochastic trace estimation.}
+    \caption{For the example from \refsec{subsec:hamiltonian} we compare the Chebyshev-Nyström++ method with the Krylov-Aware stochastic trace estimator in multiple configurations (right). To this extent, we compute the $L^1$-error of the methods for various levels of smoothing $\sigma$ (left).}
     \label{fig:krylov-aware-density}
 \end{figure}
 
@@ -117,18 +96,23 @@ To demonstrate that the Chebyshev-Nyström++ estimator is also effective on prob
         \newline
         \input{tables/krylov_aware_spin_CN.tex}
     \end{minipage}
-    \caption{Comparison with Krylov-Aware stochastic trace estimation.}
+    \caption{For the Heisenberg spin chain example, we compare the Chebyshev-Nyström++ method with the Krylov-Aware stochastic trace estimator in the same configurations as in \cite[Table 5.1]{chen-2023-krylovaware-stochastic} (right). To this extent, we compute the $L^1$-error of the methods for various choices of the temperature parameter $\beta^{-1}$ (left).}
     \label{fig:krylov-aware-spin}
 \end{figure}
 
-Unlike in the spectral density example from \refsec{subsec:hamiltonian}, the numerical rank of the matrix we approximate wildly changes with the parameter $\beta$. Since the Chebyshev-Nyström++ method requires a fixed allocation of random vectors to the low-rank approximation for all values of the parameter $\beta$. \todo{As a consequence, ...}
+Unlike in the spectral density example from \refsec{subsec:hamiltonian}, the numerical rank of the matrix we approximate wildly changes with the parameter $\beta$. Since the Chebyshev-Nyström++ method requires a fixed allocation of random vectors to the low-rank approximation for all values of the parameter $\beta$. Hence, both for large $\beta$, where the matrix $\exp(-\beta \mtx{A})$ is low-rank, and for small $\beta$, where the singular values only decay slowly, we cannot expect a good approximation.
 
 \subsection{Spectral density of Hessian matrix of neural network}
 \label{subsec:hessian}
 
-\todo{Hessian spectrum analysis?}
+When optimizing a neural network over some data, it is of great interest to determine whether a minimum has been found and if this minimum is robust, i.e. a small perturbation of the parameters of the neural network will not lead to a significant decrease in the quality of the outputs. Both properties are reflected in the eigenvalues of the Hessian matrix $\mtx{A}$ with respect to an appropriately chosen loss function: if all eigenvalues are non-negative, then the loss attains an local minimum, and if additionally all of them are small, the minimum is robust. 
+
+Since neural networks are usually parametrized by thousands if not millions of parameters, assembling the Hessian matrix and computing its eigenvalues is out of question. Luckily, there exists a method which can exactly compute matrix-vector products $\mtx{A} \vct{x}$ for any vector $\vct{x}$ which scales proportionally with the number of parameters \cite{pearlmutter-1994-fast-exact}. 
+
+To demonstrate that our algorithm can effectively be applied in the setting of neural network optimization, we approximate the spectral density of a fully connected convolutional neural network which we train on the classification task given by the MNIST dataset\footnote{Handwritten digit classification; taken from \url{http://yann.lecun.com/exdb/mnist}.}. We plot the approximation of the spectral density of the Hessian matrix of the untrained neural network, and at different stages of training in \reffig{fig:hessian-density}. It can well be observed that the eigenvalues tend towards zero as the training proceeds. Furthermore, by the absence of large eigenvalues in the spectrum, we can tell that in the final epoch, the neural network attained a robust state.
+
 \begin{figure}
     \input{plots/hessian_density.pgf}
-    \caption{Hessian spectral density}
+    \caption{Approximate spectral density of the Hessian matrix of a fully connected convolutional neural network in different epochs of training on the MNIST dataset. Computed with the Chebyshev-Nyström++ method (\refalg{alg:nystrom-chebyshev-pp}) on $n_{\mtx{\Omega}} = 30$, $n_{\mtx{\Psi}} = 10$, $m = 1500$, and $\sigma = 0.005$.}
     \label{fig:hessian-density}
 \end{figure}
