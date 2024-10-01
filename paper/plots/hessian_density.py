@@ -20,14 +20,8 @@ model = torch.nn.Sequential(
     torch.nn.BatchNorm2d(1),
     torch.nn.Flatten(),
     torch.nn.Linear(676, 10),
-    #torch.nn.Softplus(),
-    #torch.nn.Linear(256, 10),
     torch.nn.Sigmoid(),
 )
-
-# For now, don't execute this
-#if __name__ == "__main__":
-#    exit()
 
 np.random.seed(0)
 
@@ -49,7 +43,7 @@ test_loader = torch.utils.data.DataLoader(torchvision.datasets.MNIST("matrices/m
 
 
 # Set parameter
-t = np.linspace(0.1, 1.0, 150)
+t = np.linspace(0.05, 1.0, 150)
 sigma = 0.005
 m = 1000
 n_Omega = 30
@@ -100,4 +94,4 @@ plt.grid(True, which="both")
 plt.ylabel(r"smoothed spectral density $\phi_{\sigma}(t)$")
 plt.xlabel(r"spectral parameter $t$")
 plt.legend()
-plt.savefig("paper/plots/hessian_density_.pgf", bbox_inches="tight")
+plt.savefig("paper/plots/hessian_density.pgf", bbox_inches="tight")

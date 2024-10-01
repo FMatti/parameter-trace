@@ -11,6 +11,10 @@ from matrices.quantum_spin import hamiltonian, partition_function
 
 np.random.seed(0)
 
+# For now, don't execute this
+if __name__ == "__main__":
+    exit()
+
 N = 20
 s = 0.5
 h = 0.3
