@@ -209,23 +209,23 @@ In this section we show that the residual of the single-query Girard-Hutchinson 
 \end{lemma}
 
 \begin{proof}
-    The proof starts similarly as the proof of \cite[Lemma 3]{cortinovis-2022-randomized-trace}. The random variable $\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$ is centered because $\mathbb{E}[\vct{\psi}^{\top} \mtx{A} \vct{\psi}] = \operatorname{Tr}(\mtx{A})$. With the eigenvalue decomposition of $\mtx{A} = \mtx{U} \mtx{\Lambda} \mtx{U}^{\top}$, and since for orthonormal $\mtx{U}$, $\mtx{U}^{\top} \vct{\psi}$ is again a standard Gaussian random vector, we can rewrite
+    The proof starts similarly as the proof of \cite[Lemma 3]{cortinovis-2022-randomized-trace}. The random variable $\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$ is centered because $\mathbb{E}[\vct{\psi}^{\top} \mtx{A} \vct{\psi}] = \operatorname{Tr}(\mtx{A})$. With the eigenvalue decomposition of $\mtx{A} = \mtx{U} \mtx{\Lambda} \mtx{U}^{\top}$ and the orthogonality of $\mtx{U}$, we can rewrite
     \begin{equation}
         \Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{U}\mtx{\Lambda} \mtx{U}^{\top} \vct{\psi}  \sim \Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{\Lambda} \vct{\psi}  = \sum_{i=1}^{m} \lambda_i (1 - \psi_i^2) = \sum_{i=1}^{m} X_i.
     \end{equation}
     The random variables $X_i = \lambda_i(1 - \psi_i^2)$ are independent and defined by the standard Gaussian random variables $\psi_i$ for $i=1, \dots, m$. A simple integration shows that
     \begin{equation}
-        \mathbb{E}[\exp(t X_i)] = \frac{\exp\left(t \lambda_i\right) }{\sqrt{\log(1 + 2t \lambda_i)}} = \exp\left(t \lambda_i - \frac{1}{2} \log(1 + 2t \lambda_i) \right)
+        \mathbb{E}[\exp(t X_i)] = \frac{\exp\left(t \lambda_i\right) }{\sqrt{1 + 2t \lambda_i}} = \exp\left(t \lambda_i - \frac{1}{2} \log(1 + 2t \lambda_i) \right)
     \end{equation}
-    if $t \lambda_i > - 1/2$. To respect this restriction, we take one sub-exponential parameter as $\alpha_i := 2 |\lambda_i| \beta$ for an arbitrary $\beta > 1, \beta \in \mathbb{R}$. We now want to find the other sub-exponential parameter $\nu_i^2$. For all $|t| < 1 / \alpha_i$ (where $1/0$ should be understood as $+ \infty$), some standard calculus manipulations show that
+    if $t \lambda_i > - 1/2$. To respect this restriction, we take one sub-exponential parameter as $\alpha_i := 2 |\lambda_i| \beta$ for an arbitrary $\beta > 1, \beta \in \mathbb{R}$. We now want to find a good value for the other sub-exponential parameter $\nu_i^2$. For all $|t| < 1 / \alpha_i$ (where $1/0$ should be understood as $+ \infty$), some standard calculus manipulations show that
     \begin{equation}
         t \lambda_i - \frac{1}{2} \log(1 + 2t \lambda_i) \leq \frac{t^2 \nu_i^2}{2},
     \end{equation}
-    as long as we ensure
+    as long as we choose
     \begin{equation}
-        \nu_i^2 \geq \sup_{|t| < 1 / \alpha_i} \frac{2 \lambda_i^2}{1 + 2 t \lambda_i} = \frac{2 \lambda_i^2}{1 - 2 |\lambda_i| / \alpha_i} = \frac{2 \lambda_i^2}{1 - 1 / \beta}.
+        \nu_i^2 = \sup_{|t| < 1 / \alpha_i} \frac{2 \lambda_i^2}{1 + 2 t \lambda_i} = \frac{2 \lambda_i^2}{1 - 2 |\lambda_i| / \alpha_i} = \frac{2 \lambda_i^2}{1 - 1 / \beta}.
     \end{equation}
-    This shows that $Y_i$ are $(\nu_i^2, \alpha_i)$-sub-exponential.
+    This shows that the random variables $X_i$ are $(\nu_i^2, \alpha_i)$-sub-exponential.
 
     The sum of independent $(\nu_i^2, \alpha_i)$-sub-exponential random variables is $(\sum_i \nu_i^2, \max_i \alpha_i)$-sub-exponential. Therefore, $\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$ is $(2 \lVert \mtx{A} \rVert _F^2 (1 - 1/\beta)^{-1}, 2 \lVert \mtx{A} \rVert _2 \beta)$-sub-exponential for any $\beta > 1, \beta \in \mathbb{R}$.
 \end{proof}
