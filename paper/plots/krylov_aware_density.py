@@ -24,8 +24,8 @@ t = np.linspace(-1, 1, 100)
 sigma_list = np.logspace(-3.5, -1.0, 7)
 n_Omega_list = np.array([ 10, 20, 10, 10, 20])    # b
 n_Psi_list = np.array([ 60, 30, 30, 30, 20])    # m
-n_iter_list = np.array([ 30, 30, 60, 30, None])  # q
-n_reorth_list = np.array([20, 20, 20, 40, None])  # n
+q_list = np.array([20, 20, 40, 20, None])  # q
+n_list = np.array([10, 10, 10, 20, None])  # n
 m = 2000
 
 plt.style.use("paper/plots/stylesheet.mplstyle")
@@ -42,10 +42,10 @@ for j, sigma in enumerate(sigma_list):
     kernel = lambda t, x: gaussian_kernel(t, x, sigma=sigma, n=A.shape[0])
     baseline = form_spectral_density(eigvals_st, t, kernel)
 
-    for i, (n_Psi, n_Omega, n_iter, n_reorth) in enumerate(zip(n_Psi_list, n_Omega_list, n_iter_list, n_reorth_list)):
+    for i, (n_Psi, n_Omega, q, n) in enumerate(zip(n_Psi_list, n_Omega_list, q_list, n_list)):
         t0 = time.time()
         if i < len(n_Psi_list) - 1:
-            estimate = krylov_aware(A_st, t, n_iter, n_reorth, n_Psi, n_Omega, kernel)
+            estimate = krylov_aware(A_st, t, n + q, q, n_Psi, n_Omega, kernel)
         else:
             estimate = chebyshev_nystrom(A_st, t, m, n_Psi, n_Omega, kernel)
         error[i, j] = 2 * np.mean(np.abs(estimate - baseline))
@@ -62,9 +62,9 @@ plt.xscale("log")
 plt.yscale("log")
 plt.savefig("paper/plots/krylov_aware_density.pgf", bbox_inches="tight")
 
-headline = ["", r"$n_{\mtx{\Omega}}$", r"$n_{\mtx{\Psi}}$", r"$q$", r"$n$", r"time (s)"]
+headline = ["", r"$n_{\mtx{\Omega}}$", r"$n_{\mtx{\Psi}}$", r"$q$", r"$r$", r"time (s)"]
 fmt = [r"${:0.0f}$", r"${:0.0f}$", r"${:0.0f}$", r"${:0.0f}$", r"${:.2f}$"]
-values = np.vstack((n_Omega_list[:-1], n_Psi_list[:-1], n_iter_list[:-1], n_reorth_list[:-1], times[:-1])).T
+values = np.vstack((n_Omega_list[:-1], n_Psi_list[:-1], q_list[:-1], n_list[:-1], times[:-1])).T
 
 generate_tex_tabular(values, "paper/tables/krylov_aware_density_KA.tex", headline, labels[:-1], fmt=fmt)
 

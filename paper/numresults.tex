@@ -60,7 +60,7 @@ For a fixed budget of random vectors $n_{\mtx{\Omega}} + n_{\mtx{\Psi}}$, \reffi
 \subsection{Comparison to Krylov-aware stochastic trace estimation}
 \label{subsec:krylov-aware}
 
-The Krylov-aware stochastic trace estimation \cite{chen-2023-krylovaware-stochastic} also works well for the approximation of the trace of a matrix function $f(\mtx{A}, t)$ which separately depends on a parameter $t$. It also samples two standard Gaussian random matrices $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ and $\mtx{\Psi} \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$, of which $\mtx{\Omega}$ is used to extract a low-rank approximation to $f(\mtx{A}, t)$ from a Krylov-subspace of $\mtx{A}$ and $\mtx{\Psi}$ to estimate the trace of the approximation residual. 
+The Krylov-aware stochastic trace estimation \cite{chen-2023-krylovaware-stochastic} also works well for the approximation of the trace of a matrix function $f(\mtx{A}, t)$ which separately depends on a parameter $t$. It also samples two standard Gaussian random matrices $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ and $\mtx{\Psi} \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$. $\mtx{\Omega}$ is used to extract a low-rank approximation to $f(\mtx{A}, t)$ from a block-Krylov subspace of $\mtx{A}$ generated from $r + q$ iterations of the block-Lanczos method of which the first $r$ are reorthogonalized. $\mtx{\Psi}$ is used to estimate the trace of the approximation residual with $r$ iterations of the Lanczos method.
 
 We run an optimized implementation of the Krylov-aware stochastic trace estimator \cite[Algorithm 3.1]{chen-2023-krylovaware-stochastic} in multiple configurations on the example from \refsec{subsec:hamiltonian} and plot their approximation errors for various values of the smoothing parameter $\sigma$ in \reffig{fig:krylov-aware-density}. For reference, we add the error of the Chebyshev-Nyström++ method on parameters which lead to a comparable run-time.
 
@@ -77,7 +77,7 @@ We run an optimized implementation of the Krylov-aware stochastic trace estimato
         \newline
         \input{tables/krylov_aware_density_CN.tex}
     \end{minipage}
-    \caption{For the example from \refsec{subsec:hamiltonian} we compare the Chebyshev-Nyström++ method with the Krylov-Aware stochastic trace estimator in multiple configurations (right). To this extent, we compute the $L^1$-error of the methods for various levels of smoothing $\sigma$ (left).}
+    \caption{For the example from \refsec{subsec:hamiltonian} we compare the Chebyshev-Nyström++ (CN++) method with the Krylov-Aware (KA) stochastic trace estimator in multiple configurations (right). To this extent, we compute the $L^1$-error of the methods for various levels of smoothing $\sigma$ (left).}
     \label{fig:krylov-aware-density}
 \end{figure}
 
@@ -96,7 +96,7 @@ To demonstrate that the Chebyshev-Nyström++ estimator is also effective on prob
         \newline
         \input{tables/krylov_aware_spin_CN.tex}
     \end{minipage}
-    \caption{For the Heisenberg spin chain example, we compare the Chebyshev-Nyström++ method with the Krylov-Aware stochastic trace estimator in the same configurations as in \cite[Table 5.1]{chen-2023-krylovaware-stochastic} (right). To this extent, we compute the $L^1$-error of the methods for various choices of the temperature parameter $\beta^{-1}$ (left).}
+    \caption{For the Heisenberg spin chain example, we compare the Chebyshev-Nyström++ (CN++) method with the Krylov-Aware stochastic trace estimator in the same configurations as in \cite[Table 5.1]{chen-2023-krylovaware-stochastic} (right). To this extent, we compute the $L^1$-error of the methods for various choices of the temperature parameter $\beta^{-1}$ (left).}
     \label{fig:krylov-aware-spin}
 \end{figure}
 
