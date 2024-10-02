@@ -60,16 +60,16 @@ plt.xlabel(r"smoothing parameter $\sigma$")
 plt.legend()
 plt.xscale("log")
 plt.yscale("log")
-plt.savefig("paper/plots/krylov_aware_density_.pgf", bbox_inches="tight")
+plt.savefig("paper/plots/krylov_aware_density.pgf", bbox_inches="tight")
 
 headline = ["", r"$n_{\mtx{\Omega}}$", r"$n_{\mtx{\Psi}}$", r"$q$", r"$n$", r"time (s)"]
 fmt = [r"${:0.0f}$", r"${:0.0f}$", r"${:0.0f}$", r"${:0.0f}$", r"${:.2f}$"]
 values = np.vstack((n_Omega_list[:-1], n_Psi_list[:-1], n_iter_list[:-1], n_reorth_list[:-1], times[:-1])).T
 
-generate_tex_tabular(values, "paper/tables/krylov_aware_density_KA_.tex", headline, labels[:-1], fmt=fmt)
+generate_tex_tabular(values, "paper/tables/krylov_aware_density_KA.tex", headline, labels[:-1], fmt=fmt)
 
 headline = ["", r"$n_{\mtx{\Omega}}$", r"$n_{\mtx{\Psi}}$", r"$m$", r"time (s)"]
 fmt = [r"${:0.0f}$", r"${:0.0f}$", r"${:0.0f}$", r"${:.2f}$"]
 values = np.vstack((n_Omega_list[-1], n_Psi_list[-1], m, times[-1])).T
 
-generate_tex_tabular(values, "paper/tables/krylov_aware_density_CN_.tex", headline, labels[-1:], fmt=fmt)
+generate_tex_tabular(values, "paper/tables/krylov_aware_density_CN.tex", headline, labels[-1:], fmt=fmt)

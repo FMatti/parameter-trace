@@ -3,4 +3,3 @@ torchvision
 matplotlib
 scipy
 numpy
-ipykernel

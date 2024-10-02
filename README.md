@@ -1,4 +1,4 @@
-# pTrace
+# Randomized trace estimation for parameter-dependent matrices applied to spectral density approximation
 
 ![](https://img.shields.io/badge/-Compatibility-gray?style=flat-square) &ensp;
 ![](https://img.shields.io/badge/Python_3.8+-white?style=flat-square&logo=python&color=white&logoColor=white&labelColor=gray)
@@ -7,6 +7,7 @@
 ![](https://img.shields.io/badge/NumPy-white?style=flat-square&logo=numpy&color=white&logoColor=white&labelColor=gray)
 ![](https://img.shields.io/badge/SciPy-white?style=flat-square&logo=scipy&color=white&logoColor=white&labelColor=gray)
 ![](https://img.shields.io/badge/Matplotlib-white?style=flat-square&logo=python&color=white&logoColor=white&labelColor=gray)
+![](https://img.shields.io/badge/PyTorch-white?style=flat-square&logo=pytorch&color=white&logoColor=white&labelColor=gray)
 
 ## Quick start
 
@@ -31,15 +32,24 @@ cd Rand-TRACE
 Install all the requirements with
 ```[shell]
 python -m pip install --upgrade pip
-python -m install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
-Reproduce the whole project with the following command
+Reproduce the whole project with the command
 ```[shell]
 python -m reproduce.py -a
 ```
 > [!NOTE]
-> Reproducing the whole project might take up to three hours!
+> Reproducing the whole project might take up to one hour!
+
+### Tests
+
+To run the tests, you will need to install [pytest](https://docs.pytest.org/en/stable/) and run the command `pytest` at the root of this project with the commands
+
+```[shell]
+python -m pip install pytest
+pytest
+```
 
 ## Theoretical background
 
@@ -111,4 +121,5 @@ Rand-TRACE
 └───reproduce           (scripts which help setup and reproduce project)
 └───algorithms          (the algorithms introduced in the paper)
 └───matrices            (the example matrices used for the numerical results)
+└───test                (unit tests written for the algorithms)
 ```
