@@ -53,6 +53,7 @@ def train(model, data_loader, loss_function=torch.nn.MSELoss(), optimizer=torch.
     """
 
     optimizer = optimizer(model.parameters(), **optimizer_parameters)
+    loss_list = []
 
     for epoch in range(n_epochs):
         epoch_loss = 0
@@ -72,8 +73,10 @@ def train(model, data_loader, loss_function=torch.nn.MSELoss(), optimizer=torch.
             # Accumulate the loss for this epoch
             epoch_loss += loss.item()
 
+        epoch_loss /= len(data_loader)
+        loss_list.append(epoch_loss)
+
         if verbose:
-            epoch_loss /= len(data_loader)
             msg = "[Epoch {:2d}/{}] \t".format(epoch + 1, n_epochs)
             msg += "Time: {:.2f} s - ".format(time.time() - start_time)
             msg += "Loss: {:.4f}".format(epoch_loss)
@@ -82,6 +85,8 @@ def train(model, data_loader, loss_function=torch.nn.MSELoss(), optimizer=torch.
                 msg += validator(model)
 
             print(msg)
+
+    return loss_list
 
 
 def accuracy_validator(model, data_loader):

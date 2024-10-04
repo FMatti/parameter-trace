@@ -11,6 +11,10 @@ from matrices.quantum_spin import hamiltonian, partition_function
 
 np.random.seed(0)
 
+# Don't execute this because memory overflow on GitHub due to private repository
+#if __name__ == "__main__":
+#    quit()
+
 N = 20
 s = 0.5
 h = 0.3
@@ -23,10 +27,10 @@ E_max, = sp.sparse.linalg.eigsh(A, k=1, which="LA", return_eigenvectors=False, t
 A_st = spectral_transformation(A, E_min, E_max)
 
 # Set parameter
-n_Omega_list = np.array([8, 0, 8, 4, 10])  # b
-n_Psi_list = np.array([0, 13, 13, 6, 10])  # m
+n_Omega_list = np.array([8, 0, 8, 4, 40])  # b
+n_Psi_list = np.array([0, 13, 13, 6, 40])  # m
 q_list = np.array([30, 0, 30, 30, None])  # q
-n_list = np.array([50, 50, 50, 50, None])  # n
+r_list = np.array([50, 50, 50, 50, None])  # n
 m = 50
 
 plt.style.use("paper/plots/stylesheet.mplstyle")
@@ -42,11 +46,11 @@ baseline = partition_function(betas, N, h, J, E_min)
 error = np.empty((len(n_Psi_list), len(betas)))
 times = np.zeros(len(n_Psi_list))
 
-for i, (n_Psi, n_Omega, q, n) in enumerate(zip(n_Psi_list, n_Omega_list, q_list, n_list)):
+for i, (n_Psi, n_Omega, q, r) in enumerate(zip(n_Psi_list, n_Omega_list, q_list, r_list)):
     t0 = time.time()
     if i < len(n_Psi_list) - 1:
         function = lambda beta, x: np.exp(-np.multiply.outer(beta, x - E_min))
-        estimate = krylov_aware(A, betas, n + q, q, n_Omega, n_Psi, function)
+        estimate = krylov_aware(A, betas, r + q, q, n_Omega, n_Psi, function)
     else:
         function = lambda beta, x: np.exp(-np.multiply.outer(beta, x + 1))
         estimate = chebyshev_nystrom(A_st, betas * (E_max - E_min) / 2, m, n_Psi, n_Omega, function, kappa=-1, rcond=1e-10)
@@ -67,7 +71,7 @@ plt.savefig("paper/plots/krylov_aware_spin.pgf", bbox_inches="tight")
 
 headline = ["", r"$n_{\mtx{\Omega}}$", r"$n_{\mtx{\Psi}}$", r"$q$", r"$r$", r"time (s)"]
 fmt = [r"${:0.0f}$", r"${:0.0f}$", r"${:0.0f}$", r"${:0.0f}$", r"${:.2f}$"]
-values = np.vstack((n_Omega_list[:-1], n_Psi_list[:-1], q_list[:-1], n_list[:-1], times[:-1])).T
+values = np.vstack((n_Omega_list[:-1], n_Psi_list[:-1], q_list[:-1], r_list[:-1], times[:-1])).T
 
 generate_tex_tabular(values, "paper/tables/krylov_aware_spin_KA.tex", headline, labels[:-1], fmt=fmt)
 

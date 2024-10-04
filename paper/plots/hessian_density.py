@@ -1,9 +1,3 @@
-"""
-hessian_density.py
-
-TODO: Only look at spectrum at range far in the negative or positive
-"""
-
 import __context__
 
 import numpy as np
@@ -30,7 +24,7 @@ train_loader = torch.utils.data.DataLoader(torchvision.datasets.MNIST("matrices/
                                            train=True,
                                            transform=torchvision.transforms.ToTensor()),
                                            batch_size=64,
-                                           shuffle=True
+                                           shuffle=False
 )
 
 test_loader = torch.utils.data.DataLoader(torchvision.datasets.MNIST("matrices/mnist_data", 
@@ -46,11 +40,12 @@ test_loader = torch.utils.data.DataLoader(torchvision.datasets.MNIST("matrices/m
 t = np.linspace(0.05, 1.0, 150)
 sigma = 0.005
 m = 1000
-n_Omega = 30
+n_Omega = 10
 n_Psi = 10
 data = next(iter(train_loader))
 
 plt.style.use("paper/plots/stylesheet.mplstyle")
+plt.figure(figsize=(3, 3))
 
 # Train the model on the MNIST data set
 loss_function = lambda x, y: torch.nn.MSELoss()(x, torch.nn.functional.one_hot(y, num_classes=10).to(dtype=torch.float))
@@ -63,28 +58,34 @@ phi = chebyshev_nystrom(H, t, m, n_Psi, n_Omega, kernel)
 
 plt.plot(t * H.scaling_parameter, phi, color="#648FFF", label=r"untrained")
 
-train(model, train_loader, loss_function, validator=validator, n_epochs=2)
+epoch_loss = 0
+for batch in train_loader:
+    epoch_loss += loss_function(model(*batch[:-1]), batch[-1]).item()
+
+loss_list = [epoch_loss / len(train_loader)]
+
+loss_list.extend(train(model, train_loader, loss_function, validator=validator, n_epochs=2))
 
 H.update(model, loss_function, data)
 phi = chebyshev_nystrom(H, t, m, n_Psi, n_Omega, kernel)
 
 plt.plot(t * H.scaling_parameter, phi, color="#785EF0", label=r"epoch $2$")
 
-train(model, train_loader, loss_function, validator=validator, n_epochs=2)
+loss_list.extend(train(model, train_loader, loss_function, validator=validator, n_epochs=2))
 
 H.update(model, loss_function, data)
 phi = chebyshev_nystrom(H, t, m, n_Psi, n_Omega, kernel)
 
 plt.plot(t * H.scaling_parameter, phi, color="#DC267F", label=r"epoch $4$")
 
-train(model, train_loader, loss_function, validator=validator, n_epochs=2)
+loss_list.extend(train(model, train_loader, loss_function, validator=validator, n_epochs=2))
 
 H.update(model, loss_function, data)
 phi = chebyshev_nystrom(H, t, m, n_Psi, n_Omega, kernel)
 
 plt.plot(t * H.scaling_parameter, phi, color="#FE6100", label=r"epoch $6$")
 
-train(model, train_loader, loss_function, validator=validator, n_epochs=2)
+loss_list.extend(train(model, train_loader, loss_function, validator=validator, n_epochs=2))
 
 H.update(model, loss_function, data)
 phi = chebyshev_nystrom(H, t, m, n_Psi, n_Omega, kernel)
@@ -94,4 +95,12 @@ plt.grid(True, which="both")
 plt.ylabel(r"smoothed spectral density $\phi_{\sigma}(t)$")
 plt.xlabel(r"spectral parameter $t$")
 plt.legend()
-plt.savefig("paper/plots/hessian_density.pgf", bbox_inches="tight")
+plt.savefig("paper/plots/hessian_density__.pgf", bbox_inches="tight")
+
+plt.figure(figsize=(3, 3))
+plt.plot(range(len(loss_list)), loss_list, marker="d", color="k")
+plt.xticks([0, 2, 4, 6, 8], [0, 2, 4, 6, 8])
+plt.grid(True, which="both")
+plt.ylabel(r"training loss")
+plt.xlabel(r"epoch")
+plt.savefig("paper/plots/hessian_density_loss__.pgf", bbox_inches="tight")

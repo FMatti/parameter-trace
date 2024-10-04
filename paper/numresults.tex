@@ -2,6 +2,8 @@
 \section{Numerical experiments}
 \label{sec:results}
 
+In this last section, we test our algorithm in multiple scenarios. First, we numerically confirm our theoretical convergence bounds by approximating the spectral density of a Hamiltonian arising from electronic structure interaction. Subsequently, we compare our method to the Krylov-aware stochastic trace estimator \cite{chen-2023-krylovaware-stochastic} once on the electronic structure example and once for estimating the trace of a more general parameter-dependent matrix appearing in statistical thermodynamics. In the end, we demonstrate that our algorithm can also be used to monitor the optimization process of a neural network.
+
 \subsection{Spectral density for Hamiltonian of electronic structure}
 \label{subsec:hamiltonian}
 
@@ -48,7 +50,7 @@ While theoretically an important tool, we waive using the non-negative Chebyshev
 
 Indeed, we observe that for $n_{\mtx{\Omega}} = 0$, we require $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2})$ to achieve an error of order $\varepsilon$, as shown in \refthm{thm:hutchinson}. Because the eigenvalues of the matrix are quite uniformly distributed, we observe the stronger convergence of the Nyström approximation discussed in the end of \refsec{sec:application} once $n_{\mtx{\Omega}}$ exceeds the numerical rank \refequ{equ:gaussian-kernel-numerical-rank-uniform}, which in this case would be somewhat larger than $30$.
 
-For a fixed budget of random vectors $n_{\mtx{\Omega}} + n_{\mtx{\Psi}}$, \reffig{fig:distribution} visualizes how for different values of the smoothing parameter $\sigma$ the random vectors should either be invested into the Nyström approximation $n_{\mtx{\Omega}}$ or the estimation of the residual trace $n_{\mtx{\Psi}}$. Again, since for small $\sigma$ the matrix function $g_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})$ has a small numerical rank, a Nyström approximation alone is already enough to achieve a good approximation. On the other hand, when $\sigma$ is large, the Nyström approximation alone is not effective, and the correction with the residual trace becomes indispensable.
+For a fixed budget of random vectors $n_{\mtx{\Omega}} + n_{\mtx{\Psi}}$, \reffig{fig:distribution} visualizes how for different values of the smoothing parameter $\sigma$ the random vectors should either be invested into the Nyström approximation $n_{\mtx{\Omega}}$ or the estimation of the residual trace $n_{\mtx{\Psi}}$. Again, since for small $\sigma$ the matrix function $g_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})$ has a small numerical rank, a Nyström approximation alone is already enough to achieve a good approximation. On the other hand, when $\sigma$ is large, the Nyström approximation by itself is not effective, and the correction with the residual trace becomes indispensable.
 
 \begin{figure}[ht]
     \centering
@@ -60,9 +62,9 @@ For a fixed budget of random vectors $n_{\mtx{\Omega}} + n_{\mtx{\Psi}}$, \reffi
 \subsection{Comparison to Krylov-aware stochastic trace estimation}
 \label{subsec:krylov-aware}
 
-The Krylov-aware stochastic trace estimation \cite{chen-2023-krylovaware-stochastic} also works well for the approximation of the trace of a matrix function $f(\mtx{A}, t)$ which separately depends on a parameter $t$. It also samples two standard Gaussian random matrices $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ and $\mtx{\Psi} \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$. $\mtx{\Omega}$ is used to extract a low-rank approximation to $f(\mtx{A}, t)$ from a block-Krylov subspace of $\mtx{A}$ generated from $r + q$ iterations of the block-Lanczos method of which the first $r$ are reorthogonalized. $\mtx{\Psi}$ is used to estimate the trace of the approximation residual with $r$ iterations of the Lanczos method.
+The Krylov-aware stochastic trace estimation \cite{chen-2023-krylovaware-stochastic} is also well suited for approximating the trace of a matrix function $f(\mtx{A}, t)$ which separately depends on a parameter $t$. It also samples two standard Gaussian random matrices $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ and $\mtx{\Psi} \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$. $\mtx{\Omega}$ is used to extract a low-rank approximation to $f(\mtx{A}, t)$ from a block-Krylov subspace of $\mtx{A}$ generated from $r$ iterations of the block-Lanczos method with reorthogonalization and subsequently $q$ without. $\mtx{\Psi}$ is then used to estimate the trace of the approximation residual with $r$ iterations of the Lanczos method.
 
-We run an optimized implementation of the Krylov-aware stochastic trace estimator \cite[Algorithm 3.1]{chen-2023-krylovaware-stochastic} in multiple configurations on the example from \refsec{subsec:hamiltonian} and plot their approximation errors for various values of the smoothing parameter $\sigma$ in \reffig{fig:krylov-aware-density}. For reference, we add the error of the Chebyshev-Nyström++ method on parameters which lead to a comparable run-time.
+We run an optimized implementation of the Krylov-aware stochastic trace estimator \cite[Algorithm 3.1]{chen-2023-krylovaware-stochastic} in multiple configurations on the example from \refsec{subsec:hamiltonian} and plot the approximation errors for logarithmically spaced values of the smoothing parameter $\sigma$ in \reffig{fig:krylov-aware-density}. For reference, we add the error of the Chebyshev-Nyström++ method on parameters which lead to a comparable run-time.
 
 \begin{figure}[ht]
     \begin{minipage}[c]{.475\linewidth}
@@ -77,7 +79,7 @@ We run an optimized implementation of the Krylov-aware stochastic trace estimato
         \newline
         \input{tables/krylov_aware_density_CN.tex}
     \end{minipage}
-    \caption{For the example from \refsec{subsec:hamiltonian} we compare the Chebyshev-Nyström++ (CN++) method with the Krylov-Aware (KA) stochastic trace estimator in multiple configurations (right). To this extent, we compute the $L^1$-error of the methods for various levels of smoothing $\sigma$ (left).}
+    \caption{For the example from \refsec{subsec:hamiltonian} we compare the Chebyshev-Nyström++ (CN++) method with the Krylov-Aware (KA) stochastic trace estimator in multiple configurations. To this extent, we compute the $L^1$-error of the methods for various levels of smoothing $\sigma$ (left). The parameters of the algorithms and run-time averaged over all values of $\sigma$ can be found in the tables (right).}
     \label{fig:krylov-aware-density}
 \end{figure}
 
@@ -105,14 +107,21 @@ Unlike in the spectral density example from \refsec{subsec:hamiltonian}, the num
 \subsection{Spectral density of Hessian matrix of neural network}
 \label{subsec:hessian}
 
-When optimizing a neural network over some data, it is of great interest to determine whether a minimum has been found and if this minimum is robust, i.e. a small perturbation of the parameters of the neural network will not lead to a significant decrease in the quality of the outputs. Both properties are reflected in the eigenvalues of the Hessian matrix $\mtx{A}$ with respect to an appropriately chosen loss function: if all eigenvalues are non-negative, then the loss attains an local minimum, and if additionally all of them are small, the minimum is robust. 
+When optimizing a neural network over some data, it is of great interest to determine whether a minimum has been found and if this minimum is robust, i.e. a small perturbation of the parameters of the neural network will not lead to a significant decrease in the fit of the neural network. Both properties are reflected in the eigenvalues of the Hessian matrix $\mtx{A}$ with respect to some loss function: if all eigenvalues are non-negative, then the loss attains a local minimum, and if additionally all of them are small, the minimum is robust.
 
-Since neural networks are usually parametrized by thousands if not millions of parameters, assembling the Hessian matrix and computing its eigenvalues is out of question. Luckily, there exists a method which can exactly compute matrix-vector products $\mtx{A} \vct{x}$ for any vector $\vct{x}$ which scales proportionally with the number of parameters \cite{pearlmutter-1994-fast-exact}. 
+Since neural networks are usually parametrized by thousands of parameters, assembling the Hessian matrix explicitly and then computing its eigenvalues is out of question. Luckily, there exists a method which can exactly compute matrix-vector products $\mtx{A} \vct{x}$ for any vector $\vct{x}$ which scales proportionally with the number of parameters \cite{pearlmutter-1994-fast-exact}.
 
-To demonstrate that our algorithm can effectively be applied in the setting of neural network optimization, we approximate the spectral density of a fully connected convolutional neural network which we train on the classification task given by the MNIST dataset\footnote{Handwritten digit classification; taken from \url{http://yann.lecun.com/exdb/mnist}.}. We plot the approximation of the spectral density of the Hessian matrix of the untrained neural network, and at different stages of training in \reffig{fig:hessian-density}. It can well be observed that the eigenvalues tend towards zero as the training proceeds. Furthermore, by the absence of large eigenvalues in the spectrum, we can tell that in the final epoch, the neural network attained a robust state.
+To demonstrate that our algorithm can effectively be applied in the setting of neural network optimization, we approximate the spectral density of a small fully connected convolutional neural network with 6782 parameters, which we train on the handwritten digit classification task given by the MNIST dataset\footnote{Handwritten digit classification; taken from \url{http://yann.lecun.com/exdb/mnist}.}. We plot the approximation of the spectral density of the Hessian matrix of the untrained neural network, and at different stages of training in \reffig{fig:hessian-density}, as well as the corresponding mean squared error loss. It can well be observed that the eigenvalues creep towards zero as the training proceeds. Furthermore, by the absence of large eigenvalues in the spectrum, we can tell that in the final epoch, the neural network attains a more robust state than in previous epochs.
 
 \begin{figure}
-    \input{plots/hessian_density.pgf}
-    \caption{Approximate spectral density of the Hessian matrix of a fully connected convolutional neural network in different epochs of training on the MNIST dataset. Computed with the Chebyshev-Nyström++ method (\refalg{alg:nystrom-chebyshev-pp}) on $n_{\mtx{\Omega}} = 30$, $n_{\mtx{\Psi}} = 10$, $m = 1500$, and $\sigma = 0.005$.}
+    \begin{minipage}[c]{.49\linewidth}
+        \centering
+        \input{plots/hessian_density.pgf}
+    \end{minipage}\hfill%
+    \begin{minipage}[c]{.49\linewidth}
+        \centering
+        \input{plots/hessian_density_loss.pgf}
+    \end{minipage}
+    \caption{The mean squared error training loss (right) and the corresponding approximate spectral density of the Hessian matrix of a fully connected convolutional neural network in different epochs of training on the MNIST dataset (left). Computed with the Chebyshev-Nyström++ method (\refalg{alg:nystrom-chebyshev-pp}) on $n_{\mtx{\Omega}} = 10$, $n_{\mtx{\Psi}} = 10$, $m = 1000$, and $\sigma = 0.005$.}
     \label{fig:hessian-density}
 \end{figure}

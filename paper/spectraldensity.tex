@@ -69,7 +69,7 @@ However, the Chebyshev polynomials are only well-defined for matrices whose spec
         \tau(t) = \frac{2t - a - b}{b - a}
     \end{cases}
 \end{equation}
-then lets us define the matrix $\bar{\mtx{A}} = \tau(\mtx{A})$ whose spectrum is identical to the one of $\mtx{A}$ but shrunk to the interval $[-1, 1]$, for which the expansion \refequ{equ:matrix-expansion} is valid. Note that through this transformation we will also have to adjust the smoothing parameter $\bar{\sigma} = 2 \sigma (b - a)^{-1}$ to obtain an undistorted approximation of the original spectrum when reverting the spectral transform $\tau$. From now on, we will assume the eigenvalues of the matrix $\mtx{A}$ to be contained in $[-1, 1]$.
+then lets us define the matrix $\bar{\mtx{A}} = \tau(\mtx{A})$ whose spectrum is identical to the one of $\mtx{A}$ but shrunk to the interval $[-1, 1]$, for which the expansion \refequ{equ:matrix-expansion} is valid\footnote{Note that we will have to adjust the smoothing parameter $\bar{\sigma} = 2 \sigma (b - a)^{-1}$ to obtain an undistorted approximation of the original spectrum when inverting the transformation.}. From now on, we will assume the eigenvalues of the matrix $\mtx{A}$ to be contained in $[-1, 1]$.
 
 \subsubsection{Fast and consistent squaring}
 \label{subsubsec:dct}
@@ -404,4 +404,4 @@ If we additionally assume the eigenvalues of the matrix $\mtx{A}$ to be evenly d
     r_{\varepsilon}(n^{-1} g_{\sigma}(t\mtx{I}_n - \mtx{A})) \lessapprox n d_{\varepsilon, \sigma} \approx 6 n \sigma,
     \label{equ:gaussian-kernel-numerical-rank-uniform}
 \end{equation}
-provided we set $\varepsilon = 10^{-16}$ and choose $\sigma$ roughly between $10^{-8}$ and $1$. Hence, choosing $n_{\mtx{\Omega}} = \mathcal{O}(n \sigma)$ will approximations which can be significantly better than \refthm{thm:chebyshev-nystrom}.
+provided we set $\varepsilon = 10^{-16}$ and choose $\sigma$ roughly between $10^{-8}$ and $1$. Hence, choosing $n_{\mtx{\Omega}} = \mathcal{O}(n \sigma)$ will yield approximations which can be significantly better than \refthm{thm:chebyshev-nystrom}.
