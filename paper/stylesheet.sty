@@ -1,18 +1,15 @@
 %%% LANGUAGE AND FONTS
 
 % Typesetting packages
-
-% DK: Had to turn this off to make it compile
-%\usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
- \usepackage[activate={true,nocompatibility},
-             final,
-             tracking=true,
-             kerning=true,
-             spacing=false,
-             factor=1100,
-             stretch=10,
-             shrink=10]{microtype}
+\usepackage[activate={true,nocompatibility},
+            final,
+            tracking=true,
+            kerning=true,
+            spacing=false,
+            factor=1100,
+            stretch=10,
+            shrink=10]{microtype}
 
 % English language package
 \usepackage[english]{babel}
@@ -20,18 +17,8 @@
 % Package for stylizing quotes
 \usepackage{csquotes}
 
-% Set font to Palatino with Euler math
-%\usepackage{palatino}
-%\usepackage{eulervm}
+% Set font
 \renewcommand\familydefault{\rmdefault}
-
-% Comment
-\newcommand\todo[1]{{{\color{red}#1}}}
-
-% Remove page numbering from empty page at section end
-\let\origdoublepage\cleardoublepage
-\newcommand{\clearemptydoublepage}{\clearpage{\pagestyle{empty}\origdoublepage}}
-\let\cleardoublepage\clearemptydoublepage
 
 
 %%% COLOR THEME
@@ -70,42 +57,14 @@
                                    {1ex \@plus .2ex \@minus .2ex}
                                    {\normalsize\bfseries}}
 
-% Command for adding empty page
-\newcommand\emptypage{
-  \newpage
-  \thispagestyle{empty}
-  \mbox{}
-  \newpage
-}
-
 
 %%% REFERENCING
 
 % Bibliography management
-\usepackage[backend=bibtex,style=ext-alphabetic-verb,minalphanames=2,giveninits=true]{biblatex}
-%\DeclareFieldFormat[article,inproceedings,misc]{title}{}
-\DeclareFieldFormat[article,inproceedings,misc]{citetitle}{#1}
-\DeclareFieldFormat[article,inproceedings,misc]{titlecase:title}{\MakeSentenceCase*{#1}} 
-\DeclareFieldFormat[article,inproceedings,misc]{title}{#1} 
-\addbibresource{bibliography.bib}
-%\newcommand*{\doi}[1]{DOI: \href{https://doi.org/#1}{#1}}
-\let\oldcite\cite
-\renewcommand{\cite}[2][]{\textcolor{linkcolor}{\bf \oldcite[#1]{#2}}}
-%\DeclareLabelalphaTemplate{
-%   \labelelement{
-%     \field[final]{shorthand}
-%     \field{label}
-%     \field[strwidth=1,strside=left]{labelname}
-%   }
-%   \labelelement{
-%     \field[strwidth=2,strside=right]{year}
-%   }
-%}
-% \DeclareLabelalphaNameTemplate{
-%   \namepart[use=true, pre=true, strwidth=1, compound=true]{prefix} 
-%   \namepart{family}
-%}
-
+\bibliographystyle{alpha}
+\makeatletter
+\def\@cite#1#2{\textbf{[#1\if@tempswa , #2\fi]}}
+\makeatother
 
 % Links
 \usepackage{url}
@@ -129,19 +88,8 @@
 \newcommand{\refthm}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Theorem \ref*{#1}}}}
 \newcommand{\refalg}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Algorithm \ref*{#1}}}}
 \newcommand{\refsec}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Section \ref*{#1}}}}
-\newcommand{\refapp}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Appendix \ref*{#1}}}}
 \newcommand{\reflin}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Line \ref*{#1}}}}
 \newcommand{\refequ}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf (\ref*{#1})}}}
-\newcommand{\Reffig}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Figure \ref*{#1}}}}
-\newcommand{\Reftab}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Table \ref*{#1}}}}
-\newcommand{\Refdef}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Definition \ref*{#1}}}}
-\newcommand{\Reflem}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Lemma \ref*{#1}}}}
-\newcommand{\Refthm}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Theorem \ref*{#1}}}}
-\newcommand{\Refalg}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Algorithm \ref*{#1}}}}
-\newcommand{\Refsec}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Section \ref*{#1}}}}
-\newcommand{\Refapp}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Appendix \ref*{#1}}}}
-\newcommand{\Reflin}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf Line \ref*{#1}}}}
-\newcommand{\Refequ}[1]{\hyperref[#1]{\textcolor{linkcolor}{\bf (\ref*{#1})}}}
 
 
 %%% FLOATS
@@ -149,9 +97,6 @@
 % Figures
 \usepackage{graphicx}
 \usepackage{tikz}
-\usetikzlibrary{fadings}
-\usetikzlibrary{calc}
-\usetikzlibrary{decorations.text}
 
 % Table layouting
 \usepackage{booktabs}
@@ -189,28 +134,15 @@
 % Trace estimator notations
 \DeclareMathOperator{\Trace}{Tr}
 \newcommand\Hutch[1]{\Trace_{#1}}
-%\newcommand\Hutch[1]{$H_{#1}$}
 \newcommand\Nystr[2]{\widehat{#2}_{#1}}
-%\newcommand\Hutch[1]{$N_{#1}$}
 \newcommand\Nystrpp[2]{\Trace_{#2, #1}}
-%\newcommand\Hutch[1]{$N++_{#1}$}
 
-%\usepackage{xfrac}
+% Sideway fractions for simple exponents (e.g. 1/2)
 \newcommand\sfrac[2]{{}^{#1}{\mskip -5mu/\mskip -3mu}_{#2}}
-%\newcommand{\sfrac}[2]{{\textstyle\frac{#1}{#2}}}
 
-% Custom opertators
-\DeclareMathOperator{\Var}{Var}
-\DeclareMathOperator{\Real}{Re}
-\DeclareMathOperator{\Imag}{Im}
-\DeclareMathOperator{\rank}{rank}
-\DeclareMathOperator{\diag}{diag}
-\DeclareMathOperator{\dimension}{dim}
-\DeclareMathOperator{\DCT}{DCT}
-\DeclareMathOperator{\MSE}{MSE}
-\DeclareMathOperator{\range}{range}
 
-% Colorboxes
+%%% Theorem environments
+
 \usepackage[many]{tcolorbox}
 \tcbset{breakable}
 \newtcolorbox{block}[2][]
@@ -241,7 +173,6 @@
   left=3pt,
   right=3pt,
   boxrule=1pt,
-  %fonttitle=\bfseries,
 }{thm}
 
 \newtcbtheorem[number within=section, use counter from=theorem]{lemma}{Lemma}%
@@ -283,28 +214,6 @@
   boxrule=1pt,
 }{alg}
 
-%\newtcbtheorem[number within=section, use counter from=theorem]{remark}{Remark}%
-%{
-%  colframe = black,
-%  colback  = white,
-%  coltitle = white,
-%  sharp corners,
-%  before skip=10pt,
-%  after skip=10pt,
-%  left=3pt,
-%  right=3pt,
-%  boxrule=1pt,
-%}{rem}
-
 \renewenvironment{proof}{\noindent\paragraph{\bfseries Proof.}}{\qed}
 
 \newenvironment{remark}{\noindent\paragraph{\bfseries Remark.}}{\\}
-
-
-
-%%% GLOSSARY
-
-%\usepackage{glossaries}
-
-%\makeglossaries
-

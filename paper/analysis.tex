@@ -13,9 +13,9 @@ In this section, we consider a general parameter-dependent matrix
     \end{bmatrix} \in \mathbb{R}^{n \times n},
 \end{equation*}
 where each entry $b_{ij}(t)$ is a continuous function on a bounded interval $[a,b]$. \emph{If} these entries are given explicitly, we can simply compute the trace by its definition 
-$\Trace(\mtx{B}(t)) = b_{11}(t)+ \cdots + b_{nn}(t)$. This becomes more difficult when $\mtx{B}(t)$ is given implicitly (e.g., as a matrix function) and can only be accessed through matrix-vector products. The common theme of all methods analyzed in this section is to extract trace estimates from multiplying $\mtx{B}(t)$ with fixed random vectors
+$\Trace(\mtx{B}(t)) = b_{11}(t)+ \cdots + b_{nn}(t)$. This becomes more difficult when $\mtx{B}(t)$ is given implicitly (e.g., as a matrix function) and can only be accessed through matrix-vector products. The common theme of all methods analyzed in this section is to extract trace estimates from multiplying $\mtx{B}(t)$ with fixed random vectors.
 
-as we will see in Section ???.
+%as we will see in Section ???.
 \color{black}
 
 \subsection{Methods}
@@ -305,7 +305,7 @@ We start our analysis of the methods presented above by deriving an $L^1$-error 
 %
 %Compared to the analogous result for the constant case~\cite[Lemma 2.1]{meyer-2021-hutch-optimal}, the number of queries $n_{\mtx{\Psi}}$ needed by~\refthm{thm:hutchinson} is roughly a factor $\log(\delta^{-1})$ larger.
 %
-\subsubsection{Nyström approximation}
+\subsubsection{Nyström estimator}
 \label{subsec:nystrom}
 
 As a consequence of~\cite{kressner-2024-randomized-lowrank}, the following result confirms the inituition that the Nystr\"om approximation is very well suited in the presence of decaying singular values: If the nuclear norm error to the best rank-$r$ approximation to $B(t)$ is bounded by $\varepsilon$ for every $t$ then the trace of the Nystr\"om approximation (with a bit of oversampling) results, with high probability, in an error that is only modestly larger than $\varepsilon$.
@@ -347,7 +347,7 @@ Compared to the constant case~\cite[Theorem 8.1]{tropp-2023-randomized-algorithm
         \label{qu:nystrompp-theorem-bound}
     \end{equation}
         holds with probability at least $1 - \gamma^{-\sfrac{n_{\mtx{\Omega}}}{4}}$ for 
-        a universal constant $c > 0$. In particular, given $\varepsilon > 0$ and $\delta \in (0, 1)$, the bound $\int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t$ holds with probability at least $1-\delta$ if $n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-2} + \log(\delta^{-1}))$.
+        $c = 1 + 9 \sqrt{2} e^4$. In particular, given $\varepsilon > 0$ and $\delta \in (0, 1)$, the bound $\int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t$ holds with probability at least $1-\delta$ if $n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-2} + \log(\delta^{-1}))$.
 \end{lemma}
 
 %\todo{Proof idea: structural bound, then higher order moment bound to apply Markov's inequality.}

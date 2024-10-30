@@ -29,7 +29,7 @@ Choosing the smoothing parameter $\sigma$ results in the following trade off: Ty
     \sup_{f \in \mathcal{S}} \int_{a}^{b} f(t) (\phi(t) - \phi_{\sigma}(t))~\mathrm{d}t,
     \label{equ:error-metric}
 \end{equation}
-where $\mathcal{S}$ represents an appropriately chosen space of test functions. Among others, \cite{lin-2016-approximating-spectral} proposes $\mathcal{S} = \{ f: f(t) \equiv g_{\sigma}(t - s), s \in [a, b]\}$, \cite{chen-2021-analysis-stochastic} uses $\mathcal{S} = \{f : f(t) = \Theta(s - t), s \in [a, b] \}$ where $\Theta$ is the Heaviside step function, and \cite{braverman-2022-sublinear-time} uses $\mathcal{S} = \{f : |f(t) - f(s)| \leq |t - s| \}$ for which the error \refequ{equ:error-metric} is equivalent to the Wasserstein-1 distance between $\phi$ and $\phi_{\sigma}$. In this last metric, provided we assume the eigenvalues to be somewhat uniformly distributed and $\sigma$ to be rather small, a simple calculation allows us to roughly estimate the smoothing error \refequ{equ:error-metric} to be $\sigma$. Consequently, if we can only allow an approximation to deviate by at most a factor of $\varepsilon > 0$ from the original spectral density, we should choose a smoothing parameter $\sigma \approx \varepsilon$.
+where $\mathcal{S}$ represents an appropriately chosen space of test functions. Among others, \cite{lin-2016-approximating-spectral} proposes $\mathcal{S} = \{ f: f(t) \equiv g_{\sigma}(t - s), s \in [a, b]\}$, \cite{chen-2021-analysis-stochastic} uses $\mathcal{S} = \{f : f(t) = \Theta(s - t), s \in [a, b] \}$ where $\Theta$ is the Heaviside step function, and \cite{braverman-2022-sublinear-time,bhattacharjee-2024-improved-spectral} use $\mathcal{S} = \{f : |f(t) - f(s)| \leq |t - s| \}$ for which the error \refequ{equ:error-metric} is equivalent to the Wasserstein-1 distance between $\phi$ and $\phi_{\sigma}$. In this last metric, provided we assume the eigenvalues to be somewhat uniformly distributed and $\sigma$ to be rather small, a simple calculation allows us to roughly estimate the smoothing error \refequ{equ:error-metric} to be $\sigma$. Consequently, if we can only allow an approximation to deviate by at most a factor of $\varepsilon > 0$ from the original spectral density, we should choose a smoothing parameter $\sigma \approx \varepsilon$.
 
 \subsection{Chebyshev expansion of smoothing kernel}
 \label{subsec:chebyshev-expansion}
@@ -88,8 +88,8 @@ A highly useful property of the Chebyshev expansion -- of which we will make use
         \Statex \textbf{Input:} Coefficients $\{ \mu_l \}_{l=0}^{m}$ of the expansion $\sum_{l=0}^{m} \mu_l T_l$
         \Statex \textbf{Output:} Coefficients $\{ \nu_l \}_{l=0}^{2m}$ such that $\sum_{l=0}^{2m} \nu_l T_l = (\sum_{l=0}^{m} \mu_l T_l)^2$
         \State Define $\vct{\mu} \in \mathbb{R}^{2m + 1}$ whose first $m + 1$ entries are the coefficients $\mu_l$ and the remaining $m$ are $0$
-    \State Compute $\vct{f} = \DCT(\vct{\mu})$
-    \State Compute $\vct{\nu} = \DCT^{-1}(\vct{f} \odot \vct{f})$ whose entries are the coefficients $\nu_l$
+    \State Compute $\vct{f} = \operatorname{DCT}(\vct{\mu})$
+    \State Compute $\vct{\nu} = \operatorname{DCT}^{-1}(\vct{f} \odot \vct{f})$ whose entries are the coefficients $\nu_l$
     \label{lin:inverse-DCT}
     \end{algorithmic}
 \end{algo}
