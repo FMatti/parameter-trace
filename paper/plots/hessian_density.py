@@ -40,7 +40,7 @@ test_loader = torch.utils.data.DataLoader(torchvision.datasets.MNIST("matrices/m
 t = np.linspace(0.05, 1.0, 150)
 sigma = 0.005
 m = 1000
-n_Omega = 10
+n_Omega = 30
 n_Psi = 10
 data = next(iter(train_loader))
 
@@ -95,7 +95,7 @@ plt.grid(True, which="both")
 plt.ylabel(r"smoothed spectral density $\phi_{\sigma}(t)$")
 plt.xlabel(r"spectral parameter $t$")
 plt.legend()
-plt.savefig("paper/plots/hessian_density__.pgf", bbox_inches="tight")
+plt.savefig("paper/plots/hessian_density.pgf", bbox_inches="tight")
 
 plt.figure(figsize=(3, 3))
 plt.plot(range(len(loss_list)), loss_list, marker="d", color="k")
@@ -103,4 +103,4 @@ plt.xticks([0, 2, 4, 6, 8], [0, 2, 4, 6, 8])
 plt.grid(True, which="both")
 plt.ylabel(r"training loss")
 plt.xlabel(r"epoch")
-plt.savefig("paper/plots/hessian_density_loss__.pgf", bbox_inches="tight")
+plt.savefig("paper/plots/hessian_density_loss.pgf", bbox_inches="tight")

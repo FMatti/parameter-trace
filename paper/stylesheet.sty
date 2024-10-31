@@ -61,10 +61,14 @@
 %%% REFERENCING
 
 % Bibliography management
-\bibliographystyle{alpha}
-\makeatletter
-\def\@cite#1#2{\textbf{[#1\if@tempswa , #2\fi]}}
-\makeatother
+\usepackage[backend=bibtex,style=ext-alphabetic,minalphanames=2,giveninits=true]{biblatex}
+%\DeclareFieldFormat[article,inproceedings,misc]{title}{}
+\DeclareFieldFormat[article,inproceedings,misc]{citetitle}{#1}
+\DeclareFieldFormat[article,inproceedings,misc]{titlecase:title}{\MakeSentenceCase*{#1}} 
+\DeclareFieldFormat[article,inproceedings,misc]{title}{#1} 
+\addbibresource{bibliography.bib}
+\let\oldcite\cite
+\renewcommand{\cite}[2][]{\textcolor{linkcolor}{\bf \oldcite[#1]{#2}}}
 
 % Links
 \usepackage{url}

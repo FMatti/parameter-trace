@@ -45,6 +45,3 @@ def test_block_lanczos():
             if i < k - 1:
                 T[i*m:(i+1)*m, (i+1)*m:(i+2)*m] = b[i + 1].conj().T
         np.testing.assert_allclose(A @ U[:, :-m] - U @ T, 0, atol=1e-10)
-
-def test_krylov_aware():
-    return None

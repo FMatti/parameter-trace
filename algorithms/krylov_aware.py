@@ -2,7 +2,7 @@
 krylov_aware.py
 ---------------
 
-Implementation of Krylov-aware spectral density estimator.
+Implementation of Krylov-aware trace estimator.
 """
 
 import numpy as np
@@ -10,7 +10,7 @@ import scipy as sp
 
 from .helpers import gaussian_kernel
 
-def lanczos(A, X, k, reorth_tol : float = 0.7, return_matrix : bool = True, extend_matrix : bool = True, dtype=None):
+def lanczos(A, X, k, reorth_tol=0.7, return_matrix=True, extend_matrix=True, dtype=None):
     """
     Implements the Krylov-decomposition of a Hermitian matrix or linear operator
     A with the Lanczos method [1]. The decomposition consists of an orthogonal
@@ -109,7 +109,7 @@ def lanczos(A, X, k, reorth_tol : float = 0.7, return_matrix : bool = True, exte
     return U, a, b
 
 
-def block_lanczos(A, X, k, reorth_steps : int = -1, return_matrix : bool = True, extend_matrix : bool = True, dtype=None):
+def block_lanczos(A, X, k, reorth_steps=-1, return_matrix=True, extend_matrix=True, dtype=None):
     """
     Implements the Krylov-decomposition of a Hermitian matrix or linear operator
     A with the block Lanczos method [2]. The decomposition consists of an
@@ -217,7 +217,7 @@ def block_lanczos(A, X, k, reorth_steps : int = -1, return_matrix : bool = True,
     return U, a, b
 
 
-def krylov_aware(A, t=0, n_iter=10, n_reorth=5, n_Omega=10, n_Psi=10, kernel=gaussian_kernel):
+def krylov_aware(A, t=0, n_iter=10, n_reorth=5, n_Omega=10, n_Psi=10, f=gaussian_kernel):
     """
     References
     ----------
@@ -245,9 +245,9 @@ def krylov_aware(A, t=0, n_iter=10, n_reorth=5, n_Omega=10, n_Psi=10, kernel=gau
         nodes = np.append(nodes, nodes_)
         weights = np.append(weights, weights_)
 
-    if kernel is None:
+    if f is None:
         fun = lambda t, x: x
     else:
-        fun = lambda t, x: kernel(t, x)
+        fun = lambda t, x: f(t, x)
 
     return fun(t, nodes) @ weights
