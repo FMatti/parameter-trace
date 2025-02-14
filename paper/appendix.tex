@@ -199,73 +199,72 @@ In passing, we note that \reflem{lem:spectral-norm-moment}  yields the bound
 %\end{equation}
 %for some other universal constant $\widetilde{c} > 0$.
 
-\section{Moment bounds for Girard-Hutchinson estimator}
+%\section{Moment bounds for Girard-Hutchinson estimator}
 
-In this section we first recall that the (centered) single-query Girard-Hutchinson estimator~\refequ{equ:hutchinson-trace-estimator} is sub-exponential. Combined with a bound on moments of sub-exponential random variables, this will be 
-used in the proof of \refthm{thm:hutchinson}.
+%In this section we first recall that the (centered) single-query Girard-Hutchinson estimator~\refequ{equ:hutchinson-trace-estimator} is sub-exponential. Combined with a bound on moments of sub-exponential random variables, this will be used in the proof of \refthm{thm:hutchinson}.
 
-\textcolor{red}{Connection between sub-gamma and sub-exponential?}
-\begin{lemma}{Sub-exponential property of $1$-query Girard-Hutchinson estimator}{hutchinson-sub-exponential}
-    Let $\mtx{A} \in \mathbb{R}^{m \times m}$ be symmetric and $\vct{\psi} \in \mathbb{R}^m$ a Gaussian random vector. Then the real random variable $\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$ is centered and $(2 \lVert \mtx{A} \rVert _F^2 (1 - 1/\beta)^{-1}, 2 \lVert \mtx{A} \rVert _2 \beta )$-sub-exponential for any $\beta > 1, \beta \in \mathbb{R}$.
-\end{lemma}
+%\textcolor{red}{Connection between sub-gamma and sub-exponential?}
+%\begin{lemma}{Sub-exponential property of $1$-query Girard-Hutchinson estimator}{hutchinson-sub-exponential}
+%    Let $\mtx{A} \in \mathbb{R}^{m \times m}$ be symmetric and $\vct{\psi} \in \mathbb{R}^m$ a Gaussian random vector. Then the real random variable $\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$ is centered and $(2 \lVert \mtx{A} \rVert _F^2 (1 - 1/\beta)^{-1}, 2 \lVert \mtx{A} \rVert _2 \beta )$-sub-exponential for any $\beta > 1, \beta \in \mathbb{R}$.
+%\end{lemma}
 
-\begin{proof}
-    The proof starts similarly as the proof of \cite[Lemma 3]{cortinovis-2022-randomized-trace}. The random variable $\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$ is centered because $\mathbb{E}[\vct{\psi}^{\top} \mtx{A} \vct{\psi}] = \operatorname{Tr}(\mtx{A})$. With the eigenvalue decomposition of $\mtx{A} = \mtx{U} \mtx{\Lambda} \mtx{U}^{\top}$ and the orthogonality of $\mtx{U}$, we can rewrite
-    \begin{equation}
-        \Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{U}\mtx{\Lambda} \mtx{U}^{\top} \vct{\psi}  \sim \Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{\Lambda} \vct{\psi}  = \sum_{i=1}^{m} \lambda_i (1 - \psi_i^2) = \sum_{i=1}^{m} X_i.
-    \end{equation}
-    The random variables $X_i = \lambda_i(1 - \psi_i^2)$ are independent and defined by the standard Gaussian random variables $\psi_i$ for $i=1, \dots, m$. A simple integration shows that
-    \begin{equation}
-        \mathbb{E}[\exp(t X_i)] = \frac{\exp\left(t \lambda_i\right) }{\sqrt{1 + 2t \lambda_i}} = \exp\left(t \lambda_i - \frac{1}{2} \log(1 + 2t \lambda_i) \right)
-    \end{equation}
-    if $t \lambda_i > - 1/2$. To respect this restriction, we take one sub-exponential parameter as $\alpha_i := 2 |\lambda_i| \beta$ for an arbitrary $\beta > 1, \beta \in \mathbb{R}$. We now want to find a good value for the other sub-exponential parameter $\nu_i^2$. For all $|t| < 1 / \alpha_i$ (where $1/0$ should be understood as $+ \infty$), some standard calculus manipulations show that
-    \begin{equation}
-        t \lambda_i - \frac{1}{2} \log(1 + 2t \lambda_i) \leq \frac{t^2 \nu_i^2}{2},
-    \end{equation}
-    as long as we choose
-    \begin{equation}
-        \nu_i^2 = \sup_{|t| < 1 / \alpha_i} \frac{2 \lambda_i^2}{1 + 2 t \lambda_i} = \frac{2 \lambda_i^2}{1 - 2 |\lambda_i| / \alpha_i} = \frac{2 \lambda_i^2}{1 - 1 / \beta}.
-    \end{equation}
-    This shows that the random variables $X_i$ are $(\nu_i^2, \alpha_i)$-sub-exponential.
+%\begin{proof}
+%    The proof starts similarly as the proof of \cite[Lemma 3]{cortinovis-2022-randomized-trace}. The random variable $\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$ is centered because $\mathbb{E}[\vct{\psi}^{\top} \mtx{A} \vct{\psi}] = \operatorname{Tr}(\mtx{A})$. With the eigenvalue decomposition of $\mtx{A} = \mtx{U} \mtx{\Lambda} \mtx{U}^{\top}$ and the orthogonality of $\mtx{U}$, we can rewrite
+%    \begin{equation}
+%        \Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{U}\mtx{\Lambda} \mtx{U}^{\top} \vct{\psi}  \sim \Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{\Lambda} \vct{\psi}  = \sum_{i=1}^{m} \lambda_i (1 - \psi_i^2) = \sum_{i=1}^{m} X_i.
+%    \end{equation}
+%    The random variables $X_i = \lambda_i(1 - \psi_i^2)$ are independent and defined by the standard Gaussian random variables $\psi_i$ for $i=1, \dots, m$. A simple integration shows that
+%    \begin{equation}
+%        \mathbb{E}[\exp(t X_i)] = \frac{\exp\left(t \lambda_i\right) }{\sqrt{1 + 2t \lambda_i}} = \exp\left(t \lambda_i - \frac{1}{2} \log(1 + 2t \lambda_i) \right)
+%    \end{equation}
+%    if $t \lambda_i > - 1/2$. To respect this restriction, we take one sub-exponential parameter as $\alpha_i := 2 |\lambda_i| \beta$ for an arbitrary $\beta > 1, \beta \in \mathbb{R}$. We now want to find a good value for the other sub-exponential parameter $\nu_i^2$. For all $|t| < 1 / \alpha_i$ (where $1/0$ should be understood as $+ \infty$), some standard calculus manipulations show that
+%    \begin{equation}
+%        t \lambda_i - \frac{1}{2} \log(1 + 2t \lambda_i) \leq \frac{t^2 \nu_i^2}{2},
+%    \end{equation}
+%    as long as we choose
+%    \begin{equation}
+%        \nu_i^2 = \sup_{|t| < 1 / \alpha_i} \frac{2 \lambda_i^2}{1 + 2 t \lambda_i} = \frac{2 \lambda_i^2}{1 - 2 |\lambda_i| / \alpha_i} = \frac{2 \lambda_i^2}{1 - 1 / \beta}.
+%    \end{equation}
+%    This shows that the random variables $X_i$ are $(\nu_i^2, \alpha_i)$-sub-exponential.
 
-    The sum of independent $(\nu_i^2, \alpha_i)$-sub-exponential random variables is $(\sum_i \nu_i^2, \max_i \alpha_i)$-sub-exponential. Therefore, $\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$ is $(2 \lVert \mtx{A} \rVert _F^2 (1 - 1/\beta)^{-1}, 2 \lVert \mtx{A} \rVert _2 \beta)$-sub-exponential for any $\beta > 1, \beta \in \mathbb{R}$.
-\end{proof}
+%    The sum of independent $(\nu_i^2, \alpha_i)$-sub-exponential random variables is $(\sum_i \nu_i^2, \max_i \alpha_i)$-sub-exponential. Therefore, $\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$ is $(2 \lVert \mtx{A} \rVert _F^2 (1 - 1/\beta)^{-1}, 2 \lVert \mtx{A} \rVert _2 \beta)$-sub-exponential for any $\beta > 1, \beta \in \mathbb{R}$.
+%\end{proof}
 
 
-It is well-known that $\mathbb{E}^p[X] \lesssim p$ for a sub-exponential random variable~\cite[Proposition 2.7.1]{vershynin-2018-highdimensional-probability}. The following result provides a bound that pays attention to  the constants involved..
-\begin{lemma}{Moment bound for sub-exponential random variable}{sub-exponential-moments}
-    Let $X$ be a centered, $(\nu^2, \alpha)$-sub-exponential random variable. Then
-    \begin{equation}
-        \mathbb{E}^p[X] \leq \sqrt{2 \pi p} \nu + 4 p \alpha
-    \end{equation}
-    holds for any $p \geq 1, p \in \mathbb{R}$.
-\end{lemma}
-
-\begin{proof}
-    Let $X$ be a centered, $(\nu^2, \alpha)$-sub-exponential random variable and $p \geq 1, p \in \mathbb{R}$. With an integration by parts and \cite[Proposition 2.9]{wainwright-2019-highdimensional-statistics}, we can bound
-    \begin{align}
-        \mathbb{E}[|X|^p] 
-        &= p \int_{0}^{\infty} t^{p-1} \mathbb{P}(|X| > t)~\mathrm{d}t \notag \\
-        &= p \int_{0}^{\sfrac{\nu^2}{ \alpha}} t^{p-1} \mathbb{P}(|X| > t)~\mathrm{d}t + p \int_{\sfrac{\nu^2}{ \alpha}}^{\infty} t^{p-1} \mathbb{P}(|X| > t)~\mathrm{d}t \notag \\
-        &\leq 2 p \int_{0}^{\sfrac{\nu^2}{ \alpha}} t^{p-1} \exp\left(-\frac{1}{2} \frac{t^2}{\nu^2} \right)~\mathrm{d}t + 2 p \int_{\sfrac{\nu^2}{ \alpha}}^{\infty} t^{p-1} \exp\left(-\frac{1}{2} \frac{t}{\alpha} \right)~\mathrm{d}t \notag \\
-        &\leq 2 p \int_{0}^{\infty} t^{p-1} \exp\left(-\frac{1}{2} \frac{t^2}{\nu^2} \right)~\mathrm{d}t + 2 p \int_{0}^{\infty} t^{p-1} \exp\left(-\frac{1}{2} \frac{t}{\alpha} \right)~\mathrm{d}t \notag \\
-        &= p 2^{\sfrac{p}{2}} \nu^p \Gamma\left(\frac{p}{2}\right) + 2 p 2^{p} \alpha^p \Gamma\left(p\right) \notag \\
-        &= 2^{\sfrac{p}{2} + 1} \Gamma\left(\frac{p}{2} + 1\right) \nu^p  + 2^{p + 1}  \Gamma\left(p + 1\right) \alpha^p.
-        \label{equ:sub-exponential-moment-bound}
-    \end{align}
-    Consequently, using $(a + b)^{\sfrac{1}{p}} \leq a^{\sfrac{1}{p}} + b^{\sfrac{1}{p}}$ for all $a,b \geq 0$ and when $p \geq 1$, we get
-    %\begin{equation}
-    %    \mathbb{E}^p[X] 
-    %    \leq p^{\sfrac{1}{p}} \sqrt{2} \nu \Gamma\left(\frac{p}{2}\right)^{\sfrac{1}{p}} + p^{\sfrac{1}{p}} 2^{\frac{p+1}{p}} \alpha \Gamma\left(p\right)^{\sfrac{1}{p}}
-    %    \leq e^{\sfrac{1}{e}} (\sqrt{2 \pi p} \nu + 4 p \alpha),
-    %\end{equation}
-    \begin{equation}
-        \mathbb{E}^p[X] 
-        \leq \left(2^{\sfrac{p}{2} + 1} \Gamma\left(\frac{p}{2} + 1\right)\right)^{\sfrac{1}{p}} \nu  + \left(2^{p + 1}  \Gamma\left(p + 1\right)\right)^{\sfrac{1}{p}} \alpha
-        \leq \sqrt{2 \pi p} \nu  + 4 p \alpha,
-    \end{equation}
-    where we made use of basic bounds for the Gamma function in the last step.
-\end{proof}
+%It is well-known that $\mathbb{E}^p[X] \lesssim p$ for a sub-exponential random variable~\cite[Proposition 2.7.1]{vershynin-2018-highdimensional-probability}. The following result provides a bound that pays attention to  the constants involved..
+%\begin{lemma}{Moment bound for sub-exponential random variable}{sub-exponential-moments}
+%    Let $X$ be a centered, $(\nu^2, \alpha)$-sub-exponential random variable. Then
+%    \begin{equation}
+%        \mathbb{E}^p[X] \leq \sqrt{2 \pi p} \nu + 4 p \alpha
+%    \end{equation}
+%    holds for any $p \geq 1, p \in \mathbb{R}$.
+%\end{lemma}
+%
+%\begin{proof}
+%    Let $X$ be a centered, $(\nu^2, \alpha)$-sub-exponential random variable and $p \geq 1, p \in \mathbb{R}$. With an integration by parts and \cite[Proposition 2.9]{wainwright-2019-highdimensional-statistics}, we can bound
+%    \begin{align}
+%        \mathbb{E}[|X|^p] 
+%        &= p \int_{0}^{\infty} t^{p-1} \mathbb{P}(|X| > t)~\mathrm{d}t \notag \\
+%        &= p \int_{0}^{\sfrac{\nu^2}{ \alpha}} t^{p-1} \mathbb{P}(|X| > t)~\mathrm{d}t + p \int_{\sfrac{\nu^2}{ \alpha}}^{\infty} t^{p-1} \mathbb{P}(|X| > t)~\mathrm{d}t \notag \\
+%        &\leq 2 p \int_{0}^{\sfrac{\nu^2}{ \alpha}} t^{p-1} \exp\left(-\frac{1}{2} \frac{t^2}{\nu^2} \right)~\mathrm{d}t + 2 p \int_{\sfrac{\nu^2}{ \alpha}}^{\infty} t^{p-1} \exp\left(-\frac{1}{2} \frac{t}{\alpha} \right)~\mathrm{d}t \notag \\
+%        &\leq 2 p \int_{0}^{\infty} t^{p-1} \exp\left(-\frac{1}{2} \frac{t^2}{\nu^2} \right)~\mathrm{d}t + 2 p \int_{0}^{\infty} t^{p-1} \exp\left(-\frac{1}{2} \frac{t}{\alpha} \right)~\mathrm{d}t \notag \\
+%        &= p 2^{\sfrac{p}{2}} \nu^p \Gamma\left(\frac{p}{2}\right) + 2 p 2^{p} \alpha^p \Gamma\left(p\right) \notag \\
+%        &= 2^{\sfrac{p}{2} + 1} \Gamma\left(\frac{p}{2} + 1\right) \nu^p  + 2^{p + 1}  \Gamma\left(p + 1\right) \alpha^p.
+%        \label{equ:sub-exponential-moment-bound}
+%    \end{align}
+%    Consequently, using $(a + b)^{\sfrac{1}{p}} \leq a^{\sfrac{1}{p}} + b^{\sfrac{1}{p}}$ for all $a,b \geq 0$ and when $p \geq 1$, we get
+%    %\begin{equation}
+%    %    \mathbb{E}^p[X] 
+%    %    \leq p^{\sfrac{1}{p}} \sqrt{2} \nu \Gamma\left(\frac{p}{2}\right)^{\sfrac{1}{p}} + p^{\sfrac{1}{p}} 2^{\frac{p+1}{p}} \alpha \Gamma\left(p\right)^{\sfrac{1}{p}}
+%    %    \leq e^{\sfrac{1}{e}} (\sqrt{2 \pi p} \nu + 4 p \alpha),
+%    %\end{equation}
+%    \begin{equation}
+%        \mathbb{E}^p[X] 
+%        \leq \left(2^{\sfrac{p}{2} + 1} \Gamma\left(\frac{p}{2} + 1\right)\right)^{\sfrac{1}{p}} \nu  + \left(2^{p + 1}  \Gamma\left(p + 1\right)\right)^{\sfrac{1}{p}} \alpha
+%        \leq \sqrt{2 \pi p} \nu  + 4 p \alpha,
+%    \end{equation}
+%    where we made use of basic bounds for the Gamma function in the last step.
+%\end{proof}
 
 %    We will need
 %    \begin{equation}
@@ -293,21 +292,21 @@ It is well-known that $\mathbb{E}^p[X] \lesssim p$ for a sub-exponential random 
 %
 %    as is required.
 
-\textcolor{red}{NEW!!!}
+%\textcolor{red}{NEW!!!}
 
 \section{Moment bounds for sub-gamma random variables}
 
 A real centered random variable $X$ is called sub-gamma with parameters $(\nu,c)$ if its moment generating function satisfies
 \[
- \mathbb E[ \exp( tX ) ] \le \frac{ t^2 \nu}{2(1-c|t|)} \ \text{for every} \ 0 < |t| < 1/c.
+ \mathbb E[ \exp( tX ) ] \le \exp\left( \frac{ t^2 \nu}{2(1-c|t|)} \right) \ \text{for every} \ 0 < |t| < 1/c.
 \]
 Any such $X$ satisfies the following tail bound~\cite[P. 29]{boucheron-2013-concentration-inequalities}:
 \begin{equation}
-  \label{eq:subgammatail}
+  \label{equ:subgammatail}
   \mathbb P\big(|X| > \sqrt{2\nu t} + ct\big) \le 2 e^{-t} \ \text{for every} \ t>0.
 \end{equation}
 
-\begin{lemma}{Moment bounds for sub-gamma r.v.}{sub-gamma-moments}
+\begin{lemma}{Moment bounds for sub-gamma random variable}{sub-gamma-moments}
     Let $X$ be a centered, $(\nu,c)$-sub-gamma random variable for $\nu,c>0$. Then
     \begin{equation}
         \mathbb{E}^p[X] \leq 2 \sqrt{2 \nu p} + 4 c p
@@ -315,7 +314,7 @@ Any such $X$ satisfies the following tail bound~\cite[P. 29]{boucheron-2013-conc
     holds for any $p \geq 1$, $p \in \mathbb{R}$.
 \end{lemma}
 \begin{proof}
-The statement follows from a straightforward extension of the proof of Theorem 2.3 in~\cite{boucheron-2013-concentration-inequalities} from  even integers $p$ to general $p$. We include the detailed argument for completeness. Using integration by parts, the reparametrization $x = \sqrt{2\nu t} + ct$, and~\eqref{eq:subgammatail} one gets
+The statement follows from a straightforward extension of the proof of~\cite[Theorem 2.3]{boucheron-2013-concentration-inequalities} from  even integers $p$ to general $p$. We include the detailed argument for completeness. Using integration by parts, the reparametrization $x = \sqrt{2\nu t} + ct$, and~\refequ{equ:subgammatail} one gets
 \begin{align*}
  \mathbb{E}\big[|X|^p\big] &= p \int_0^\infty  |x|^{p-1} \mathbb P\big(|X| > x\big) \,\mathrm{d}x \\
  &=  p \int_0^\infty  (\sqrt{2\nu t} + ct)^{p-1} \mathbb P\big(|X| > \sqrt{2\nu t} + ct \big) \frac{ \sqrt{2\nu t} + 2ct}{2t} \,\mathrm{d}t \\
@@ -327,9 +326,9 @@ we have that
  \mathbb{E}\big[|X|^p\big] & \le 
  p 2^{p-1}   \int_0^\infty  \big( (2\nu t)^{p/2} + (2ct)^{p}\big)  \frac{e^{-t}}{t} \,\mathrm{d}t \\
  &= p 2^{p-1} \big( (2\nu)^{p/2} \Gamma(p/2) + (2c)^p  \Gamma(p) \big) \\
- &= 2^{p} (2\nu)^{p/2} \Gamma(p/2+1) + 2^{p-1} (2c)^p  \Gamma(p+1) \big)
+ &= 2^{p} (2\nu)^{p/2} \Gamma(p/2+1) + 2^{p-1} (2c)^p  \Gamma(p+1) \big.
 \end{align*}
-Using $(a+b)^{1/p} \le a^{1/p} + b^{1/b}$, we obtain
+Using $(a+b)^{1/p} \le a^{1/p} + b^{1/p}$, we obtain
 \[
 \mathbb{E}^p[X] \leq 2 \sqrt{2\nu} \Gamma(p/2+1)^{1/p}  + 4 c \Gamma(p+1)^{1/p}.
 \]

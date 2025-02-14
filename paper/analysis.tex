@@ -108,53 +108,58 @@ We start our analysis of the methods presented above by deriving an $L^1$-error 
 \begin{theorem}{Girard-Hutchinson estimator for parameter-dependent matrices}{hutchinson}
     For a symmetric matrix $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ that depends continuously on $t \in [a, b]$, consider the  Girard-Hutchinson estimator~\refequ{equ:hutchinson-trace-estimator} with an $n\times n_{\mtx{\Psi}}$ Gaussian random matrix $\mtx{\Psi}$. Then for any $p \geq 1, p \in \mathbb{R}$ and $\gamma \geq 1$ the bound 
     \begin{equation} \label{eq:ghbound}
-        \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq \gamma c \left( \sqrt{\frac{p}{n_{\mtx{\Psi}}}} + \frac{p}{n_{\mtx{\Psi}}}  \right) \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t
+        \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq 4 \gamma \int_{a}^{b} \sqrt{\frac{p}{n_{\mtx{\Psi}}}}  \lVert \mtx{B}(t) \rVert _F + \frac{2 p}{n_{\mtx{\Psi}}} \lVert \mtx{B}(t) \rVert _2 ~\mathrm{d}t
     \end{equation}
-    holds with probability at least $1 - \gamma^{-p}$ and for $c = 4 (1 + \sqrt{1 + \pi/4})$.
+    holds with probability at least $1 - \gamma^{-p}$.
     In particular, given $\varepsilon \in (0, 1)$ and $\delta \in (0, e^{-1})$, the bound $\int_{a}^{b} | \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) | ~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t$ holds 
     with probability at least $1-\delta$ if $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2} \log(\delta^{-1}))$.
 \end{theorem}
 
 \color{black}
 \begin{proof}
-    The proof proceeds by bounding moments for fixed values of $t$ and then uses Minkowski's integral inequality. We start with a standard embedding trick (see, e.g.,~\cite[Theorem 1]{cortinovis-2022-randomized-trace}) for which we define
+    We first consider a fixed value for $t$. From the proof of \cite[Theorem 1]{cortinovis-2022-randomized-trace}, we know that $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))$ is a $(2 \lVert \mtx{B}(t) \rVert _F^2 / n_{\mtx{\Psi}}, 2 \lVert \mtx{B}(t) \rVert _2 / n_{\mtx{\Psi}})$-sub-gamma random variable. Therefore, by \reflem{lem:sub-gamma-moments}
     \begin{equation}
-        \widetilde{\mtx{B}}(t)
-        = \frac{1}{n_{\mtx{\Psi}}} \begin{pmatrix}
-            \mtx{B}(t) & & \\
-            & \ddots & \\
-            & & \mtx{B}(t)
-        \end{pmatrix}
-        \quad \text{and} \quad
-        \widetilde{\vct{\psi}} = \begin{pmatrix}
-            \vct{\psi}_1 \\
-            \vdots \\
-            \vct{\psi}_{n_{\mtx{\Psi}}}
-        \end{pmatrix}.
-    \end{equation}
-    Note that $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) =  \Trace(\widetilde{\mtx{B}}(t)) - \widetilde{\vct{\psi}}^{\top} \widetilde{\mtx{B}}(t) \widetilde{\vct{\psi}}$, $\lVert \widetilde{\mtx{B}}(t) \rVert _2 = \lVert \mtx{B}(t) \rVert _2 / n_{\mtx{\Psi}}$ and $\lVert \widetilde{\mtx{B}}(t) \rVert _F = \lVert \mtx{B}(t) \rVert _F / \sqrt{n_{\mtx{\Psi}}}$ hold. Therefore, by \reflem{lem:hutchinson-sub-exponential}, $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))$ is a centered and $(2 \lVert \mtx{B}(t) \rVert _F^2 (1 - 1/\beta)^{-1} / n_{\mtx{\Psi}}, 2 \lVert \mtx{B}(t) \rVert _2 \beta / n_{\mtx{\Psi}})$-sub-exponential random variable for any $\beta > 1$. Thus, we can apply \reflem{lem:sub-exponential-moments} to bound
-    \begin{equation}
-        \mathbb{E}^{p}[\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))] \leq 2 \left(\sqrt{\frac{\pi}{1-1/\beta}} \sqrt{\frac{p}{n_{\mtx{\Psi}}}} \lVert \mtx{B}(t) \rVert _F + 4 \beta \frac{p}{n_{\mtx{\Psi}}} \lVert \mtx{B}(t) \rVert _2 \right).
-    \end{equation}
-    Bounding $\lVert \mtx{B}(t) \rVert _2 \leq \lVert \mtx{B}(t) \rVert _F$ and letting $\beta = (1 + \sqrt{1 + \pi/4}) / 2$ we get
-    \begin{equation}
-        \mathbb{E}^{p}[\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))] \leq \underbrace{4 (1 + \sqrt{1 + \pi/4})}_{=~c} \left( \sqrt{\frac{p}{n_{\mtx{\Psi}}}} + \frac{p}{n_{\mtx{\Psi}}} \right) \lVert \mtx{B}(t) \rVert _F.
+        \mathbb{E}^{p}[\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))] \leq 4  \sqrt{\frac{p}{n_{\mtx{\Psi}}}} \lVert \mtx{B}(t) \rVert _F + 8 \frac{p}{n_{\mtx{\Psi}}} \lVert \mtx{B}(t) \rVert _2.
         \label{equ:moment-bound-hutchinson}
     \end{equation}
+%    The proof proceeds by bounding moments for fixed values of $t$ and then uses Minkowski's integral inequality. We start with a standard embedding trick (see, e.g.,~\cite[Theorem 1]{cortinovis-2022-randomized-trace}) for which we define
+%    \begin{equation}
+%        \widetilde{\mtx{B}}(t)
+%        = \frac{1}{n_{\mtx{\Psi}}} \begin{pmatrix}
+%            \mtx{B}(t) & & \\
+%            & \ddots & \\
+%            & & \mtx{B}(t)
+%        \end{pmatrix}
+%        \quad \text{and} \quad
+%        \widetilde{\vct{\psi}} = \begin{pmatrix}
+%            \vct{\psi}_1 \\
+%            \vdots \\
+%            \vct{\psi}_{n_{\mtx{\Psi}}}
+%        \end{pmatrix}.
+%    \end{equation}
+%    Note that $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) =  \Trace(\widetilde{\mtx{B}}(t)) - \widetilde{\vct{\psi}}^{\top} \widetilde{\mtx{B}}(t) \widetilde{\vct{\psi}}$, $\lVert \widetilde{\mtx{B}}(t) \rVert _2 = \lVert \mtx{B}(t) \rVert _2 / n_{\mtx{\Psi}}$ and $\lVert \widetilde{\mtx{B}}(t) \rVert _F = \lVert \mtx{B}(t) \rVert _F / \sqrt{n_{\mtx{\Psi}}}$ hold. Therefore, by \reflem{lem:hutchinson-sub-exponential}, $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))$ is a centered and $(2 \lVert \mtx{B}(t) \rVert _F^2 (1 - 1/\beta)^{-1} / n_{\mtx{\Psi}}, 2 \lVert \mtx{B}(t) \rVert _2 \beta / n_{\mtx{\Psi}})$-sub-exponential random variable for any $\beta > 1$. Thus, we can apply \reflem{lem:sub-exponential-moments} to bound
+%    \begin{equation}
+%        \mathbb{E}^{p}[\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))] \leq 2 \left(\sqrt{\frac{\pi}{1-1/\beta}} \sqrt{\frac{p}{n_{\mtx{\Psi}}}} \lVert \mtx{B}(t) \rVert _F + 4 \beta \frac{p}{n_{\mtx{\Psi}}} \lVert \mtx{B}(t) \rVert _2 \right).
+%    \end{equation}
+%    Bounding $\lVert \mtx{B}(t) \rVert _2 \leq \lVert \mtx{B}(t) \rVert _F$ and letting $\beta = (1 + \sqrt{1 + \pi/4}) / 2$ we get
+%    \begin{equation}
+%        \mathbb{E}^{p}[\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))] \leq \underbrace{4 (1 + \sqrt{1 + \pi/4})}_{=~c} \left( \sqrt{\frac{p}{n_{\mtx{\Psi}}}} + \frac{p}{n_{\mtx{\Psi}}} \right) \lVert \mtx{B}(t) \rVert _F.
+%        \label{equ:moment-bound-hutchinson}
+%    \end{equation}
 
     To address the parameter-dependent case, we first note that the continuity assumption implies that $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))$ is measurable. Therefore, we can apply Minkowski's integral inequality~\cite[Theorem 202]{hardy-1952-inequalities} to conclude from the moment bound~\refequ{equ:moment-bound-hutchinson} that
     \begin{align}
         \mathbb{E}^{p}\left[ \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t  \right]
         &\leq \int_{a}^{b} \mathbb{E}^{p}\left[ \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) \right]~\mathrm{d}t \notag \\
-        &\leq c \left( \sqrt{\frac{p}{n_{\mtx{\Psi}}}} + \frac{p}{n_{\mtx{\Psi}}}  \right) \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t .
+        &\leq 4 \int_{a}^{b}  \sqrt{\frac{p}{n_{\mtx{\Psi}}}}  \lVert \mtx{B}(t) \rVert _F + \frac{2 p}{n_{\mtx{\Psi}}} \lVert \mtx{B}(t) \rVert _2 ~\mathrm{d}t.
     \end{align}
     Consequently, by Markov's inequality, the bound 
     \begin{equation} 
-        \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq \gamma c \left( \sqrt{\frac{p}{n_{\mtx{\Psi}}}} + \frac{p}{n_{\mtx{\Psi}}}  \right) \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t
+        \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq 4 \gamma \int_{a}^{b} \sqrt{\frac{p}{n_{\mtx{\Psi}}}}  \lVert \mtx{B}(t) \rVert _F + \frac{2 p}{n_{\mtx{\Psi}}} \lVert \mtx{B}(t) \rVert _2 ~\mathrm{d}t.
     \end{equation}
     holds for any $\gamma \geq 1$ with probability at least $1 - \gamma^{-p}$. 
 
-    Setting $\gamma = e$ and choosing $p = \log(\delta^{-1}) \geq 1$, the second part of the theorem follows when taking $n_{\mtx{\Psi}} = \lceil 2 c^2 e^2 \log(\delta^{-1}) \varepsilon^{-2} \rceil$.
+    Bounding $\lVert \mtx{B}(t) \rVert _2 \leq \lVert \mtx{B}(t) \rVert _F$, setting $\gamma = e$, and choosing $p = \log(\delta^{-1}) \geq 1$, the second part of the theorem follows for example when taking $n_{\mtx{\Psi}} = \lceil (8 e)^2 \log(\delta^{-1}) \varepsilon^{-2} \rceil$.
 \end{proof}
 %\begin{proof}
 %    The proof proceeds by bounding moments for fixed values of $t$ and then uses Minkowski's integral inequality. We start with a standard embedding trick (see, e.g.,~\cite[Theorem 1]{cortinovis-2022-randomized-trace}) for which we define
@@ -199,14 +204,14 @@ We start our analysis of the methods presented above by deriving an $L^1$-error 
 %    %we get that for all $\delta \in (0, 1)$
 %\end{proof}
 
-\refthm{thm:hutchinson} coincides with the analogous result for the constant case~\cite[Lemma 2.1]{meyer-2021-hutch-optimal}, except for a slightly more restricted choice of $\delta$.
+\refthm{thm:hutchinson} coincides with the analogous result for the constant case~\cite[Lemma 2.1]{meyer-2021-hutch-optimal}, except for a slightly more restricted choice of the failure probability $\delta$.
 
 \begin{remark}
     A slightly different version of \refthm{thm:hutchinson} can be derived when $\mtx{B}(t)$ is nonzero and symmetric positive semi-definite for all $t \in [a, b]$: after dividing both sides of \refequ{equ:moment-bound-hutchinson} by $\Trace(\mtx{B}(t))$, one can apply the remaining steps in the proof to deduce with probability at least $1 - \delta$
     \begin{equation}
         \int_{a}^{b} \frac{| \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) |}{\Trace(\mtx{B}(t))} ~\mathrm{d}t < \varepsilon,
     \end{equation}
-    if $n_{\mtx{\Psi}} \geq 2 c^2 e^2 \log(\delta^{-1}) \varepsilon^{-2} \rho^2$, where we identify
+    if $n_{\mtx{\Psi}} = \mathcal{O}(\log(\delta^{-1}) \varepsilon^{-2} \rho^2)$, where we identify
     \begin{equation}
         \rho = \int_{a}^{b} \frac{\lVert \mtx{B}(t) \rVert _F}{\Trace(\mtx{B}(t))} ~\mathrm{d}t
     \end{equation}
