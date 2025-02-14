@@ -1,18 +1,19 @@
-
 \section{Randomized trace estimators for parameter-dependent matrices}
 \label{sec:analysis}
 
 \color{blue}
 In this section, we consider a general parameter-dependent matrix
-\begin{equation*}
-    \mtx{B}(t) = \begin{bmatrix}
-        b_{11}(t) & b_{12}(t) & \dots & b_{1n}(t) \\
-        b_{21}(t) & b_{22}(t) & \dots & b_{2n}(t) \\
-        \vdots & \vdots & \ddots & \vdots \\
-        b_{n1}(t) & b_{n2}(t) & \dots & b_{nn}(t) \\
-    \end{bmatrix} \in \mathbb{R}^{n \times n},
-\end{equation*}
-where each entry $b_{ij}(t)$ is a continuous function on a bounded interval $[a,b]$. \emph{If} these entries are given explicitly, we can simply compute the trace by its definition 
+$\mtx{B}(t) \in \mathbb{R}^{n \times n}$, where each
+entry $b_{ij}(t)$ is a 
+%\begin{equation*}
+%     \mtx{B}(t) = \begin{bmatrix}
+%         b_{11}(t) & b_{12}(t) & \dots & b_{1n}(t) \\
+%         b_{21}(t) & b_{22}(t) & \dots & b_{2n}(t) \\
+%         \vdots & \vdots & \ddots & \vdots \\
+%         b_{n1}(t) & b_{n2}(t) & \dots & b_{nn}(t) \\
+%     \end{bmatrix} \in \mathbb{R}^{n \times n},
+% \end{equation*}
+continuous function on a bounded interval $[a,b]$. ??? UNTIL HERE ??? \emph{If} these entries are given explicitly, we can simply compute the trace by its definition 
 $\Trace(\mtx{B}(t)) = b_{11}(t)+ \cdots + b_{nn}(t)$. This becomes more difficult when $\mtx{B}(t)$ is given implicitly (e.g., as a matrix function) and can only be accessed through matrix-vector products. The common theme of all methods analyzed in this section is to extract trace estimates from multiplying $\mtx{B}(t)$ with fixed random vectors.
 
 %as we will see in Section ???.

@@ -5,16 +5,15 @@
 
 The goal of this section is to establish moment bounds for $\lVert \mtx{A} \mtx{\Omega} \rVert _2^2$ with a fixed matrix $\mtx{A}$ and a Gaussian random matrix $\mtx{\Omega}$. These bounds are needed in the proof of \reflem{lem:nystrom}, but may also be of independent interest.
 %For reasons which will become clear in the proof of the final and most interesting of these lemmas (\reflem{lem:nystrom}), we will need to bound $\mathbb{E}^{\sfrac{p}{2}}\left[\lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]$ for a constant matrix $\mtx{A} \in \mathbb{R}^{m \times m}$ and a standard Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{m \times k}$.
-The corresponding result for the Frobenius norm can be found in~\cite[Lemma 3]{kressner-2024-randomized-lowrank}. For the spectral norm, moment bounds for $\lVert \mtx{\Omega} \rVert _2^2$ (that is, $\mtx{A} = \mtx{I}$) are well established\cite{chen-2005-condition-numbers, edelman-1988-eigenvalues-condition, james-1964-distributions-matrix}. In \cite[Lemma B.1]{tropp-2023-randomized-algorithms} bounds on the first- and second-order moments for general $\mtx{A}$ are derived. In the following, we will generalize this result to moments of arbitrary high order. To do so, we first establish two preliminary results.
+The corresponding result for the Frobenius norm can be found in~\cite[Lemma 3]{kressner-2024-randomized-lowrank}. For the spectral norm, moment bounds for $\lVert \mtx{\Omega} \rVert _2^2$ (that is, $\mtx{A} = \mtx{I}$) are well established\cite{chen-2005-condition-numbers, edelman-1988-eigenvalues-condition, james-1964-distributions-matrix}. In \cite[Lemma B.1]{tropp-2023-randomized-algorithms} bounds on the first- and second-order moments for general $\mtx{A}$ are derived. In the following, we will generalize this result to moments of arbitrarily high order. To do so, we first establish two preliminary results.
 
-\begin{lemma}{Moment bound of $\chi^2$-random variable}{gamma}
-    Let $X$ follow a $\chi^2$ distribution with $k \ge 2$, $k\in \mathbb{N}$, degrees of freedom. Then 
+\begin{lemma}{Moment bound of chi-squared random variable}{gamma}
+    Let $X \sim \chi_k^2$, where $\chi_k^2$ denotes the chi-squared distribution with $k \ge 2$ degrees of freedom. Then 
     $
         \mathbb{E}^{{p}}[X] \leq k + p-1
         %\frac{\Gamma(\frac{k + p}{2})}{\Gamma(\frac{k}{2})} \leq \left( \frac{k + p}{2} \right)^{\sfrac{p}{2}}.
     $ holds for every $p \ge 1$, $p\in \mathbb R$.
-\end{lemma}
-
+\end{lemma}%
 \begin{proof}
 It is well known that
 %    From \cite[Theorem 3.3.2]{hogg-2013-introduction-mathematical} we know
@@ -54,7 +53,7 @@ It is well known that
 
 
 \begin{lemma}{Spectral norm moments of non-standard Gaussian random vector}{spectral-norm-moment-vector}
-    Given $\mtx{A} \in \mathbb{R}^{m \times m}$ and a standard Gaussian random vector $\vct{\omega} \in \mathbb{R}^{m}$, the bound
+    Given $\mtx{A} \in \mathbb{R}^{m \times m}$ and a Gaussian random vector $\vct{\omega} \in \mathbb{R}^{m}$, the bound
     \[
         \mathbb{E}^{p}\big[ \lVert \mtx{A} \vct{\omega} \rVert _2^2 \big]
         \leq  (k + p - 1) \Big( \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \Big).
@@ -67,7 +66,7 @@ It is well known that
     %\end{equation}
     %If we choose 
     holds for every $k \ge 2$, $k\in \mathbb{N}$, and $p \ge 1$, $p\in \mathbb R$.
-\end{lemma}
+\end{lemma}%
 % \begin{remark}
 %     In particular, this result can also be used to bound
 %     \begin{equation}
@@ -98,7 +97,7 @@ Following the proof of \cite[Theorem 1]{cohen-2016-optimal-approximate}, we spli
         = \mathbb{E}^{p}\Big[ \sum_{i=0}^{\ell - 1} \sum_{j=1}^{k} \sigma_{ik + j}^2 \omega_{ik + j}^2 \Big] \\
         &\leq \mathbb{E}^{p}\Big[ \sum_{i=0}^{\ell - 1} \sigma_{ik + 1}^2 \sum_{j=1}^{k} \omega_{ik + j}^2 \Big] 
         \leq \sum_{i=0}^{\ell - 1} \sigma_{ik + 1}^2 ~ \mathbb{E}^{p}\Big[ \sum_{j=1}^{k} \omega_{ik + j}^2 \Big] \\
-        &\leq (k + p - 1) \sum_{i=0}^{\ell - 1} \sigma_{ik + 1}^2 \leq (k + p - 1) \left( \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2 \right), 
+        &\leq (k + p - 1) \sum_{i=0}^{\ell - 1} \sigma_{ik + 1}^2 \leq (k + p - 1) \Big( \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2 \Big), 
     \end{align*}
     where we used the triangle inequality, \reflem{lem:gamma}, and \refequ{equ:singular-value-group-bound} for the last three inequalities.
     %The moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ can be bound with help of the proof of \cite[Lemma B.3]{tropp-2023-randomized-algorithms}
@@ -118,10 +117,10 @@ Following the proof of \cite[Theorem 1]{cohen-2016-optimal-approximate}, we spli
 \end{proof}
 
 \begin{lemma}{Spectral norm moments of non-standard Gaussian random matrix}{spectral-norm-moment}
-    Given $\mtx{A} \in \mathbb{R}^{m \times m}$ and a standard Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{m \times k}$, the bound
+    Given $\mtx{A} \in \mathbb{R}^{m \times m}$ and a Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{m \times k}$, the bound
     \begin{equation}
         \mathbb{E}^{p}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]
-        \leq  (k + p-1) \left( 2 \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \right).
+        \leq  (k + p-1) \Big( 2 \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \Big).
     \end{equation}
     holds for every $k \ge 2$, $k\in \mathbb{N}$, and $p \ge 1$, $p\in \mathbb R$.
     %\begin{equation}
@@ -139,10 +138,10 @@ Following the proof of \cite[Theorem 1]{cohen-2016-optimal-approximate}, we spli
         \mathbb{E}^{p}\big[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \big]
         \leq \lVert \mtx{A} \rVert _2^2 \mathbb{E}^{p}\big[ \lVert \vct{\omega}_1 \rVert _2^2 \big] + \mathbb{E}^{p}\big[ \lVert \mtx{A} \vct{\omega}_2 \rVert _2^2 \big]
     \end{equation}
-    for independent standard Gaussian random vectors $\vct{\omega}_1 \in \mathbb{R}^{k}$ and $\vct{\omega}_2 \in \mathbb{R}^{m}$. The claimed result follows from applying \reflem{lem:gamma} and \reflem{lem:spectral-norm-moment-vector}:
+    for Gaussian random vectors $\vct{\omega}_1 \in \mathbb{R}^{k}$ and $\vct{\omega}_2 \in \mathbb{R}^{m}$. The claimed result follows from applying \reflem{lem:gamma} and \reflem{lem:spectral-norm-moment-vector}:
     \[
         \mathbb{E}^{p}\big[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \big]
-        \leq (k + p - 1) \lVert \mtx{A} \rVert _2^2  + (k + p - 1) \left( \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \right).
+        \leq (k + p - 1) \lVert \mtx{A} \rVert _2^2  + (k + p - 1) \Big( \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \Big).
     \]
     %The moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ can be bound with help of the proof of \cite[Lemma B.3]{tropp-2023-randomized-algorithms}
     %\begin{align}
@@ -200,12 +199,14 @@ In passing, we note that \reflem{lem:spectral-norm-moment}  yields the bound
 %\end{equation}
 %for some other universal constant $\widetilde{c} > 0$.
 
-\section{Moment bound for sub-exponential random variables}
+\section{Moment bounds for Girard-Hutchinson estimator}
 
-In this section we show that the residual of the single-query Girard-Hutchinson estimator \refequ{equ:hutchinson-trace-estimator}, i.e. when $n_{\mtx{\Psi}} = 1$, is a sub-exponential random variable. Further, we establish a bound on the high order moments of sub-exponential random variables. A similar bound is available in \cite[Proposition 2.7.1]{vershynin-2018-highdimensional-probability} but does not explicitly determine the constants. The combination of these two results will then be used in the proof of \refthm{thm:hutchinson}.
+In this section we first recall that the (centered) single-query Girard-Hutchinson estimator~\refequ{equ:hutchinson-trace-estimator} is sub-exponential. Combined with a bound on moments of sub-exponential random variables, this will be 
+used in the proof of \refthm{thm:hutchinson}.
 
-\begin{lemma}{Residual of $1$-query Girard-Hutchinson estimator is sub-exponential}{hutchinson-sub-exponential}
-    Let $\mtx{A} \in \mathbb{R}^{m \times m}$ be symmetric and $\vct{\psi} \in \mathbb{R}^m$ a standard Gaussian random vector. Then the real random variable $\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$ is centered and $(2 \lVert \mtx{A} \rVert _F^2 (1 - 1/\beta)^{-1}, 2 \lVert \mtx{A} \rVert _2 \beta )$-sub-exponential for any $\beta > 1, \beta \in \mathbb{R}$.
+\textcolor{red}{Connection between sub-gamma and sub-exponential?}
+\begin{lemma}{Sub-exponential property of $1$-query Girard-Hutchinson estimator}{hutchinson-sub-exponential}
+    Let $\mtx{A} \in \mathbb{R}^{m \times m}$ be symmetric and $\vct{\psi} \in \mathbb{R}^m$ a Gaussian random vector. Then the real random variable $\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$ is centered and $(2 \lVert \mtx{A} \rVert _F^2 (1 - 1/\beta)^{-1}, 2 \lVert \mtx{A} \rVert _2 \beta )$-sub-exponential for any $\beta > 1, \beta \in \mathbb{R}$.
 \end{lemma}
 
 \begin{proof}
@@ -230,6 +231,8 @@ In this section we show that the residual of the single-query Girard-Hutchinson 
     The sum of independent $(\nu_i^2, \alpha_i)$-sub-exponential random variables is $(\sum_i \nu_i^2, \max_i \alpha_i)$-sub-exponential. Therefore, $\Trace(\mtx{A}) - \vct{\psi}^{\top} \mtx{A} \vct{\psi}$ is $(2 \lVert \mtx{A} \rVert _F^2 (1 - 1/\beta)^{-1}, 2 \lVert \mtx{A} \rVert _2 \beta)$-sub-exponential for any $\beta > 1, \beta \in \mathbb{R}$.
 \end{proof}
 
+
+It is well-known that $\mathbb{E}^p[X] \lesssim p$ for a sub-exponential random variable~\cite[Proposition 2.7.1]{vershynin-2018-highdimensional-probability}. The following result provides a bound that pays attention to  the constants involved..
 \begin{lemma}{Moment bound for sub-exponential random variable}{sub-exponential-moments}
     Let $X$ be a centered, $(\nu^2, \alpha)$-sub-exponential random variable. Then
     \begin{equation}
@@ -289,3 +292,52 @@ In this section we show that the residual of the single-query Girard-Hutchinson 
 %    \end{equation*}
 %
 %    as is required.
+
+\textcolor{red}{NEW!!!}
+
+\section{Moment bounds for sub-gamma random variables}
+
+A real centered random variable $X$ is called sub-gamma with parameters $(\nu,c)$ if its moment generating function satisfies
+\[
+ \mathbb E[ \exp( tX ) ] \le \frac{ t^2 \nu}{2(1-c|t|)} \ \text{for every} \ 0 < |t| < 1/c.
+\]
+Any such $X$ satisfies the following tail bound~\cite[P. 29]{boucheron-2013-concentration-inequalities}:
+\begin{equation}
+  \label{eq:subgammatail}
+  \mathbb P\big(|X| > \sqrt{2\nu t} + ct\big) \le 2 e^{-t} \ \text{for every} \ t>0.
+\end{equation}
+
+\begin{lemma}{Moment bounds for sub-gamma r.v.}{sub-gamma-moments}
+    Let $X$ be a centered, $(\nu,c)$-sub-gamma random variable for $\nu,c>0$. Then
+    \begin{equation}
+        \mathbb{E}^p[X] \leq 2 \sqrt{2 \nu p} + 4 c p
+    \end{equation}
+    holds for any $p \geq 1$, $p \in \mathbb{R}$.
+\end{lemma}
+\begin{proof}
+The statement follows from a straightforward extension of the proof of Theorem 2.3 in~\cite{boucheron-2013-concentration-inequalities} from  even integers $p$ to general $p$. We include the detailed argument for completeness. Using integration by parts, the reparametrization $x = \sqrt{2\nu t} + ct$, and~\eqref{eq:subgammatail} one gets
+\begin{align*}
+ \mathbb{E}\big[|X|^p\big] &= p \int_0^\infty  |x|^{p-1} \mathbb P\big(|X| > x\big) \,\mathrm{d}x \\
+ &=  p \int_0^\infty  (\sqrt{2\nu t} + ct)^{p-1} \mathbb P\big(|X| > \sqrt{2\nu t} + ct \big) \frac{ \sqrt{2\nu t} + 2ct}{2t} \,\mathrm{d}t \\
+ &\le p  \int_0^\infty  (\sqrt{2\nu t} + 2ct)^{p}  \frac{e^{-t}}{t} \,\mathrm{d}t.
+\end{align*}
+Using the inequality $( (a+b)/2 )^p \le (a^p + b^p)/2$ implied by the convexity of $x^p$ on $[0,\infty)$,
+we have that
+\begin{align*}
+ \mathbb{E}\big[|X|^p\big] & \le 
+ p 2^{p-1}   \int_0^\infty  \big( (2\nu t)^{p/2} + (2ct)^{p}\big)  \frac{e^{-t}}{t} \,\mathrm{d}t \\
+ &= p 2^{p-1} \big( (2\nu)^{p/2} \Gamma(p/2) + (2c)^p  \Gamma(p) \big) \\
+ &= 2^{p} (2\nu)^{p/2} \Gamma(p/2+1) + 2^{p-1} (2c)^p  \Gamma(p+1) \big)
+\end{align*}
+Using $(a+b)^{1/p} \le a^{1/p} + b^{1/b}$, we obtain
+\[
+\mathbb{E}^p[X] \leq 2 \sqrt{2\nu} \Gamma(p/2+1)^{1/p}  + 4 c \Gamma(p+1)^{1/p}.
+\]
+Using $\Gamma(p/2+1)^{1/p} \le \sqrt{p}$ and $\Gamma(p+1)^{1/p} \le p$ completes the proof.
+
+\end{proof}
+
+
+
+
+
