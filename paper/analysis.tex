@@ -124,7 +124,7 @@ We first derive an $L^1$-error bound for the Girard-Hutchinson estimator~\refequ
     \begin{equation} \label{eq:ghbound}
         \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq 4 \gamma \Big( \sqrt{\frac{p}{n_{\mtx{\Psi}}}}  \|\mtx{B}(t)\|_{F,1} + \frac{2 p}{n_{\mtx{\Psi}}} \|\mtx{B}(t)\|_{2,1} \Big).
     \end{equation}
-In particular, given $\varepsilon \in (0, 1)$ and $\delta \in (0, e^{-1}]$, the bound $\int_{a}^{b} | \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) | ~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t$ holds 
+In particular, given $\varepsilon \in (0, 1)$ and $\delta \in (0, e^{-1}]$, the bound $\int_{a}^{b} | \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) | ~\mathrm{d}t \leq \varepsilon \|\mtx{B}(t)\|_{F,1}$ holds 
     with probability at least $1-\delta$ if $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2} \log(\delta^{-1}))$.
 \end{theorem}
 \begin{proof}
@@ -214,7 +214,7 @@ In particular, given $\varepsilon \in (0, 1)$ and $\delta \in (0, e^{-1}]$, the 
 \refthm{thm:hutchinson} parallels an analogous result for the constant case~\cite[Lemma 2.1]{meyer-2021-hutch-optimal}, except for a slightly more restricted choice of the failure probability $\delta$.
 
 \begin{remark}
-    A variant of \refthm{thm:hutchinson} can be derived when assuming that $\mtx{B}(t)$ isSPSD and nonzero for every $t \in [a, b]$. After dividing both sides of \refequ{equ:moment-bound-hutchinson} by $\Trace(\mtx{B}(t))$, one can apply the remaining steps of the proof to deduce that
+    A variant of \refthm{thm:hutchinson} can be derived when assuming that $\mtx{B}(t)$ is SPSD and nonzero for every $t \in [a, b]$. After dividing both sides of \refequ{equ:moment-bound-hutchinson} by $\Trace(\mtx{B}(t))$, one can apply the remaining steps of the proof to deduce that
     \begin{equation*}
         \int_{a}^{b} \frac{| \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) |}{\Trace(\mtx{B}(t))} ~\mathrm{d}t < \varepsilon
     \end{equation*}
@@ -381,7 +381,7 @@ $\mtx{\Lambda} = \operatorname{diag}(\lambda_1, \dots, \lambda_n)$ and $\lambda_
     $\mtx{\Omega}_1 := \mtx{U}_1^{\top} \mtx{\Omega} \in \mathbb{R}^{k \times n_{\mtx{\Omega}}}$ and $\mtx{\Omega}_2 := \mtx{U}_2^{\top} \mtx{\Omega} \in \mathbb{R}^{(n - k) \times n_{\mtx{\Omega}}}$, which are independent Gaussian random matrices.
 Applying Theorem B.1 from~\cite{persson-2023-randomized-lowrank} for $f(x) = x$, see also \textcolor{red}{??? Also cite the same result from Tropp and Webber or Epperly and Tropp? ???}, yields the bound
     \begin{equation}
-        \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}(t)} \rVert _F 
+        \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F 
         \leq  \lVert \mtx{\Lambda}_2 \rVert _F + \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2,
         \label{equ:nystrom-proof-persson-bonud}
     \end{equation}
