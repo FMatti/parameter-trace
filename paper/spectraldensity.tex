@@ -22,7 +22,7 @@ for a smoothing kernel $g_{\sigma}$ parametrized by a smoothing parameter $\sigm
     g_{\sigma}(s) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\sfrac{s^2}{2\sigma^2}}.
     \label{equ:smoothing-kernel}
 \end{equation}
-The task in \refequ{equ:smooth-spectral-density} is to approximate the trace of the parameter-dependent symmetric positive semi-definite matrix $g_{\sigma}(t\mtx{I}_n - \mtx{A})$. Hence, we can apply the results derived in \refsec{sec:analysis}.
+The task in \refequ{equ:smooth-spectral-density} is to approximate the trace of the parameter-dependent SPSD matrix $g_{\sigma}(t\mtx{I}_n - \mtx{A})$. Hence, we can apply the results derived in \refsec{sec:analysis}.
 
 Choosing the smoothing parameter $\sigma$ results in the following trade off: Typically, larger $\sigma$ make it easier to approximate the matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$, whereas smaller $\sigma$ allow us to stay closer to the original spectral density \refequ{equ:spectral-density}. To see the latter, we measure the error between the spectral density $\phi$ and its smoothened version $\phi_{\sigma}$ with
 \begin{equation}
@@ -236,7 +236,7 @@ Similar observations for the case when $n_{\mtx{\Psi}}$ is nonzero lead to the f
     \State Compute $\{\mu_l(t_i)\}_{l=0}^{m}$ for all $t_i$ with non-negative Chebyshev expansion \refequ{equ:non-negative-chebyshev-expansion}
     \State Compute $\{\nu_l(t_i)\}_{l=0}^{2m}$ using \refalg{alg:chebyshev-squaring}%\refalg{alg:2-chebyshev-chebyshev-expansion}
     %\State Compute  for all $t_i$ using %\refalg{alg:3-nystrom-chebyshev-exponentiation}
-    \State Generate standard Gaussian random matrices $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ and $\mtx{\Psi} \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$%\glsfirst{sketching-matrix} $\in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$
+    \State Generate Gaussian random matrices $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ and $\mtx{\Psi} \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$%\glsfirst{sketching-matrix} $\in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$
     %\State Generate standard Gaussian %\glsfirst{random-matrix} $\in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$
     \State Initialize $[\mtx{V}_1, \mtx{V}_2, \mtx{V}_3] \gets [\mtx{0}_{n \times n_{\mtx{\Omega}}}, \mtx{\mtx{\Omega}}, \mtx{0}_{n \times n_{\mtx{\Omega}}}]$
     \State Initialize $[\mtx{W}_1, \mtx{W}_2, \mtx{W}_3] \gets [\mtx{0}_{n \times n_{\mtx{\Psi}}}, \mtx{\Psi}, \mtx{0}_{n \times n_{\mtx{\Psi}}}]$

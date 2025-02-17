@@ -1,7 +1,7 @@
 \appendix
 
 \color{blue}
-\section{Moment bounds for non-standard Gaussian random vectors and matrices}
+\section{Moment bounds for Gaussian random vectors and matrices}
 
 The goal of this section is to establish moment bounds for $\lVert \mtx{A} \mtx{\Omega} \rVert _2^2$ with a fixed matrix $\mtx{A}$ and a Gaussian random matrix $\mtx{\Omega}$. These bounds are needed in the proof of \reflem{lem:nystrom}, but may also be of independent interest.
 %For reasons which will become clear in the proof of the final and most interesting of these lemmas (\reflem{lem:nystrom}), we will need to bound $\mathbb{E}^{\sfrac{p}{2}}\left[\lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]$ for a constant matrix $\mtx{A} \in \mathbb{R}^{m \times m}$ and a standard Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{m \times k}$.
@@ -52,7 +52,7 @@ It is well known that
 
 
 
-\begin{lemma}{Spectral norm moments of non-standard Gaussian random vector}{spectral-norm-moment-vector}
+\begin{lemma}{Spectral norm moments of Gaussian random vector}{spectral-norm-moment-vector}
     Given $\mtx{A} \in \mathbb{R}^{m \times m}$ and a Gaussian random vector $\vct{\omega} \in \mathbb{R}^{m}$, the bound
     \[
         \mathbb{E}^{p}\big[ \lVert \mtx{A} \vct{\omega} \rVert _2^2 \big]
@@ -116,7 +116,7 @@ Following the proof of \cite[Theorem 1]{cohen-2016-optimal-approximate}, we spli
     %\end{equation}
 \end{proof}
 
-\begin{lemma}{Spectral norm moments of non-standard Gaussian random matrix}{spectral-norm-moment}
+\begin{lemma}{Spectral norm moments of Gaussian random matrix}{spectral-norm-moment}
     Given $\mtx{A} \in \mathbb{R}^{m \times m}$ and a Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{m \times k}$, the bound
     \begin{equation}
         \mathbb{E}^{p}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]

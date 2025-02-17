@@ -35,7 +35,7 @@ There are other popular choices for the probability distribution, such as the Ra
 
 The Girard-Hutchinson estimator is a popular choice for spectral density estimation; it has been used in the Haydock method \cite{haydock-1972-electronic-structure}, as well as the Delta-Gauss-Legendre and Delta-Gauss-Chebyshev methods from~\cite{lin-2016-approximating-spectral, lin-2017-randomized-estimation}. However, it shares the disadvantage of Monte Carlo methods: Its error is proportional to $n^{-1/2}_{\mtx{\Psi}}$, making it expensive in applications that require decent accuracy.
 
-\paragraph{Nyström estimator.} Given a good low-rank approximation of a matrix, its trace can be cheaply estimated by simply taking the trace of that low-rank approximation. In the context of  spectral density estimation, the use of a non-negative smoothing kernel implies that $\mtx{B}(t)$ is symmetric positive definite for every $t$. This makes the Nyström method
+\paragraph{Nyström estimator.} Given a good low-rank approximation of a matrix, its trace can be cheaply estimated by simply taking the trace of that low-rank approximation. In the context of  spectral density estimation, the use of a non-negative smoothing kernel implies that $\mtx{B}(t)$ is symmetric positive semi-definite (SPSD) for every $t$. This makes the Nyström method
 from~\cite{gittens-2013-revisiting-nystrom} very well for constructing a (randomized) low-rank approximation.
 Given a Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$, Nyström computes the approximation
 \begin{equation}
@@ -214,7 +214,7 @@ In particular, given $\varepsilon \in (0, 1)$ and $\delta \in (0, e^{-1}]$, the 
 \refthm{thm:hutchinson} parallels an analogous result for the constant case~\cite[Lemma 2.1]{meyer-2021-hutch-optimal}, except for a slightly more restricted choice of the failure probability $\delta$.
 
 \begin{remark}
-    A variant of \refthm{thm:hutchinson} can be derived when assuming that $\mtx{B}(t)$ is symmetric positive semi-definite and nonzero for every $t \in [a, b]$. After dividing both sides of \refequ{equ:moment-bound-hutchinson} by $\Trace(\mtx{B}(t))$, one can apply the remaining steps of the proof to deduce that
+    A variant of \refthm{thm:hutchinson} can be derived when assuming that $\mtx{B}(t)$ isSPSD and nonzero for every $t \in [a, b]$. After dividing both sides of \refequ{equ:moment-bound-hutchinson} by $\Trace(\mtx{B}(t))$, one can apply the remaining steps of the proof to deduce that
     \begin{equation*}
         \int_{a}^{b} \frac{| \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) |}{\Trace(\mtx{B}(t))} ~\mathrm{d}t < \varepsilon
     \end{equation*}
@@ -322,7 +322,7 @@ is small when the singular values of $\mtx{B}(t)$ decay slowly for the majority 
 A consequence of~\cite{kressner-2024-randomized-lowrank}, the following result confirms the inituition that the Nystr\"om estimator is very well suited when the singular values of $\mtx{B}(t)$ decay quickly. More specifically, it shows that the $L^1$-error of the estimator stays on the level of the $L^1$-norm of the best rank-$r$ approximation error of $B(t)$, measured in the nuclear norm.
 
 \begin{theorem}{Nyström estimator for parameter-dependent matrices}{nystrom}
-    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuous for $t \in [a, b]$. For integers $r \geq 2$ and $n_{\mtx{\Omega}} \geq r + 4$, consider the Nystr\"om approximation $\Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ defined in~\refequ{equ:nystrom-approximation} with an $n\times n_{\mtx{\Omega}}$ Gaussian random matrix $\mtx{\Omega}$. Then, for any $\gamma \geq 1$, the bound 
+    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be SPSD and continuous for $t \in [a, b]$. For integers $r \geq 2$ and $n_{\mtx{\Omega}} \geq r + 4$, consider the Nystr\"om approximation $\Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ defined in~\refequ{equ:nystrom-approximation} with an $n\times n_{\mtx{\Omega}}$ Gaussian random matrix $\mtx{\Omega}$. Then, for any $\gamma \geq 1$, the bound 
     \[
         \int_{a}^{b} \big| \Trace(\mtx{B}(t)) - \Trace(\Nystr{\mtx{\Omega}}{\mtx{B}}(t)) \big| ~\mathrm{d}t
         \leq \gamma^2 (1 + r) \int_{a}^{b} \sum_{i = r+1}^{n} \sigma_i(\mtx{B}(t)) ~\mathrm{d}t.
@@ -330,7 +330,7 @@ A consequence of~\cite{kressner-2024-randomized-lowrank}, the following result c
     holds with probability at least $1 - \gamma^{-(n_{\mtx{\Omega}} - r)}$.
 \end{theorem}
 \begin{proof}
-Using that $\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ is positive semi-definite (see, e.g.,~\cite[Lemma 2.1]{frangella-2023-randomized-nystrom}) we obtain
+Using that $\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ is SPSD (see, e.g.,~\cite[Lemma 2.1]{frangella-2023-randomized-nystrom}) we obtain
     \begin{align*}
         \big| \Trace(\mtx{B}(t)) - \Trace(\Nystr{\mtx{\Omega}}{\mtx{B}}(t)) \big|
         & = \big| \Trace(\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)) \big|
@@ -515,7 +515,7 @@ When compared to the equivalent result for constant matrices \cite[Lemma 3.2]{pe
 Finally, we can now combine the bound on the Girard-Hutchinson estimator (\refthm{thm:hutchinson}) and the one on the Nyström approximation (\reflem{lem:nystrom}) to obtain our main result.
 
 \begin{theorem}{Nyström++ trace estimator for parameter-dependent matrices}{nystrom-pp}
-    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. If $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-1} \log(\delta^{-1}))$ with \emph{even} $n_{\mtx{\Omega}} \geq 4$, then for $\delta \in (0, 2e^{-1})$ and $\varepsilon \in (0, 1)$ with probability at least $1 - \delta$ 
+    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be SPSD and continuously depend on $t \in [a, b]$. If $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-1} \log(\delta^{-1}))$ with \emph{even} $n_{\mtx{\Omega}} \geq 4$, then for $\delta \in (0, 2e^{-1})$ and $\varepsilon \in (0, 1)$ with probability at least $1 - \delta$ 
     \begin{equation}
         \int_{a}^{b} | \Trace(\mtx{B}(t)) - \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{B}(t)) |~\mathrm{d}t
         \leq \varepsilon \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t.
