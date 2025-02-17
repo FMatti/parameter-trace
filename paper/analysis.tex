@@ -2,8 +2,8 @@
 \label{sec:analysis}
 
 \color{blue}
-In this section, we consider a general parameter-dependent matrix
-$\mtx{B}(t) \in \mathbb{R}^{n \times n}$, where each
+Consider a general parameter-dependent matrix
+$\mtx{B}(t) \in \mathbb{R}^{n \times n}$ for which each
 entry $b_{ij}(t)$ is a 
 %\begin{equation*}
 %     \mtx{B}(t) = \begin{bmatrix}
@@ -13,39 +13,43 @@ entry $b_{ij}(t)$ is a
 %         b_{n1}(t) & b_{n2}(t) & \dots & b_{nn}(t) \\
 %     \end{bmatrix} \in \mathbb{R}^{n \times n},
 % \end{equation*}
-continuous function on a bounded interval $[a,b]$. ??? UNTIL HERE ??? \emph{If} these entries are given explicitly, we can simply compute the trace by its definition 
-$\Trace(\mtx{B}(t)) = b_{11}(t)+ \cdots + b_{nn}(t)$. This becomes more difficult when $\mtx{B}(t)$ is given implicitly (e.g., as a matrix function) and can only be accessed through matrix-vector products. The common theme of all methods analyzed in this section is to extract trace estimates from multiplying $\mtx{B}(t)$ with fixed random vectors.
-
-%as we will see in Section ???.
-\color{black}
+continuous function on a bounded interval $[a,b]$. In this section, we 
+describe and analyze methods that estimate, for several values of $t$, the 
+trace $\Trace(\mtx{B}(t)) = b_{11}(t)+ \cdots + b_{nn}(t)$
+from matrix-vector products of $B(t)$ with \emph{constant} random vectors. For one \emph{fixed} value of $t$, our methods reduce to known algorithms. Once one considers several, potentially many values of $t$, important differences arise from the fact that the random vectors do not depend on $t$. On the one hand, as we will see in~\refsec{sec:application}, this allows one to reuse computations. On the other hand, this significantly complicates the analysis, which will be the main focus of this section.
 
 \subsection{Methods}
 \label{subsec:methods}
 
-\paragraph{Girard-Hutchinson estimator.} The trace of a parameter-dependent matrix can be approximated with the Girard-Hutchinson estimator \cite{girard-1989-fast-montecarlo,hutchinson-1990-stochastic-estimator}: We take $n_{\mtx{\Psi}}$ stochastically independent standard Gaussian random vectors $\vct{\psi}_1,\dots, \vct{\psi}_{n_{\mtx{\Psi}}} \in \mathbb{R}^{n}$, i.e. vectors whose entries are independent standard Gaussian random variables, to form
+\paragraph{Girard-Hutchinson estimator.} One of the simplest methods for trace estimation, the Girard-Hutchinson estimator~\cite{girard-1989-fast-montecarlo,hutchinson-1990-stochastic-estimator} proceeds by sampling $n_{\mtx{\Psi}}$ stochastically independent Gaussian random vectors $\vct{\psi}_1,\dots, \vct{\psi}_{n_{\mtx{\Psi}}} \in \mathbb{R}^{n}$
+and computes the approximation 
 \begin{equation}
-    \Hutch{\mtx{\Psi}}(\mtx{B}(t))
-    = \frac{1}{n_{\mtx{\Psi}}} \sum_{j=1}^{n_{\mtx{\Psi}}} \vct{\psi}_j^{\top} \mtx{B}(t) \vct{\psi}_j
-    = \frac{1}{n_{\mtx{\Psi}}} \Trace( \mtx{\Psi}^{\top} \mtx{B}(t) \mtx{\Psi})
+    \Trace(\mtx{B}(t)) \approx \Hutch{\mtx{\Psi}}(\mtx{B}(t))
+    := \frac{1}{n_{\mtx{\Psi}}} \sum_{j=1}^{n_{\mtx{\Psi}}} \vct{\psi}_j^{\top} \mtx{B}(t) \vct{\psi}_j
+    = \frac{1}{n_{\mtx{\Psi}}} \Trace( \mtx{\Psi}^{\top} \mtx{B}(t) \mtx{\Psi}).
     \label{equ:hutchinson-trace-estimator}
 \end{equation}
-where $\mtx{\Psi} = [\vct{\psi}_1 ~ \cdots ~ \vct{\psi}_{n_{\mtx{\Psi}}}] \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$ is a standard Gaussian random matrix. Other choices for the distribution of the random vectors are possible, for example by uniformly sampling from $\{-1, +1\}$ or from the $(n-1)$-sphere. Our theoretical developments only hold in the Gaussian case.
+Here, $\mtx{\Psi} = [\vct{\psi}_1 ~ \cdots ~ \vct{\psi}_{n_{\mtx{\Psi}}}] \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$ is a Gaussian random matrix, that is, 
+its entries are independent standard normal random variables.
+There are other popular choices for the probability distribution, such as the Rademacher distribution. Our theoretical developments, however, only apply to the Gaussian case.
 
-The Girard-Hutchinson estimator distinguishes itself for its simplicity. It has already been used to approximate traces of parameter-dependent matrices for spectral density estimation in the Haydock method \cite{haydock-1972-electronic-structure}, as well as the Delta-Gauss-Legendre and Delta-Gauss-Chebyshev methods of \cite{lin-2016-approximating-spectral, lin-2017-randomized-estimation}. However, as a Monte Carlo estimate, its accuracy is often quite disappointing: if we aim to increase the accuracy of the estimate by one digit, we would need to increase the number of queries by a factor of one hundred.
+The Girard-Hutchinson estimator is a popular choice for spectral density estimation; it has been used in the Haydock method \cite{haydock-1972-electronic-structure}, as well as the Delta-Gauss-Legendre and Delta-Gauss-Chebyshev methods from~\cite{lin-2016-approximating-spectral, lin-2017-randomized-estimation}. However, it shares the disadvantage of Monte Carlo methods: Its error is proportional to $n^{-1/2}_{\mtx{\Psi}}$, making it expensive in applications that require decent accuracy.
 
-\paragraph{Nyström estimator.} Matrices with fast singular value decay can well be approximated with a low-rank approximation. Intuitively, it should be sufficient to approximate the trace of a quadratic matrix with the trace of a good low-rank approximation. Our application, the spectral density estimation (\refsec{sec:application}) of symmetric matrices, requires us to approximate the trace of a symmetric positive semi-definite matrix, originating from a non-negative smoothing kernel. In this scenario, the Nyström approximation is the most suitable low-rank approximation \cite{gittens-2013-revisiting-nystrom}. For a standard Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$, it is defined as
+\paragraph{Nyström estimator.} Given a good low-rank approximation of a matrix, its trace can be cheaply estimated by simply taking the trace of that low-rank approximation. In the context of  spectral density estimation, the use of a non-negative smoothing kernel implies that $\mtx{B}(t)$ is symmetric positive definite for every $t$. This makes the Nyström method
+from~\cite{gittens-2013-revisiting-nystrom} very well for constructing a (randomized) low-rank approximation.
+Given a Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$, Nyström computes the approximation
 \begin{equation}
-    \Nystr{\mtx{\Omega}}{\mtx{B}}(t) = (\mtx{B}(t) \mtx{\Omega}) (\mtx{\Omega}^{\top} \mtx{B}(t) \mtx{\Omega})^{\dagger} (\mtx{B}(t) \mtx{\Omega})^{\top}.
+    \mtx{B}(t) \approx \Nystr{\mtx{\Omega}}{\mtx{B}}(t) := (\mtx{B}(t) \mtx{\Omega}) (\mtx{\Omega}^{\top} \mtx{B}(t) \mtx{\Omega})^{\dagger} (\mtx{B}(t) \mtx{\Omega})^{\top}.
     \label{equ:nystrom-approximation}
 \end{equation}
-We can estimate the trace of $\mtx{B}(t)$ with $\Trace(\Nystr{\mtx{\Omega}}{\mtx{B}}(t))$. Thanks to the invariance of the trace under cyclic permutation of its arguments and the symmetry of the matrix, we may rewrite this estimator as
+Related randomized low-rank approximations for general parameter-dependent matrices have been analyzed in~\cite{kressner-2024-randomized-lowrank}.
+Exploiting the invariance of the trace under cyclic permutations, taking the trace of~\eqref{equ:nystrom-approximation} gives rise to the Nyström estimator
 \begin{equation}
-    \Trace(\Nystr{\mtx{\Omega}}{\mtx{B}}(t)) = \Trace( (\mtx{\Omega}^{\top} \mtx{B}(t) \mtx{\Omega})^{\dagger} ( \mtx{\Omega}^{\top} \mtx{B}(t)^2 \mtx{\Omega})).
+    \Trace(\mtx{B}(t)) \approx \Trace(\Nystr{\mtx{\Omega}}{\mtx{B}}(t)) = \Trace( (\mtx{\Omega}^{\top} \mtx{B}(t) \mtx{\Omega})^{\dagger} ( \mtx{\Omega}^{\top} \mtx{B}(t)^2 \mtx{\Omega})).
     \label{equ:nystrom-trace-estimator}
 \end{equation}
 This estimator forms the basis of the so-called spectrum sweeping method \cite{lin-2017-randomized-estimation}. 
 
-Two different low-rank approximation algorithms for general parameter-dependent matrices have already been analyzed in \cite{kressner-2024-randomized-lowrank}. However, the downside of the low-rank approximation approach is that it will -- in general -- not work well enough on matrices whose singular values do not decay quickly.
 %Write:
 %\begin{itemize}
 % \item fast singular value decay, intuitively sufficient to consider a low-rank %approximation
@@ -58,14 +62,19 @@ Two different low-rank approximation algorithms for general parameter-dependent 
 %
 %Alternatively, the trace of a symmetric matrix whose singular values decay %quickly can be approximated well by using a Gaussian sketching matrix $\mtx%{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ to form the Nyström %approximation \cite{gittens-2013-revisiting-nystrom}
 
-\paragraph{Nyström++ estimator.} Finally, \cite{lin-2017-randomized-estimation} proposes an estimator which is more accurate than the Girard-Hutchinson estimator and, unlike the Nyström approximation, does not rely on a fast singular value decay of $\mtx{B}(t)$. The estimator first computes the trace of the Nyström approximation \refequ{equ:nystrom-trace-estimator} of the matrix. Because this result may not always be satisfactory, the estimator then corrects for eventual inaccuracies in the Nyström approximation by estimating the trace of the approximation residual with the Girard-Hutchinson estimator \refequ{equ:hutchinson-trace-estimator}. The full estimator is
+\paragraph{Nyström++ estimator.}
+The Nyström estimator~\eqref{equ:nystrom-trace-estimator} relies on the feasibility of low-rank approximation, that is, the singular values of $\mtx{B}(t)$ need to decay sufficiently quickly.
+If this property cannot be ensured, it is preferable to use an estimator that combines the Girard-Hutchinson and Nyström estimators.
+The combination suggested in~\cite{lin-2017-randomized-estimation} applies Girard-Hutchinson to the error of the Nyström approximation~\eqref{equ:nystrom-approximation} in order to
+reduce the error of the Nyström estimator:
 \begin{equation}
     \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{B}(t)) = \Trace(\Nystr{\mtx{\Omega}}{\mtx{B}}(t)) + \Hutch{\mtx{\Psi}}(\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)),
     \label{equ:nystrompp-trace-estimator}
 \end{equation}
-where the matrix indices again emphasize the use of a constant standard Gaussian random matrix $\mtx{\Psi} \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$ for the Girard-Hutchinson estimator and the dimension reduction matrix $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ for the Nyström approximation.
+where $\mtx{\Psi} \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$, $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ are independent Gaussian random matrices. 
+\textcolor{red}{??? What about XTrace? Does it apply; should we mention it somewhere? ???}
 
-This estimator is the parameter-dependent analogue of the Nyström++ estimator \cite{persson-2022-improved-variants}, which itself is based on the Hutch++ estimator \cite{meyer-2021-hutch-optimal}. For constant matrices $\mtx{B}$, these estimators were both shown to achieve a relative $\varepsilon$-error with just using $\mathcal{O}(\varepsilon^{-1})$ matrix-vector products, independent of the singular value decay of $\mtx{B}$.
+For a fixed value of $t$, the estimator~\eqref{equ:nystrompp-trace-estimator} coincides with the Nyström++ estimator from~\cite{persson-2022-improved-variants}, which is based on the Hutch++ estimator~\cite{meyer-2021-hutch-optimal}. In this situation (constant $\mtx{B}$), these estimators were both shown to achieve a relative $\varepsilon$-error with just using $\mathcal{O}(\varepsilon^{-1})$ matrix-vector products, independent of the singular value decay of $\mtx{B}$.
 %We can interpret this estimator as an interpolation between the trace of the Nyström approximation and the Girard-Hutchinson estimator.
 
 %In the remainder of this section, we will derive upper bounds on the error of these estimators.
@@ -84,16 +93,21 @@ This estimator is the parameter-dependent analogue of the Nyström++ estimator \
 %\end{tabular}
 %\end{table}
 
+%as we will see in Section ???.
+
+
 \subsection{Error bounds}
 
-\textcolor{green}{In the following pages, we will upper bound the $L^1$-error of each of the trace estimators from \refsec{subsec:methods} with a suitable quantity which parallels the corresponding result in the constant case. As in \cite{kressner-2024-randomized-lowrank}, this often requires us to bound the high order moments $\mathbb{E}^p[X] = (\mathbb{E}[|X|^p])^{\sfrac{1}{p}}$ of certain random variables $X$.}
+In this section, we derive bounds on the $L^1$-error (in $t$) for each of the trace estimators from \refsec{subsec:methods}. Our bounds parallel existing results in the constant case. As in~\cite{kressner-2024-randomized-lowrank}, our proofs incorporate parameter dependence by proceeding through moments $\mathbb{E}^p[X] = (\mathbb{E}[|X|^p])^{\sfrac{1}{p}}$ of certain random variables $X$.
 
 \subsubsection{Girard-Hutchinson estimator}
 \label{subsec:hutchinson}
 
-\color{blue}
+We first derive an $L^1$-error bound for the Girard-Hutchinson estimator~\refequ{equ:hutchinson-trace-estimator} that is relative to the $L^1$-norms of the Frobenius and spectral norms of $\mtx{B}(t)$, defined by
+\[
+ \|\mtx{B}(t)\|_{F,1} := \int_{a}^{b} \|\mtx{B}(t)\|_{F}~\mathrm{d}t, \quad  \|\mtx{B}(t)\|_{2,1} := \int_{a}^{b} \|\mtx{B}(t)\|_{2}~\mathrm{d}t.
+\]
 
-We start our analysis of the methods presented above by deriving an $L^1$-error bound for the Girard-Hutchinson estimator~\refequ{equ:hutchinson-trace-estimator} that is relative to the $L^1$-norm of the Frobenius norm $\lVert \mtx{B}(t) \rVert _F$.
 
 %\begin{theorem}{Girard-Hutchinson estimator for parameter-dependent matrices}{hutchinson}
 %    For a symmetric matrix $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ that depends continuously on $t \in [a, b]$, consider the  Girard-Hutchinson estimator~\refequ{equ:hutchinson-trace-estimator} with an $n\times n_{\mtx{\Psi}}$ Gaussian random matrix $\mtx{\Psi}$. Then for any $p \geq 1, p \in \mathbb{R}$ and $\gamma \geq 1$ the bound 
@@ -106,18 +120,15 @@ We start our analysis of the methods presented above by deriving an $L^1$-error 
 %\end{theorem}
 
 \begin{theorem}{Girard-Hutchinson estimator for parameter-dependent matrices}{hutchinson}
-    For a symmetric matrix $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ that depends continuously on $t \in [a, b]$, consider the  Girard-Hutchinson estimator~\refequ{equ:hutchinson-trace-estimator} with an $n\times n_{\mtx{\Psi}}$ Gaussian random matrix $\mtx{\Psi}$. Then for any $p \geq 1, p \in \mathbb{R}$ and $\gamma \geq 1$ the bound 
+    For a symmetric matrix $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ that depends continuously on $t \in [a, b]$, consider the  Girard-Hutchinson estimator~\refequ{equ:hutchinson-trace-estimator} with an $n\times n_{\mtx{\Psi}}$ Gaussian random matrix $\mtx{\Psi}$. Then for any $p \geq 1$, $p \in \mathbb{R}$ and $\gamma \geq 1$, the following bound holds with probability at least $1 - \gamma^{-p}$:
     \begin{equation} \label{eq:ghbound}
-        \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq 4 \gamma \int_{a}^{b} \sqrt{\frac{p}{n_{\mtx{\Psi}}}}  \lVert \mtx{B}(t) \rVert _F + \frac{2 p}{n_{\mtx{\Psi}}} \lVert \mtx{B}(t) \rVert _2 ~\mathrm{d}t
+        \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq 4 \gamma \Big( \sqrt{\frac{p}{n_{\mtx{\Psi}}}}  \|\mtx{B}(t)\|_{F,1} + \frac{2 p}{n_{\mtx{\Psi}}} \|\mtx{B}(t)\|_{2,1} \Big).
     \end{equation}
-    holds with probability at least $1 - \gamma^{-p}$.
-    In particular, given $\varepsilon \in (0, 1)$ and $\delta \in (0, e^{-1})$, the bound $\int_{a}^{b} | \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) | ~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t$ holds 
+In particular, given $\varepsilon \in (0, 1)$ and $\delta \in (0, e^{-1}]$, the bound $\int_{a}^{b} | \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) | ~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t$ holds 
     with probability at least $1-\delta$ if $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2} \log(\delta^{-1}))$.
 \end{theorem}
-
-\color{black}
 \begin{proof}
-    We first consider a fixed value for $t$. From the proof of \cite[Theorem 1]{cortinovis-2022-randomized-trace}, we know that $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))$ is a $(2 \lVert \mtx{B}(t) \rVert _F^2 / n_{\mtx{\Psi}}, 2 \lVert \mtx{B}(t) \rVert _2 / n_{\mtx{\Psi}})$-sub-gamma random variable. Therefore, by \reflem{lem:sub-gamma-moments}
+    Let us first consider $t$ fixed. From the proof of \cite[Theorem 1]{cortinovis-2022-randomized-trace}, we know that $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))$ is a $(2 \lVert \mtx{B}(t) \rVert _F^2 / n_{\mtx{\Psi}}, 2 \lVert \mtx{B}(t) \rVert _2 / n_{\mtx{\Psi}})$-sub-gamma random variable. Therefore, \reflem{lem:sub-gamma-moments} yields
     \begin{equation}
         \mathbb{E}^{p}[\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))] \leq 4  \sqrt{\frac{p}{n_{\mtx{\Psi}}}} \lVert \mtx{B}(t) \rVert _F + 8 \frac{p}{n_{\mtx{\Psi}}} \lVert \mtx{B}(t) \rVert _2.
         \label{equ:moment-bound-hutchinson}
@@ -151,15 +162,11 @@ We start our analysis of the methods presented above by deriving an $L^1$-error 
     \begin{align}
         \mathbb{E}^{p}\left[ \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t  \right]
         &\leq \int_{a}^{b} \mathbb{E}^{p}\left[ \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) \right]~\mathrm{d}t \notag \\
-        &\leq 4 \int_{a}^{b}  \sqrt{\frac{p}{n_{\mtx{\Psi}}}}  \lVert \mtx{B}(t) \rVert _F + \frac{2 p}{n_{\mtx{\Psi}}} \lVert \mtx{B}(t) \rVert _2 ~\mathrm{d}t.
+        &\leq 4 \sqrt{\frac{p}{n_{\mtx{\Psi}}}} \lVert \mtx{B}(t) \rVert_{F,1} + 8 \frac{p}{n_{\mtx{\Psi}}} \lVert \mtx{B}(t) \rVert_{2,1}.
     \end{align}
-    Consequently, by Markov's inequality, the bound 
-    \begin{equation} 
-        \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq 4 \gamma \int_{a}^{b} \sqrt{\frac{p}{n_{\mtx{\Psi}}}}  \lVert \mtx{B}(t) \rVert _F + \frac{2 p}{n_{\mtx{\Psi}}} \lVert \mtx{B}(t) \rVert _2 ~\mathrm{d}t.
-    \end{equation}
-    holds for any $\gamma \geq 1$ with probability at least $1 - \gamma^{-p}$. 
+    This implies~\eqref{eq:ghbound} by Markov's inequality.
 
-    Bounding $\lVert \mtx{B}(t) \rVert _2 \leq \lVert \mtx{B}(t) \rVert _F$, setting $\gamma = e$, and choosing $p = \log(\delta^{-1}) \geq 1$, the second part of the theorem follows for example when taking $n_{\mtx{\Psi}} = \lceil (8 e)^2 \log(\delta^{-1}) \varepsilon^{-2} \rceil$.
+    Bounding $\lVert \mtx{B}(t) \rVert _2 \leq \lVert \mtx{B}(t) \rVert _F$, setting $\gamma = e$, and choosing $p = \log(\delta^{-1}) \geq 1$, the second part of the theorem follows by taking,  e.g., $n_{\mtx{\Psi}} = \lceil (8 e)^2 \log(\delta^{-1}) \varepsilon^{-2} \rceil$.
 \end{proof}
 %\begin{proof}
 %    The proof proceeds by bounding moments for fixed values of $t$ and then uses Minkowski's integral inequality. We start with a standard embedding trick (see, e.g.,~\cite[Theorem 1]{cortinovis-2022-randomized-trace}) for which we define
@@ -204,21 +211,19 @@ We start our analysis of the methods presented above by deriving an $L^1$-error 
 %    %we get that for all $\delta \in (0, 1)$
 %\end{proof}
 
-\refthm{thm:hutchinson} coincides with the analogous result for the constant case~\cite[Lemma 2.1]{meyer-2021-hutch-optimal}, except for a slightly more restricted choice of the failure probability $\delta$.
+\refthm{thm:hutchinson} parallels an analogous result for the constant case~\cite[Lemma 2.1]{meyer-2021-hutch-optimal}, except for a slightly more restricted choice of the failure probability $\delta$.
 
 \begin{remark}
-    A slightly different version of \refthm{thm:hutchinson} can be derived when $\mtx{B}(t)$ is nonzero and symmetric positive semi-definite for all $t \in [a, b]$: after dividing both sides of \refequ{equ:moment-bound-hutchinson} by $\Trace(\mtx{B}(t))$, one can apply the remaining steps in the proof to deduce with probability at least $1 - \delta$
-    \begin{equation}
-        \int_{a}^{b} \frac{| \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) |}{\Trace(\mtx{B}(t))} ~\mathrm{d}t < \varepsilon,
-    \end{equation}
-    if $n_{\mtx{\Psi}} = \mathcal{O}(\log(\delta^{-1}) \varepsilon^{-2} \rho^2)$, where we identify
-    \begin{equation}
-        \rho = \int_{a}^{b} \frac{\lVert \mtx{B}(t) \rVert _F}{\Trace(\mtx{B}(t))} ~\mathrm{d}t
-    \end{equation}
-    The quantity $\rho$ is small when on the interval $[a, b]$ the singular values of $\mtx{B}(t)$ decay slowly and large when they decay quickly. This parallels a similar result for constant matrices in~\cite[Remark 2]{cortinovis-2022-randomized-trace}.
+    A variant of \refthm{thm:hutchinson} can be derived when assuming that $\mtx{B}(t)$ is symmetric positive semi-definite and nonzero for every $t \in [a, b]$. After dividing both sides of \refequ{equ:moment-bound-hutchinson} by $\Trace(\mtx{B}(t))$, one can apply the remaining steps of the proof to deduce that
+    \begin{equation*}
+        \int_{a}^{b} \frac{| \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) |}{\Trace(\mtx{B}(t))} ~\mathrm{d}t < \varepsilon
+    \end{equation*}
+    holds with probability at least $1 - \delta$ if $n_{\mtx{\Psi}} = \mathcal{O}(\log(\delta^{-1}) \varepsilon^{-2} \rho^2)$. Here, 
+    the quantity $
+        \rho := \frac{1}{b-a} \int_{a}^{b} \frac{\lVert \mtx{B}(t) \rVert _F}{\Trace(\mtx{B}(t))} ~\mathrm{d}t \in [1,n]
+    $
+is small when the singular values of $\mtx{B}(t)$ decay slowly for the majority of $t\in [a,b]$ and large otherwise. This parallels an analogous result for constant matrices; see~\cite[Remark 2]{cortinovis-2022-randomized-trace}.
 \end{remark}
-
-\color{blue}
 
 %The idea behind the proof is to bound  to extend the results to the continuous parameter case. We first only consider the $1$-query estimator and subsequently use a diagonal embedding trick to carry the result over to the general case.
 %\begin{proof} 
@@ -314,10 +319,10 @@ We start our analysis of the methods presented above by deriving an $L^1$-error 
 \subsubsection{Nyström estimator}
 \label{subsec:nystrom}
 
-As a consequence of~\cite{kressner-2024-randomized-lowrank}, the following result confirms the inituition that the Nystr\"om approximation is very well suited in the presence of decaying singular values: If the nuclear norm error to the best rank-$r$ approximation to $B(t)$ is bounded by $\varepsilon$ for every $t$ then the trace of the Nystr\"om approximation (with a bit of oversampling) results, with high probability, in an error that is only modestly larger than $\varepsilon$.
+A consequence of~\cite{kressner-2024-randomized-lowrank}, the following result confirms the inituition that the Nystr\"om estimator is very well suited when the singular values of $\mtx{B}(t)$ decay quickly. More specifically, it shows that the $L^1$-error of the estimator stays on the level of the $L^1$-norm of the best rank-$r$ approximation error of $B(t)$, measured in the nuclear norm.
 
 \begin{theorem}{Nyström estimator for parameter-dependent matrices}{nystrom}
-    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuous for $t \in [a, b]$. For integers $r \geq 2$ and $n_{\mtx{\Omega}} \geq r + 4$, consider the Nystr\"om approximation $\Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ defined in~\refequ{equ:nystrom-approximation} with an $n\times n_{\mtx{\Omega}}$ Gaussian random matrix $\mtx{\Omega}$. Then for any $\gamma \geq 1$ the bound 
+    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuous for $t \in [a, b]$. For integers $r \geq 2$ and $n_{\mtx{\Omega}} \geq r + 4$, consider the Nystr\"om approximation $\Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ defined in~\refequ{equ:nystrom-approximation} with an $n\times n_{\mtx{\Omega}}$ Gaussian random matrix $\mtx{\Omega}$. Then, for any $\gamma \geq 1$, the bound 
     \[
         \int_{a}^{b} \big| \Trace(\mtx{B}(t)) - \Trace(\Nystr{\mtx{\Omega}}{\mtx{B}}(t)) \big| ~\mathrm{d}t
         \leq \gamma^2 (1 + r) \int_{a}^{b} \sum_{i = r+1}^{n} \sigma_i(\mtx{B}(t)) ~\mathrm{d}t.
@@ -335,24 +340,25 @@ Using that $\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ is positive semi-defi
     where $\lVert \cdot \rVert _{\ast}$ denotes the nuclear norm and we used \cite[Theorem 1]{gittens-2011-spectral-norm} in the last equality. This allows us to apply \cite[Theorem 5]{kressner-2024-randomized-lowrank}, which immediately implies the statement claimed by the theorem.
 \end{proof}
 
-Compared to the constant case~\cite[Theorem 8.1]{tropp-2023-randomized-algorithms}, the bound of \refthm{thm:nystrom} features an additional factor $1+r$ that cannot be compensated with oversampling.
+Compared to the constant case~\cite[Theorem 8.1]{tropp-2023-randomized-algorithms}, the bound of \refthm{thm:nystrom} features an additional factor $1+r$, which cannot be compensated with oversampling.
 
 \subsection{Nyström++ estimator for parameter-dependent matrices}
 \label{subsec:nystrom-pp}
 
 
-\refthm{thm:hutchinson} shows that the the Girard-Hutchinson estimator achieves a relative $\varepsilon$-error when using $\mathcal{O}(\varepsilon^{-2})$ queries. The aim of this section is to show that the Nyström++ estimator~\refequ{equ:nystrompp-trace-estimator} improves this to $\mathcal{O}(\varepsilon^{-1})$ queries (that is, matrix-vector products with random vectors), \emph{without} requiring any assumption on the singular values of $\mtx{B}(t)$. This parallels existing results for the constant case for the Hutch++~\cite[Theorem 3.1]{meyer-2021-hutch-optimal} and Nyström++ estimators \cite[Theorem 3.4]{persson-2022-improved-variants}. \textcolor{red}{?? Include specific result ???} \textcolor{green}{Specifically, a bound of the form $|\Trace(\mtx{B}) - \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{B})| \leq \varepsilon \Trace(\mtx{B})$ for any constant symmetric positive semi-definite matrix $\mtx{B}$ is shown to hold with high probability for the Nyström++ estimator $\Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{B})$ \refequ{equ:nystrompp-trace-estimator} when $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-1})$ }. Indeed, our proof follows the strategy from~\cite{meyer-2021-hutch-optimal}, by first showing that the parameter-dependent Nyström approximation achieves a relative $\varepsilon$-error when using $\mathcal{O}(\varepsilon^{-2})$ queries.
+\refthm{thm:hutchinson} shows that the Girard-Hutchinson estimator achieves a relative $\varepsilon$-error when using $\mathcal{O}(\varepsilon^{-2})$ queries. The aim of this section is to show that the Nyström++ estimator~\refequ{equ:nystrompp-trace-estimator} improves this to $\mathcal{O}(\varepsilon^{-1})$ queries (that is, matrix-vector products with random vectors), \emph{without} requiring any assumption on the singular values of $\mtx{B}(t)$. This parallels existing results for the constant case~\cite{meyer-2021-hutch-optimal,persson-2022-improved-variants}. In particular, Theorem 3.4 from~\cite{persson-2022-improved-variants} shows that $|\Trace(\mtx{B}) - \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{B})| \leq \varepsilon \Trace(\mtx{B})$ holds with high probability for any (constant) SPSD matrix $\mtx{B}$ for the Nyström++ estimator $\Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{B})$ from~\refequ{equ:nystrompp-trace-estimator} when $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-1})$. 
 
-\color{blue}
+Our analysis mimicks the strategy from~\cite{meyer-2021-hutch-optimal}, by first establishing a relative Frobenius norm error proportional to $n_{\mtx{\Omega}}^{-1/2}$ for the parameter-dependent Nyström approximation.
+
 
 \begin{lemma}{Nyström approximation for parameter-dependent matrices}{nystrom}
-    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be symmetric positive semi-definite and continuously depend on $t \in [a, b]$. Consider the Nyström approximation $\Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ with a Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ and \emph{even} $n_{\mtx{\Omega}} \geq 4$.
-    Then for any $\gamma \geq 1$ the bound
+    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be SPSD and continuous for $t \in [a, b]$. Consider the Nyström approximation $\Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ with a Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ and \emph{even} $n_{\mtx{\Omega}} \geq 4$.
+    Then, for any $\gamma \geq 1$, the bound
     \begin{equation}
         \int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \leq \gamma \frac{c}{\sqrt{n_{\mtx{\Omega}}}} \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t
         \label{qu:nystrompp-theorem-bound}
     \end{equation}
-        holds with probability at least $1 - \gamma^{-\sfrac{n_{\mtx{\Omega}}}{4}}$ for 
+        holds with probability at least $1 - \gamma^{-n_{\mtx{\Omega}} / 4}$ for 
         $c = 1 + 9 \sqrt{2} e^4$. In particular, given $\varepsilon > 0$ and $\delta \in (0, 1)$, the bound $\int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t$ holds with probability at least $1-\delta$ if $n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-2} + \log(\delta^{-1}))$.
 \end{lemma}
 
@@ -373,7 +379,7 @@ $\mtx{\Lambda} = \operatorname{diag}(\lambda_1, \dots, \lambda_n)$ and $\lambda_
     \end{equation*}
     we set
     $\mtx{\Omega}_1 := \mtx{U}_1^{\top} \mtx{\Omega} \in \mathbb{R}^{k \times n_{\mtx{\Omega}}}$ and $\mtx{\Omega}_2 := \mtx{U}_2^{\top} \mtx{\Omega} \in \mathbb{R}^{(n - k) \times n_{\mtx{\Omega}}}$, which are independent Gaussian random matrices.
-Applying Theorem B.1 from~\cite{persson-2023-randomized-lowrank} for $f(x) = x$ yields the bound
+Applying Theorem B.1 from~\cite{persson-2023-randomized-lowrank} for $f(x) = x$, see also \textcolor{red}{??? Also cite the same result from Tropp and Webber or Epperly and Tropp? ???}, yields the bound
     \begin{equation}
         \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}(t)} \rVert _F 
         \leq  \lVert \mtx{\Lambda}_2 \rVert _F + \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2,
@@ -387,6 +393,7 @@ Applying Theorem B.1 from~\cite{persson-2023-randomized-lowrank} for $f(x) = x$ 
         \leq \Trace(\mtx{B}) / \sqrt{k}.
         \label{equ:nystrom-proof-frobenius-trace}
     \end{equation}
+    ??? UNTIL HERE ???
     \textcolor{red}{??? STOPPED HERE: Not clear to me why $n_\Omega/4$ should be the optimal exponent for the tail bound ???} \textcolor{green}{I rearranged and reformulated things a bit to hopefully make it clearer:}
     
     \color{black}

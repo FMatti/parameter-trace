@@ -166,7 +166,6 @@ In passing, we note that \reflem{lem:spectral-norm-moment}  yields the bound
     \end{equation}
     with $k\ge 2, p\ge 2$. For $p = 2$, this nearly matches the corresponding bound from~\cite[Lemma B.1]{tropp-2023-randomized-algorithms}, except for the additional factor $\sqrt{2}$.
 
-\color{black}
 %\section{Moment bound for simple trace estimator}
 %
 %In this section we will bound the high order moments of the residual of the single-query Girard-Hutchinson estimator \refequ{equ:hutchinson-trace-estimator}, i.e. when $n_{\mtx{\Psi}} = 1$. This bound is needed in the proof of \refthm{thm:hutchinson}.
@@ -306,7 +305,7 @@ Any such $X$ satisfies the following tail bound~\cite[P. 29]{boucheron-2013-conc
   \mathbb P\big(|X| > \sqrt{2\nu t} + ct\big) \le 2 e^{-t} \ \text{for every} \ t>0.
 \end{equation}
 
-\begin{lemma}{Moment bounds for sub-gamma random variable}{sub-gamma-moments}
+\begin{lemma}{Moment bounds for sub-gamma random variables}{sub-gamma-moments}
     Let $X$ be a centered, $(\nu,c)$-sub-gamma random variable for $\nu,c>0$. Then
     \begin{equation}
         \mathbb{E}^p[X] \leq 2 \sqrt{2 \nu p} + 4 c p
@@ -314,7 +313,7 @@ Any such $X$ satisfies the following tail bound~\cite[P. 29]{boucheron-2013-conc
     holds for any $p \geq 1$, $p \in \mathbb{R}$.
 \end{lemma}
 \begin{proof}
-The statement follows from a straightforward extension of the proof of~\cite[Theorem 2.3]{boucheron-2013-concentration-inequalities} from  even integers $p$ to general $p$. We include the detailed argument for completeness. Using integration by parts, the reparametrization $x = \sqrt{2\nu t} + ct$, and~\refequ{equ:subgammatail} one gets
+The statement follows from a straightforward extension of the proof of~\cite[Theorem 2.3]{boucheron-2013-concentration-inequalities} from  even integers $p$ to general $p$. We include the detailed argument for completeness. Using integration by parts, the reparametrization $x = \sqrt{2\nu t} + ct$, and~\refequ{equ:subgammatail}, one gets
 \begin{align*}
  \mathbb{E}\big[|X|^p\big] &= p \int_0^\infty  |x|^{p-1} \mathbb P\big(|X| > x\big) \,\mathrm{d}x \\
  &=  p \int_0^\infty  (\sqrt{2\nu t} + ct)^{p-1} \mathbb P\big(|X| > \sqrt{2\nu t} + ct \big) \frac{ \sqrt{2\nu t} + 2ct}{2t} \,\mathrm{d}t \\
@@ -326,14 +325,13 @@ we have that
  \mathbb{E}\big[|X|^p\big] & \le 
  p 2^{p-1}   \int_0^\infty  \big( (2\nu t)^{p/2} + (2ct)^{p}\big)  \frac{e^{-t}}{t} \,\mathrm{d}t \\
  &= p 2^{p-1} \big( (2\nu)^{p/2} \Gamma(p/2) + (2c)^p  \Gamma(p) \big) \\
- &= 2^{p} (2\nu)^{p/2} \Gamma(p/2+1) + 2^{p-1} (2c)^p  \Gamma(p+1) \big.
+ &= 2^{p} (2\nu)^{p/2} \Gamma(p/2+1) + 2^{p-1} (2c)^p  \Gamma(p+1).
 \end{align*}
 Using $(a+b)^{1/p} \le a^{1/p} + b^{1/p}$, we obtain
 \[
 \mathbb{E}^p[X] \leq 2 \sqrt{2\nu} \Gamma(p/2+1)^{1/p}  + 4 c \Gamma(p+1)^{1/p}.
 \]
-Using $\Gamma(p/2+1)^{1/p} \le \sqrt{p}$ and $\Gamma(p+1)^{1/p} \le p$ completes the proof.
-
+Combined with $\Gamma(p/2+1)^{1/p} \le \sqrt{p}$ and $\Gamma(p+1)^{1/p} \le p$, this completes the proof.
 \end{proof}
 
 
