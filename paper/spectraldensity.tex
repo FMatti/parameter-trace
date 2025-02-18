@@ -2,77 +2,71 @@
 \section{Application to spectral density approximation}
 \label{sec:application}
 
-We consider the task of computing the spectral density of a real symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ with eigenvalues $\lambda_1, \dots, \lambda_n$, which is defined as
-\begin{equation}
-    \phi(t) = \frac{1}{n} \sum_{i=1}^{n} \delta(t - \lambda_i),
-    \label{equ:spectral-density}
-\end{equation}
-where $\delta$ is the Dirac delta distribution. Finding approximations to this distribution is challenging. Furthermore, in most applications the exact location of each individual eigenvalue is not important, but more so their approximate locations relative to each other, such as eigenvalue clusters, spectral gaps, or outliers. In the following we will work with a smoothed version of the spectral density, which is significantly easier to approximate at the cost of losing some of the finer characteristics of the spectrum.
+We now get back to the task of computing the spectral density $1/n \sum_{i=1}^{n} \delta(t - \lambda_i)$ of a real symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ with eigenvalues $\lambda_1, \dots, \lambda_n$, where $\delta(\cdot)$ denotes the Dirac delta distribution. As explained in the introduction, finding accurate approximations to this distribution is challenging and we will therefore work with
+a smoothed version. %This still yields enough information
+%. Furthermore, in most applications the exact location of each individual eigenvalue is not important, but more so their approximate locations relative to each other, such as eigenvalue clusters, spectral gaps, or outliers. In the following we will work with a smoothed version of the spectral density, which is significantly easier to approximate at the cost of losing some of the finer characteristics of the spectrum.
 
 \subsection{Smoothed spectral density}
 \label{subsec:spectral-density}
 
-The smoothed spectral density $\phi_{\sigma}$ is defined as
+We recall that the smoothed spectral density $\phi_{\sigma}$ is defined as
 \begin{equation}
     \phi_{\sigma}(t) = \frac{1}{n} \sum_{i=1}^{n} g_{\sigma}(t - \lambda_i) = \frac{1}{n} \Trace(g_{\sigma}(t\mtx{I}_n - \mtx{A}))
     \label{equ:smooth-spectral-density}
 \end{equation}
-for a smoothing kernel $g_{\sigma}$ parametrized by a smoothing parameter $\sigma > 0$, which controls by how much $\phi$ is smoothed. We choose a Gaussian smoothing kernel of width $\sigma > 0$, given by
+for a smoothing kernel $g_{\sigma}$ parametrized by a smoothing parameter $\sigma > 0$. In this work, we choose a Gaussian smoothing kernel of width $\sigma > 0$:
 \begin{equation}
     g_{\sigma}(s) = \frac{1}{\sigma \sqrt{2\pi}} e^{-\sfrac{s^2}{2\sigma^2}}.
     \label{equ:smoothing-kernel}
 \end{equation}
-The task in \refequ{equ:smooth-spectral-density} is to approximate the trace of the parameter-dependent SPSD matrix $g_{\sigma}(t\mtx{I}_n - \mtx{A})$. Hence, we can apply the results derived in \refsec{sec:analysis}.
+The expression~\refequ{equ:smooth-spectral-density} gives rise to the task of estimating the trace of the parameter-dependent SPSD matrix $g_{\sigma}(t\mtx{I}_n - \mtx{A})$, which has been analyzed in \refsec{sec:analysis}.
 
-Choosing the smoothing parameter $\sigma$ results in the following trade off: Typically, larger $\sigma$ make it easier to approximate the matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$, whereas smaller $\sigma$ allow us to stay closer to the original spectral density \refequ{equ:spectral-density}. To see the latter, we measure the error between the spectral density $\phi$ and its smoothened version $\phi_{\sigma}$ with
+Choosing the smoothing parameter $\sigma$ results in the following trade off: A larger $\sigma$ usually makes it  easier to approximate the matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$, whereas a smaller $\sigma$ allow one to stay closer to the original spectral density $\phi$. To quantify the latter, one can measure the error between $\phi$ and its smoothened version $\phi_{\sigma}$ by
 \begin{equation}
     \sup_{f \in \mathcal{S}} \int_{a}^{b} f(t) (\phi(t) - \phi_{\sigma}(t))~\mathrm{d}t,
     \label{equ:error-metric}
 \end{equation}
-where $\mathcal{S}$ represents an appropriately chosen space of test functions. Among others, \cite{lin-2016-approximating-spectral} proposes $\mathcal{S} = \{ f: f(t) \equiv g_{\sigma}(t - s), s \in [a, b]\}$, \cite{chen-2021-analysis-stochastic} uses $\mathcal{S} = \{f : f(t) = \Theta(s - t), s \in [a, b] \}$ where $\Theta$ is the Heaviside step function, and \cite{braverman-2022-sublinear-time,bhattacharjee-2024-improved-spectral} use $\mathcal{S} = \{f : |f(t) - f(s)| \leq |t - s| \}$ for which the error \refequ{equ:error-metric} is equivalent to the Wasserstein-1 distance between $\phi$ and $\phi_{\sigma}$. In this last metric, provided we assume the eigenvalues to be somewhat uniformly distributed and $\sigma$ to be rather small, a simple calculation allows us to roughly estimate the smoothing error \refequ{equ:error-metric} to be $\sigma$. Consequently, if we can only allow an approximation to deviate by at most a factor of $\varepsilon > 0$ from the original spectral density, we should choose a smoothing parameter $\sigma \approx \varepsilon$.
+where $\mathcal{S}$ represents an appropriately chosen space of test functions. Among others, the reference~\cite{lin-2016-approximating-spectral} uses $\mathcal{S} = \{ f: f(t) \equiv g_{\sigma}(t - s), s \in [a, b]\}$, \cite{chen-2021-analysis-stochastic} uses $\mathcal{S} = \{f : f(t) = \Theta(s - t), s \in [a, b] \}$ with the Heaviside step function $\Theta$, and \cite{braverman-2022-sublinear-time,bhattacharjee-2024-improved-spectral} use $\mathcal{S} = \{f : |f(t) - f(s)| \leq |t - s| \}$ for which the error \refequ{equ:error-metric} is equivalent to the Wasserstein-1 distance between $\phi$ and $\phi_{\sigma}$.
+When choosing 
+the last metric,
+assuming that the eigenvalues are somewhat uniformly distributed and $\sigma$ is rather small, a simple calculation allows one to conclude that the smoothing error \refequ{equ:error-metric} is of the order $\sigma$. Consequently, to ensure that the approximation deviates by at most a factor of $\varepsilon > 0$, one needs to choose $\sigma \sim \varepsilon$.
 
 \subsection{Chebyshev expansion of smoothing kernel}
 \label{subsec:chebyshev-expansion}
 
-To estimate the trace in \refequ{equ:smooth-spectral-density}, we first need to evaluate the involved matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$. However, doing this exactly would require us to first diagonalize $\mtx{A}$, which is often a prohibitively expensive operation. For algorithmic reasons (see \refsec{subsubsec:chebyshev-nystrom-implementation}), we seek for approximations of this matrix function in terms of affine linear expansions, of which the Chebyshev expansion was determined to be most suitable due to its approximation error guarantees and ease of manipulation. In every $t \in \mathbb{R}$ we expand 
+To estimate the trace in \refequ{equ:smooth-spectral-density} efficiently, we first approximate the function 
+$s\mapsto g_{\sigma}(t- s)$ by a truncated
+Chebyshev expansion:
+%need to evaluate the involved matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$. However, doing this exactly would require us to first diagonalize $\mtx{A}$, which is often a prohibitively expensive operation. For algorithmic reasons (see \refsec{subsubsec:chebyshev-nystrom-implementation}), we seek for approximations of this matrix function in terms of affine linear expansions, of which the was determined to be most suitable due to its approximation error guarantees and ease of manipulation. In every $t \in \mathbb{R}$ we expand 
 \begin{equation}
-    g_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A}) = \sum_{l=0}^{m} \mu_l(t) T_l(\mtx{A})
+    g_{\sigma}(t\mtx{I}_n - \mtx{A}) \approx g_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A}) = \sum_{l=0}^{m} \mu_l(t) T_l(\mtx{A}),
     \label{equ:matrix-expansion}
 \end{equation}
-in terms of a set of $m+1$ coefficients $\mu_0(t), \dots, \mu_m(t)$ which linearly combine the Chebyshev polynomials
+with the expansion coefficients $\mu_0(t), \dots, \mu_m(t) \in \mathbb R$ and the Chebyshev polynomials
+$T_1,\ldots,T_m$. Assuming that the spectrum of $\mtx{A}$ is contained in $[-1,1]$, one has that
+$T_l(s) = \cos(l \cdot \arccos(s))$ satisfies the 
+three-term recurrence relation
 \begin{equation}
-    \begin{cases}
-        T_l : [-1, 1] \to \mathbb{R}; \\
-        T_l(s) = \cos(l \cdot \arccos(s)),
-    \end{cases}
-    \label{equ:chebyshev-polynomial}
-\end{equation}
-evaluated at the matrix $\mtx{A}$. It is easy to verify that these polynomials satisfy the three-term recurrence relation
-\begin{equation}
-    T_l(s) =
-    \begin{cases}
-        s^l, & \text{if $l \in \{0, 1\}$}; \\
-        T_l(s) = 2 s T_{l-1}(s) - T_{l-2}(s), & \text{if $l \geq 2$.}
-    \end{cases}
+    T_0(s) = 1,\quad  T_1(s) = s,\quad 
+    T_l(s) = 2 s T_{l-1}(s) - T_{l-2}(s) \text{ for $l \geq 2$.}
     \label{equ:chebyshev-recurrence}
 \end{equation}
-With the help of the Chebyshev expansion \refequ{equ:matrix-expansion} we can now define the expanded spectral density
+Inserting~\refequ{equ:matrix-expansion} into~\eqref{equ:smooth-spectral-density} yields the approximate smoothed spectral density
 \begin{equation}
-    \phi_{\sigma}^{(m)}(t) =  \frac{1}{n} \Trace(g_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})).
+    \phi_{\sigma}(t) \approx \phi_{\sigma}^{(m)}(t) =  \frac{1}{n} \Trace(g_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})).
     \label{equ:expanded-spectral-density}
 \end{equation}
 
-However, the Chebyshev polynomials are only well-defined for matrices whose spectrum is contained in $[-1, 1]$. When working with general matrices of bounded spectrum, we will first have to estimate a lower bound $a$ and upper bound $b$ on the spectrum \cite{zhou-2011-bounding-spectrum}. A spectral transform
-\begin{equation}
-    \begin{cases}
-        \tau : [a, b] \to [-1, 1]\\
-        \tau(t) = \frac{2t - a - b}{b - a}
-    \end{cases}
-\end{equation}
-then lets us define the matrix $\bar{\mtx{A}} = \tau(\mtx{A})$ whose spectrum is identical to the one of $\mtx{A}$ but shrunk to the interval $[-1, 1]$, for which the expansion \refequ{equ:matrix-expansion} is valid\footnote{Note that we will have to adjust the smoothing parameter $\bar{\sigma} = 2 \sigma (b - a)^{-1}$ to obtain an undistorted approximation of the original spectrum when inverting the transformation.}. From now on, we will assume the eigenvalues of the matrix $\mtx{A}$ to be contained in $[-1, 1]$.
+For a general symmetric matrix $\mtx{A}$, one first estimates an interval $[a,b]$ containing the spectrum \cite{zhou-2011-bounding-spectrum}. The usual affine transform
+$\tau(t) = \frac{2t - a - b}{b - a}$
+then lets us define a matrix $\bar{\mtx{A}} = \tau(\mtx{A})$ for which the spectrum is contained in $[-1, 1]$ and, hence, the expansion \refequ{equ:matrix-expansion} is valid.\footnote{Note that one has to adjust the smoothing parameter $\bar{\sigma} = 2 \sigma (b - a)^{-1}$ to obtain an undistorted approximation of the original spectrum when inverting the transformation.} From now on, we will assume without loss of generality that the spectrum of $\mtx{A}$ is contained in $[-1, 1]$.
 
 \subsubsection{Fast and consistent squaring}
 \label{subsubsec:dct}
+
+??? UNTIL HERE ???
+\color{black}
+
 
 It is well known that the coefficients of a Chebyshev expansion of a function can -- in exact arithmetic -- be computed by inverting the discrete cosine transform (DCT)
 \begin{equation}
