@@ -42,7 +42,7 @@ Chebyshev expansion:
     g_{\sigma}(t\mtx{I}_n - \mtx{A}) \approx g_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A}) = \sum_{l=0}^{m} \mu_l(t) T_l(\mtx{A}),
     \label{equ:matrix-expansion}
 \end{equation}
-with the expansion coefficients $\mu_0(t), \dots, \mu_m(t) \in \mathbb R$ and the Chebyshev polynomials
+with the expansion coefficients $\mu_0(t), \dots, \mu_m(t) \in \mathbb R$ and the Chebyshev polynomials of the first kind
 $T_1,\ldots,T_m$. Assuming that the spectrum of $\mtx{A}$ is contained in $[-1,1]$, one has that
 $T_l(s) = \cos(l \cdot \arccos(s))$ satisfies the 
 three-term recurrence relation
@@ -51,7 +51,7 @@ three-term recurrence relation
     T_l(s) = 2 s T_{l-1}(s) - T_{l-2}(s) \text{ for $l \geq 2$.}
     \label{equ:chebyshev-recurrence}
 \end{equation}
-Inserting~\refequ{equ:matrix-expansion} into~\eqref{equ:smooth-spectral-density} yields the approximate smoothed spectral density
+Inserting~\refequ{equ:matrix-expansion} into~\refequ{equ:smooth-spectral-density} yields the approximate smoothed spectral density
 \begin{equation}
     \phi_{\sigma}(t) \approx \phi_{\sigma}^{(m)}(t) =  \frac{1}{n} \Trace(g_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})).
     \label{equ:expanded-spectral-density}
@@ -68,20 +68,20 @@ then lets us define a matrix $\bar{\mtx{A}} = \tau(\mtx{A})$ for which the spect
 \color{black}
 
 
-It is well known that the coefficients of a Chebyshev expansion of a function can -- in exact arithmetic -- be computed by inverting the discrete cosine transform (DCT)
+It is well known that the coefficients of a Chebyshev expansion of a function can --- in exact arithmetic --- be computed by inverting the discrete cosine transform (DCT)
 \begin{equation}
     g_{\sigma}(t - \cos(s_i)) = \sum_{l=0}^{m} \mu_l(t) \cos\left(\frac{\pi i l}{m} \right)
     \label{equ:discrete-cosine-transform}
 \end{equation}
-between the expansion coefficients $\mu_l(t),~i=0,\dots,m$ and the function evaluations at the Chebyshev nodes $s_i = \cos(\pi i / m),~i=0,\dots,m$. This can be accomplished in $\mathcal{O}(m \log(m))$ operations. \cite[Algorithm 1]{lin-2017-randomized-estimation} uses a slightly different approach, which only approximates the coefficients and is noticeably slower (cf. \reftab{tab:chebyshev-timing-interpolation}).
+between the expansion coefficients $\mu_l(t),~i=0,\dots,m$ and the function evaluations at the Chebyshev nodes of the second kind $s_i = \cos(\pi i / m),~i=0,\dots,m$. This can be accomplished in $\mathcal{O}(m \log(m))$ operations. \cite[Algorithm 1]{lin-2017-randomized-estimation} uses a slightly different approach, which only approximates the expansion coefficients and is noticeably slower (cf. \reftab{tab:chebyshev-timing-interpolation}).
 
-A highly useful property of the Chebyshev expansion -- of which we will make use twice in the following pages -- is the fact that we can square such an expansion in $\mathcal{O}(m \log(m))$ operations \cite{baszenski-1997-fast-polynomial}, which will be used in the below algorithm.
+A highly useful property of the Chebyshev expansion --- of which we will make use twice in the following pages --- is the fact that we can square such an expansion in $\mathcal{O}(m \log(m))$ operations \cite{baszenski-1997-fast-polynomial}, which the below algorithm implements.
 
 \begin{algo}{Fast squaring of Chebyshev expansion}{chebyshev-squaring}
     \begin{algorithmic}[1]
         \Statex \textbf{Input:} Coefficients $\{ \mu_l \}_{l=0}^{m}$ of the expansion $\sum_{l=0}^{m} \mu_l T_l$
         \Statex \textbf{Output:} Coefficients $\{ \nu_l \}_{l=0}^{2m}$ such that $\sum_{l=0}^{2m} \nu_l T_l = (\sum_{l=0}^{m} \mu_l T_l)^2$
-        \State Define $\vct{\mu} \in \mathbb{R}^{2m + 1}$ whose first $m + 1$ entries are the coefficients $\mu_l$ and the remaining $m$ are $0$
+        \State Define $\vct{\mu} \in \mathbb{R}^{2m + 1}$ whose first $m + 1$ entries are the coefficients $\mu_0, \dots, \mu_m$ and the remaining $m$ are $0$
     \State Compute $\vct{f} = \operatorname{DCT}(\vct{\mu})$
     \State Compute $\vct{\nu} = \operatorname{DCT}^{-1}(\vct{f} \odot \vct{f})$ whose entries are the coefficients $\nu_l$
     \label{lin:inverse-DCT}
@@ -132,7 +132,7 @@ The proof specializes Bernstein's theorem for Chebyshev interpolation to the cas
     \end{equation}
 \end{proof}
 
-\reflem{lem:chebyshev-error} shows that when $0 < \sigma \ll 1$ and if we choose $m = \mathcal{O}(\sigma^{-1}(\log(\varepsilon^{-1}) + \log(\sigma^{-1})))$, the error we induce with the Chebyshev expansion is at most $\mathcal{O}(\varepsilon)$. It now also allows us to bound the error we make when expanding the spectral density.
+\reflem{lem:chebyshev-error} shows that when $0 < \sigma \ll 1$ and if we choose $m = \mathcal{O}(\sigma^{-1}(\log(\varepsilon^{-1}) + \log(\sigma^{-1})))$, the error we induce with the Chebyshev expansion is at most $\mathcal{O}(\varepsilon)$. It now also allows us to bound the $L^1$-error we make when expanding the spectral density.
 
 \begin{theorem}{$L^1$-error of Chebyshev expansion of spectral density}{chebyshev-error}
     Let $\phi_{\sigma}$ be the smoothed spectral density of a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ whose spectrum is contained in $[-1, 1]$. Then the spectal density with Chebyshev expansion $\phi_{\sigma}^{(m)}$ satisfies
@@ -171,11 +171,11 @@ The proof specializes Bernstein's theorem for Chebyshev interpolation to the cas
 
 Our goal is to apply the Nyström++ trace estimator which we have analyzed in \refsec{subsec:nystrom-pp} to the Chebyshev expansion of the smoothing kernel $g_{\sigma}$ to approximate the smoothed spectral density $\phi_{\sigma}$. However, due to the oscillatory nature of the Chebyshev expansion, we can no longer guarantee that $g_{\sigma}^{(m)} \geq 0$, and consequently, the matrix function $g_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})$ may be (slightly) indefinite. While in our experiments this never seemed to be an issue, it disallows us to directly use \refthm{thm:nystrom-pp}. While variants of the Nyström approximation designed for indefinite matrices have been analyzed, no practical algorithms for computing them exist \cite{nakatsukasa-2023-randomized-lowrank}.
 
-To still apply the bound from \refthm{thm:nystrom-pp} in this scenario, we will have to ensure that the Chebyshev expansion is non-negative. We can think of many ways in which this can be achieved: by using Jackson damping \cite{jackson-1912-approximation-trigonometric,braverman-2022-sublinear-time}, albeit at a significantly worse rate of convergence; by shifting up the expansion $g_{\sigma}^{(m)} + \rho$ with a large enough $\rho > 0$, at the loss of some of the low-rank structure of $g_{\sigma}(t \mtx{I}_n - \mtx{A})$; or by directly minimizing the approximation error over all non-negative Chebyshev polynomials \cite{fejer-1916-uber-trigonometrische}, which realistically only works for small $m$. In the end, we propose the following method to produce a non-negative Chebyshev expansion: First, expand the square root of the smoothing kernel in a basis of Chebyshev polynomials up to degree $m/2$
+To still apply the bound from \refthm{thm:nystrom-pp} in this scenario, we will have to ensure that the Chebyshev expansion is non-negative. We can think of many ways in which this can be achieved: by using Jackson damping \cite{jackson-1912-approximation-trigonometric,braverman-2022-sublinear-time}, albeit at a significantly worse rate of convergence; by shifting up the expansion $g_{\sigma}^{(m)} + \rho$ with a large enough $\rho > 0$, at the loss of some of the low-rank structure of $g_{\sigma}(t \mtx{I}_n - \mtx{A})$; or by directly minimizing the approximation error over all non-negative Chebyshev polynomials \cite{fejer-1916-uber-trigonometrische}, which realistically only works for small $m$. In the end, we propose the following method to produce a non-negative Chebyshev expansion: Fix an even $m$ and expand the square root of the smoothing kernel in a basis of Chebyshev polynomials up to degree $m/2$
 \begin{equation}
     \sqrt{g_{\sigma}}^{(\sfrac{m}{2})}(t - s) = \sum_{l=0}^{m/2} \xi_l(t) T_l(s).
 \end{equation}
-Second, square this expansion with \refalg{alg:chebyshev-squaring} to obtain the non-negative Chebyshev expansion
+Then, square this expansion with \refalg{alg:chebyshev-squaring} to obtain the non-negative Chebyshev expansion
 \begin{equation}
     \underline{g}^{(m)}_{\sigma}(t - s) = \sum_{l=0}^{m} \mu_l(t) T_l(s).
     \label{equ:non-negative-chebyshev-expansion}
@@ -225,7 +225,7 @@ Similar observations for the case when $n_{\mtx{\Psi}}$ is nonzero lead to the f
 \begin{algo}{Chebyshev-Nyström++ method}{nystrom-chebyshev-pp}
 \begin{algorithmic}[1]
     \Statex \textbf{Input:} Symmetric $\mtx{A} \in \mathbb{R}^{n \times n}$ with spectrum in $[-1, 1]$, points $\{t_i\}_{i=1}^{n_t} \subset \mathbb{R}$
-    \Statex \textbf{Parameters:} Degree of expansion $m \in 2\mathbb{N}$, number of Girard-Hutchinson queries $n_{\mtx{\Psi}} \in \mathbb{N}_0$, Nyström sketch size $n_{\mtx{\Omega}} \in \mathbb{N}_0$,  smoothing parameter $\sigma > 0$
+    \Statex \textbf{Parameters:} Even degree of expansion $m \in \mathbb{N}$, number of Girard-Hutchinson queries $n_{\mtx{\Psi}} \in \mathbb{N}_0$, Nyström sketch size $n_{\mtx{\Omega}} \in \mathbb{N}_0$,  smoothing parameter $\sigma > 0$
     \Statex \textbf{Output:} Approximate evaluations of the spectral density $\{\widetilde{\phi}_{\sigma}(t_i)\}_{i=1}^{n_t}$
     \State Compute $\{\mu_l(t_i)\}_{l=0}^{m}$ for all $t_i$ with non-negative Chebyshev expansion \refequ{equ:non-negative-chebyshev-expansion}
     \State Compute $\{\nu_l(t_i)\}_{l=0}^{2m}$ using \refalg{alg:chebyshev-squaring}%\refalg{alg:2-chebyshev-chebyshev-expansion}
@@ -354,7 +354,7 @@ On one hand, in the non-negative expansion, the underlying computes Chebyshev ex
 
 %We now discuss what value to choose for $n_{\mtx{\Omega}}$ in the Nyström trace estimator introduced in \refsec{subsec:nystrom}. In order to guarantee an even better approximation error based on \refthm{thm:nystrom}, we analyze the numerical rank of the matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$.
 
-In practice, the approximation error is often significantly better than guaranteed in \refthm{thm:chebyshev-nystrom}, particularly when $n_{\mtx{\Omega}}$ is chosen rather large. The reason is that for small $\sigma$ the singular values of the matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ decay so quickly that already the Nyström approximation alone is highly accurate (cf. \refthm{thm:nystrom}). To establish a relation between the singular value decay of $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ and what choice of $n_{\mtx{\Omega}}$ is needed for a significantly better approximation than ensured by \refthm{thm:chebyshev-nystrom}, we study the numerical rank of $n^{-1} g_{\sigma}(t\mtx{I}_n - \mtx{A})$\footnote{The factor $n^{-1}$ comes from the definition of the spectral density \refequ{equ:smooth-spectral-density} when it is written as the trace of a matrix function.}.
+In practice, the approximation error is often significantly better than guaranteed in \refthm{thm:chebyshev-nystrom}, particularly when $n_{\mtx{\Omega}}$ is chosen rather large. The reason is that for small $\sigma$ the singular values of the matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ decay so quickly that already the Nyström approximation alone is highly accurate (cf. \refthm{thm:nystrom}). To establish a relation between the singular value decay of $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ and what choice of $n_{\mtx{\Omega}}$ is needed for a significantly better approximation than ensured by \refthm{thm:chebyshev-nystrom}, we study the numerical rank of $g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n$\footnote{The factor $1/n$ comes from the definition of the spectral density \refequ{equ:smooth-spectral-density} when it is written as the trace of a matrix function.}.
 
 We can express the numerical rank of a matrix with respect to the nuclear norm in terms of its singular values $\sigma_1 \geq \dots \geq \sigma_n \geq 0$ as
 \begin{equation}
@@ -375,27 +375,27 @@ where $\varepsilon$ is usually taken to be the double machine precision, i.e. $1
 %    \todo{TODO}
 %\end{proof}
 
-When using a Gaussian smoothing-kernel, we can explicitly write the singular values of $n^{-1} g_{\sigma}(t\mtx{I}_n - \mtx{A})$ as
+When using a Gaussian smoothing-kernel, we can explicitly write the singular values of $g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n$ as
 \begin{equation}
-    \sigma_i(t) = n^{-1} g_{\sigma}(t - \lambda_{(i)}) = \frac{1}{n \sqrt{2 \pi \sigma^2}} e^{-\sfrac{(t - \lambda_{(i)})^2}{2 \sigma^2}},
+    \sigma_i(t) = g_{\sigma}(t - \lambda_{(i)}) / n = \frac{1}{n \sqrt{2 \pi \sigma^2}} e^{-\sfrac{(t - \lambda_{(i)})^2}{2 \sigma^2}},
     \label{equ:gaussian-kernel-eigenvalues}
 \end{equation}
 where $\lambda_{(1)}, \dots, \lambda_{(n)}$ denote the eigenvalues of $\mtx{A}$ sorted by increasing distance from spectral-parameter $t$, such that $\sigma_1(t) \geq \dots \geq \sigma_n(t)$. Consequently, by using the closed-form expression of the eigenvalues \refequ{equ:gaussian-kernel-eigenvalues}, we may generously upper bound the numerical rank by
 \begin{equation}
-    r_{\varepsilon}(n^{-1} g_{\sigma}(t\mtx{I}_n - \mtx{A})) \leq \#\left\{1\leq i\leq n: |t - \lambda_i| < d_{\varepsilon, \sigma} \right\},
+    r_{\varepsilon}(g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n) \leq \#\left\{1\leq i\leq n: |t - \lambda_i| < d_{\varepsilon, \sigma} \right\},
     \label{equ:gaussian-kernel-numerical-rank}
 \end{equation}
 with $d_{\varepsilon, \sigma} = \sigma \sqrt{-2 \log(\sqrt{2 \pi} \sigma \varepsilon)}$ and the eigenvalues $\lambda_1, \dots, \lambda_n$ of $\mtx{A}$ and the constants. The expression \refequ{equ:gaussian-kernel-numerical-rank} has a nice visual interpretation: The numerical rank of a matrix is at most equal to the number of eigenvalues which are closer to the parameter $t$ than $d_{\varepsilon, \sigma}$. This is illustrated in \reffig{fig:numerical-rank}.
 \begin{figure}[ht]
     \centering
     \input{figures/numerical-rank.tex}
-    \caption{The numerical rank of $n^{-1} g_{\sigma}(t\mtx{I}_n - \mtx{A})$ can be approximately computed by counting the number of eigenvalues $\lambda_{(1)}, \dots, \lambda_{(n)}$ of the matrix $\mtx{A}$ which lie less than a constant $d_{\varepsilon, \sigma}$ away from $t$.}
+    \caption{The numerical rank of $g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n$ can be approximately computed by counting the number of eigenvalues $\lambda_{(1)}, \dots, \lambda_{(n)}$ of the matrix $\mtx{A}$ which lie less than a constant $d_{\varepsilon, \sigma}$ away from $t$.}
     \label{fig:numerical-rank}
 \end{figure}
 
-If we additionally assume the eigenvalues of the matrix $\mtx{A}$ to be evenly distributed within $[-1, 1]$, that is, in any subinterval of fixed length in $[a, b]$, $-1 \leq a < b \leq 1$, we can expect to find roughly the same number of eigenvalues, then we can estimate the numerical rank of $n^{-1} g_{\sigma}(t\mtx{I}_n - \mtx{A})$ to be
+If we additionally assume the eigenvalues of the matrix $\mtx{A}$ to be evenly distributed within $[-1, 1]$, that is, in any subinterval of fixed length in $[a, b]$, $-1 \leq a < b \leq 1$, we can expect to find roughly the same number of eigenvalues, then we can estimate the numerical rank of $g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n$ to be
 \begin{equation}
-    r_{\varepsilon}(n^{-1} g_{\sigma}(t\mtx{I}_n - \mtx{A})) \lessapprox n d_{\varepsilon, \sigma} \approx 6 n \sigma,
+    r_{\varepsilon}(g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n) \lessapprox n d_{\varepsilon, \sigma} \approx 6 n \sigma,
     \label{equ:gaussian-kernel-numerical-rank-uniform}
 \end{equation}
 provided we set $\varepsilon = 10^{-16}$ and choose $\sigma$ roughly between $10^{-8}$ and $1$. Hence, choosing $n_{\mtx{\Omega}} = \mathcal{O}(n \sigma)$ will yield approximations which can be significantly better than \refthm{thm:chebyshev-nystrom}.
