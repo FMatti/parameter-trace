@@ -75,7 +75,7 @@ where $\mtx{\Psi} \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$, $\mtx{\Omega} \in \
 
 For constant $\mtx{\Omega}$, the estimator~\refequ{equ:nystrompp-trace-estimator} coincides with the Nyström++ estimator from~\cite{persson-2022-improved-variants}, which is based on the Hutch++ estimator~\cite{meyer-2021-hutch-optimal}. In this situation (constant $\mtx{B}$), these estimators were both shown to achieve a relative $\varepsilon$-error with $\mathcal{O}(\varepsilon^{-1})$ matrix-vector products only, independent of the singular value decay of $\mtx{B}$.
 
-\textcolor{green}{At this point, we acknowledge the existence of the XNysTrace estimator from \cite{epperly-2024-xtrace-making} which oftentimes outperforms the Nyström++ estimator. Moreover, a straight-forward extension of the XNysTrace estimator to the parameter-dependent setting seems to be in reach. However, what distinguishes \refalg{alg:nystrom-chebyshev-pp} for estimating spectral densities are two key observations --- using the cyclic invariance of the trace and the affine linear form of Chebyshev expansions (see \refsec{subsubsec:chebyshev-nystrom-implementation} for details) --- which it exploits to significantly speed up the computation. Unfortunately, we do not see a way of marrying these observations with the efficient implementation of XNysTrace described in \cite[Section 2.2]{epperly-2024-xtrace-making}, which limits its suitability for spectral density estimation.} \textcolor{green}{??? Maybe this would be more appropriate in the introduction? ???}
+At this point, we acknowledge the existence of the XNysTrace estimator from \cite{epperly-2024-xtrace-making} which oftentimes outperforms the Nyström++ estimator. Moreover, a straight-forward extension of the XNysTrace estimator to the parameter-dependent setting seems to be in reach. However, what distinguishes \refalg{alg:nystrom-chebyshev-pp} for estimating spectral densities are two key observations --- using the cyclic invariance of the trace and the affine linear form of Chebyshev expansions (see \refsec{subsubsec:chebyshev-nystrom-implementation} for details) --- which it exploits to significantly speed up the computation. Unfortunately, we do not see a way of marrying these observations with the efficient implementation of XNysTrace described in \cite[Section 2.2]{epperly-2024-xtrace-making}, which limits its suitability for spectral density estimation.
 %We can interpret this estimator as an interpolation between the trace of the Nyström approximation and the Girard-Hutchinson estimator.
 
 %In the remainder of this section, we will derive upper bounds on the error of these estimators.
@@ -360,7 +360,7 @@ Our analysis mimicks the strategy from~\cite{meyer-2021-hutch-optimal}, by first
         \label{qu:nystrompp-theorem-bound}
     \end{equation}
         holds with probability at least $1 - \gamma^{-n_{\mtx{\Omega}} / 4}$ for 
-        $c = \textcolor{green}{154}$. In particular, given $\varepsilon > 0$ and $\delta \in (0, 1)$, the bound $\int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t$ holds with probability at least $1-\delta$ if $n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-2} + \log(\delta^{-1}))$.
+        $c = 154$. In particular, given $\varepsilon > 0$ and $\delta \in (0, 1)$, the bound $\int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t$ holds with probability at least $1-\delta$ if $n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-2} + \log(\delta^{-1}))$.
 \end{lemma}
 
 %\todo{Proof idea: structural bound, then higher order moment bound to apply Markov's inequality.}
@@ -380,7 +380,7 @@ $\mtx{\Lambda} = \operatorname{diag}(\lambda_1, \dots, \lambda_n)$ and $\lambda_
     \end{equation*}
     we set
     $\mtx{\Omega}_1 := \mtx{U}_1^{\top} \mtx{\Omega} \in \mathbb{R}^{k \times n_{\mtx{\Omega}}}$ and $\mtx{\Omega}_2 := \mtx{U}_2^{\top} \mtx{\Omega} \in \mathbb{R}^{(n - k) \times n_{\mtx{\Omega}}}$, which are independent Gaussian random matrices.
-Applying Theorem B.1 from~\cite{persson-2023-randomized-lowrank} for $f(x) = x$, see also \textcolor{green}{proof of \cite[Corollary 8.2]{tropp-2023-randomized-algorithms}}, yields the bound
+Applying Theorem B.1 from~\cite{persson-2023-randomized-lowrank} for $f(x) = x$, see also proof of \cite[Corollary 8.2]{tropp-2023-randomized-algorithms}, yields the bound
     \begin{equation}
         \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F 
         \leq  \lVert \mtx{\Lambda}_2 \rVert _F + \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2,
@@ -410,7 +410,7 @@ its $q$th moment using the independence of $\mtx{\Omega}_1$ and $\mtx{\Omega}_2$
     \[
      \mathbb{E}\left[ \big\| ( \mtx{\Omega}_1 \mtx{\Omega}_1^{\top} )^{-1} \big\|_2^{\sfrac{n_{\mtx{\Omega}}}{4}} \right]%  \notag \\
         \leq
-        \textcolor{green}{\left(1 + \frac{n_{\mtx{\Omega}}}{2}\right)}
+        \left(1 + \frac{n_{\mtx{\Omega}}}{2}\right)
         \left( \frac{3}{4} n_{\mtx{\Omega}}\right)^{\sfrac{n_{\mtx{\Omega}}}{4}}
         \big( ( n_{\mtx{\Omega}} / 2 + 1)!\big)^{-\frac{n_{\mtx{\Omega}}}{2+n_{\mtx{\Omega}}}}.
     \]
@@ -422,7 +422,7 @@ its $q$th moment using the independence of $\mtx{\Omega}_1$ and $\mtx{\Omega}_2$
         \frac{e^4 n_{\mtx{\Omega}}}{(n_{\mtx{\Omega}} / 2+ 1)^2} \le 
         \frac{3}{4}  \frac{e^4}{n_{\mtx{\Omega}}},
     \end{equation}
-    where we used \textcolor{green}{$(1 + m)^{\sfrac{1}{m}} \leq e$ and} $(m!)^{-\sfrac{1}{m}} \leq e/m$. Note that, in contrast 
+    where we used $(1 + m)^{\sfrac{1}{m}} \leq e$ and $(m!)^{-\sfrac{1}{m}} \leq e/m$. Note that, in contrast 
     to the result of~\cite[Lemma B.3]{tropp-2023-randomized-algorithms}, this inequality is valid for arbitrarily large $n_{\mtx{\Omega}}$, at the expense of a slightly larger constant.
 %
 %     To match the decay rate of the moments of the first term in \refequ{equ:nystrom-proof-persson-bonud}, we will need to ensure that this term also is of order $\mathcal{O}(\Trace(\mtx{B}) / \sqrt{k})$. We bound the moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ similarly to \cite[Lemma B.3]{tropp-2023-randomized-algorithms}, but without restricting $q$ to be smaller than $18$. The explicit integration of \cite[Equation B.7]{tropp-2023-randomized-algorithms} imposes the condition $n_{\mtx{\Omega}} - k - 2q \geq 0$. Both $n_{\mtx{\Omega}}$ and $k$ are integers and must be of the same order to ensure a decay of $\mathcal{O}(\Trace(\mtx{B}) / \sqrt{k})$. To avoid restricting the choice of $n_{\mtx{\Omega}}$ too much, we let it be even and set $k = n_{\mtx{\Omega}}/2$. The moment $q$ should be chosen as large as possible to ensure a fast decay of the failure probability, so we fix it to $q = n_{\mtx{\Omega}}/4$. Therefore, we get
@@ -443,7 +443,7 @@ its $q$th moment using the independence of $\mtx{\Omega}_1$ and $\mtx{\Omega}_2$
     The second factor in~\refequ{equ:nystrom-proof-processed-tail} is bounded using \reflem{lem:spectral-norm-moment} with $\mtx{A} = \mtx{\Lambda}_2^{\sfrac{1}{2}}$: % and $p = n_{\mtx{\Omega}}/2$:
     \[
         \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \big\| \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \big\|_2^2 \right]
-        \leq \textcolor{green}{\frac{5}{4}} n_{\mtx{\Omega}} \Big( \textcolor{green}{2} \big\| \mtx{\Lambda}_2^{\sfrac{1}{2}} \big\|_2^2 + \frac{1}{n_{\mtx{\Omega}}} \big\| \mtx{\Lambda}_2^{\sfrac{1}{2}} \big\|_F^2 \Big).
+        \leq \frac{5}{4} n_{\mtx{\Omega}} \Big( 2 \big\| \mtx{\Lambda}_2^{\sfrac{1}{2}} \big\|_2^2 + \frac{1}{n_{\mtx{\Omega}}} \big\| \mtx{\Lambda}_2^{\sfrac{1}{2}} \big\|_F^2 \Big).
       %  \label{equ:spectral-norm-bound-applied}
     \]
     %The $q$-th moment of the second term can be processed with standard matrix norm manipulations and the stochastic independence of $\mtx{\Omega}_1$ and $\mtx{\Omega}_2$ to
@@ -478,19 +478,19 @@ its $q$th moment using the independence of $\mtx{\Omega}_1$ and $\mtx{\Omega}_2$
     Inserting this inequality and~\refequ{equ:pinv-spectral-norm-bound} into~\refequ{equ:nystrom-proof-processed-tail} gives
     \begin{equation}
         \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2 \right]
-        \leq \textcolor{green}{\frac{15 e^4}{16}}  \sqrt{n_{\mtx{\Omega}}} \Big( \textcolor{green}{2} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{1}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \Big).
+        \leq \frac{15 e^4}{16}  \sqrt{n_{\mtx{\Omega}}} \Big( 2 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{1}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \Big).
         %\leq \sqrt{k} \frac{e^4}{2} \frac{(k + n_{\mtx{\Omega}})(2p + n_{\mtx{\Omega}})}{(n_{\mtx{\Omega}} - k + 1)^2}  \left( 3 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{1}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \right).
     \end{equation}
     Bounding $\lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 = \lambda_{k+1}  \leq \Trace(\mtx{B})/k$ and $\lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 = \Trace(\mtx{\Lambda}_2) \le \Trace(\mtx{B})$ (recall that $k = n_{\mtx{\Omega}}/2$) yields
     \begin{equation}
         \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2 \right]
-        \leq \textcolor{green}{\frac{15 e^4}{16}}  \sqrt{n_{\mtx{\Omega}}} \Big( \frac{2}{n_{\mtx{\Omega}}} \Trace(\mtx{B}) + \frac{1}{n_{\mtx{\Omega}}} \Trace(\mtx{B}) \Big)
-        \leq  \frac{\textcolor{green}{154}}{\sqrt{n_{\mtx{\Omega}}}} \Trace(\mtx{B}).
+        \leq \frac{15 e^4}{16}  \sqrt{n_{\mtx{\Omega}}} \Big( \frac{2}{n_{\mtx{\Omega}}} \Trace(\mtx{B}) + \frac{1}{n_{\mtx{\Omega}}} \Trace(\mtx{B}) \Big)
+        \leq  \frac{154}{\sqrt{n_{\mtx{\Omega}}}} \Trace(\mtx{B}).
         \label{equ:nystrom-proof-tail-bound}
         %\leq \sqrt{k} \frac{e^4}{2} \frac{(k + n_{\mtx{\Omega}})(2p + n_{\mtx{\Omega}})}{(n_{\mtx{\Omega}} - k + 1)^2}  \left( 3 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{1}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \right).
     \end{equation}
     
-    Inserting~\refequ{equ:nystrom-proof-tail-bound} along with \refequ{equ:nystrom-proof-frobenius-trace} in \refequ{equ:nystrom-proof-persson-bonud}\textcolor{green}{, letting $c=154$,} and using the triangle inequality for $\mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}[\cdot]$, we obtain
+    Inserting~\refequ{equ:nystrom-proof-tail-bound} along with \refequ{equ:nystrom-proof-frobenius-trace} in \refequ{equ:nystrom-proof-persson-bonud}, letting $c=154$, and using the triangle inequality for $\mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}[\cdot]$, we obtain
     \begin{equation} \label{eq:blubber}
         \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}} \left[\lVert \mtx{B} - \Nystr{\mtx{\Omega}}{\mtx{B}} \rVert _F \right]
         \leq \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}} \left[ \lVert \mtx{\Lambda}_2 \rVert _F \right] + \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}} \left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2 \right]
