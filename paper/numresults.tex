@@ -3,6 +3,14 @@
 \label{sec:results}
 
 \color{black}
+\textcolor{red}{
+To do in this section:
+\begin{itemize}
+    \item Specify implementation details (no non-negative Chebyshev expansion, speed-up tricks, thresholding, ...)
+    \item Clarify where code come from (faithful implementation, own code, ...)
+    \item Give experimental setup (software version, hardware, ...)
+\end{itemize}
+}
 
 In this last section, we test our algorithm in multiple scenarios. First, we numerically confirm our theoretical convergence bounds by approximating the spectral density of a Hamiltonian arising from electronic structure interaction. Subsequently, we compare our method to the Krylov-aware stochastic trace estimator \cite{chen-2023-krylovaware-stochastic} once on the electronic structure example and once for estimating the trace of a more general parameter-dependent matrix appearing in statistical thermodynamics. In the end, we demonstrate that our algorithm can also be used to monitor the optimization process of a neural network.
 
