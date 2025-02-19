@@ -34,60 +34,37 @@ assuming that the eigenvalues are somewhat uniformly distributed and $\sigma$ is
 \subsection{Chebyshev expansion of smoothing kernel}
 \label{subsec:chebyshev-expansion}
 
-To estimate the trace in \refequ{equ:smooth-spectral-density} efficiently, we first approximate the function 
+To estimate the trace in \refequ{equ:smooth-spectral-density} efficiently, we approximate the function 
 $s\mapsto g_{\sigma}(t- s)$ by a truncated
-Chebyshev expansion:
+Chebyshev expansion $g_{\sigma}^{(m)}(t-s) = 
+\sum_{l=0}^{m} \mu_l(t) T_l(s)$
+with the expansion coefficients $\mu_l(t) \in \mathbb R$ and the Chebyshev polynomials
+$T_l(s) = \cos(l \cdot \arccos(s))$ for $l = 0,1,\ldots,m$.
+Assuming that the spectrum of $\mtx{A}$ is contained in $[-1,1]$, this gives rise to
 %need to evaluate the involved matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$. However, doing this exactly would require us to first diagonalize $\mtx{A}$, which is often a prohibitively expensive operation. For algorithmic reasons (see \refsec{subsubsec:chebyshev-nystrom-implementation}), we seek for approximations of this matrix function in terms of affine linear expansions, of which the was determined to be most suitable due to its approximation error guarantees and ease of manipulation. In every $t \in \mathbb{R}$ we expand 
 \begin{equation}
     g_{\sigma}(t\mtx{I}_n - \mtx{A}) \approx g_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A}) = \sum_{l=0}^{m} \mu_l(t) T_l(\mtx{A}),
     \label{equ:matrix-expansion}
 \end{equation}
-with the expansion coefficients $\mu_0(t), \dots, \mu_m(t) \in \mathbb R$ and the Chebyshev polynomials of the first kind
-$T_1,\ldots,T_m$. Assuming that the spectrum of $\mtx{A}$ is contained in $[-1,1]$, one has that
-$T_l(s) = \cos(l \cdot \arccos(s))$ satisfies the 
+\textcolor{red}{??? MOVE BELOW! This is not at a good place
+For later purposes, we recall the well-known
 three-term recurrence relation
 \begin{equation}
     T_0(s) = 1,\quad  T_1(s) = s,\quad 
     T_l(s) = 2 s T_{l-1}(s) - T_{l-2}(s) \text{ for $l \geq 2$.}
     \label{equ:chebyshev-recurrence}
-\end{equation}
+\end{equation}}
 Inserting~\refequ{equ:matrix-expansion} into~\refequ{equ:smooth-spectral-density} yields the approximate smoothed spectral density
 \begin{equation}
     \phi_{\sigma}(t) \approx \phi_{\sigma}^{(m)}(t) =  \frac{1}{n} \Trace(g_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})).
     \label{equ:expanded-spectral-density}
 \end{equation}
-
-For a general symmetric matrix $\mtx{A}$, one first estimates an interval $[a,b]$ containing the spectrum \cite{zhou-2011-bounding-spectrum}. The usual affine transform
+\begin{remark}
+For a general symmetric matrix $\mtx{A}$, one first estimates an interval $[a,b]$ containing the spectrum of $A$~\cite{zhou-2011-bounding-spectrum}. The usual affine transform
 $\tau(t) = \frac{2t - a - b}{b - a}$
-then lets us define a matrix $\bar{\mtx{A}} = \tau(\mtx{A})$ for which the spectrum is contained in $[-1, 1]$ and, hence, the expansion \refequ{equ:matrix-expansion} is valid.\footnote{Note that one has to adjust the smoothing parameter $\bar{\sigma} = 2 \sigma (b - a)^{-1}$ to obtain an undistorted approximation of the original spectrum when inverting the transformation.} From now on, we will assume without loss of generality that the spectrum of $\mtx{A}$ is contained in $[-1, 1]$.
+then lets us define a matrix $\bar{\mtx{A}} = \tau(\mtx{A})$ for which the spectrum is contained in $[-1, 1]$ and, hence, the expansion \refequ{equ:matrix-expansion} is valid.\footnote{Note that one has to adjust the smoothing parameter $\bar{\sigma} = 2 \sigma (b - a)^{-1}$ to obtain an undistorted approximation of the original spectrum when inverting the transformation.} This allows to assume, from now on, without loss of generality that the spectrum of $\mtx{A}$ is contained in $[-1, 1]$.
+\end{remark}
 
-\subsubsection{Fast and consistent squaring}
-\label{subsubsec:dct}
-
-??? UNTIL HERE ???
-\color{black}
-
-
-It is well known that the coefficients of a Chebyshev expansion of a function can --- in exact arithmetic --- be computed by inverting the discrete cosine transform (DCT)
-\begin{equation}
-    g_{\sigma}(t - \cos(s_i)) = \sum_{l=0}^{m} \mu_l(t) \cos\left(\frac{\pi i l}{m} \right)
-    \label{equ:discrete-cosine-transform}
-\end{equation}
-between the expansion coefficients $\mu_l(t),~i=0,\dots,m$ and the function evaluations at the Chebyshev nodes of the second kind $s_i = \cos(\pi i / m),~i=0,\dots,m$. This can be accomplished in $\mathcal{O}(m \log(m))$ operations. \cite[Algorithm 1]{lin-2017-randomized-estimation} uses a slightly different approach, which only approximates the expansion coefficients and is noticeably slower (cf. \reftab{tab:chebyshev-timing-interpolation}).
-
-A highly useful property of the Chebyshev expansion --- of which we will make use twice in the following pages --- is the fact that we can square such an expansion in $\mathcal{O}(m \log(m))$ operations \cite{baszenski-1997-fast-polynomial}, which the below algorithm implements.
-
-\begin{algo}{Fast squaring of Chebyshev expansion}{chebyshev-squaring}
-    \begin{algorithmic}[1]
-        \Statex \textbf{Input:} Coefficients $\{ \mu_l \}_{l=0}^{m}$ of the expansion $\sum_{l=0}^{m} \mu_l T_l$
-        \Statex \textbf{Output:} Coefficients $\{ \nu_l \}_{l=0}^{2m}$ such that $\sum_{l=0}^{2m} \nu_l T_l = (\sum_{l=0}^{m} \mu_l T_l)^2$
-        \State Define $\vct{\mu} \in \mathbb{R}^{2m + 1}$ whose first $m + 1$ entries are the coefficients $\mu_0, \dots, \mu_m$ and the remaining $m$ are $0$
-    \State Compute $\vct{f} = \operatorname{DCT}(\vct{\mu})$
-    \State Compute $\vct{\nu} = \operatorname{DCT}^{-1}(\vct{f} \odot \vct{f})$ whose entries are the coefficients $\nu_l$
-    \label{lin:inverse-DCT}
-    \end{algorithmic}
-\end{algo}
-On \reflin{lin:inverse-DCT}, $\odot$ denotes the entrywise product.
 
 \subsubsection{Expansion error}
 \label{subsubsec:expansion-error}
@@ -166,8 +143,7 @@ The proof specializes Bernstein's theorem for Chebyshev interpolation to the cas
     \end{equation}
 \end{proof}
 
-\subsection{Chebyshev-Nyström++ method for spectral density approximation}
-\label{subsec:chebyshev-nystrom}
+\subsubsection{Preservation of non-negativity}
 
 Our goal is to apply the Nyström++ trace estimator which we have analyzed in \refsec{subsec:nystrom-pp} to the Chebyshev expansion of the smoothing kernel $g_{\sigma}$ to approximate the smoothed spectral density $\phi_{\sigma}$. However, due to the oscillatory nature of the Chebyshev expansion, we can no longer guarantee that $g_{\sigma}^{(m)} \geq 0$, and consequently, the matrix function $g_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})$ may be (slightly) indefinite. While in our experiments this never seemed to be an issue, it disallows us to directly use \refthm{thm:nystrom-pp}. While variants of the Nyström approximation designed for indefinite matrices have been analyzed, no practical algorithms for computing them exist \cite{nakatsukasa-2023-randomized-lowrank}.
 
@@ -192,12 +168,47 @@ With a complexity of $\mathcal{O}(m \log(m))$ this procedure is computationally 
 %Maybe mention indefinite Nyström [Nakatsukasa], which won't give us desirable guarantees, and refinement of Chebyshev expansion [Francis Bach], which only slightly improves, but is much harder to implement. Side-note: it is possible to refine the coefficients of the Chebyshev expansion to get a better approximation in the supremum-norm over the set of all non-negative polynomials \cite%{fejer-1916-uber-trigonometrische}. The non-convex nature of this problem and the relatively small improvement we get with this technique made us decide to not pursue this further.
 %}
 
+\subsection{Computation of expansion coefficients}
+
+\subsubsection{Fast and consistent squaring}
+\label{subsubsec:dct}
+
+??? UNTIL HERE ???
+\color{black}
+
+
+It is well known that the coefficients of a Chebyshev expansion of a function can --- in exact arithmetic --- be computed by inverting the discrete cosine transform (DCT)
+\begin{equation}
+    g_{\sigma}(t - \cos(s_i)) = \sum_{l=0}^{m} \mu_l(t) \cos\left(\frac{\pi i l}{m} \right)
+    \label{equ:discrete-cosine-transform}
+\end{equation}
+between the expansion coefficients $\mu_l(t),~i=0,\dots,m$ and the function evaluations at the Chebyshev nodes of the second kind $s_i = \cos(\pi i / m),~i=0,\dots,m$. This can be accomplished in $\mathcal{O}(m \log(m))$ operations. \cite[Algorithm 1]{lin-2017-randomized-estimation} uses a slightly different approach, which only approximates the expansion coefficients and is noticeably slower (cf. \reftab{tab:chebyshev-timing-interpolation}).
+
+A highly useful property of the Chebyshev expansion --- of which we will make use twice in the following pages --- is the fact that we can square such an expansion in $\mathcal{O}(m \log(m))$ operations \cite{baszenski-1997-fast-polynomial}, which the below algorithm implements.
+
+\begin{algo}{Fast squaring of Chebyshev expansion}{chebyshev-squaring}
+    \begin{algorithmic}[1]
+        \Statex \textbf{Input:} Coefficients $\{ \mu_l \}_{l=0}^{m}$ of the expansion $\sum_{l=0}^{m} \mu_l T_l$
+        \Statex \textbf{Output:} Coefficients $\{ \nu_l \}_{l=0}^{2m}$ such that $\sum_{l=0}^{2m} \nu_l T_l = (\sum_{l=0}^{m} \mu_l T_l)^2$
+        \State Define $\vct{\mu} \in \mathbb{R}^{2m + 1}$ whose first $m + 1$ entries are the coefficients $\mu_0, \dots, \mu_m$ and the remaining $m$ are $0$
+    \State Compute $\vct{f} = \operatorname{DCT}(\vct{\mu})$
+    \State Compute $\vct{\nu} = \operatorname{DCT}^{-1}(\vct{f} \odot \vct{f})$ whose entries are the coefficients $\nu_l$
+    \label{lin:inverse-DCT}
+    \end{algorithmic}
+\end{algo}
+On \reflin{lin:inverse-DCT}, $\odot$ denotes the entrywise product.
+
+
+\subsection{Chebyshev-Nyström++ method for spectral density approximation}
+\label{subsec:chebyshev-nystrom}
+
 In the end, we propose the following approximation for the smoothed spectral density
 \begin{equation}
     \widetilde{\phi}_{\sigma}^{(m)}(t) = \frac{1}{n} \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\underline{g}_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A}))
     \label{equ:chebyshev-nystrom-formula}
 \end{equation}
 which is the Nyström++ estimator $\Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}$ \refequ{equ:nystrompp-trace-estimator} applied to the non-negative Chebyshev expansion $\underline{g}_{\sigma}^{(m)}$ \refequ{equ:non-negative-chebyshev-expansion}.
+
 
 \subsubsection{Implementation}
 \label{subsubsec:chebyshev-nystrom-implementation}
@@ -221,6 +232,7 @@ meaning we can first precompute the small $n_{\mtx{\Omega}} \times n_{\mtx{\Omeg
 \end{figure}
 
 Similar observations for the case when $n_{\mtx{\Psi}}$ is nonzero lead to the following algorithm.
+\textcolor{red}{??? Lines 1 and 2 are quite confusing. Say more explicitly how $\mu$ is computed. Is Algorithm 3.3 applied twice? ???}
 
 \begin{algo}{Chebyshev-Nyström++ method}{nystrom-chebyshev-pp}
 \begin{algorithmic}[1]
@@ -312,7 +324,7 @@ In this section, we will upper bound the output of the Chebyshev-Nyström++ meth
     \begin{equation}
         \left| g_{\sigma} - \underline{g}_{\sigma}^{(m)} \right| \leq \left( 2 \left| \sqrt{g_{\sigma}} \right| + \left| \sqrt{g_{\sigma}} - \sqrt{g_{\sigma}}^{(\sfrac{m}{2})} \right| \right) \left| \sqrt{g_{\sigma}} - \sqrt{g_{\sigma}}^{(\sfrac{m}{2})} \right|.
     \end{equation}
-    Since $\sqrt{g_{\sigma}} = \sqrt{2 \sigma \sqrt{2 \pi}} \cdot g_{\sqrt{2}\sigma}$ and $\sqrt{g_{\sigma}} \leq 1/\sqrt{\sigma \sqrt{2 \pi}}$ we can apply the result from \refthm{thm:chebyshev-error} to get
+    Since $\sqrt{g_{\sigma}} = \sqrt{2 \sigma \sqrt{2 \pi}} \cdot g_{\sqrt{2}\sigma}$ and $\sqrt{g_{\sigma}} \leq 1/\sqrt{\sigma \sqrt{2 \pi}}$ \textcolor{red}{we can apply the result from \refthm{thm:chebyshev-error} ??? the reference seems to be incorrect ???} to get
     \begin{align}
         &\sup_{t \in [-1, 1]} \left| g_{\sigma}(t - s) - \underline{g}_{\sigma}^{(m)}(t - s) \right| \notag \\
         &\leq \left( 2 \frac{1}{\sqrt{ \sigma \sqrt{2\pi}}} + \sqrt{2 \sigma \sqrt{2 \pi}} \cdot E_{\sqrt{2}\sigma, \sfrac{m}{2}}\right)\sqrt{2 \sigma \sqrt{2 \pi}} \cdot E_{\sqrt{2}\sigma, \sfrac{m}{2}},
