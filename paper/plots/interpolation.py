@@ -26,7 +26,7 @@ m_list = (np.logspace(1.8, 3.3, 7).astype(int) // 2) * 2
 plt.style.use("paper/plots/stylesheet.mplstyle")
 colors = ["#648FFF", "#DC267F", "#FFB000"]
 markers = ["o", "s", "d"]
-labels = ["inconsistent", "consistent", "non-negative"]
+labels = ["inconsistent", "consistent", "consistent + non-negative"]
 
 # Determine the baseline spectral density
 kernel = lambda t, x: gaussian_kernel(t, x, sigma=sigma, n=A.shape[0])

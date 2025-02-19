@@ -77,7 +77,7 @@ def chebyshev_coefficients_quadrature(t, m, kernel, n_theta=None):
     return mu
 
 methods = [chebyshev_coefficients_quadrature, chebyshev_expansion, chebyshev_expansion]
-labels = ["quadrature FFT", "DCT", "non-negative DCT"]
+labels = ["FFT", "DCT", "non-negative DCT"]
 
 n_t = 1000
 t = np.arange(-1, 1, n_t)

@@ -46,14 +46,6 @@ Assuming that the spectrum of $\mtx{A}$ is contained in $[-1,1]$, this gives ris
     g_{\sigma}(t\mtx{I}_n - \mtx{A}) \approx g_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A}) = \sum_{l=0}^{m} \mu_l(t) T_l(\mtx{A}),
     \label{equ:matrix-expansion}
 \end{equation}
-\textcolor{red}{??? MOVE BELOW! This is not at a good place
-For later purposes, we recall the well-known
-three-term recurrence relation
-\begin{equation}
-    T_0(s) = 1,\quad  T_1(s) = s,\quad 
-    T_l(s) = 2 s T_{l-1}(s) - T_{l-2}(s) \text{ for $l \geq 2$.}
-    \label{equ:chebyshev-recurrence}
-\end{equation}}
 Inserting~\refequ{equ:matrix-expansion} into~\refequ{equ:smooth-spectral-density} yields the approximate smoothed spectral density
 \begin{equation}
     \phi_{\sigma}(t) \approx \phi_{\sigma}^{(m)}(t) =  \frac{1}{n} \Trace(g_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})).
@@ -110,81 +102,121 @@ The proof specializes Bernstein's theorem for Chebyshev interpolation to the cas
 \end{proof}
 
 \reflem{lem:chebyshev-error} shows that when $0 < \sigma \ll 1$ and if we choose $m = \mathcal{O}(\sigma^{-1}(\log(\varepsilon^{-1}) + \log(\sigma^{-1})))$, the error we induce with the Chebyshev expansion is at most $\mathcal{O}(\varepsilon)$. It now also allows us to bound the $L^1$-error we make when expanding the spectral density.
+\begin{align}
+    \int_{-1}^{1} \left| \phi_{\sigma}(t) - \phi_{\sigma}^{(m)}(t) \right|~\mathrm{d}t 
+    &= \int_{-1}^{1} \left| \frac{1}{n} \sum_{i=1}^n \left(g_{\sigma}(t - \lambda_i) - g_{\sigma}^{(m)}(t - \lambda_i)\right) \right|~\mathrm{d}t \notag \\
+    &\leq \int_{-1}^{1} \max_{i = 1, \dots, n} \left| g_{\sigma}(t - \lambda_i) - g_{\sigma}^{(m)}(t - \lambda_i) \right|~\mathrm{d}t \notag \\
+    &\leq 2 E_{\sigma, m}
+    \label{equ:chebyshev-interpolation-spectral-density}
+\end{align}
 
-\begin{theorem}{$L^1$-error of Chebyshev expansion of spectral density}{chebyshev-error}
-    Let $\phi_{\sigma}$ be the smoothed spectral density of a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ whose spectrum is contained in $[-1, 1]$. Then the spectal density with Chebyshev expansion $\phi_{\sigma}^{(m)}$ satisfies
-    \begin{equation}
-        \int_{-1}^{1} \left| \phi_{\sigma}(t) - \phi_{\sigma}^{(m)}(t) \right|~\mathrm{d}t \leq 2 E_{\sigma, m}
-        \label{equ:chebyshev-interpolation-spectral-density}
-        %\lVert  \phi_{\sigma} - \phi_{\sigma}^{(m)} \rVert _1 &\leq \frac{2\sqrt{2}}{\sigma^2} (1 + \sigma)^{-m}.
-        %\label{equ:2-chebyshev-interpolation-error}
-    \end{equation}
-    for all degrees $m \in \mathbb{N}$, smoothing parameters $\sigma > 0$, and the error $E_{\sigma, m}$ from \reflem{lem:chebyshev-error}.%, and $t \in \mathbb{R}$. %The same result holds for the expansion of a non-negative Chebyshev expansion of \emph{even} degree $m \in \mathbb{N}$ but with $\underline{E}_{\sigma, m}$.
-\end{theorem}
-
-\begin{proof}
-    We observe that for all $t \in [-1, 1]$
-    \begin{align}
-        &\left| \phi_{\sigma}(t) - \phi_{\sigma}^{(m)}(t) \right| \notag \\
-        &= \left| \frac{1}{n} \Trace(g_{\sigma}(t\mtx{I}_n - \mtx{A})) - \frac{1}{n} \Trace(g_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A})) \right|
-        && \text{(definitions \refequ{equ:smooth-spectral-density} and \refequ{equ:expanded-spectral-density})} \notag \\
-        &= \left| \frac{1}{n} \sum_{i=1}^n \left(g_{\sigma}(t - \lambda_i) - g_{\sigma}^{(m)}(t - \lambda_i)\right) \right|
-        && \text{($\lambda_1, \dots, \lambda_n$ eigenvalues of $\mtx{A}$)} \notag \\
-        &\leq \max_{i = 1, \dots, n} \left| g_{\sigma}(t - \lambda_i) - g_{\sigma}^{(m)}(t - \lambda_i) \right|
-        && \text{(conservative upper bound)} \notag \\
-        &\leq E_{\sigma, m}.% ~ \text{(or $\underline{E}_{\sigma, m}$)}.
-        && \text{(using \reflem{lem:chebyshev-error})} \notag \\
-    \end{align}
-    Then, Hölder's inequality allows us to conclude
-    \begin{equation}
-        \int_{-1}^{1} | \phi_{\sigma}(t) - \phi_{\sigma}^{(m)}(t) | ~\mathrm{d}t
-        \leq 2 \sup_{t \in [-1, 1]} \left| \phi_{\sigma}(t) - \phi_{\sigma}^{(m)}(t) \right|
-        \leq 2 E_{\sigma, m}.% ~ \text{(or $2 \underline{E}_{\sigma, m}$)}.
-    \end{equation}
-\end{proof}
+%\begin{theorem}{$L^1$-error of Chebyshev expansion of spectral density}{chebyshev-error}
+%    Let $\phi_{\sigma}$ be the smoothed spectral density of a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ whose spectrum is contained in $[-1, 1]$. Then the spectal density with Chebyshev expansion $\phi_{\sigma}^{(m)}$ satisfies
+%    \begin{equation}
+%        \int_{-1}^{1} \left| \phi_{\sigma}(t) - \phi_{\sigma}^{(m)}(t) \right|~\mathrm{d}t \leq 2 E_{\sigma, m}
+%        \label{equ:chebyshev-interpolation-spectral-density}
+%        %\lVert  \phi_{\sigma} - \phi_{\sigma}^{(m)} \rVert _1 &\leq \frac{2\sqrt{2}}{\sigma^2} (1 + \sigma)^{-m}.
+%        %\label{equ:2-chebyshev-interpolation-error}
+%    \end{equation}
+%    for all degrees $m \in \mathbb{N}$, smoothing parameters $\sigma > 0$, and the error $E_{\sigma, m}$ from \reflem{lem:chebyshev-error}.%, and $t \in \mathbb{R}$. %The same result holds for the expansion of a non-negative Chebyshev expansion of \emph{even} degree $m \in \mathbb{N}$ but with $\underline{E}_{\sigma, m}$.
+%\end{theorem}
+%
+%\begin{proof}
+%    We observe that for all $t \in [-1, 1]$
+%    \begin{align}
+%        &\left| \phi_{\sigma}(t) - \phi_{\sigma}^{(m)}(t) \right| \notag \\
+%        &= \left| \frac{1}{n} \Trace(g_{\sigma}(t\mtx{I}_n - \mtx{A})) - \frac{1}{n} \Trace(g_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A})) \right|
+%        && \text{(definitions \refequ{equ:smooth-spectral-density} and \refequ{equ:expanded-spectral-density})} \notag \\
+%        &= \left| \frac{1}{n} \sum_{i=1}^n \left(g_{\sigma}(t - \lambda_i) - g_{\sigma}^{(m)}(t - \lambda_i)\right) \right|
+%        && \text{($\lambda_1, \dots, \lambda_n$ eigenvalues of $\mtx{A}$)} \notag \\
+%        &\leq \max_{i = 1, \dots, n} \left| g_{\sigma}(t - \lambda_i) - g_{\sigma}^{(m)}(t - \lambda_i) \right|
+%        && \text{(conservative upper bound)} \notag \\
+%        &\leq E_{\sigma, m}.% ~ \text{(or $\underline{E}_{\sigma, m}$)}.
+%        && \text{(using \reflem{lem:chebyshev-error})} \notag \\
+%    \end{align}
+%    Then, Hölder's inequality allows us to conclude
+%    \begin{equation}
+%        \int_{-1}^{1} | \phi_{\sigma}(t) - \phi_{\sigma}^{(m)}(t) | ~\mathrm{d}t
+%        \leq 2 \sup_{t \in [-1, 1]} \left| \phi_{\sigma}(t) - \phi_{\sigma}^{(m)}(t) \right|
+%        \leq 2 E_{\sigma, m}.% ~ \text{(or $2 \underline{E}_{\sigma, m}$)}.
+%    \end{equation}
+%\end{proof}
 
 \subsubsection{Preservation of non-negativity}
 
 Our goal is to apply the Nyström++ trace estimator which we have analyzed in \refsec{subsec:nystrom-pp} to the Chebyshev expansion of the smoothing kernel $g_{\sigma}$ to approximate the smoothed spectral density $\phi_{\sigma}$. However, due to the oscillatory nature of the Chebyshev expansion, we can no longer guarantee that $g_{\sigma}^{(m)} \geq 0$, and consequently, the matrix function $g_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})$ may be (slightly) indefinite. While in our experiments this never seemed to be an issue, it disallows us to directly use \refthm{thm:nystrom-pp}. While variants of the Nyström approximation designed for indefinite matrices have been analyzed, no practical algorithms for computing them exist \cite{nakatsukasa-2023-randomized-lowrank}.
 
-To still apply the bound from \refthm{thm:nystrom-pp} in this scenario, we will have to ensure that the Chebyshev expansion is non-negative. We can think of many ways in which this can be achieved: by using Jackson damping \cite{jackson-1912-approximation-trigonometric,braverman-2022-sublinear-time}, albeit at a significantly worse rate of convergence; by shifting up the expansion $g_{\sigma}^{(m)} + \rho$ with a large enough $\rho > 0$, at the loss of some of the low-rank structure of $g_{\sigma}(t \mtx{I}_n - \mtx{A})$; or by directly minimizing the approximation error over all non-negative Chebyshev polynomials \cite{fejer-1916-uber-trigonometrische}, which realistically only works for small $m$. In the end, we propose the following method to produce a non-negative Chebyshev expansion: Fix an even $m$ and expand the square root of the smoothing kernel in a basis of Chebyshev polynomials up to degree $m/2$
+To still apply the bound from \refthm{thm:nystrom-pp} in this scenario, we will have to ensure that the Chebyshev expansion is non-negative. We propose the following method to produce a non-negative Chebyshev expansion \textcolor{red}{[REFERENCE NEEDED]}: Fix an even $m$ and expand the square root of the smoothing kernel in a basis of Chebyshev polynomials up to degree $m/2$
 \begin{equation}
     \sqrt{g_{\sigma}}^{(\sfrac{m}{2})}(t - s) = \sum_{l=0}^{m/2} \xi_l(t) T_l(s).
+    \label{equ:square-root-chebyshev-expansion}
 \end{equation}
 Then, square this expansion with \refalg{alg:chebyshev-squaring} to obtain the non-negative Chebyshev expansion
 \begin{equation}
-    \underline{g}^{(m)}_{\sigma}(t - s) = \sum_{l=0}^{m} \underline{\mu}_l(t) T_l(s).
+    \underline{g}_{\sigma}^{(m)}(t - s) = \sum_{l=0}^{m} \underline{\mu}_l(t) T_l(s).
     \label{equ:non-negative-chebyshev-expansion}
 \end{equation}
-With a complexity of $\mathcal{O}(m \log(m))$ this procedure is computationally inexpensive and allows for very similar convergence bounds to \reflem{lem:chebyshev-error}, which we will derive in \refsec{subsubsec:chebyshev-nystrom-analysis}. In \reftab{tab:chebyshev-timing-interpolation}, the non-negative expansion can be seen to only be slightly slower than the normal one.
 
-\begin{table}[ht]
-    \caption{We compare the runtime in milliseconds for computing the coefficients of the Chebyshev expansion of the smoothing kernel $g_{\sigma}$ \refequ{equ:smoothing-kernel} in three different ways: as proposed in \cite[Algorithm 1]{lin-2017-randomized-estimation} (\emph{quadrature FFT}), using the discrete cosine transform (\emph{DCT}) \refequ{equ:discrete-cosine-transform}, and computing a non-negative Chebyshev expansion with \refalg{alg:chebyshev-squaring} (\emph{non-negative DCT}). We use $\sigma=0.005$, $n_t=1000$ parameter values, and various degrees $m$. For stability, we average over 7 runs of the algorithms and repeat these runs 1000 times to form the mean and standard deviation which are given in the below table.}
-    \label{tab:chebyshev-timing-interpolation}
-   \input{tables/interpolation.tex}
-\end{table}
+??? UNTIL HERE ???
 
+%With a complexity of $\mathcal{O}(m \log(m))$ this procedure is computationally inexpensive and allows for very similar convergence bounds to \reflem{lem:chebyshev-error}, which we will derive \textcolor{red}{in the following?} in \refsec{subsubsec:chebyshev-nystrom-analysis}.
+
+\color{black}
+
+%To this extent, we will first analyze the non-negative Chebyshev expansion.
+
+The resulting non-negative version of the approximate smoothed spectral density \refequ{equ:expanded-spectral-density}
+\begin{equation}
+    \phi_{\sigma}(t) \approx \underline{\phi}_{\sigma}^{(m)}(t) = \frac{1}{n} \Trace(\underline{g}_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A}))
+    \label{equ:non-negative-expanded-density}
+\end{equation}
+then satisfies the following bound:
+
+\begin{lemma}{$L^1$-error of non-negative approximate smooth spectral density}{non-negative-chebyshev-error}
+Let $\phi_{\sigma}$ be the smoothed spectral density of a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ whose spectrum is contained in $[-1, 1]$. Then the non-negative approximate smoothed spectral density $\underline{\phi}_{\sigma}^{(m)}$ satisfies
+    \begin{equation}
+        \int_{-1}^{1} \left| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t \leq 4 \sqrt{2} \left(1 + \sigma \sqrt{\pi} \cdot E_{\sqrt{2}\sigma, \sfrac{m}{2}}\right) E_{\sqrt{2}\sigma, \sfrac{m}{2}} \equiv \underline{E}_{\sigma, m}
+        \label{equ:chebyshev-interpolation-sup-error-kernel-nonneg}
+        %\lVert  \phi_{\sigma} - \phi_{\sigma}^{(m)} \rVert _1 &\leq \frac{2\sqrt{2}}{\sigma^2} (1 + \sigma)^{-m}.
+        %\label{equ:2-chebyshev-interpolation-error}
+    \end{equation}
+    for all \emph{even} degrees $m \in \mathbb{N}$, smoothing parameters $\sigma > 0$, and with $E_{\sigma, m}$ as defined in \reflem{lem:chebyshev-error}.
+\end{lemma}
+
+\begin{proof}
+    For any numbers $a, b \in \mathbb{R}$ it holds $| a^2 - b^2 | \leq (2 | a | + | a - b |)  | a - b |$. Therefore,
+    \begin{equation}
+        \left| g_{\sigma} - \underline{g}_{\sigma}^{(m)} \right| = \left| (\sqrt{g_{\sigma}})^2 - (\sqrt{g_{\sigma}}^{(\sfrac{m}{2})})^2 \right| \leq \left( 2 \left| \sqrt{g_{\sigma}} \right| + \left| \sqrt{g_{\sigma}} - \sqrt{g_{\sigma}}^{(\sfrac{m}{2})} \right| \right) \left| \sqrt{g_{\sigma}} - \sqrt{g_{\sigma}}^{(\sfrac{m}{2})} \right|.
+    \end{equation}
+    Since $\sqrt{g_{\sigma}} = \sqrt{2 \sigma \sqrt{2 \pi}} \cdot g_{\sqrt{2}\sigma}$, we can apply \reflem{lem:chebyshev-error} with $\sigma \to \sqrt{2}\sigma$ and $m \to m/2$ along with the bound $|\sqrt{g_{\sigma}}| \leq 1/\sqrt{\sigma \sqrt{2 \pi}}$ to get
+    \begin{align}
+        &\sup_{t \in [-1, 1]} \left| g_{\sigma}(t - s) - \underline{g}_{\sigma}^{(m)}(t - s) \right| \notag \\
+        &\leq \left( 2 \frac{1}{\sqrt{ \sigma \sqrt{2\pi}}} + \sqrt{2 \sigma \sqrt{2 \pi}} \cdot E_{\sqrt{2}\sigma, \sfrac{m}{2}}\right)\sqrt{2 \sigma \sqrt{2 \pi}} \cdot E_{\sqrt{2}\sigma, \sfrac{m}{2}} \notag \\
+        &= 2\sqrt{2} \left(1 + \sigma \sqrt{\pi} \cdot E_{\sqrt{2}\sigma, \sfrac{m}{2}}\right) E_{\sqrt{2}\sigma, \sfrac{m}{2}}.
+    \end{align}
+    An identical treatment to \refequ{equ:chebyshev-interpolation-spectral-density} then leads to the statement of the lemma.
+\end{proof}
+
+On one hand, in the non-negative expansion of degree $m$ \refequ{equ:non-negative-chebyshev-expansion}, the underlying Chebyshev expansion -- whose error is shown in \reflem{lem:chebyshev-error} to exponentially decay with $m$ -- is only computed to half the degree (i.e. $m/2$) of the standard Chebyshev expansion, hence, usually not as accurate. On the other hand, in the non-negative expansion we approximate $\sqrt{g_{\sigma}} \propto g_{\sqrt{2}\sigma}$ which is less \enquote{pointy} than $g_{\sigma}$ and therefore easier to approximate with Chebyshev polynomials. Overall, we will need to choose the degree $m$ of the non-negative expansion roughly a factor of $\sqrt{2}$ larger to match the approximation error of the standard expansion (cf. \reffig{fig:interpolation-issue}).
+
+%In the following, we will show how the coefficients $\underline{\mu}_0(t), \dots, \underline{\mu}_m(t)$ of the non-negative Chebyshev expansion \refequ{equ:non-negative-chebyshev-expansion} can efficiently be computed and that this expansion exhibits similar convergence properties to the standard Chebyshev expansion.
 %\todo{
 %Maybe mention indefinite Nyström [Nakatsukasa], which won't give us desirable guarantees, and refinement of Chebyshev expansion [Francis Bach], which only slightly improves, but is much harder to implement. Side-note: it is possible to refine the coefficients of the Chebyshev expansion to get a better approximation in the supremum-norm over the set of all non-negative polynomials \cite%{fejer-1916-uber-trigonometrische}. The non-convex nature of this problem and the relatively small improvement we get with this technique made us decide to not pursue this further.
 %}
 
-\subsection{Computation of expansion coefficients}
+%\subsection{Computation of expansion coefficients}
 
-\subsubsection{Fast and consistent squaring}
+\subsubsection{Computation of Chebyshev coefficients}
 \label{subsubsec:dct}
-
-??? UNTIL HERE ???
-\color{black}
-
 
 It is well known that the coefficients of a Chebyshev expansion of a function can --- in exact arithmetic --- be computed by inverting the discrete cosine transform (DCT)
 \begin{equation}
     g_{\sigma}(t - \cos(s_i)) = \sum_{l=0}^{m} \mu_l(t) \cos\left(\frac{\pi i l}{m} \right)
     \label{equ:discrete-cosine-transform}
 \end{equation}
-between the expansion coefficients $\mu_l(t),~i=0,\dots,m$ and the function evaluations at the Chebyshev nodes of the second kind $s_i = \cos(\pi i / m),~i=0,\dots,m$. This can be accomplished in $\mathcal{O}(m \log(m))$ operations. \cite[Algorithm 1]{lin-2017-randomized-estimation} uses a slightly different approach, which only approximates the expansion coefficients and is noticeably slower (cf. \reftab{tab:chebyshev-timing-interpolation}).
+between the expansion coefficients $\mu_l(t),~i=0,\dots,m$ and the function evaluations at the Chebyshev nodes of the second kind $s_i = \cos(\pi i / m),~i=0,\dots,m$ \cite{vanloan-1992-computational-frameworks, baszenski-1997-fast-polynomial}. This can be accomplished in $\mathcal{O}(m \log(m))$ operations.
 
-A highly useful property of the Chebyshev expansion --- of which we will make use twice in the following pages --- is the fact that we can square such an expansion in $\mathcal{O}(m \log(m))$ operations \cite{baszenski-1997-fast-polynomial}, which the below algorithm implements.
+A desirable property of the Chebyshev expansion is the fact that such an expansion can be squared in $\mathcal{O}(m \log(m))$ operations by using the DCT and its inverse \cite{baszenski-1997-fast-polynomial}. This allows us to efficiently compute the non-negative Chebyshev expansion \refequ{equ:non-negative-chebyshev-expansion}, and will also be useful in \refsec{subsec:chebyshev-nystrom}. The below algorithm implements this observation.
 
 \begin{algo}{Fast squaring of Chebyshev expansion}{chebyshev-squaring}
     \begin{algorithmic}[1]
@@ -192,19 +224,26 @@ A highly useful property of the Chebyshev expansion --- of which we will make us
         \Statex \textbf{Output:} Coefficients $\{ \nu_l \}_{l=0}^{2m}$ such that $\sum_{l=0}^{2m} \nu_l T_l = (\sum_{l=0}^{m} \mu_l T_l)^2$
         \State Define $\vct{\mu} \in \mathbb{R}^{2m + 1}$ whose first $m + 1$ entries are the coefficients $\mu_0, \dots, \mu_m$ and the remaining $m$ are $0$
     \State Compute $\vct{f} = \operatorname{DCT}(\vct{\mu})$
-    \State Compute $\vct{\nu} = \operatorname{DCT}^{-1}(\vct{f} \odot \vct{f})$ whose entries are the coefficients $\nu_l$
+    \State Compute $\vct{\nu} = \operatorname{DCT}^{-1}(\vct{f} \odot \vct{f})$ whose entries are the coefficients $\nu_0, \dots, \nu_{2m}$
     \label{lin:inverse-DCT}
     \end{algorithmic}
 \end{algo}
-On \reflin{lin:inverse-DCT}, $\odot$ denotes the entrywise product.
+On \reflin{lin:inverse-DCT}, $\odot$ denotes the entrywise product. 
 
+In \cite{lin-2017-randomized-estimation}, a slightly different approach to computing the expansion coefficients in \refequ{equ:discrete-cosine-transform} is taken. They express the coefficients $\mu_l(t)$ in terms of an integral, which they subsequently approximate with a quadrature supported in at least $2m + 1$ nodes. They evaluate the resulting approximation with the fast Fourier transform (FFT). Besides not yielding the exact expansion coefficients $\mu_l(t)$, this procedure is also significantly slower due to the larger number of quadrature nodes and the implementational benefits of the DCT over the FFT. In \reftab{tab:chebyshev-timing-interpolation}, we compare a benevolent implementation of \cite[Algorithm 1]{lin-2017-randomized-estimation} with our approach, both for the standard and the non-negative Chebyshev expansion.
+
+\begin{table}[ht]
+    \caption{We compare the runtime in milliseconds for computing the coefficients of the Chebyshev expansion of the smoothing kernel $g_{\sigma}$ \refequ{equ:smoothing-kernel} in three different ways: as proposed in \cite[Algorithm 1]{lin-2017-randomized-estimation} (\emph{FFT}), using the discrete cosine transform (\emph{DCT}) \refequ{equ:discrete-cosine-transform}, and using the discrete cosine transform to compute a non-negative Chebyshev expansion with \refalg{alg:chebyshev-squaring} (\emph{non-negative DCT}). We use $\sigma=0.005$, $n_t=1000$ parameter values, and various degrees $m$. For stability, we average over 7 runs of the algorithms and repeat these runs 1000 times to form the mean and standard deviation which are given in the below table.}
+    \label{tab:chebyshev-timing-interpolation}
+   \input{tables/interpolation.tex}
+\end{table}
 
 \subsection{Chebyshev-Nyström++ method for spectral density approximation}
 \label{subsec:chebyshev-nystrom}
 
-In the end, we propose the following approximation for the smoothed spectral density
+Combining the results from \refsec{sec:analysis} for $\mtx{B}(t) = \underline{g}_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})$ with the Chebyshev expansion framework from \refsec{subsec:chebyshev-expansion}, we now approximate the smoothed spectral density with
 \begin{equation}
-    \underline{\phi}_{\sigma}^{(m)}(t) = \frac{1}{n} \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\underline{g}_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A}))
+    \phi_{\sigma}(t) \approx \widetilde{\underline{\phi}}_{\sigma}^{(m)}(t) = \frac{1}{n} \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\underline{g}_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})),
     \label{equ:chebyshev-nystrom-formula}
 \end{equation}
 which is the Nyström++ estimator $\Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}$ \refequ{equ:nystrompp-trace-estimator} applied to the non-negative Chebyshev expansion $\underline{g}_{\sigma}^{(m)}$ \refequ{equ:non-negative-chebyshev-expansion}.
@@ -213,34 +252,53 @@ which is the Nyström++ estimator $\Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}$ \refequ{e
 \subsubsection{Implementation}
 \label{subsubsec:chebyshev-nystrom-implementation}
 
-An efficient implementation of the approximation \refequ{equ:chebyshev-nystrom-formula} can be achieved thanks to the invariance of the trace under cyclic permutation of its arguments and the recurrence relation \refequ{equ:chebyshev-recurrence} which the Chebyshev polynomials satisfy. To illustrate this, consider the approximation \refequ{equ:chebyshev-nystrom-formula} when $n_{\mtx{\Psi}}$ is zero, i.e. only a low-rank approximation is computed. Using the definition of the Nyström approximation \refequ{equ:nystrom-approximation}, the cyclic invariance of the trace, and the symmetry of $\mtx{A}$, we can rewrite it as
+An efficient implementation of the approximation \refequ{equ:chebyshev-nystrom-formula} can be achieved thanks to the invariance of the trace under cyclic permutation of its arguments and the three-term recurrence relation
 \begin{equation}
-    \frac{1}{n} \Trace((\mtx{\Omega}^{\top} \underline{g}^{(m)}_{\sigma}(t \mtx{I}_n - \mtx{A}) \mtx{\Omega})^{\dagger} (\mtx{\Omega}^{\top} \underline{g}^{(m)}_{\sigma}(t \mtx{I}_n - \mtx{A})^2 \mtx{\Omega})).
+    T_0(s) = 1,\quad  T_1(s) = s,\quad 
+    T_l(s) = 2 s T_{l-1}(s) - T_{l-2}(s) \text{ for $l \geq 2$,}
+    \label{equ:chebyshev-recurrence}
+\end{equation}
+which the Chebyshev polynomials satisfy. To illustrate this, consider the approximation \refequ{equ:chebyshev-nystrom-formula} when $n_{\mtx{\Psi}}$ is zero, i.e. only a low-rank approximation is computed. Using the definition of the Nyström approximation \refequ{equ:nystrom-approximation}, the cyclic invariance of the trace, and the symmetry of $\mtx{A}$, we can rewrite it as
+\begin{equation}
+    \frac{1}{n} \Trace \big((\mtx{B}(t) \mtx{\Omega}) (\mtx{\Omega}^{\top} \mtx{B}(t) \mtx{\Omega})^{\dagger} (\mtx{B}(t) \mtx{\Omega})^{\top} \big) =
+    \frac{1}{n} \Trace \big((\underbrace{\mtx{\Omega}^{\top} \mtx{B}(t) \mtx{\Omega}}_{= \mtx{K}_1(t)})^{\dagger} (\underbrace{\mtx{\Omega}^{\top} \mtx{B}(t)^2 \mtx{\Omega}}_{= \mtx{K}_2(t)}) \big).
+    %\frac{1}{n} \Trace((\mtx{\Omega}^{\top} \underline{g}_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A}) \mtx{\Omega})^{\dagger} (\mtx{\Omega}^{\top} \underline{g}_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})^2 \mtx{\Omega})).
     \label{equ:cyclic-property}
 \end{equation}
-Thanks to the affine form of the Chebyshev expansion, the first parenthesized term in the trace is
+Thanks to the affine linear form of the Chebyshev expansion, we have
 \begin{equation}
-    \mtx{\Omega}^{\top} \underline{g}^{(m)}_{\sigma}(t \mtx{I}_n - \mtx{A}) \mtx{\Omega} = \sum_{l=0}^{m} \underline{\mu}_l(t) (\mtx{\Omega}^{\top} T_l(\mtx{A}) \mtx{\Omega}),
+    \mtx{K}_1(t) = \mtx{\Omega}^{\top} \underline{g}_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A}) \mtx{\Omega} = \sum_{l=0}^{m} \underline{\mu}_l(t) (\mtx{\Omega}^{\top} T_l(\mtx{A}) \mtx{\Omega}),
 \end{equation}
-meaning we can first precompute the small $n_{\mtx{\Omega}} \times n_{\mtx{\Omega}}$ matrices $\mtx{\Omega}^{\top} T_l(\mtx{A}) \mtx{\Omega}$ for $l=0, \dots, m$ using the Chebyshev recurrence \refequ{equ:chebyshev-recurrence} and then inexpensively sum them up with the corresponding coefficients $\underline{\mu}_l(t)$ for all $t$ in which we want to evaluate the approximation. Thanks to the fast and exact squaring of Chebyshev expansions (cf. \refalg{alg:chebyshev-squaring}), the second parenthesized term in \refequ{equ:cyclic-property} can be approximated in an equivalent way. Unlike expanding the squared smoothing kernel $g_{\sigma}^2$ separately \cite{lin-2017-randomized-estimation}, this approach is consistent, which we have observed to make a noticeable difference in terms of accuracy (cf. \reffig{fig:interpolation-issue}), and which enables provability. 
+meaning we can first precompute the small $n_{\mtx{\Omega}} \times n_{\mtx{\Omega}}$ matrices $\mtx{\Omega}^{\top} T_l(\mtx{A}) \mtx{\Omega}$ for $l=0, \dots, m$ using the Chebyshev recurrence \refequ{equ:chebyshev-recurrence} and then inexpensively sum them up with the corresponding coefficients $\underline{\mu}_l(t)$ for all $t$ in which we want to evaluate the approximation. The fast and exact squaring of Chebyshev expansions (cf. \refalg{alg:chebyshev-squaring}), allows us to also express $\underline{g}_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})^2 = \sum_{l=0}^{2m} \underline{\nu}_l(t) T_l(\mtx{A})$ in terms of an affine linear sum of the small matrices $\mtx{\Omega}^{\top} T_l(\mtx{A}) \mtx{\Omega}$ for $l=0, \dots, 2m$, such that the matrix $\mtx{K}_2(t)$ can be built in an analogous way to $\mtx{K}_1(t)$. Alternatively, \cite{lin-2017-randomized-estimation} proposes to expand the squared smoothing kernel $g_{\sigma}^2$ in a separate Chebyshev expansion of degree $2m$. While this approximation of $g_{\sigma}^2$ might be more accurate, it is \emph{inconsistent} in the sense that computing a Chebyshev expansion of $g_{\sigma}^2$ is in general not the same as squaring an existing Chebyshev expansion of $g_{\sigma}$. We have observed the consistency between the approximation of $g_{\sigma}$ and $g_{\sigma}^2$ to make a crucial difference in terms of accuracy (cf. \reffig{fig:interpolation-issue}). The consistency also allows bounds to be derived for the estimator \refequ{equ:chebyshev-nystrom-formula}.
 
 \begin{figure}[ht]
     \centering
     \input{plots/interpolation.pgf}
-    \caption{Difference in the accuracy when computing the estimate \refequ{equ:cyclic-property} once by separately expanding the squared smoothing kernel $g_{\sigma}^2$ (\emph{inconsistent}), once by squaring the Chebyshev expansion $g_{\sigma}^{(m)}$ using \refalg{alg:chebyshev-squaring} (\emph{consistent}), and once with a non-negative Chebyshev expansion $\underline{g}_{\sigma}^{(m)}$ \refequ{equ:non-negative-chebyshev-expansion} which is also squared with \refalg{alg:chebyshev-squaring} (\emph{non-negative}). We use a small example matrix from \refsec{sec:results}, fix the size of the Nyström approximation to $n_{\mtx{\Omega}} = 80$, let $\sigma = 0.005$, and compute the $L^1$ error from the approximation of the spectral density at $n_t = 100$ uniformly spaced values of $t$.}
+    \caption{Difference in the accuracy when computing the estimate \refequ{equ:cyclic-property} once by separately expanding the squared smoothing kernel $g_{\sigma}^2$ like \cite{lin-2017-randomized-estimation} (\emph{inconsistent}), once by squaring the Chebyshev expansion $g_{\sigma}^{(m)}$ using \refalg{alg:chebyshev-squaring} (\emph{consistent}), and once with a non-negative Chebyshev expansion $\underline{g}_{\sigma}^{(m)}$ \refequ{equ:non-negative-chebyshev-expansion} which is also squared with \refalg{alg:chebyshev-squaring} (\emph{non-negative}). We use a small example matrix from \refsec{sec:results}, fix the size of the Nyström approximation to $n_{\mtx{\Omega}} = 80$, let $\sigma = 0.005$, and compute the $L^1$ error from the approximation of the spectral density at $n_t = 100$ uniformly spaced values of $t$.}
     \label{fig:interpolation-issue}
 \end{figure}
 
-Similar observations for the case when $n_{\mtx{\Psi}}$ is nonzero lead to the following algorithm.
-\textcolor{red}{??? Lines 1 and 2 are quite confusing. Say more explicitly how $\mu$ is computed. Is Algorithm 3.3 applied twice? ???}
+Analogous observations for the \enquote{Girard-Hutchinson} term which appears in $\Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}$ when $n_{\mtx{\Psi}}$ is nonzero show that also then, the estimator can be expressed in terms of small quadratic forms involving the matrix $\mtx{B}(t) = \underline{g}_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})$:
+\begin{align}
+    &\frac{1}{n n_{\mtx{\Psi}}} \Trace \big(\mtx{\Psi}^{\top} (\mtx{B}(t) - (\mtx{B}(t) \mtx{\Omega}) (\mtx{\Omega}^{\top} \mtx{B}(t) \mtx{\Omega})^{\dagger} (\mtx{B}(t) \mtx{\Omega})^{\top}) \mtx{\Psi}^{\top} \big) \notag \\
+    &= \frac{1}{n n_{\mtx{\Psi}}} \big( \underbrace{\Trace(\mtx{\Psi}^{\top} \mtx{B}(t)\mtx{\Psi})}_{= \ell(t)} - \Trace((\underbrace{\mtx{\Psi}^{\top} \mtx{B}(t) \mtx{\Omega}}_{= \mtx{L}_1(t)^{\top}}) (\underbrace{\mtx{\Omega}^{\top} \mtx{B}(t) \mtx{\Omega}}_{= \mtx{K}_1(t)^{\top}})^{\dagger} (\underbrace{\mtx{\Omega}^{\top} \mtx{B}(t) \mtx{\Psi}^{\top}}_{= \mtx{L}_1(t)})) \big).
+    \label{equ:cyclic-property-hutchinson}
+\end{align}
+
+An efficient implementation of the whole procedure described in this section can be found in \refalg{alg:nystrom-chebyshev-pp}.
 
 \begin{algo}{Chebyshev-Nyström++ method}{nystrom-chebyshev-pp}
 \begin{algorithmic}[1]
     \Statex \textbf{Input:} Symmetric $\mtx{A} \in \mathbb{R}^{n \times n}$ with spectrum in $[-1, 1]$, points $\{t_i\}_{i=1}^{n_t} \subset \mathbb{R}$
     \Statex \textbf{Parameters:} Even degree of expansion $m \in \mathbb{N}$, number of Girard-Hutchinson queries $n_{\mtx{\Psi}} \in \mathbb{N}_0$, Nyström sketch size $n_{\mtx{\Omega}} \in \mathbb{N}_0$,  smoothing parameter $\sigma > 0$
-    \Statex \textbf{Output:} Approximate evaluations of the spectral density $\{\underline{\phi}_{\sigma}^{(m)}(t_i)\}_{i=1}^{n_t}$
-    \State Compute $\{\underline{\mu}_l(t_i)\}_{l=0}^{m}$ for all $t_i$ with non-negative Chebyshev expansion \refequ{equ:non-negative-chebyshev-expansion}
-    \State Compute $\{\nu_l(t_i)\}_{l=0}^{2m}$ using \refalg{alg:chebyshev-squaring}%\refalg{alg:2-chebyshev-chebyshev-expansion}
+    \Statex \textbf{Output:} Approximate evaluations of the spectral density $\{\widetilde{\underline{\phi}}_{\sigma}^{(m)}(t_i)\}_{i=1}^{n_t}$
+    \For {$i = 1, \dots, n_t$}
+        \State Compute the coefficients $\{\xi_l(t_i)\}_{l=0}^{m/2}$ of the Chebyshev expansion of $\sqrt{g_{\sigma}}$ \refequ{equ:square-root-chebyshev-expansion}
+        \State Compute the coefficients $\{\underline{\mu}_l(t_i)\}_{l=0}^{m}$ of the non-negative Chebyshev expansion by applying \refalg{alg:chebyshev-squaring} to $\{\xi_l(t_i)\}_{l=0}^{m/2}$
+        \State Compute the coefficients $\{\underline{\nu}_l(t_i)\}_{l=0}^{2m}$ of the square of the non-negative Chebyshev expansion by applying \refalg{alg:chebyshev-squaring} to $\{\underline{\mu}_l(t_i)\}_{l=0}^{m}$
+    \EndFor
+    %\State Compute the coefficients $\{\underline{\mu}_l(t_i)\}_{l=0}^{m}$ of the non-negative Chebyshev expansion \refequ{equ:non-negative-chebyshev-expansion} for all points $t_i$ \textcolor{red}{maybe more details needed (maybe compute $\xi$ for m/2, then twice Alg 3.3)}
+    %\State Compute the coefficients $\{\nu_l(t_i)\}_{l=0}^{2m}$ of the square of the non-negative Chebyshev expansion with coefficients $\{\underline{\mu}_l(t_i)\}_{l=0}^{m}$ using \refalg{alg:chebyshev-squaring}%\refalg{alg:2-chebyshev-chebyshev-expansion}
     %\State Compute  for all $t_i$ using %\refalg{alg:3-nystrom-chebyshev-exponentiation}
     \State Generate Gaussian random matrices $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ and $\mtx{\Psi} \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$%\glsfirst{sketching-matrix} $\in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$
     %\State Generate standard Gaussian %\glsfirst{random-matrix} $\in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$
@@ -256,11 +314,11 @@ Similar observations for the case when $n_{\mtx{\Psi}}$ is nonzero lead to the f
       \State $z \gets \Trace(\mtx{\Psi}^{\top} \mtx{W}_2)$
       \For {$i = 1, \dots, n_t$}
         \If {$l \leq m$}
-            \State $\mtx{K}_1(t_i) \gets \mtx{K}_1(t_i) + \underline{\mu}_l(t_i) \mtx{X}$ \Comment{assemble $\mtx{\Omega}^{\top} \underline{g}_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A}) \mtx{\Omega}$}
-            \State $\mtx{L}_1(t_i) \gets \mtx{L}_1(t_i) + \underline{\mu}_l(t_i) \mtx{Y}$ \Comment{assemble $\mtx{\Omega}^{\top} \underline{g}_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A}) \mtx{\Psi}$}
-            \State $\ell(t_i) \gets \ell(t_i) + \underline{\mu}_l(t_i) z$ \Comment{assemble $\Trace(\mtx{\Psi}^{\top} \underline{g}_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A}) \mtx{\Psi})$}
+            \State $\mtx{K}_1(t_i) \gets \mtx{K}_1(t_i) + \underline{\mu}_l(t_i) \mtx{X}$ \Comment{assembles $\mtx{\Omega}^{\top} \underline{g}_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A}) \mtx{\Omega}$}
+            \State $\mtx{L}_1(t_i) \gets \mtx{L}_1(t_i) + \underline{\mu}_l(t_i) \mtx{Y}$ \Comment{assembles $\mtx{\Omega}^{\top} \underline{g}_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A}) \mtx{\Psi}$}
+            \State $\ell(t_i) \gets \ell(t_i) + \underline{\mu}_l(t_i) z$ \Comment{assembles $\Trace(\mtx{\Psi}^{\top} \underline{g}_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A}) \mtx{\Psi})$}
         \EndIf
-        \State $\mtx{K}_2(t_i) \gets \mtx{K}_2(t_i) + \nu_l(t_i) \mtx{X}$ \Comment{assemble $\mtx{\Omega}^{\top} \underline{g}_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A})^2 \mtx{\Omega}$}
+        \State $\mtx{K}_2(t_i) \gets \mtx{K}_2(t_i) + \underline{\nu}_l(t_i) \mtx{X}$ \Comment{assembles $\mtx{\Omega}^{\top} \underline{g}_{\sigma}^{(m)}(t\mtx{I}_n - \mtx{A})^2 \mtx{\Omega}$}
       \EndFor
       \State $[\mtx{V}_3, \mtx{W}_3] \gets (2 - \delta_{l0}) \mtx{A} [\mtx{V}_2, \mtx{W}_2] - [\mtx{V}_1, \mtx{W}_1]$ \Comment{Chebyshev recurrence}
       \State $[\mtx{V}_1, \mtx{W}_1] \gets [\mtx{V}_2, \mtx{W}_2]$
@@ -271,7 +329,7 @@ Similar observations for the case when $n_{\mtx{\Psi}}$ is nonzero lead to the f
       %\State $\mtx{W}_1 \gets \mtx{W}_2, \mtx{W}_2 \gets \mtx{W}_3$
     \EndFor
     \For {$i = 1, \dots, n_t$}
-      \State $\underline{\phi}_{\sigma}(t_i) \gets \frac{1}{n} \Trace\left( \mtx{K}_1(t_i)^{\dagger}\mtx{K}_2(t_i) \right) + \frac{1}{n n_{\mtx{\Psi}}} \left( \ell(t_i) + \Trace\left( \mtx{L}_1(t_i)^{\top} \mtx{K}_1(t_i)^{\dagger} \mtx{L}_1(t_i) \right)  \right) $ \label{lin:4-nystromchebyshev-nystrom-pp}
+      \State $\widetilde{\underline{\phi}}_{\sigma}(t_i) \gets \frac{1}{n} \Trace\left( \mtx{K}_1(t_i)^{\dagger}\mtx{K}_2(t_i) \right) + \frac{1}{n n_{\mtx{\Psi}}} \left( \ell(t_i) + \Trace\left( \mtx{L}_1(t_i)^{\top} \mtx{K}_1(t_i)^{\dagger} \mtx{L}_1(t_i) \right)  \right) $ \label{lin:4-nystromchebyshev-nystrom-pp}
     \EndFor
 \end{algorithmic}
 \end{algo}
@@ -289,7 +347,7 @@ The algorithm also accomodates the two other estimators introduced in \refsec{se
 
 The pseudoinverses on \reflin{lin:4-nystromchebyshev-nystrom-pp} need to be computed with care. It is possible to reformulate the problem as a generalized eigenvalue problem and apply thresholding to the smallest eigenvalues of a certain matrix to enforce stability \cite{lin-2017-randomized-estimation, epperly-2022-theory-quantum}. Since this renders the algorithm significantly more complicated but only improved the accuracy slightly during our experiments, we will instead evaluate these expressions in \reflin{lin:4-nystromchebyshev-nystrom-pp} using a least-squares solver which likewise uses a truncation of the smallest eigenvalues to enforce better conditioning.
 
-What we have found to be crucial for a successful approximation of the full spectral density was the detection of regions wherein lie no eigenvalues, i.e. regions where the spectral density nearly vanishes. For small smoothing parameters $\sigma$, the rapid decay of the Gaussian $g_{\sigma}$ will cause $\mtx{K}_1(t_i) \approx \mtx{\Omega}^{\top} g_{\sigma}(t_i\mtx{I}_n - \mtx{A}) \mtx{\Omega}$ to be close to the zero matrix for parameter values $t_i$ located in such regions. Hence, on \reflin{lin:4-nystromchebyshev-nystrom-pp} we would compute the pseudoinverse of an almost zero matrix, which can be extremely unstable (see \reffig{fig:zerocheck}). Notice that with $\mtx{K}_1(t_i)$ -- a matrix we need to assemble anyway -- we can cheaply compute $\Trace(\mtx{K}_1(t_i)) / n_{\mtx{\Omega}}$, which is the $n_{\mtx{\Omega}}$-query Girard-Hutchinson estimator. We may use it as a rough indicator whether $t_i$ lies within a region where the spectral density nearly vanishes, and subsequently set $\underline{\phi}^{(m)}_{\sigma}(t_i) = 0$ instead of computing the full expression on \reflin{lin:4-nystromchebyshev-nystrom-pp}.
+What we have found to be crucial for a successful approximation of the full spectral density was the detection of regions wherein lie no eigenvalues, i.e. regions where the spectral density nearly vanishes. For small smoothing parameters $\sigma$, the rapid decay of the Gaussian $g_{\sigma}$ will cause $\mtx{K}_1(t) \approx \mtx{\Omega}^{\top} g_{\sigma}(t\mtx{I}_n - \mtx{A}) \mtx{\Omega}$ to be close to the zero matrix for parameter values $t$ located in such regions. Hence, on \reflin{lin:4-nystromchebyshev-nystrom-pp} we would compute the pseudoinverse of an almost zero matrix, which can be extremely unstable (see \reffig{fig:zerocheck}). Notice that with $\mtx{K}_1(t)$ -- a matrix we need to assemble anyway -- we can cheaply compute $\Trace(\mtx{K}_1(t)) / n_{\mtx{\Omega}}$, which is the $n_{\mtx{\Omega}}$-query Girard-Hutchinson estimator. We may use it as a rough indicator whether $t$ lies within a region where the spectral density nearly vanishes, and subsequently set $\widetilde{\underline{\phi}}_{\sigma}^{(m)}(t) = 0$ instead of computing the full expression on \reflin{lin:4-nystromchebyshev-nystrom-pp}.
 
 \begin{figure}[ht]
     \centering
@@ -301,44 +359,11 @@ What we have found to be crucial for a successful approximation of the full spec
 \subsubsection{Analysis}
 \label{subsubsec:chebyshev-nystrom-analysis}
 
-In this section, we will upper bound the output of the Chebyshev-Nyström++ method (see. \refalg{alg:nystrom-chebyshev-pp}). To this extent, we will first analyze the non-negative Chebyshev expansion.
-
-\begin{lemma}{Non-negative Chebyshev expansion error}{non-negative-chebyshev-error}
-    The non-negative expansion $\underline{g}_{\sigma}^{(m)}$ of the Gaussian smoothing kernel satisfies
-    \begin{equation}
-        \sup_{t \in [-1, 1]} \left| g_{\sigma}(t - s) - \underline{g}_{\sigma}^{(m)}(t - s) \right| \leq 2\sqrt{2} \left(1 + \sigma \sqrt{\pi} \cdot E_{\sqrt{2}\sigma, \sfrac{m}{2}}\right) E_{\sqrt{2}\sigma, \sfrac{m}{2}} \equiv \underline{E}_{\sigma, m}
-        \label{equ:chebyshev-interpolation-sup-error-kernel-nonneg}
-        %\lVert  \phi_{\sigma} - \phi_{\sigma}^{(m)} \rVert _1 &\leq \frac{2\sqrt{2}}{\sigma^2} (1 + \sigma)^{-m}.
-        %\label{equ:2-chebyshev-interpolation-error}
-    \end{equation}
-    for all \emph{even} degrees $m \in \mathbb{N}$, smoothing parameters $\sigma > 0$, $s \in [-1, 1]$, and with $E_{\sigma, m}$ as defined in \reflem{lem:chebyshev-error}.
-\end{lemma}
-
-\begin{proof}
-    For any numbers $a, b \in \mathbb{R}$ it holds
-    \begin{equation}
-    | a^2 - b^2 | = | (a + b)(a - b) | = | a + b | | a - b | \leq (2 | a | + | a - b |)  | a - b |
-    \end{equation}
-    Therefore, omitting the arguments and using $g_{\sigma} = (\sqrt{g_{\sigma}})^2$ and $\underline{g}_{\sigma}^{(m)} = (\sqrt{g_{\sigma}}^{(\sfrac{m}{2})})^2$.
-    we have
-    \begin{equation}
-        \left| g_{\sigma} - \underline{g}_{\sigma}^{(m)} \right| \leq \left( 2 \left| \sqrt{g_{\sigma}} \right| + \left| \sqrt{g_{\sigma}} - \sqrt{g_{\sigma}}^{(\sfrac{m}{2})} \right| \right) \left| \sqrt{g_{\sigma}} - \sqrt{g_{\sigma}}^{(\sfrac{m}{2})} \right|.
-    \end{equation}
-    Since $\sqrt{g_{\sigma}} = \sqrt{2 \sigma \sqrt{2 \pi}} \cdot g_{\sqrt{2}\sigma}$ and $\sqrt{g_{\sigma}} \leq 1/\sqrt{\sigma \sqrt{2 \pi}}$ \textcolor{red}{we can apply the result from \refthm{thm:chebyshev-error} ??? the reference seems to be incorrect ???} to get
-    \begin{align}
-        &\sup_{t \in [-1, 1]} \left| g_{\sigma}(t - s) - \underline{g}_{\sigma}^{(m)}(t - s) \right| \notag \\
-        &\leq \left( 2 \frac{1}{\sqrt{ \sigma \sqrt{2\pi}}} + \sqrt{2 \sigma \sqrt{2 \pi}} \cdot E_{\sqrt{2}\sigma, \sfrac{m}{2}}\right)\sqrt{2 \sigma \sqrt{2 \pi}} \cdot E_{\sqrt{2}\sigma, \sfrac{m}{2}},
-    \end{align}
-    from which follows the result with some minor simplifications.
-
-\end{proof}
-
-On one hand, in the non-negative expansion, the underlying computes Chebyshev expansion -- which is shown in \reflem{lem:chebyshev-error} to exponentially decay with its degree -- is only computed to degree $m/2$, whereas the standard expansion is of degree $m$. On the other hand, we approximate $\sqrt{g_{\sigma}}$ instead of $g_{\sigma}$, which is less \enquote{pointy} and therefore better approximated by polynomials. Overall, we will need to choose the degree $m$ of the expansion approximately a factor of $\sqrt{2}$ larger to match the error of the standard expansion (cf. \reffig{fig:interpolation-issue}).
-
+In this section, we will upper bound the output of the Chebyshev-Nyström++ method (see. \refalg{alg:nystrom-chebyshev-pp}). 
 \begin{theorem}{Chebyshev-Nyström++ method}{chebyshev-nystrom}
-    Let $\phi_{\sigma}$ be the smoothed spectral density of a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ whose spectrum is contained in $[-1, 1]$. Then the Chebyshev-Nyström++ estimate $\underline{\phi}_{\sigma}^{(m)}$ with \emph{even} degree $m = \mathcal{O}(\sigma^{-1}(\log(\varepsilon^{-1}) + \log(\sigma^{-1})))$, \emph{even} $n_{\mtx{\Omega}} = n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-1}\log(\delta^{-1})^2)$, and smoothing parameter $0 < \sigma \ll 1$ satisfies with probability at least $1 - \delta$
+    Let $\phi_{\sigma}$ be the smoothed spectral density of a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ whose spectrum is contained in $[-1, 1]$. Then the Chebyshev-Nyström++ estimate $\widetilde{\underline{\phi}}_{\sigma}^{(m)}$ with \emph{even} degree $m = \mathcal{O}(\sigma^{-1}(\log(\varepsilon^{-1}) + \log(\sigma^{-1})))$, \emph{even} $n_{\mtx{\Omega}} = n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-1}\log(\delta^{-1})^2)$, and smoothing parameter $0 < \sigma \ll 1$ satisfies with probability at least $1 - \delta$
     \begin{equation}
-        \int_{-1}^{1} \left| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t \leq \varepsilon
+        \int_{-1}^{1} \left| \phi_{\sigma}(t) - \widetilde{\underline{\phi}}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t \leq \varepsilon
         \label{equ:chebyshev-nystrom-error}
         %\lVert  \phi_{\sigma} - \phi_{\sigma}^{(m)} \rVert _1 &\leq \frac{2\sqrt{2}}{\sigma^2} (1 + \sigma)^{-m}.
         %\label{equ:2-chebyshev-interpolation-error}
@@ -349,17 +374,17 @@ On one hand, in the non-negative expansion, the underlying computes Chebyshev ex
 \begin{proof}
     The previously derived results can be applied to
     \begin{align}
-        &\int_{-1}^{1} \left| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t \notag \\
-        &\leq \int_{-1}^{1} \left| \phi_{\sigma}(t) - \phi_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \int_{-1}^{1} \left| \phi^{(m)}_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t && \text{(triangle inequality)} \notag \\
-        &\leq \int_{-1}^{1} \left| \phi_{\sigma}(t) - \phi_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \widetilde{\varepsilon} \int_{-1}^{1} \left| \phi^{(m)}_{\sigma}(t) \right|~\mathrm{d}t && \text{(\refthm{thm:nystrom-pp} w.p. $\geq 1 - \delta$)} \notag \\
-        &\leq (1 + \widetilde{\varepsilon}) \int_{-1}^{1} \left| \phi_{\sigma}(t) - \phi_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \widetilde{\varepsilon} \int_{-1}^{1} \left| \phi_{\sigma}(t) \right|~\mathrm{d}t && \text{(triangle inequality)} \notag \\
-        &\leq (1 + \widetilde{\varepsilon}) 2 \underline{E}_{\sigma, m} + \widetilde{\varepsilon}. && \text{(\refthm{thm:chebyshev-error}, normalization)} \notag \\
+        &\int_{-1}^{1} \left| \phi_{\sigma}(t) - \widetilde{\underline{\phi}}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t \notag \\
+        &\leq \int_{-1}^{1} \left| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \int_{-1}^{1} \left| \underline{\phi}_{\sigma}^{(m)}(t) - \widetilde{\underline{\phi}}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t && \text{(triangle inequality)} \notag \\
+        &\leq \int_{-1}^{1} \left| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \widetilde{\varepsilon} \int_{-1}^{1} \left| \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t && \text{(\refthm{thm:nystrom-pp} w.p. $\geq 1 - \delta$)} \notag \\
+        &\leq (1 + \widetilde{\varepsilon}) \int_{-1}^{1} \left| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \widetilde{\varepsilon} \int_{-1}^{1} \left| \phi_{\sigma}(t) \right|~\mathrm{d}t && \text{(triangle inequality)} \notag \\
+        &\leq (1 + \widetilde{\varepsilon}) \underline{E}_{\sigma, m} + \widetilde{\varepsilon}. && \text{(\reflem{lem:non-negative-chebyshev-error}, normalization)} \notag \\
     \end{align}
     From \reflem{lem:non-negative-chebyshev-error} we see that if $0 < \sigma \ll 1$, choosing $m = \mathcal{O}(\sigma^{-1}(\log(\varepsilon^{-1}) + \log(\sigma^{-1})))$ ensures $\underline{E}_{\sigma, m} \leq \widetilde{\varepsilon}$, and thus, since $\widetilde{\varepsilon} \leq 1$,
     \begin{equation}
-        \int_{-1}^{1} \left| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t \leq (1+\widetilde{\varepsilon}) 2 \widetilde{\varepsilon} + \widetilde{\varepsilon} \leq 5 \widetilde{\varepsilon}
+        \int_{-1}^{1} \left| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t \leq (1+\widetilde{\varepsilon}) \widetilde{\varepsilon} + \widetilde{\varepsilon} \leq 3 \widetilde{\varepsilon}
     \end{equation}
-    from which the result follows by identifying $\varepsilon = 5 \widetilde{\varepsilon}$.
+    from which the result follows by identifying $\varepsilon = 3 \widetilde{\varepsilon}$.
 \end{proof}
 
 %\todo{Maybe specialize \refthm{thm:nystrom} to spectral densities?}
