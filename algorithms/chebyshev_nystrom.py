@@ -10,16 +10,16 @@ import scipy as sp
 
 from .helpers import gaussian_kernel
 
-def chebyshev_expansion(kernel, t, m, nonnegative=False):
+def chebyshev_approximation(kernel, t, m, nonnegative=False):
     """
-    Chebyshev expansion of a kernel.
+    Chebyshev approximation of a kernel.
 
     Parameters
     ----------
     kernel : kernel
         The kernel used to regularize the spectral density.
     t : int, float, list, or np.ndarray of shape (n_t,)
-        Point(s) where the expansion should be evaluated.
+        Point(s) where the approximation should be evaluated.
     m : int > 0
         Degree of the Chebyshev polynomial.
     nonnegative : bool
@@ -44,15 +44,15 @@ def chebyshev_expansion(kernel, t, m, nonnegative=False):
     # Rescale coefficients due to type-1 DCT convention
     mu[..., 1:-1] *= 2
 
-    # Square Chebyshev expansion
+    # Square Chebyshev approximation
     if nonnegative:
-        mu = square_chebyshev_expansion(mu)
+        mu = square_chebyshev_approximation(mu)
 
     return mu
 
-def square_chebyshev_expansion(mu):
+def square_chebyshev_approximation(mu):
     """
-    Square a Chebyshev expansion with coefficients mu.
+    Square a Chebyshev approximation with coefficients mu.
 
     Parameters
     ----------
@@ -100,7 +100,7 @@ def chebyshev_nystrom(A, t=0, m=100, n_Psi=10, n_Omega=10, kernel=gaussian_kerne
     kernel : callable
         Smoothing kernel.
     nonnegative : bool
-        Use non-negative Chebyshev expansion.
+        Use non-negative Chebyshev approximation.
     kappa : float > 0
         The threshold on the Hutchinson estimate of g_sigma. If it is below this
         value, instead of solving the possibly ill-conditioned generalized
@@ -125,12 +125,12 @@ def chebyshev_nystrom(A, t=0, m=100, n_Psi=10, n_Omega=10, kernel=gaussian_kerne
     n = A.shape[0]
     n_t = t.shape[0]
 
-    # Compute coefficients of Chebyshev expansion of the smoothing kernel
-    mu = chebyshev_expansion(kernel, t, m, nonnegative=nonnegative)
+    # Compute coefficients of Chebyshev approximation of the smoothing kernel
+    mu = chebyshev_approximation(kernel, t, m, nonnegative=nonnegative)
     if consistent:
-        nu = square_chebyshev_expansion(mu)
+        nu = square_chebyshev_approximation(mu)
     else:
-        nu = chebyshev_expansion(lambda t, x: kernel(t, x) ** 2, t, 2 * m, nonnegative=nonnegative)
+        nu = chebyshev_approximation(lambda t, x: kernel(t, x) ** 2, t, 2 * m, nonnegative=nonnegative)
 
     # Generate Gaussian random matrices
     Omega = np.random.randn(n, n_Omega)

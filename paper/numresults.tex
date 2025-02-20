@@ -6,7 +6,7 @@
 \textcolor{red}{
 To do in this section:
 \begin{itemize}
-    \item Specify implementation details (no non-negative Chebyshev expansion, speed-up tricks, thresholding, ...)
+    \item Specify implementation details (no non-negative Chebyshev approximation, speed-up tricks, thresholding, ...)
     \item Clarify where code come from (faithful implementation, own code, ...)
     \item Give experimental setup (software version, hardware, single-threaded, ...)
 \end{itemize}
@@ -49,7 +49,7 @@ with $v_0 = -4$ and $\lambda = 8$, centered in cells of side length $L=6$ which 
     \label{fig:gaussian-well}
 \end{figure}
 
-While theoretically an important tool, we waive using the non-negative Chebyshev expansion, since the slight indefiniteness of $g_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})$ \refequ{equ:matrix-expansion} does not make a difference in finite precision arithmetic. We approximate the integrals for computing the $L^1$-errors in \refsec{sec:analysis} using a midpoint quadrature with $n_t \in \mathbb{N}$ nodes. For a fixed total number of random vectors $n_{\mtx{\Psi}} + n_{\mtx{\Omega}}$, we analyze the convergence behavior of the Chebyshev-Nyström++ method when run on the $1000 \times 1000$ matrix resulting from the finite difference discretization of the Hamiltonian for $n_c = 1$ described above (see \reffig{fig:convergence}). 
+While theoretically an important tool, we waive using the non-negative Chebyshev approximation, since the slight indefiniteness of $g_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})$ \refequ{equ:matrix-approximation} does not make a difference in finite precision arithmetic. We approximate the integrals for computing the $L^1$-errors in \refsec{sec:analysis} using a midpoint quadrature with $n_t \in \mathbb{N}$ nodes. For a fixed total number of random vectors $n_{\mtx{\Psi}} + n_{\mtx{\Omega}}$, we analyze the convergence behavior of the Chebyshev-Nyström++ method when run on the $1000 \times 1000$ matrix resulting from the finite difference discretization of the Hamiltonian for $n_c = 1$ described above (see \reffig{fig:convergence}). 
 
 \begin{figure}[ht]
     \centering
@@ -65,7 +65,7 @@ For a fixed budget of random vectors $n_{\mtx{\Omega}} + n_{\mtx{\Psi}}$, \reffi
 \begin{figure}[ht]
     \centering
     \input{plots/distribution.pgf}
-    \caption{The Chebyshev-Nyström++ method for different ways of allocations a total of $n_{\mtx{\Psi}} + n_{\mtx{\Omega}}=80$ random vectors to either the Nystr\"om low-rank approximation or the Girard-Hutchinson trace estimation for the Gaussian smoothing kernel with multiple different values of the smoothing parameter. We make the approximation error made in the Chebyshev expansion negligible by rescaling $m=16 / \sigma$ (based on \refthm{thm:chebyshev-error}).}
+    \caption{The Chebyshev-Nyström++ method for different ways of allocations a total of $n_{\mtx{\Psi}} + n_{\mtx{\Omega}}=80$ random vectors to either the Nystr\"om low-rank approximation or the Girard-Hutchinson trace estimation for the Gaussian smoothing kernel with multiple different values of the smoothing parameter. We make the approximation error made in the Chebyshev approximation negligible by rescaling $m=16 / \sigma$ (based on \reflem{lem:non-negative-chebyshev-error}).}
     \label{fig:distribution}
 \end{figure}
 

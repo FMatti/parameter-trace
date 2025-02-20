@@ -3,7 +3,7 @@ import __context__
 import timeit
 import numpy as np
 
-from algorithms.chebyshev_nystrom import chebyshev_expansion
+from algorithms.chebyshev_nystrom import chebyshev_approximation
 from algorithms.helpers import gaussian_kernel, generate_tex_tabular
 
 def time_method(method, parameters, num_times=1000, num_repeats=10):
@@ -34,12 +34,12 @@ def time_method(method, parameters, num_times=1000, num_repeats=10):
 
 def chebyshev_coefficients_quadrature(t, m, kernel, n_theta=None):
     """
-    Delta-Gauss-Chebyshev polynomial expansion.
+    Delta-Gauss-Chebyshev polynomial approximation.
 
     Parameters
     ----------
     t : int, float, list, or np.ndarray of shape (n,)
-        Point(s) where the expansion should be evaluated.
+        Point(s) where the approximation should be evaluated.
     m : int > 0
         Degree of the Chebyshev polynomial.
     kernel : callable
@@ -76,7 +76,7 @@ def chebyshev_coefficients_quadrature(t, m, kernel, n_theta=None):
     mu[:, 1:] /= n_theta
     return mu
 
-methods = [chebyshev_coefficients_quadrature, chebyshev_expansion, chebyshev_expansion]
+methods = [chebyshev_coefficients_quadrature, chebyshev_approximation, chebyshev_approximation]
 labels = ["FFT", "DCT", "non-negative DCT"]
 
 n_t = 1000

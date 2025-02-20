@@ -46,7 +46,7 @@ for i in range(3):
 
 plt.grid(True, which="both")
 plt.ylabel(r"$L^1$-error")
-plt.xlabel(r"expansion degree $m$")
+plt.xlabel(r"approximation degree $m$")
 plt.legend()
 plt.xscale("log")
 plt.yscale("log")
