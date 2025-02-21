@@ -429,24 +429,37 @@ Combining results derived above, we obtain that
 %We now discuss what value to choose for $n_{\mtx{\Omega}}$ in the Nyström trace estimator introduced in \refsec{subsec:nystrom}. In order to guarantee an even better approximation error based on \refthm{thm:nystrom}, we analyze the numerical rank of the matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$.
 
 \color{black}
-In practice, the $\varepsilon^{-1}$ complexity of $n_{\mtx{\Omega}}$, $n_{\mtx{\Psi}}$ in \refthm{thm:chebyshev-nystrom} is often pessimistic.
-\textcolor{red}{Make briefer:
-\begin{itemize}
- \item Quick decay of eigenvalues makes Nyström alone look good.
- \item State singular values.
- \item Explain as quickly as possible how you arrive at estimate of numerical rank for a roughly uniform distribution. w.l.o.g. eigenvalue $t$ around zero $\leadsto$ roughly distribution count number of eigenvalues $\approx \pm i/n$ needed for numerical rank $\epsilon$.
- \item try to reduce notation
-\end{itemize}
-}
-In particular, for small $\sigma$ the singular values of the matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ decay so quickly that the Nyström approximation alone is highly accurate (cf. \refthm{thm:nystrom}). To establish a relation between the singular value decay of $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ and what choice of $n_{\mtx{\Omega}}$ is needed for a significantly better approximation than ensured by \refthm{thm:chebyshev-nystrom}, we study the numerical rank of $g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n$.\footnote{The factor $1/n$
-does not change the conclusion, but is added to simplify the calculations and also reflects how we implement the method: We absorb the factor $1/n$ from the smoothed spectral density \refequ{equ:smooth-spectral-density} in the definition of $g_{\sigma}$, such that in reality, the Chebyshev approximation and the Nyström++ estimator are applied to $g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n$.}
-
-We can express the numerical rank of a matrix with respect to the nuclear norm in terms of its singular values $\sigma_1 \geq \dots \geq \sigma_n \geq 0$ as
+In practice, the $\varepsilon^{-1}$ complexity of $n_{\mtx{\Omega}}$ and $n_{\mtx{\Psi}}$ in \refthm{thm:chebyshev-nystrom} is often pessimistic. The reason is that \refthm{thm:nystrom-pp} does not take advantage of the low-rank structure of the matrix $\mtx{B}(t) = g_{\sigma}(t\mtx{I}_n - \mtx{A})$: The singular values of the matrix $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ are given by
 \begin{equation}
-    r_{\varepsilon_m} = \min \{1 \leq r \leq n: \sum_{j=r+1}^n \sigma_{j} \leq \varepsilon_m \},
-    \label{equ:numerical-rank}
+    \sigma_i(t) = g_{\sigma}(t - \lambda_{(i)}) = \frac{1}{\sqrt{2 \pi \sigma^2}} e^{-\sfrac{\left(t - \lambda_{(i)}\right)^2}{2 \sigma^2}},
+    \label{equ:gaussian-kernel-eigenvalues}
 \end{equation}
-where $\varepsilon_m$ is usually taken to be the double machine precision, i.e. $\varepsilon_m \approx 10^{-16}$. 
+where $\lambda_{(1)}, \dots, \lambda_{(n)}$ denote the eigenvalues of $\mtx{A}$ sorted by increasing distance from $t$, such that $\sigma_1(t) \geq \dots \geq \sigma_n(t)$. Clearly, the further away an eigenvalue $\lambda_{(i)}$ is from $t$, the (exponentially) smaller its associated singular value $\sigma_i(t)$ will be. Hence, all singular values $\sigma_i(t)$ corresponding to eigenvalues outside of a certain window $[t - d, t + d]$ around $t$, where $d$ is a number depending on $\sigma$ and $n$, will be negligibly small (see \reffig{fig:numerical-rank}).
+\begin{figure}[ht]
+    \centering
+    \input{figures/numerical-rank.tex}
+    \caption{Singular values $\sigma_i$ of $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ corresponding to eigenvalues $\lambda_{(i)}$ of $\mtx{A}$ which lie further away from $t$ than a certain distance $d$ are negligibly small.}
+    \label{fig:numerical-rank}
+\end{figure}
+If we choose $n_{\mtx{\Omega}}$ large enough such that the sum $\sum_{i=r+1}^{n} \sigma_i(t)$ which bounds the approximation error in \refthm{thm:nystrom} is negligibly small for all $t$, we achieve a much better approximation. In particular, if we assume the eigenvalues of $\mtx{A}$ to be uniformly distributed, a small calculation shows that $n_{\mtx{\Omega}} = \mathcal{O}(n \sigma)$ will ensure this.
+
+%\textcolor{red}{Make briefer:
+%\begin{itemize}
+% \item Quick decay of eigenvalues makes Nyström alone look good.
+% \item State singular values.
+% \item Explain as quickly as possible how you arrive at estimate of numerical rank for a roughly uniform distribution. w.l.o.g. eigenvalue $t$ around zero $\leadsto$ roughly distribution count number of eigenvalues $\approx \pm i/n$ needed for numerical rank $\epsilon$.
+% \item try to reduce notation
+%\end{itemize}
+%}
+%In particular, for small $\sigma$ the singular values of the matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ decay so quickly that the Nyström approximation alone is highly accurate (cf. \refthm{thm:nystrom}). To establish a relation between the singular value decay of $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ and what choice of $n_{\mtx{\Omega}}$ is needed for a significantly better approximation than ensured by \refthm{thm:chebyshev-nystrom}, we study the numerical rank of $g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n$.\footnote{The factor $1/n$
+%does not change the conclusion, but is added to simplify the calculations and also reflects how we implement the method: We absorb the factor $1/n$ from the smoothed spectral density \refequ{equ:smooth-spectral-density} in the definition of $g_{\sigma}$, such that in reality, the Chebyshev approximation and the Nyström++ estimator are applied to $g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n$.}
+
+%We can express the numerical rank of a matrix with respect to the nuclear norm in terms of its singular values $\sigma_1 \geq \dots \geq \sigma_n \geq 0$ as
+%\begin{equation}
+%    r_{\varepsilon_m} = \min \{1 \leq r \leq n: \sum_{j=r+1}^n \sigma_{j} \leq \varepsilon_m \},
+%    \label{equ:numerical-rank}
+%\end{equation}
+%where $\varepsilon_m$ is usually taken to be the double machine precision, i.e. $\varepsilon_m \approx 10^{-16}$. 
 
 %\begin{theorem}{Nyström estimator for parameter-dependent matrices}%{chebyshev-nystrom-raw}
 %    Let $\phi_{\sigma}$ be the smooth spectral density of a symmetric %matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ whose spectrum is %contained in $[-1, 1]$. Then the Chebyshev-Nyström++ estimate %$\widetilde{\phi}_{\sigma}^{(m)}$ with \emph{even} degree $m \in %\mathbb{N}$, $n_{\mtx{\Omega}} \geq \max(6, \max_{t \in [-1, 1]}(r_%{\varepsilon}(g_{\sigma}(t\mtx{I}_n - \mtx{A}))) + \log(\delta^%{-1}))$, $n_{\mtx{\Psi}} = 0$, and smoothing parameter $\sigma > 0$ %satisfies with for all $\gamma \geq 1$ with probability at least $1 %- \delta$
@@ -460,27 +473,27 @@ where $\varepsilon_m$ is usually taken to be the double machine precision, i.e. 
 %    \todo{TODO}
 %\end{proof}
 
-When using a Gaussian smoothing-kernel, we can explicitly write the singular values of $g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n$ as
-\begin{equation}
-    \sigma_i(t) = g_{\sigma}(t - \lambda_{(i)}) / n = \frac{1}{n \sqrt{2 \pi \sigma^2}} e^{-\sfrac{\left(t - \lambda_{(i)}\right)^2}{2 \sigma^2}},
-    \label{equ:gaussian-kernel-eigenvalues}
-\end{equation}
-where $\lambda_{(1)}, \dots, \lambda_{(n)}$ denote the eigenvalues of $\mtx{A}$ sorted by increasing distance from spectral-parameter $t$, such that $\sigma_1(t) \geq \dots \geq \sigma_n(t)$. Consequently, by using the closed-form expression of the eigenvalues \refequ{equ:gaussian-kernel-eigenvalues}, we may generously upper bound the numerical rank by
-\begin{equation}
-    r_{\varepsilon_m}(g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n) \leq \#\left\{1\leq i\leq n: |t - \lambda_i| < d_{\varepsilon_m, \sigma} \right\},
-    \label{equ:gaussian-kernel-numerical-rank}
-\end{equation}
-with $d_{\varepsilon_m, \sigma} = \sigma \sqrt{-2 \log(\sqrt{2 \pi} \sigma \varepsilon_m)}$ and the eigenvalues $\lambda_1, \dots, \lambda_n$ of $\mtx{A}$ and the constants. The expression \refequ{equ:gaussian-kernel-numerical-rank} has a nice visual interpretation: The numerical rank of a matrix is at most equal to the number of eigenvalues which are closer to the parameter $t$ than $d_{\varepsilon_m, \sigma}$. This is illustrated in \reffig{fig:numerical-rank}.
-\begin{figure}[ht]
-    \centering
-    \input{figures/numerical-rank.tex}
-    \caption{The numerical rank of $g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n$ can be approximately computed by counting the number of eigenvalues $\lambda_{(1)}, \dots, \lambda_{(n)}$ of the matrix $\mtx{A}$ which lie less than a constant $d_{\varepsilon_m, \sigma}$ away from $t$.}
-    \label{fig:numerical-rank}
-\end{figure}
+%When using a Gaussian smoothing-kernel, we can explicitly write the singular values of $g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n$ as
+%\begin{equation}
+%    \sigma_i(t) = g_{\sigma}(t - \lambda_{(i)}) / n = \frac{1}{n \sqrt{2 \pi \sigma^2}} e^{-\sfrac{\left(t - \lambda_{(i)}\right)^2}{2 \sigma^2}},
+%    \label{equ:gaussian-kernel-eigenvalues}
+%\end{equation}
+%where $\lambda_{(1)}, \dots, \lambda_{(n)}$ denote the eigenvalues of $\mtx{A}$ sorted by increasing distance from spectral-parameter $t$, such that $\sigma_1(t) \geq \dots \geq \sigma_n(t)$. Consequently, by using the closed-form expression of the eigenvalues \refequ{equ:gaussian-kernel-eigenvalues}, we may generously upper bound the numerical rank by
+%\begin{equation}
+%    r_{\varepsilon_m}(g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n) \leq \#\left\{1\leq i\leq n: |t - \lambda_i| < d_{\varepsilon_m, \sigma} \right\},
+%    \label{equ:gaussian-kernel-numerical-rank}
+%\end{equation}
+%with $d_{\varepsilon_m, \sigma} = \sigma \sqrt{-2 \log(\sqrt{2 \pi} \sigma \varepsilon_m)}$ and the eigenvalues $\lambda_1, \dots, \lambda_n$ of $\mtx{A}$ and the constants. The expression \refequ{equ:gaussian-kernel-numerical-rank} has a nice visual interpretation: The numerical rank of a matrix is at most equal to the number of eigenvalues which are closer to the parameter $t$ than $d_{\varepsilon_m, \sigma}$. This is illustrated in \reffig{fig:numerical-rank}.
+%\begin{figure}[ht]
+%    \centering
+%    \input{figures/numerical-rank.tex}
+%    \caption{The numerical rank of $g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n$ can be approximately computed by counting the number of eigenvalues $\lambda_{(1)}, \dots, \lambda_{(n)}$ of the matrix $\mtx{A}$ which lie less than a constant $d_{\varepsilon_m, \sigma}$ away from $t$.}
+%    \label{fig:numerical-rank}
+%\end{figure}
 
-If we additionally assume the eigenvalues of the matrix $\mtx{A}$ to be evenly distributed within $[-1, 1]$, that is, in any subinterval of fixed length in $[a, b]$, $-1 \leq a < b \leq 1$, we can expect to find roughly the same number of eigenvalues, then we can estimate the numerical rank of $g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n$ to be
-\begin{equation}
-    r_{\varepsilon_m}(g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n) \lessapprox n d_{\varepsilon_m, \sigma} \approx 6 n \sigma,
-    \label{equ:gaussian-kernel-numerical-rank-uniform}
-\end{equation}
-provided we set $\varepsilon_m = 10^{-16}$ and choose $\sigma$ roughly between $10^{-8}$ and $1$. Hence, choosing $n_{\mtx{\Omega}} = \mathcal{O}(n \sigma)$ will yield approximations which can be significantly better than \refthm{thm:chebyshev-nystrom}.
+%If we additionally assume the eigenvalues of the matrix $\mtx{A}$ to be evenly distributed within $[-1, 1]$, that is, in any subinterval of fixed length in $[a, b]$, $-1 \leq a < b \leq 1$, we can expect to find roughly the same number of eigenvalues, then we can estimate the numerical rank of $g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n$ to be
+%\begin{equation}
+%    r_{\varepsilon_m}(g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n) \lessapprox n d_{\varepsilon_m, \sigma} \approx 6 n \sigma,
+%    \label{equ:gaussian-kernel-numerical-rank-uniform}
+%\end{equation}
+%provided we set $\varepsilon_m = 10^{-16}$ and choose $\sigma$ roughly between $10^{-8}$ and $1$. Hence, choosing $n_{\mtx{\Omega}} = \mathcal{O}(n \sigma)$ will yield approximations which can be significantly better than \refthm{thm:chebyshev-nystrom}.
