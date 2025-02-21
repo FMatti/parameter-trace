@@ -372,9 +372,11 @@ $\mtx{B}(t) = \underline{g}_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})$, as explained
 The two pseudoinverses on \reflin{lin:4-nystromchebyshev-nystrom-pp} need to be computed with care. One way to ensure numerical stability is to 
 consider an associated eigenvalue problem and threshold the smallest eigenvalues~\cite{lin-2017-randomized-estimation, epperly-2022-theory-quantum}. However, this renders the algorithm significantly more complicated, and we found that it improves accuracy only slightly. Instead, we use the standard NumPy least-squares solver when applying $\mtx{K}_1(t_i)^{\dagger}$, which is based on the DGELSD routine from LAPACK, and likewise truncates the smallest eigenvalues by treating them as zero if they are smaller than a certain threshold. We have found a threshold of $10^{-5}$ times the largest eigenvalue to give the best results in our numerical experiments. 
 
-\color{black}
 
-What we have found to be crucial for a successful approximation of the full spectral density was the detection of regions wherein lie no eigenvalues, i.e. regions where the spectral density nearly vanishes. For small smoothing parameters $\sigma$, the rapid decay of the Gaussian $g_{\sigma}$ will cause $\mtx{K}_1(t) \approx \mtx{\Omega}^{\top} g_{\sigma}(t\mtx{I}_n - \mtx{A}) \mtx{\Omega}$ to be close to the zero matrix for parameter values $t$ located in such regions. Hence, on \reflin{lin:4-nystromchebyshev-nystrom-pp} we would compute the pseudoinverse of an almost zero matrix, which can be extremely unstable (see \reffig{fig:zerocheck}). Notice that with $\mtx{K}_1(t)$ --- a matrix we need to assemble anyway --- we can cheaply compute $\Trace(\mtx{K}_1(t)) / n_{\mtx{\Omega}}$, which is the $n_{\mtx{\Omega}}$-query Girard-Hutchinson estimator \refequ{equ:hutchinson-trace-estimator}. If this estimate is significantly smaller than $1/n$, in our experiments usually around $10^{-5}$, we may use it as an indicator that $t$ lies within a region where the spectral density nearly vanishes, and therefore set $\widetilde{\underline{\phi}}_{\sigma}^{(m)}(t) = 0$ instead of computing the full expression on \reflin{lin:4-nystromchebyshev-nystrom-pp}.
+To ensure numerical accuracy, we found it crucial to separately treat regions
+where the spectral density nearly vanishes, because there are no eigenvalues in or close to the region.
+Especially for small smoothing parameters $\sigma$, the rapid decay of the Gaussian $g_{\sigma}$ will cause $\mtx{K}_1(t) \approx \mtx{\Omega}^{\top} g_{\sigma}(t\mtx{I}_n - \mtx{A}) \mtx{\Omega}$ to be close to zero for parameter values $t$ located in such regions. Hence, on \reflin{lin:4-nystromchebyshev-nystrom-pp} we would compute the pseudoinverse of an almost zero matrix, which can be extremely unstable; see \reffig{fig:zerocheck}. To detect this situation, we can cheaply compute the Girard-Hutchinson 
+estimate $\Trace(\mtx{K}_1(t)) / n_{\mtx{\Omega}}$ of the nuclear norm. If this estimate is small (in our experiments, smaller than $10^{-5}$), we use it as an indicator that $t$ is within a region with a nearly vanishing spectral density, and therefore set $\widetilde{\underline{\phi}}_{\sigma}^{(m)}(t) = 0$ instead of computing the full expression on \reflin{lin:4-nystromchebyshev-nystrom-pp}.
 
 \begin{figure}[ht]
     \centering
@@ -405,7 +407,7 @@ In this section, we analyze the accuracy of Chebyshev-Nyström++ estimate return
 \end{theorem}
 
 \begin{proof}
-Combining results derived above, we obtain that \color{black}
+Combining results derived above, we obtain that 
     \begin{align}
         &\int_{-1}^{1} \left| \phi_{\sigma}(t) - \widetilde{\underline{\phi}}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t \notag \\
         &\leq \int_{-1}^{1} \left| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \int_{-1}^{1} \left| \underline{\phi}_{\sigma}^{(m)}(t) - \widetilde{\underline{\phi}}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t &&  \notag \\
@@ -413,18 +415,30 @@ Combining results derived above, we obtain that \color{black}
         &\leq (1 + \widetilde{\varepsilon}) \int_{-1}^{1} \left| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \widetilde{\varepsilon} \int_{-1}^{1} \left| \phi_{\sigma}(t) \right|~\mathrm{d}t &&  \notag \\
         &\leq (1 + \widetilde{\varepsilon}) \underline{E}_{\sigma, m} + \widetilde{\varepsilon}. && \text{(\reflem{lem:non-negative-chebyshev-error})} \notag 
     \end{align}
-    From \reflem{lem:non-negative-chebyshev-error} and the discussion after \reflem{lem:chebyshev-error} we see that the choice $m = \mathcal{O}((\log(\widetilde{\varepsilon}^{-1}) + \log(\sigma^{-1})) / \log(\sigma + 1))$ ensures $\underline{E}_{\sigma, m} \leq \widetilde{\varepsilon}$, and thus, if $\widetilde{\varepsilon} \leq 1$,
-    \begin{equation}
-        \int_{-1}^{1} \left| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t \leq (1+\widetilde{\varepsilon}) \widetilde{\varepsilon} + \widetilde{\varepsilon} \leq 3 \widetilde{\varepsilon}
-    \end{equation}
-    from which the result follows by identifying $\varepsilon = 3 \widetilde{\varepsilon}$.
+    From \reflem{lem:non-negative-chebyshev-error} and the discussion after \reflem{lem:chebyshev-error} we see that the choice $m = \mathcal{O}((\log(\widetilde{\varepsilon}^{-1}) + \log(\sigma^{-1})) / \log(\sigma + 1))$ ensures $\underline{E}_{\sigma, m} \leq \widetilde{\varepsilon}$, and thus
+    the result follows by setting $\varepsilon = 3 \widetilde{\varepsilon}$.
+%    if $\widetilde{\varepsilon} \leq 1$,
+%    \begin{equation}
+%        \int_{-1}^{1} \left| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t \leq (1+\widetilde{\varepsilon}) \widetilde{\varepsilon} + \widetilde{\varepsilon} \leq 3 \widetilde{\varepsilon}
+%    \end{equation}
+%    from which the result follows by identifying $\varepsilon = 3 \widetilde{\varepsilon}$.
 \end{proof}
 
 %\todo{Maybe specialize \refthm{thm:nystrom} to spectral densities?}
 
 %We now discuss what value to choose for $n_{\mtx{\Omega}}$ in the Nyström trace estimator introduced in \refsec{subsec:nystrom}. In order to guarantee an even better approximation error based on \refthm{thm:nystrom}, we analyze the numerical rank of the matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$.
 
-In practice, the approximation error is often significantly better than guaranteed in \refthm{thm:chebyshev-nystrom}, particularly when $n_{\mtx{\Omega}}$ is chosen rather large. The reason is that for small $\sigma$ the singular values of the matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ decay so quickly that already the Nyström approximation alone is highly accurate (cf. \refthm{thm:nystrom}). To establish a relation between the singular value decay of $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ and what choice of $n_{\mtx{\Omega}}$ is needed for a significantly better approximation than ensured by \refthm{thm:chebyshev-nystrom}, we study the numerical rank of $g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n$.\footnote{The factor $1/n$
+\color{black}
+In practice, the $\varepsilon^{-1}$ complexity of $n_{\mtx{\Omega}}$, $n_{\mtx{\Psi}}$ in \refthm{thm:chebyshev-nystrom} is often pessimistic.
+\textcolor{red}{Make briefer:
+\begin{itemize}
+ \item Quick decay of eigenvalues makes Nyström alone look good.
+ \item State singular values.
+ \item Explain as quickly as possible how you arrive at estimate of numerical rank for a roughly uniform distribution. w.l.o.g. eigenvalue $t$ around zero $\leadsto$ roughly distribution count number of eigenvalues $\approx \pm i/n$ needed for numerical rank $\epsilon$.
+ \item try to reduce notation
+\end{itemize}
+}
+In particular, for small $\sigma$ the singular values of the matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ decay so quickly that the Nyström approximation alone is highly accurate (cf. \refthm{thm:nystrom}). To establish a relation between the singular value decay of $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ and what choice of $n_{\mtx{\Omega}}$ is needed for a significantly better approximation than ensured by \refthm{thm:chebyshev-nystrom}, we study the numerical rank of $g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n$.\footnote{The factor $1/n$
 does not change the conclusion, but is added to simplify the calculations and also reflects how we implement the method: We absorb the factor $1/n$ from the smoothed spectral density \refequ{equ:smooth-spectral-density} in the definition of $g_{\sigma}$, such that in reality, the Chebyshev approximation and the Nyström++ estimator are applied to $g_{\sigma}(t\mtx{I}_n - \mtx{A}) / n$.}
 
 We can express the numerical rank of a matrix with respect to the nuclear norm in terms of its singular values $\sigma_1 \geq \dots \geq \sigma_n \geq 0$ as

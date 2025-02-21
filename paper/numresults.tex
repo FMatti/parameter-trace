@@ -6,12 +6,17 @@
 
 In this last section, we test our algorithm in multiple scenarios. First, we numerically confirm our theoretical convergence bounds by approximating the spectral density of a Hamiltonian arising from electronic structure interaction. Subsequently, we compare our method to the Krylov-aware stochastic trace estimator, once on the electronic structure example, and once for estimating the trace of a more general parameter-dependent matrix appearing in statistical thermodynamics. In the end, we demonstrate that our algorithm can also be used to monitor the optimization process of a neural network.
 
-All our implementations are written from scratch in Python 3.12.3 using the packages NumPy 2.0.0 and SciPy 1.14.1. They are executed on a single thread of a GitHub-hosted Ubuntu runner with a 64-bit processor and 16 GB of RAM.
+All our implementations are written in Python 3.12.3 using the packages NumPy 2.0.0 and SciPy 1.14.1. They are executed on a single thread of a GitHub-hosted Ubuntu runner with a 64-bit processor and 16 GB of RAM. \textcolor{red}{??? Provide all parameter choices algorithmic choices common toa all experiments here. For example, the dismissal of non-negative approx ???}
+(evtl. unless otherwise mentioned 
+$n_t$ sampling points uniformly distributed.
+The error is calculcated with the composite midpoint rule using this sampling points.
+For transforming the interval to $[-1,1]$ exterior eigenvalues of $A$ are estimated using the Lanczos method (Python's ....).
+
 
 \subsection{Spectral density for Hamiltonian of electronic structure}
 \label{subsec:hamiltonian}
 
-Our first numerical example comes from electronic structure interaction \cite{lin-2017-randomized-estimation}, more precisely from the second order finite difference discretization of the Hamiltonian
+Our first numerical example comes from electronic structure interaction \textcolor{red}{??? Provide more specific reference ???} \cite{lin-2017-randomized-estimation}, more precisely from the second order finite difference discretization of the Hamiltonian
 \begin{equation}
     \mathcal{H} = - \Delta + V
     \label{equ:5-experiments-electronic-hamiltonian}
@@ -21,7 +26,7 @@ in three dimensions. The potential $V$ interacting with the electrons is generat
     v(r) = v_0 e^{-\lambda r^2}
     \label{equ:5-experiments-gaussian-cell}
 \end{equation}
-with $v_0 = -4$ and $\lambda = 8$, centered in cells of side length $L=6$ which are stacked $n_c \in \mathbb{N}$ times in each spatial dimension (cf. \reffig{fig:gaussian-well}). The discretization step is fixed to be $h=0.6$. This is an idealized model for the interaction of nuclei on a regular grid with electrons for a $k$-vector in the center of the first Brillouin zone. The distribution of the eigenvalues of the Hamiltonian --- its spectral density --- allows us to interpret the system's energy levels.
+with $v_0 = -4$ and $\lambda = 8$, centered in cells of side length $L=6$ which are stacked $n_c \in \mathbb{N}$ times in each spatial dimension (cf. \reffig{fig:gaussian-well}). The grid width is fixed to be $h=0.6$. For example, for $n_c = 1$, this leads to a matrix of size \textcolor{red}{??? ???}. This is an idealized model for the interaction of nuclei on a regular grid with electrons for a $k$-vector in the center of the first Brillouin zone. The distribution of the eigenvalues of the Hamiltonian --- its spectral density --- allows us to interpret the system's energy levels.
 
 \begin{figure}[ht]
     \begin{subfigure}[b]{0.32\columnwidth}
@@ -43,7 +48,7 @@ with $v_0 = -4$ and $\lambda = 8$, centered in cells of side length $L=6$ which 
     \label{fig:gaussian-well}
 \end{figure}
 
-While theoretically an important tool, for the remainder of this section, we waive using the non-negative Chebyshev approximation, since the (slight) indefiniteness of $g_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})$ \refequ{equ:matrix-approximation} does not seem to matter when computing the Nyström++ estimator in finite precision arithmetic. We approximate the integrals for computing the $L^1$-errors in \refsec{sec:analysis} using a midpoint quadrature with $n_t \in \mathbb{N}$ nodes. For a fixed total number of random vectors $n_{\mtx{\Psi}} + n_{\mtx{\Omega}}$, we analyze the convergence behavior of the Chebyshev-Nyström++ method when run on the $1000 \times 1000$ matrix resulting from the finite difference discretization of the Hamiltonian for $n_c = 1$ described above (see \reffig{fig:convergence}). 
+While theoretically an important tool, for the remainder of this section, we waive using the non-negative Chebyshev approximation, since the (slight) indefiniteness of $g_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})$ \refequ{equ:matrix-approximation} does not seem to matter when computing the Nyström++ estimator in finite precision arithmetic. We approximate the integrals for computing the $L^1$-errors in \refsec{sec:analysis} using composite midpoint quadrature with $n_t \in \mathbb{N}$ uniformly distributed nodes. For a fixed total number of random vectors $n_{\mtx{\Psi}} + n_{\mtx{\Omega}}$, we analyze the convergence behavior of the Chebyshev-Nyström++ method when run on the $1000 \times 1000$ matrix resulting from the finite difference discretization of the Hamiltonian for $n_c = 1$ described above (see \reffig{fig:convergence}). 
 
 \begin{figure}[!htpb]
     \centering
@@ -68,7 +73,7 @@ For a fixed budget of random vectors $n_{\mtx{\Omega}} + n_{\mtx{\Psi}}$, \reffi
 
 The Krylov-aware stochastic trace estimation \cite{chen-2023-krylovaware-stochastic} is also well suited for approximating the trace of a matrix function $f(\mtx{A}, t)$ which separately depends on a parameter $t$. It also samples two Gaussian random matrices $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ and $\mtx{\Psi} \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$. $\mtx{\Omega}$ is used to extract a low-rank approximation to $f(\mtx{A}, t)$ from a block-Krylov subspace of $\mtx{A}$ generated from $r$ iterations of the block-Lanczos method with reorthogonalization and subsequently $q$ without. $\mtx{\Psi}$ is then used to estimate the trace of the approximation residual with $r$ iterations of the Lanczos method.
 
-We run an optimized implementation of the Krylov-aware stochastic trace estimator \cite[Algorithm 3.1]{chen-2023-krylovaware-stochastic} in multiple configurations on the example from \refsec{subsec:hamiltonian} and plot the approximation errors for logarithmically spaced values of the smoothing parameter $\sigma$ in \reffig{fig:krylov-aware-density}. For reference, we add the error of the Chebyshev-Nyström++ method on parameters which lead to a comparable run-time.
+We run our own, faithfully optimized implementation of the Krylov-aware stochastic trace estimator \cite[Algorithm 3.1]{chen-2023-krylovaware-stochastic} in multiple configurations on the example from \refsec{subsec:hamiltonian} and plot the approximation errors for logarithmically spaced values of the smoothing parameter $\sigma$ in \reffig{fig:krylov-aware-density}. For reference, we add the error of the Chebyshev-Nyström++ method on parameters which lead to a comparable run-time.
 
 \begin{figure}[ht]
     \begin{minipage}[c]{.475\linewidth}
