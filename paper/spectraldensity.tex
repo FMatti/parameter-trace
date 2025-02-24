@@ -390,10 +390,9 @@ estimate $\Trace(\mtx{K}_1(t)) / n_{\mtx{\Omega}}$ of the nuclear norm. If this 
 \subsubsection{Analysis}
 \label{subsubsec:chebyshev-nystrom-analysis}
 
-\color{blue}
 
 In this section, we analyze the accuracy of Chebyshev-Nyström++ estimate returned by~\refalg{alg:nystrom-chebyshev-pp}. 
-\begin{theorem}{Error of Chebyshev-Nyström++ estimate}{chebyshev-nystrom}
+\begin{theorem}{Error of Chebyshev-Nyström++ estimate for smoothed spectral density estimation}{chebyshev-nystrom}
     For a smoothing parameter $\sigma > 0$, let $\phi_{\sigma}$ be the smoothed spectral density~\refequ{equ:smooth-spectral-density} of a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ with spectrum contained in $[-1, 1]$. Consider $\varepsilon \in (0, 3)$ and $\delta \in (0, 2 e^{-1})$.
     Then the Chebyshev-Nyström++ estimate $\widetilde{\underline{\phi}}_{\sigma}^{(m)}$ 
     satisfies the error bound
@@ -428,20 +427,19 @@ Combining results derived above, we obtain that
 
 %We now discuss what value to choose for $n_{\mtx{\Omega}}$ in the Nyström trace estimator introduced in \refsec{subsec:nystrom}. In order to guarantee an even better approximation error based on \refthm{thm:nystrom}, we analyze the numerical rank of the matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$.
 
-\color{black}
-In practice, the $\varepsilon^{-1}$ complexity of $n_{\mtx{\Omega}}$ and $n_{\mtx{\Psi}}$ in \refthm{thm:chebyshev-nystrom} is often pessimistic. The reason is that \refthm{thm:nystrom-pp} does not take advantage of the low-rank structure of the matrix $\mtx{B}(t) = g_{\sigma}(t\mtx{I}_n - \mtx{A})$: The singular values of the matrix $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ are given by
+In practice, the $\varepsilon^{-1}$ complexity of $n_{\mtx{\Omega}}$ and $n_{\mtx{\Psi}}$ in \refthm{thm:chebyshev-nystrom} is often pessimistic, because  the underlying result of \refthm{thm:nystrom-pp} is agnostic to the low-rank structure of the matrix $\mtx{B}(t) = g_{\sigma}(t\mtx{I}_n - \mtx{A})$. The singular values of this matrix are given by
 \begin{equation}
-    \sigma_i(t) = g_{\sigma}(t - \lambda_{(i)}) = \frac{1}{\sqrt{2 \pi \sigma^2}} e^{-\sfrac{\left(t - \lambda_{(i)}\right)^2}{2 \sigma^2}},
+    \sigma_i(t) = g_{\sigma}(t - \lambda_{(i)}) = \frac{1}{\sigma\sqrt{2 \pi}} \exp\Big( -\frac{(t - \lambda_{(i)})^2}{2 \sigma^2} \Big),  
     \label{equ:gaussian-kernel-eigenvalues}
 \end{equation}
-where $\lambda_{(1)}, \dots, \lambda_{(n)}$ denote the eigenvalues of $\mtx{A}$ sorted by increasing distance from $t$, such that $\sigma_1(t) \geq \dots \geq \sigma_n(t)$. Clearly, the further away an eigenvalue $\lambda_{(i)}$ is from $t$, the (exponentially) smaller its associated singular value $\sigma_i(t)$ will be. Hence, all singular values $\sigma_i(t)$ corresponding to eigenvalues outside of a certain window $[t - d, t + d]$ around $t$, where $d$ is a number depending on $\sigma$ and $n$, will be negligibly small (see \reffig{fig:numerical-rank}).
+where $\lambda_{(1)}, \dots, \lambda_{(n)}$ denote the eigenvalues of $\mtx{A}$ sorted by increasing distance from $t$, such that $\sigma_1(t) \geq \dots \geq \sigma_n(t) \ge 0$. A distant eigenvalue $\lambda_{(i)}$ results in an exponentially small singular value $\sigma_i(t)$. In particular, for a small value of $\sigma$, all singular values corresponding to eigenvalues outside a certain window $[t - d, t + d]$ are negligibly small; see \reffig{fig:numerical-rank}).
 \begin{figure}[ht]
     \centering
     \input{figures/numerical-rank.tex}
     \caption{Singular values $\sigma_i$ of $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ corresponding to eigenvalues $\lambda_{(i)}$ of $\mtx{A}$ which lie further away from $t$ than a certain distance $d$ are negligibly small.}
     \label{fig:numerical-rank}
 \end{figure}
-If we choose $n_{\mtx{\Omega}}$ large enough such that the sum $\sum_{i=r+1}^{n} \sigma_i(t)$ which bounds the approximation error in \refthm{thm:nystrom} is negligibly small for all $t$, we achieve a much better approximation. In particular, if we assume the eigenvalues of $\mtx{A}$ to be uniformly distributed, a small calculation shows that $n_{\mtx{\Omega}} = \mathcal{O}(n \sigma)$ will ensure this.
+By choosing $n_{\mtx{\Omega}}$ such that the sum $\sum_{i=n_{\mtx{\Omega}}+5}^{n} \sigma_i(t)$ becomes negligibly small,  \refthm{thm:nystrom} implies an excellent approximation with high probability. In particular, if we assume the eigenvalues of $\mtx{A}$ to be roughly uniformly distributed, a small calculation shows that \textcolor{red}{??? The point of the start of this discussion was the dependence on $\epsilon$. Please verify this dependence; it is hopefully something like $\log\varepsilon^{-1}$ ???} $n_{\mtx{\Omega}} = \mathcal{O}(n \sigma)$ will ensure this.
 
 %\textcolor{red}{Make briefer:
 %\begin{itemize}
