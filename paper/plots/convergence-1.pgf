@@ -24,9 +24,9 @@
 %%   
 %%   \ifdefined\pdftexversion\else  % non-pdftex case.
 %%     \usepackage{fontspec}
-%%     \setmainfont{DejaVuSerif.ttf}[Path=\detokenize{/home/matti/Documents/.venv/lib/python3.12/site-packages/matplotlib/mpl-data/fonts/ttf/}]
-%%     \setsansfont{DejaVuSans.ttf}[Path=\detokenize{/home/matti/Documents/.venv/lib/python3.12/site-packages/matplotlib/mpl-data/fonts/ttf/}]
-%%     \setmonofont{DejaVuSansMono.ttf}[Path=\detokenize{/home/matti/Documents/.venv/lib/python3.12/site-packages/matplotlib/mpl-data/fonts/ttf/}]
+%%     \setmainfont{DejaVuSerif.ttf}[Path=\detokenize{/opt/hostedtoolcache/Python/3.12.3/x64/lib/python3.12/site-packages/matplotlib/mpl-data/fonts/ttf/}]
+%%     \setsansfont{DejaVuSans.ttf}[Path=\detokenize{/opt/hostedtoolcache/Python/3.12.3/x64/lib/python3.12/site-packages/matplotlib/mpl-data/fonts/ttf/}]
+%%     \setmonofont{DejaVuSansMono.ttf}[Path=\detokenize{/opt/hostedtoolcache/Python/3.12.3/x64/lib/python3.12/site-packages/matplotlib/mpl-data/fonts/ttf/}]
 %%   \fi
 %%   \makeatletter\@ifpackageloaded{underscore}{}{\usepackage[strings]{underscore}}\makeatother
 %%
@@ -925,7 +925,7 @@
 \pgfpathlineto{\pgfqpoint{1.896020in}{2.296988in}}%
 \pgfpathlineto{\pgfqpoint{2.258635in}{2.259955in}}%
 \pgfpathlineto{\pgfqpoint{2.625694in}{2.177820in}}%
-\pgfpathlineto{\pgfqpoint{2.991556in}{2.165764in}}%
+\pgfpathlineto{\pgfqpoint{2.991556in}{2.165765in}}%
 \pgfusepath{stroke}%
 \end{pgfscope}%
 \begin{pgfscope}%
@@ -978,7 +978,7 @@
 \pgfsys@useobject{currentmarker}{}%
 \end{pgfscope}%
 \begin{pgfscope}%
-\pgfsys@transformshift{2.991556in}{2.165764in}%
+\pgfsys@transformshift{2.991556in}{2.165765in}%
 \pgfsys@useobject{currentmarker}{}%
 \end{pgfscope}%
 \end{pgfscope}%
@@ -994,9 +994,9 @@
 \pgfpathmoveto{\pgfqpoint{0.777271in}{2.430579in}}%
 \pgfpathlineto{\pgfqpoint{1.145143in}{2.354202in}}%
 \pgfpathlineto{\pgfqpoint{1.526888in}{2.281084in}}%
-\pgfpathlineto{\pgfqpoint{1.896020in}{2.116234in}}%
+\pgfpathlineto{\pgfqpoint{1.896020in}{2.116235in}}%
 \pgfpathlineto{\pgfqpoint{2.258635in}{1.828599in}}%
-\pgfpathlineto{\pgfqpoint{2.625694in}{0.821349in}}%
+\pgfpathlineto{\pgfqpoint{2.625694in}{0.821378in}}%
 \pgfpathlineto{\pgfqpoint{2.991556in}{0.741573in}}%
 \pgfusepath{stroke}%
 \end{pgfscope}%
@@ -1033,7 +1033,7 @@
 \pgfsys@useobject{currentmarker}{}%
 \end{pgfscope}%
 \begin{pgfscope}%
-\pgfsys@transformshift{1.896020in}{2.116234in}%
+\pgfsys@transformshift{1.896020in}{2.116235in}%
 \pgfsys@useobject{currentmarker}{}%
 \end{pgfscope}%
 \begin{pgfscope}%
@@ -1041,7 +1041,7 @@
 \pgfsys@useobject{currentmarker}{}%
 \end{pgfscope}%
 \begin{pgfscope}%
-\pgfsys@transformshift{2.625694in}{0.821349in}%
+\pgfsys@transformshift{2.625694in}{0.821378in}%
 \pgfsys@useobject{currentmarker}{}%
 \end{pgfscope}%
 \begin{pgfscope}%
@@ -1062,9 +1062,9 @@
 \pgfpathlineto{\pgfqpoint{1.145143in}{2.612108in}}%
 \pgfpathlineto{\pgfqpoint{1.526888in}{2.507106in}}%
 \pgfpathlineto{\pgfqpoint{1.896020in}{2.275012in}}%
-\pgfpathlineto{\pgfqpoint{2.258635in}{1.153473in}}%
-\pgfpathlineto{\pgfqpoint{2.625694in}{1.026865in}}%
-\pgfpathlineto{\pgfqpoint{2.991556in}{0.992786in}}%
+\pgfpathlineto{\pgfqpoint{2.258635in}{1.153471in}}%
+\pgfpathlineto{\pgfqpoint{2.625694in}{1.026864in}}%
+\pgfpathlineto{\pgfqpoint{2.991556in}{0.992785in}}%
 \pgfusepath{stroke}%
 \end{pgfscope}%
 \begin{pgfscope}%
@@ -1104,15 +1104,15 @@
 \pgfsys@useobject{currentmarker}{}%
 \end{pgfscope}%
 \begin{pgfscope}%
-\pgfsys@transformshift{2.258635in}{1.153473in}%
+\pgfsys@transformshift{2.258635in}{1.153471in}%
 \pgfsys@useobject{currentmarker}{}%
 \end{pgfscope}%
 \begin{pgfscope}%
-\pgfsys@transformshift{2.625694in}{1.026865in}%
+\pgfsys@transformshift{2.625694in}{1.026864in}%
 \pgfsys@useobject{currentmarker}{}%
 \end{pgfscope}%
 \begin{pgfscope}%
-\pgfsys@transformshift{2.991556in}{0.992786in}%
+\pgfsys@transformshift{2.991556in}{0.992785in}%
 \pgfsys@useobject{currentmarker}{}%
 \end{pgfscope}%
 \end{pgfscope}%
@@ -1146,7 +1146,7 @@
 \pgfsetstrokeopacity{0.500000}%
 \pgfsetdash{{5.550000pt}{2.400000pt}}{0.000000pt}%
 \pgfpathmoveto{\pgfqpoint{0.777271in}{2.502500in}}%
-\pgfpathlineto{\pgfqpoint{1.145143in}{2.454933in}}%
+\pgfpathlineto{\pgfqpoint{1.145143in}{2.454934in}}%
 \pgfpathlineto{\pgfqpoint{1.526888in}{2.405574in}}%
 \pgfpathlineto{\pgfqpoint{1.896020in}{2.357845in}}%
 \pgfpathlineto{\pgfqpoint{2.258635in}{2.310959in}}%
