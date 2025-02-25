@@ -46,17 +46,17 @@ with $v_0 = -4$ and $\lambda = 8$, centered in cells of side length $L=6$ which 
     \label{fig:gaussian-well}
 \end{figure}
 
-\reffig{fig:convergence} displays the convergence behavior of Chebyshev-Nyström++ applied to the matrix resulting from the discretization of the Hamiltonian for $n_c = 1$ and $n_c = 2$. As a reference, we use the eigenvalues computed by NumPy's dense eigenvalue solver.
+\reffig{fig:convergence} displays the convergence behavior of Chebyshev-Nyström++ applied to the matrix $\mtx{A}$ resulting from the discretization of the Hamiltonian for $n_c = 1$ and $n_c = 2$. Unlike \cite{lin-2017-randomized-estimation}, where just a small portion of the spectral density is considered, we approximate the whole spectrum of $\mtx{A}$ (transformed to $[-1, 1]$) in accordance with our theoretical results (\refsec{subsubsec:chebyshev-nystrom-analysis}) and to demonstrate the effectiveness of our implementational particularities (\refsec{subsubsec:chebyshev-nystrom-implementation}). As a reference, we use the eigenvalues computed by NumPy's Hermitian eigenvalue solver.
 \begin{figure}[ht]
     \centering
     \begin{subfigure}[b]{0.495\textwidth}
         \input{plots/convergence-1.pgf}
-        \caption{$n_c = 1$}
+        \caption{$n_c = 1.$}
         \label{fig:convergence-1}
     \end{subfigure}
     \begin{subfigure}[b]{0.495\textwidth}
         \input{plots/convergence-2.pgf}
-        \caption{$n_c = 2$}
+        \caption{$n_c = 2.$}
         \label{fig:convergence-2}
     \end{subfigure}
     \caption{Error vs. number of random vectors $n_{\mtx{\Psi}} + n_{\mtx{\Omega}}$ (with fixed $\sigma=0.005$ and $m=2000$) when applying  Chebyshev-Nyström++ to the Hamiltonian matrix from~\refsec{subsec:hamiltonian}.}
@@ -68,7 +68,7 @@ with $v_0 = -4$ and $\lambda = 8$, centered in cells of side length $L=6$ which 
 %    \caption{Error vs. number of random vectors $n_{\mtx{\Psi}} + n_{\mtx{\Omega}}$ (with fixed $\sigma=0.005$ and $m=2000$) when applying  Chebyshev-Nyström++ to the Hamiltonian matrix from~\refsec{subsec:hamiltonian} with $n_c = 1$.}
 %    \label{fig:convergence}
 %\end{figure}%
-As expected from \refthm{thm:hutchinson}, Girard-Hutchinson alone ($n_{\mtx{\Omega}} = 0$) require $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2})$ samples to achieve an error of order $\varepsilon$. Because the eigenvalues of the matrix are spread out, we observe the better convergence of the Nyström approximation discussed at the end of \refsec{sec:application} once $n_{\mtx{\Omega}}$ is sufficiently large. We can observe the errors stagnate at around $10^{-6}$ as a consequence of the error made in the Chebyshev approximation.
+As expected from \refthm{thm:hutchinson}, Girard-Hutchinson alone ($n_{\mtx{\Omega}} = 0$) requires $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2})$ samples to achieve an error of order $\varepsilon$. Because the eigenvalues of the matrix are spread out, we observe the better convergence of the Nyström approximation discussed at the end of \refsec{sec:application} once $n_{\mtx{\Omega}}$ is sufficiently large. At this point, we can observe the errors stagnate at around $10^{-6}$ as a consequence of the error made in the Chebyshev approximation. Due to the higher eigenvalue density of $\mtx{A}$ for $n_c = 2$, the stronger convergence can be observed to kick in later in this case, because a larger $n_{\mtx{\Omega}}$ is needed for a good Nyström approximation. In fact, for $n_c = 5$ the eigenvalue density is so high that to profit from this effect, $n_{\mtx{\Omega}}$ would need to be chosen so large that the computations become unfeasible.
 
 %\begin{figure}[ht]
 %    \centering
