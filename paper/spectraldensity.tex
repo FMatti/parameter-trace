@@ -432,7 +432,7 @@ In practice, the $\mathcal{O}(\varepsilon^{-1})$ complexity of $n_{\mtx{\Omega}}
     \sigma_i(t) = g_{\sigma}(t - \lambda_{(i)}) = \frac{1}{\sigma\sqrt{2 \pi}} \exp\Big( -\frac{(t - \lambda_{(i)})^2}{2 \sigma^2} \Big),  
     \label{equ:gaussian-kernel-eigenvalues}
 \end{equation*}
-where $\lambda_{(1)}, \dots, \lambda_{(n)}$ denote the eigenvalues of $\mtx{A}$ sorted by increasing distance from $t$, such that $\sigma_1(t) \geq \dots \geq \sigma_n(t) \ge 0$. An eigenvalue $\lambda_{(i)}$ \textcolor{blue}{distant from $t$} results in an exponentially small singular value $\sigma_i(t)$. In particular, for a small value of $\sigma$, all singular values corresponding to eigenvalues outside a certain window $[t - d, t + d]$ are negligibly small; see \reffig{fig:numerical-rank}.
+where $\lambda_{(1)}, \dots, \lambda_{(n)}$ denote the eigenvalues of $\mtx{A}$ sorted by increasing distance from $t$, such that $\sigma_1(t) \geq \dots \geq \sigma_n(t) \ge 0$. An eigenvalue $\lambda_{(i)}$ distant from $t$ results in an exponentially small singular value $\sigma_i(t)$. In particular, for a small value of $\sigma$, all singular values corresponding to eigenvalues outside a certain window $[t - d, t + d]$ are negligibly small; see \reffig{fig:numerical-rank}.
 \begin{figure}[ht]
     \centering
     \input{figures/numerical-rank.tex}

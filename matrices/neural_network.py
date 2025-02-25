@@ -158,10 +158,6 @@ def hessian_transpose_product(gradient, params, x):
     -------
     htp : torch.Tensor
         The result of the product of the Hessian transposed with x.
-
-    References
-    ----------
-    [1] TODO
     """
     htp = torch.autograd.grad(gradient, params, x.T, retain_graph=True, is_grads_batched=x.ndim > 1)
     htp = torch.cat([e.reshape(x.shape[-1], -1) for e in htp], dim=1)
@@ -211,10 +207,6 @@ class hessian(object):
         -------
         spectral_norm : float
             Approximation of spectral norm.
-
-        References
-        ----------
-        [2] TODO
         """
         x = torch.randn(self.num_parameters)
         Q, T = lanczos(self, x, k, dtype=np.float64)

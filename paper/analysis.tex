@@ -72,7 +72,7 @@ The combination suggested in~\cite{lin-2017-randomized-estimation} applies Girar
 where $\mtx{\Psi} \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$, $\mtx{\Omega} \in \mathbb{R}^{n \times n_{\mtx{\Omega}}}$ are independent Gaussian random matrices. 
 %\textcolor{red}{??? What about XTrace? Does it apply; should we mention it somewhere? ???}
 
-For constant $\mtx{\Omega}$ \textcolor{blue}{Shoud it be constant $B$?}, the estimator~\refequ{equ:nystrompp-trace-estimator} coincides with the Nyström++ estimator from~\cite{persson-2022-improved-variants}, which is based on the Hutch++ estimator~\cite{meyer-2021-hutch-optimal}. In this situation (constant $\mtx{B}$), these estimators were both shown to achieve a relative $\varepsilon$-error with $\mathcal{O}(\varepsilon^{-1})$ matrix-vector products only, independent of the singular value decay of $\mtx{B}$.
+For constant $\mtx{B}$, the estimator~\refequ{equ:nystrompp-trace-estimator} coincides with the Nyström++ estimator from~\cite{persson-2022-improved-variants}, which is based on the Hutch++ estimator~\cite{meyer-2021-hutch-optimal}. In this situation (constant $\mtx{B}$), these estimators were both shown to achieve a relative $\varepsilon$-error with $\mathcal{O}(\varepsilon^{-1})$ matrix-vector products only, independent of the singular value decay of $\mtx{B}$.
 
 At this point, we acknowledge the existence of the XNysTrace estimator from \cite{epperly-2024-xtrace-making} which oftentimes outperforms the Nyström++ estimator. Moreover, a straight-forward extension of the XNysTrace estimator to the parameter-dependent setting seems to be in reach. However, what distinguishes \refalg{alg:nystrom-chebyshev-pp} for estimating spectral densities are two key observations --- using the cyclic invariance of the trace and the affine linear form of Chebyshev approximations (see \refsec{subsubsec:chebyshev-nystrom-implementation} for details) --- which it exploits to significantly speed up the computation. Unfortunately, we do not see a way of marrying these observations with the efficient implementation of XNysTrace described in \cite[Section 2.2]{epperly-2024-xtrace-making}, which limits its suitability for spectral density estimation.
 %We can interpret this estimator as an interpolation between the trace of the Nyström approximation and the Girard-Hutchinson estimator.
@@ -338,7 +338,7 @@ Using that $\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ is SPSD (see, e.g.,~\
         = \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _{\ast} \\
         & = \lVert (\mtx{I}_n - \mtx{\Pi}_{\mtx{B}(t)^{\sfrac{1}{2}} \mtx{\Omega}}) \mtx{B}(t)^{\sfrac{1}{2}} \rVert _F^2,
     \end{align*}
-    where $\lVert \cdot \rVert _{\ast}$ denotes the nuclear norm and we used \cite[Theorem 1]{gittens-2011-spectral-norm} in the \textcolor{blue}{second} equality. This allows us to apply \cite[Theorem 5]{kressner-2024-randomized-lowrank}, which immediately implies the statement claimed by the theorem.
+    where $\lVert \cdot \rVert _{\ast}$ denotes the nuclear norm and we used \cite[Theorem 1]{gittens-2011-spectral-norm} in the last equality. This allows us to apply \cite[Theorem 5]{kressner-2024-randomized-lowrank}, which immediately implies the statement claimed by the theorem.
 \end{proof}
 
 Compared to the constant case~\cite[Theorem 8.1]{tropp-2023-randomized-algorithms}, the bound of \refthm{thm:nystrom} features an additional factor $1+r$, which cannot be compensated with oversampling.

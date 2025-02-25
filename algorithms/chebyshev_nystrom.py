@@ -105,12 +105,15 @@ def chebyshev_nystrom(A, t=0, m=100, n_Psi=10, n_Omega=10, kernel=gaussian_kerne
         The threshold on the Hutchinson estimate of g_sigma. If it is below this
         value, instead of solving the possibly ill-conditioned generalized
         eigenvalue problem, we set the spectral density at that point to zero.
+    rcond : float > 0
+        The relative threshold (with respect to largest eigenvalue) for
+        setting small eigenvalues to zero for computing pseudoinverse by lstsq.
     seed : int >= 0
-        The seed for generating the random matrix W.
+        The seed for generating the random matrix Omega.
 
     Returns
     -------
-    phi : np.ndarray
+    phi : np.ndarray (n_t, )
         Approximations of the spectral density at the points t.
 
     """

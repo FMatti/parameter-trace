@@ -18,37 +18,37 @@ def lanczos(A, X, k, reorth_tol=0.7, return_matrix=True, extend_matrix=True, dty
 
         A @ U[:, :k] = U[:, :k+1] @ T
 
-    after k iterations of the Lanczos method.
+    after k iterations of the Lanczos method. Multiple starting vectors can be
+    passed as X = [x_1, x_2, ..., x_m].
 
     Parameters
     ----------
+    A : np.ndarray (n, n)
+        Symmetric matrix.
+    X : np.ndarray (n, ) or (n, m,^)
+        Collection of starting vectors.
+    k : int > 0
+        Number of iterations.
     reorth_tol : float < 1
         The tolerance for reorthogonalizing the Krylov basis between iterations.
     return_matrix : bool
         Whether to return the (full) tridiagonal matrix H or arrays of its
         diagonal and off-diagonal elements.
-    return_matrix : bool
+    extend_matrix : bool
         Whether to extend the orthogonal matrix U with one more column after
         the last iteration.
+    dtype : type or str
+        The datatype of the matrix, such that auxiliary arrays are the same.
 
     Returns
     -------
-    TODO:
+    U : np.ndarray (m, n, k + 1)
+        Orthogonal basis of the block Krylov subspace(s) K(A, X).
+    T or a, b : np.ndarray (m, k + 1, k + 1) or (m, k + 1), (m, k + 1)
+        The block tridiagonal matrix T or its tridiagonal blocks a, b.
 
-    Example
-    -------
-    TODO:
-    >>> import numpy as np
-    >>> from roughly.approximate.krylov import LanczosDecomposition
-    >>> decomposition = LanczosDecomposition()
-    >>> A = np.random.randn(100, 100)
-    >>> A = A + A.T
-    >>> X = np.random.randn(100)
-    >>> U, H = decomposition.compute(A, X, 10)
-    >>> np.testing.assert_allclose(A @ U[:, :10] - U @ H, 0, atol=1e-10)
-    >>> U, H = decomposition.refine(1)
-    >>> np.testing.assert_allclose(A @ U[:, :11] - U @ H, 0, atol=1e-10)
-
+    References
+    ----------
     [1] Lanczos, C. (1950). "An iteration method for the solution of the
         eigenvalue problem of linear differential and integral operators".
         Journal of Research of the National Bureau of Standards. 45 (4): 255–282.
@@ -113,45 +113,47 @@ def block_lanczos(A, X, k, reorth_steps=-1, return_matrix=True, extend_matrix=Tr
     """
     Implements the Krylov-decomposition of a Hermitian matrix or linear operator
     A with the block Lanczos method [2]. The decomposition consists of an
-    orthogonal matrix U and a Hermitian tridiagonal matrix H which satisfy
+    orthogonal matrix U and a Hermitian tridiagonal matrix T which satisfy
 
-        A @ U[:, :k] = U[:, :k+1] @ H
+        A @ U[:, :k * n_X] = U[:, :(k + 1) * n_X] @ T
 
     after k iterations of the Lanczos method.
 
     Parameters
     ----------
+    A : np.ndarray (n, n)
+        Symmetric matrix with eigenvalues between (-1, 1).
+    X : np.ndarray (n, m)
+        Starting block.
+    k : int > 0
+        Number of iterations.
+    reorth_steps : int <= k
+        The number of iterations in which to reorthogonalize. To always
+        reorthogonalize, use -1.
     return_matrix : bool
         Whether to return the (full) tridiagonal matrix H or arrays of its
         diagonal and off-diagonal elements.
-    return_matrix : bool
+    extend_matrix : bool
         Whether to extend the orthogonal matrix U with one more column after
         the last iteration.
-    reorth_steps : int
-        The number of iterations in which to reorthogonalize. To always
-        reorthogonalize, use -1.
+    dtype : type or str
+        The datatype of the matrix, such that auxiliary arrays are the same.
 
     Returns
     -------
-    TODO
-
-    Example
-    -------
-    TODO:
-    >>> import numpy as np
-    >>> from roughly.approximate.krylov import BlockLanczosDecomposition
-    >>> decomposition = BlockLanczosDecomposition()
-    >>> A = np.random.randn(100, 100)
-    >>> A = A + A.T
-    >>> X = np.random.randn(100, 2)
-    >>> U, H = decomposition.compute(A, X, 10)
-    >>> np.testing.assert_allclose(A @ U[:, :-2] - U @ H, 0, atol=1e-10)
-    >>> U, H = decomposition.refine(1)
-    >>> np.testing.assert_allclose(A @ U[:, :-2] - U @ H, 0, atol=1e-10)
-
+    U : np.ndarray (n, (k + 1) * m)
+        Orthogonal basis of the block Krylov subspace K(A, X).
+    T or a, b : np.ndarray ((k + 1) * m, (k + 1) * m)
+        The block tridiagonal matrix T or its tridiagonal blocks a, b.
+    
+    References
+    ----------
     [2] Montgomery, P. L. (1995). "A Block Lanczos Algorithm for Finding
         Dependencies over GF(2)". Lecture Notes in Computer Science. EUROCRYPT.
         Vol. 921. Springer-Verlag. pp. 106–120. doi:10.1007/3-540-49264-X_9.
+    [3] Chen T. and Hallman, E. (2023). "Krylov-Aware Stochastic Trace
+        Estimation". SIAM Journal on Matrix Analysis and Applications.
+        Vol. 44 (3). doi:10.1137/22M1494257.
     """
 
     # Pre-process the starting vector/matrix
@@ -159,7 +161,7 @@ def block_lanczos(A, X, k, reorth_steps=-1, return_matrix=True, extend_matrix=Tr
         X = X[:, np.newaxis]
     n, m = X.shape
 
-    # Determine the range of A in case it is not an array/matrix
+    # Determine datatype of A
     dtype = A.dtype if dtype is None else dtype
 
     # Initialize arrays for storing the block-tridiagonal elements
@@ -219,12 +221,40 @@ def block_lanczos(A, X, k, reorth_steps=-1, return_matrix=True, extend_matrix=Tr
 
 def krylov_aware(A, t=0, n_iter=10, n_reorth=5, n_Omega=10, n_Psi=10, f=gaussian_kernel):
     """
+    Krylov-aware stochastic trace estimator to approximate the trace of a 
+    (parametrized) matrix function Tr(f_t(A)).
+
+    Parameters
+    ----------
+    A : np.ndarray (n, n)
+        Symmetric matrix with eigenvalues between (-1, 1).
+    t : int, float, or np.ndarray (n_t)
+        Parameter values at which estimator is evaluated.
+    n_iter : int > 0
+        Number of block Lanczos and Lanczos iterations.
+    reorth_steps : int <= n_iter
+        The number of iterations of block Lanczos in which to reorthogonalize.
+        To always reorthogonalize, use -1.
+    n_Omega : int > 0
+        Size of sketching matrix in the block Lanczos low-rank approximation.
+    n_Psi : int > 0
+        Number of queries with Girard-Hutchinson estimator.
+    f : callable or None
+        Function of f(t, x) of a parameter t and scalar x: f_t(A) = f(t, A).
+        If None is specified, f is the identity.
+        
+    Returns
+    -------
+    trace : np.ndarray (n_t, )
+        The approximations of Tr(f_t(A)) at all values of the parameter t.
+    
     References
     ----------
     [3] Chen T. and Hallman, E. (2023). "Krylov-Aware Stochastic Trace
         Estimation". SIAM Journal on Matrix Analysis and Applications.
         Vol. 44 (3). doi:10.1137/22M1494257.
     """
+    # Compute block Lanczos low-rank approximation trace quadrature of A
     if n_Omega > 0:
         Omega = np.random.randn(A.shape[0], n_Omega)
         Q, T = block_lanczos(A, Omega, n_iter, extend_matrix=False, reorth_steps=n_reorth)
@@ -234,10 +264,12 @@ def krylov_aware(A, t=0, n_iter=10, n_reorth=5, n_Omega=10, n_Psi=10, f=gaussian
         nodes = []
         weights = []
 
+    # Transform the Girard-Hutchinson query-vectors
     Psi = np.random.randn(A.shape[0], n_Psi)
     if n_Omega > 0:
         Psi -= Q[:, :(n_reorth + 1) * n_Omega] @ (Q[:, :(n_reorth + 1) * n_Omega].T @ Psi)
 
+    # Approximate the Girard-Hutchinson estimator of the approximation residual
     _, a_rem, b_rem = lanczos(A, Psi, n_iter, extend_matrix=False, return_matrix=False, reorth_tol=0)
     for a, b in zip(a_rem, b_rem):
         nodes_, T_evec = sp.linalg.eigh_tridiagonal(a, b[1:-1])
@@ -245,9 +277,11 @@ def krylov_aware(A, t=0, n_iter=10, n_reorth=5, n_Omega=10, n_Psi=10, f=gaussian
         nodes = np.append(nodes, nodes_)
         weights = np.append(weights, weights_)
 
+    # Define the function f as the identity, if none is specified
     if f is None:
         fun = lambda t, x: x
     else:
         fun = lambda t, x: f(t, x)
 
+    # Evaluate the quadrature
     return fun(t, nodes) @ weights

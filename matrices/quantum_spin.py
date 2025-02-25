@@ -2,7 +2,15 @@ import numpy as np
 import scipy as sp
 
 def hamiltonian(N=20, s=0.5, h=0.3, J=1):
+    """
+    Implements Hamiltonian matrix of Heisenberg spin chain [1].
 
+    References
+    ----------
+    [1] Chen T. and Hallman, E. (2023). "Krylov-Aware Stochastic Trace
+        Estimation". SIAM Journal on Matrix Analysis and Applications.
+        Vol. 44 (3). doi:10.1137/22M1494257.
+    """
     M = int(2*s+1)
 
     Jz_T = h*np.ones(N)
@@ -54,7 +62,15 @@ def hamiltonian(N=20, s=0.5, h=0.3, J=1):
     return out.real
 
 def partition_function(beta, N, h, J, E_min):
-    
+    """
+    Analytic solution to partition function of Heisenber spin chain [1].
+
+    References
+    ----------
+    [1] Chen T. and Hallman, E. (2023). "Krylov-Aware Stochastic Trace
+        Estimation". SIAM Journal on Matrix Analysis and Applications.
+        Vol. 44 (3). doi:10.1137/22M1494257.
+    """
     beta = np.asarray(beta, dtype=np.float64)
 
     k = np.arange(1, N+1) * np.pi / (N + 1)
