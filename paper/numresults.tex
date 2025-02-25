@@ -3,7 +3,7 @@
 \label{sec:results}
 
 
-In this section, we verify the performance the Chebyshev-Nyström++ algorithm proposed in this paper in various application scenarios, from electronic structure interaction, statistical thermodynamics, and neural network optimization.
+In this section, we verify the performance \textcolor{blue}{of} the Chebyshev-Nyström++ algorithm proposed in this paper in various application scenarios, from electronic structure interaction, statistical thermodynamics, and neural network optimization.
 
 While theoretically an important tool, we have observed that the preservation of non-negativity discussed in Section~\ref{sec:preservnonneg} is not needed in practice. The (slight) indefiniteness of the standard Chebyshev approximation $g_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})$ from~\refequ{equ:matrix-approximation} does not seem to impede the reliability of the Nyström++ estimator. Unless otherwise stated, we transform the input matrices such that their eigenvalues are contained in $[-1, 1]$, by approximating their spectrum with NumPy's \textcolor{red}{Hessian ??? replace by sparse? ???} eigenvalue solver. We compute spectral densities at $n_t = 100$ uniformly distributed values of the parameter $t \in [-1, 1]$. The integral involved in computing the $L^1$-errors is approximated with the composite midpoint quadrature rule using the $n_t$ values of $t$ as nodes. Both parameters introduced at the end \refsec{subsubsec:chebyshev-nystrom-implementation},the eigenvalue truncation threshold and the parameter for detecting a vanishing spectral density, are fixed to $10^{-5}$.
 
