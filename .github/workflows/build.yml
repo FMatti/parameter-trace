@@ -31,11 +31,8 @@ jobs:
       - name: Set up TeX environment
         run: sudo apt-get update && sudo apt-get install texlive texlive-luatex texlive-publishers texlive-science texlive-fonts-extra texlive-bibtex-extra cm-super dvipng
 
-#      - name: Generate matrices
-#        run: python reproduce/generate_matrices.py
-
       - name: Generate plots and tables
-        run: python reproduce/generate_results.py
+        run: python reproduce/reproduce_results.py
 
       - name: Obtain commit hash and time
         run: |
@@ -45,7 +42,7 @@ jobs:
       - name: Generate paper
         run: |
           echo "The code for our numerical experiments can be found on \url{${{ github.server_url }}/${{ github.repository }}}. The figures and tables were generated from the commit \href{${{ github.server_url }}/${{ github.repository }}/tree/${{ env.sha_short }}}{${{ env.sha_short }}} on ${{ env.build_time }}." > "${{ env.PAPER_DIR }}/re-pro-badge.tex"
-          python reproduce/generate_paper.py
+          python reproduce/reproduce_paper.py
 
       - name: Upload paper as PDF artifact
         uses: actions/upload-artifact@v4
