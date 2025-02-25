@@ -2,10 +2,6 @@
 
 \usepackage{stylesheet}
 
-% to speed up compilation speed a bit while drafting
-\pdfcompresslevel=0
-\pdfobjcompresslevel=0
-
 \title{Stochastic trace estimation for parameter-dependent matrices applied to spectral density approximation}
 
 \author{Fabio Matti\thanks{Institute of Mathematics, EPFL, 1015 Lausanne, Switzerland. {\textbf{(\href{mailto:fabio.matti@epfl.ch}{fabio.matti}, \href{mailto:haoze.he@epfl.ch}{haoze.he}, \href{mailto:daniel.kressner@epfl.ch}{daniel.kressner}, \href{mailto:hysan.lam@epfl.ch}{hysan.lam})@epfl.ch}}.}
@@ -13,25 +9,9 @@
 \and Daniel Kressner\footnotemark[1]
 \and Hei Yin Lam\footnotemark[1]}
 
-
 \begin{document}
 
 \maketitle
-
-%\todo{
-%\begin{itemize}
-%    \item Unify index notation
-%    \item Double-check proofs
-%    \item Add all references
-%    \item Run numerical experiments 
-%    \item Write introduction, abstract, and discussion
-%    \item ArXiv HTML support (check if packages)
-%\end{itemize}
-%}
-
-%\todo{
-%    \tableofcontents
-%}
 
 \begin{abstract}
     Stochastic trace estimation is a well-established tool for approximating the trace of a large symmetric positive semi-definite matrix $\mtx{B}$. Several applications involve a matrix that depends continuously on a parameter $t \in [a,b]$, and require trace estimates of $\mtx{B}(t)$ for many different values of $t$. This is, for example, the case when approximating the spectral density of a matrix or computing partition functions of quantum systems. Approximating the trace separately for each matrix
@@ -42,17 +22,6 @@
     Chebyshev approximation applies to large-scale spectral density estimation and provide an analysis of the resulting method. This  improves various aspects of an existing stochastic estimator for spectral density estimation. Several numerical experiments for examples from electronic structure interaction, statistical thermodynamics, and neural network optimization illustrate and validate our findings.
 \end{abstract}
 
-%\textcolor{red}{TODO for Fabio:
-%\begin{itemize}
- %\item Has~\cite{bhattacharjee-2024-improved-spectral} been published?
- %\item Fix discussion end of Section 3.3.2
- %\item Please reread entire Section 4 and address various red points.
- %\item Please reread abstract.
- %\item Please reread last part of Section 2 (startin from new contributions) and fix red remark.
- %\item Please remove all unreferenced equation labels (using checkref) at the end.
- %\item Perform a spell check at the end.
-%\end{itemize}
-%}
 \input{intro.tex}
 \input{analysis.tex}
 \input{spectraldensity.tex}
