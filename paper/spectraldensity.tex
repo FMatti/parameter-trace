@@ -26,7 +26,7 @@ Choosing the smoothing parameter $\sigma$ results in the following trade off: A 
     \sup_{f \in \mathcal{S}} \int_{a}^{b} f(t) (\phi(t) - \phi_{\sigma}(t))~\mathrm{d}t,
     \label{equ:error-metric}
 \end{equation}
-where $\mathcal{S}$ represents an appropriately chosen space of test functions. Among others, the reference~\cite{lin-2016-approximating-spectral} uses $\mathcal{S} = \{ f: f(t) \equiv g_{\sigma}(t - s), s \in [a, b]\}$, \cite{chen-2021-analysis-stochastic} uses $\mathcal{S} = \{f : f(t) = \Theta(s - t), s \in [a, b] \}$ with the Heaviside step function $\Theta$, and \cite{braverman-2022-sublinear-time,bhattacharjee-2024-improved-spectral} use $\mathcal{S} = \{f : |f(t) - f(s)| \leq |t - s| \}$ for which the error \refequ{equ:error-metric} is equivalent to the Wasserstein-1 distance between $\phi$ and $\phi_{\sigma}$.
+where $\mathcal{S}$ represents an appropriately chosen space of test functions. Among others, the reference~\cite{lin-2016-approximating-spectral} uses $\mathcal{S} = \{ f: f(t) \equiv g_{\sigma}(t - s), s \in [a, b]\}$, \cite{chen-2021-analysis-stochastic} uses $\mathcal{S} = \{f : f(t) = \Theta(s - t), s \in [a, b] \}$ with the Heaviside step function $\Theta$, and \cite{braverman-2022-sublinear-time,bhattacharjee-2025-improved-spectral} use $\mathcal{S} = \{f : |f(t) - f(s)| \leq |t - s| \}$ for which the error \refequ{equ:error-metric} is equivalent to the Wasserstein-1 distance between $\phi$ and $\phi_{\sigma}$.
 When choosing 
 the last metric,
 assuming that the eigenvalues are somewhat uniformly distributed and $\sigma$ is rather small, a simple calculation allows one to conclude that the smoothing error \refequ{equ:error-metric} is of the order $\sigma$. Consequently, to ensure that the approximation deviates by at most a factor of $\varepsilon > 0$, one needs to choose $\sigma \approx \varepsilon$.
@@ -76,19 +76,19 @@ We now analyze the impact of the Chebyshev approximation of the Gaussian smoothi
 \begin{proof}
     The proof of this result is standard. % and follows the one given in the arXiv preprint of \cite[Theorem 2]{lin-2017-randomized-estimation}, but attains a slightly different dependence on $\sigma$. 
     Let $\mathcal{E}_{\chi} \subset \mathbb{C}$ denote the Bernstein ellipse  with foci $\{-1, +1\}$ and the sum of semi-axes equal to $\chi > 1$. By\cite[Theorem 8.2]{trefethen-2020-approximation-theory},
-    \begin{equation}
+    \begin{equation*}
         \sup_{s \in [-1, 1]} \big| g_{\sigma}(t - s) - g_{\sigma}^{(m)}(t - s) \big| \leq \frac{4}{\chi^m (\chi - 1)} \max_{z \in \mathcal{E}_{\chi}} |g_{\sigma}(t - z)|,
         \label{equ:bernstein-bound}
-    \end{equation}
+    \end{equation*}
     where used the analyticity of $g_{\sigma}(t- \cdot)$.
     For $z = x + \mathrm{i} y \in \mathcal{E}_{\chi}$, we have
-    \begin{equation}
+    \begin{equation*}
     | g_{\sigma}(t - z) | 
     = \frac{1}{\sigma \sqrt{2 \pi}} \big| e^{-\sfrac{(t - z)^2}{2\sigma^2}} \big|
     = \frac{1}{\sigma \sqrt{2 \pi}} e^{-\sfrac{(t - x)^2}{2\sigma^2}}e^{\sfrac{y^2}{2\sigma^2}}
     \le \frac{1}{\sigma \sqrt{2 \pi}} e^{\sfrac{(\chi - \chi^{-1})^2}{8 \sigma^2}},
     %\leq \frac{1}{n \sigma \sqrt{2 \pi}} \max_{x + iy \in \mathcal{E}_{\chi}} e^{\sfrac{y^2}{2\sigma^2}} 
-    \end{equation}
+    \end{equation*}
     where the last inequality uses 
     $e^{-\sfrac{(t - x)^2}{2\sigma^2}} \leq 1$ and $|y| \le (\chi - \chi^{-1}) / 2$.
     Choosing $\chi = 1 + \sigma$ and using $\chi - \chi^{-1} \leq 2\sigma$ completes the proof of~\refequ{equ:chebyshev-interpolation-sup-error-kernel}.
@@ -166,29 +166,29 @@ satisfies the following bound.
 \begin{lemma}{$L^1$-error of non-negative approximate smooth spectral density}{non-negative-chebyshev-error}
 Let $\phi_{\sigma}$ be the smoothed spectral density defined in~\refequ{equ:smooth-spectral-density}
 for a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ with spectrum contained in $[-1, 1]$. Then the approximation $\underline{\phi}_{\sigma}^{(m)}$ defined in~\refequ{equ:non-negative-expanded-density} satisfies
-    \begin{equation}
+    \begin{equation*}
         \int_{-1}^{1} \big| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \big|~\mathrm{d}t \leq 4 \sqrt{2} \left(1 + \sigma \sqrt{\pi} \cdot E_{\sqrt{2}\sigma, \sfrac{m}{2}}\right) E_{\sqrt{2}\sigma, \sfrac{m}{2}} =: \underline{E}_{\sigma, m}
         \label{equ:chebyshev-interpolation-sup-error-kernel-nonneg}
         %\lVert  \phi_{\sigma} - \phi_{\sigma}^{(m)} \rVert _1 &\leq \frac{2\sqrt{2}}{\sigma^2} (1 + \sigma)^{-m}.
         %\label{equ:2-chebyshev-interpolation-error}
-    \end{equation}
+    \end{equation*}
     for every \emph{even} degree $m \in \mathbb{N}$, smoothing parameter $\sigma > 0$, and with $E_{\sigma, m}$ defined in \reflem{lem:chebyshev-error}.
 \end{lemma}
 \begin{proof}
     Using that the inequality $| a - b | \leq (2 \sqrt{a} + | \sqrt{a} - \sqrt{b} |)  | \sqrt{a} - \sqrt{b} |$ holds for any non-negative numbers $a, b$, it follows that
-    \begin{equation}
+    \begin{equation*}
         \big| g_{\sigma} - \underline{g}_{\sigma}^{(m)} \big| \leq \big( 2 \big| \sqrt{g_{\sigma}} \big| + \big| \sqrt{g_{\sigma}} - \sqrt{g_{\sigma}}^{(\sfrac{m}{2})} \big| \big) \big| \sqrt{g_{\sigma}} - \sqrt{g_{\sigma}}^{(\sfrac{m}{2})} \big|.
-    \end{equation}
+    \end{equation*}
     Because of $\sqrt{g_{\sigma}} = \sqrt{2 \sigma \sqrt{2 \pi}} \cdot g_{\sqrt{2}\sigma}$,
 we can apply \reflem{lem:chebyshev-error} with the substitutions
     $\sigma \gets \sqrt{2}\sigma$ and $m \gets m/2$ to bound 
     $\big| \sqrt{g_{\sigma}} - \sqrt{g_{\sigma}}^{(\sfrac{m}{2})} \big|$.
     Together with  $|\sqrt{g_{\sigma}}| \leq 1/\sqrt{\sigma \sqrt{2 \pi}}$, we get
-    \begin{align}
+    \begin{align*}
         \big| g_{\sigma}(t - s) - \underline{g}_{\sigma}^{(m)}(t - s) \big| \notag 
         &\leq \Big( 2 \frac{1}{\sqrt{ \sigma \sqrt{2\pi}}} + \sqrt{2 \sigma \sqrt{2 \pi}} \cdot E_{\sqrt{2}\sigma, \sfrac{m}{2}}\Big)\sqrt{2 \sigma \sqrt{2 \pi}} \cdot E_{\sqrt{2}\sigma, \sfrac{m}{2}} \notag \\
         &= 2\sqrt{2} \big(1 + \sigma \sqrt{\pi} \cdot E_{\sqrt{2}\sigma, \sfrac{m}{2}}\big) E_{\sqrt{2}\sigma, \sfrac{m}{2}}
-    \end{align}
+    \end{align*}
     for every $s,t \in [-1, 1]$.
     Bounding the integral as in~\refequ{equ:chebyshev-interpolation-spectral-density} then yields the desired result.
 \end{proof}
@@ -220,10 +220,10 @@ As the non-negative approximation~\refequ{equ:non-negative-chebyshev-approximati
 %\end{enumerate}
 %???
 It is well known that the coefficients of the Chebyshev approximation \refequ{equ:matrix-approximation} can --- in exact arithmetic --- be computed by inverting the (type I) discrete cosine transform (DCT)
-\begin{equation}
+\begin{equation*}
     g_{\sigma}(t - \cos(s_i)) = \sum_{l=0}^{m} \mu_l(t) \cos\left(\frac{\pi i l}{m} \right)
     \label{equ:discrete-cosine-transform}
-\end{equation}
+\end{equation*}
 between the approximation coefficients $\mu_l(t),~l=0,\dots,m$ and the function evaluations at the Chebyshev points $s_i = \cos(\pi i / m),~i=0,\dots,m$ \cite{baszenski-1997-fast-polynomial, plonka-2018-numerical-fourier, trefethen-2020-approximation-theory}. This can be accomplished in $\mathcal{O}(m \log(m))$ operations.%}
 
 A Chebyshev approximation can be squared in $\mathcal{O}(m \log(m))$ operations by using the DCT and its inverse \cite{baszenski-1997-fast-polynomial}; see \refalg{alg:chebyshev-squaring}. This allows one to efficiently compute the non-negative Chebyshev approximation \refequ{equ:non-negative-chebyshev-approximation}, and it will find further use in \refsec{subsec:chebyshev-nystrom}. 
@@ -284,19 +284,18 @@ Nyström approximation \refequ{equ:nystrom-approximation}:
 \end{equation}
 where we used the invariance of the trace under cyclic permutations.
 Inserting the Chebyshev approximation  $\mtx{B}(t) = \underline{g}_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})$ gives
-\begin{equation}
+\begin{equation*}
     \mtx{K}_1(t) = \mtx{\Omega}^{\top} \underline{g}_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A}) \mtx{\Omega} = \sum_{l=0}^{m} \underline{\mu}_l(t) (\mtx{\Omega}^{\top} T_l(\mtx{A}) \mtx{\Omega}).
-\end{equation}
+\end{equation*}
 Observing that $\mtx{\Omega}^{\top} T_l(\mtx{A}) \mtx{\Omega}$ is independent of $t$ allows us to precompute these (small) $n_{\mtx{\Omega}} \times n_{\mtx{\Omega}}$ matrices for $l=0, \dots, m$ using the Chebyshev recurrence \refequ{equ:chebyshev-recurrence}. For each value of $t$, we then only need to sum these matrices (multiplied by the corresponding coefficient $\underline{\mu}_l(t)$).
 
 The squaring of Chebyshev approximations discussed in \refsec{sec:preservnonneg} allows us to express $\mtx{B}(t)^2 = \underline{g}_{\sigma}^{(m)}(t \mtx{I}_n - \mtx{A})^2 = \sum_{l=0}^{2m} \underline{\nu}_l(t) T_l(\mtx{A})$, where the coefficients $\underline{\nu}_l(t)$ can be cheaply computed from $\underline{\mu}_l(t)$ using~\refalg{alg:chebyshev-squaring}. Hence, if we precompute
 $\mtx{\Omega}^{\top} T_l(\mtx{A}) \mtx{\Omega}$
 also for $l=m+1, \dots, 2m$, this allows us to evaluate $\mtx{K}_2(t)$ cheaply, in an analogous way to $\mtx{K}_1(t)$. Alternatively, \cite{lin-2017-randomized-estimation} proposes to instead approximate the squared smoothing kernel $g_{\sigma}^2$ in a separate "auxiliary" Chebyshev series truncated after term $2m$. While this direct approximation of $g_{\sigma}^2$ might be more accurate than our squaring approach, it is \emph{inconsistent} in the sense that numerically computing the truncated Chebyshev series of $g_{\sigma}^2$ gives --- in general --- not the same result as squaring the truncated Chebyshev series of $g_{\sigma}$. We have observed that meticulously ensuring consistency between the approximations of $g_{\sigma}$ and $g_{\sigma}^2$ makes a visible difference in terms of accuracy (cf. \reffig{fig:interpolation-issue}). This consistency will also allow us to derive bounds for the estimator \refequ{equ:chebyshev-nystrom-formula}.
-
 \begin{figure}[ht]
     \centering
     \input{plots/interpolation.pgf}
-    \caption{Accuracy when computing the estimate \refequ{equ:cyclic-property} in three different ways. \emph{Inconsistent}: Applying an auxiliary truncated Chebyshev series to $g_{\sigma}^2$, as proposed in~\cite{lin-2017-randomized-estimation}. \emph{Consistent}: Squaring the Chebyshev approximation $g_{\sigma}^{(m)}$ using \refalg{alg:chebyshev-squaring}. \emph{Non-negative consistent}: Squaring the non-negative Chebyshev approximation $\underline{g}_{\sigma}^{(m)}$ with~\refalg{alg:chebyshev-squaring}. As input matrix we use the $100 \times 100$ matrix $\mtx{A}$ coming from a two-dimensional finite difference discretization of the Hamiltonian defined in~\refequ{equ:5-experiments-electronic-hamiltonian} on a $10 \times 10$ grid. We fix $n_{\mtx{\Omega}} = 80$ to make sure the low-rank approximation is accurate, set $\sigma = 0.005$, and compute the $L^1$ error from the approximation of the spectral density at $n_t = 100$ uniformly spaced values of $t$ in the interval $[-1, 1]$.}
+    \caption{Accuracy when computing the estimate \refequ{equ:cyclic-property} in three different ways. \emph{Inconsistent}: Applying an auxiliary truncated Chebyshev series to $g_{\sigma}^2$, as proposed in~\cite{lin-2017-randomized-estimation}. \emph{Consistent}: Squaring the Chebyshev approximation $g_{\sigma}^{(m)}$ using \refalg{alg:chebyshev-squaring}. \emph{Non-negative consistent}: Squaring the non-negative Chebyshev approximation $\underline{g}_{\sigma}^{(m)}$ with~\refalg{alg:chebyshev-squaring}. As input matrix we use the $100 \times 100$ matrix $\mtx{A}$ coming from a two-dimensional finite difference discretization of the Hamiltonian defined in~\refequ{equ:electronic-hamiltonian} on a $10 \times 10$ grid. We fix $n_{\mtx{\Omega}} = 80$ to make sure the low-rank approximation is accurate, set $\sigma = 0.005$, and compute the $L^1$ error from the approximation of the spectral density at $n_t = 100$ uniformly spaced values of $t$ in the interval $[-1, 1]$.}
     \label{fig:interpolation-issue}
 \end{figure}
 
@@ -381,7 +380,7 @@ estimate $\Trace(\mtx{K}_1(t)) / n_{\mtx{\Omega}}$ of the nuclear norm. If this 
 \begin{figure}[ht]
     \centering
     \input{plots/zerocheck.pgf}
-    \caption{The difference the non-zero check can make when approximating a spectral density using \refalg{alg:nystrom-chebyshev-pp}. As input matrix we use the $1000 \times 1000$ matrix $\mtx{A}$ coming from a three-dimensional finite difference discretization of the Hamiltonian defined in~\refequ{equ:5-experiments-electronic-hamiltonian} on a $10 \times 10$ grid. We ran the Chebyshev-Nyström++ method with and without estimating if the matrix function is zero before taking its pseudo-inverse. We let $m=2000$, $n_{\mtx{\Omega}}=80$, $n_{\mtx{\Psi}}=0$, and $\sigma = 0.004$. We compute the $L^1$ error from the approximation of the spectral density at $n_t = 100$ uniformly spaced values of $t$ in the interval $[-1, 1]$.}
+    \caption{The difference the non-zero check can make when approximating a spectral density using \refalg{alg:nystrom-chebyshev-pp}. As input matrix we use the $1000 \times 1000$ matrix $\mtx{A}$ coming from a three-dimensional finite difference discretization of the Hamiltonian defined in~\refequ{equ:electronic-hamiltonian} on a $10 \times 10$ grid. We ran the Chebyshev-Nyström++ method with and without estimating if the matrix function is zero before taking its pseudo-inverse. We let $m=2000$, $n_{\mtx{\Omega}}=80$, $n_{\mtx{\Psi}}=0$, and $\sigma = 0.004$. We compute the $L^1$ error from the approximation of the spectral density at $n_t = 100$ uniformly spaced values of $t$ in the interval $[-1, 1]$.}
     \label{fig:zerocheck}
 \end{figure}
 
@@ -392,28 +391,28 @@ estimate $\Trace(\mtx{K}_1(t)) / n_{\mtx{\Omega}}$ of the nuclear norm. If this 
 
 
 In this section, we analyze the accuracy of Chebyshev-Nyström++ estimate returned by~\refalg{alg:nystrom-chebyshev-pp}. 
-\begin{theorem}{Error of Chebyshev-Nyström++ estimate for smoothed spectral density estimation}{chebyshev-nystrom}
+\begin{theorem}{Error of Chebyshev-Nyström++ estimate for smoothed spectral density}{chebyshev-nystrom}
     For a smoothing parameter $\sigma > 0$, let $\phi_{\sigma}$ be the smoothed spectral density~\refequ{equ:smooth-spectral-density} of a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ with spectrum contained in $[-1, 1]$. Consider $\varepsilon \in (0, 3)$ and $\delta \in (0, 2 e^{-1})$.
     Then the Chebyshev-Nyström++ estimate $\widetilde{\underline{\phi}}_{\sigma}^{(m)}$ 
     satisfies the error bound
-    \begin{equation}
+    \begin{equation*}
         \int_{-1}^{1} \left| \phi_{\sigma}(t) - \widetilde{\underline{\phi}}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t \leq \varepsilon
         \label{equ:chebyshev-nystrom-error}
         %\lVert  \phi_{\sigma} - \phi_{\sigma}^{(m)} \rVert _1 &\leq \frac{2\sqrt{2}}{\sigma^2} (1 + \sigma)^{-m}.
         %\label{equ:2-chebyshev-interpolation-error}
-    \end{equation}
+    \end{equation*}
     with probability at least $1 - \delta$ for $m = \mathcal{O}((\log(\varepsilon^{-1}) + \log(\sigma^{-1})) / \log(\sigma + 1))$  and $n_{\mtx{\Omega}} = n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-1}\log(\delta^{-1}))$.
 \end{theorem}
 
 \begin{proof}
 Combining results derived above, we obtain that 
-    \begin{align}
+    \begin{align*}
         &\int_{-1}^{1} \left| \phi_{\sigma}(t) - \widetilde{\underline{\phi}}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t \notag \\
         &\leq \int_{-1}^{1} \left| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \int_{-1}^{1} \left| \underline{\phi}_{\sigma}^{(m)}(t) - \widetilde{\underline{\phi}}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t &&  \notag \\
         &\leq \int_{-1}^{1} \left| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \widetilde{\varepsilon} \int_{-1}^{1} \left| \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t && \text{(\refthm{thm:nystrom-pp} w.p. $\geq 1 - \delta$)} \notag \\
         &\leq (1 + \widetilde{\varepsilon}) \int_{-1}^{1} \left| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \widetilde{\varepsilon} \int_{-1}^{1} \left| \phi_{\sigma}(t) \right|~\mathrm{d}t &&  \notag \\
         &\leq (1 + \widetilde{\varepsilon}) \underline{E}_{\sigma, m} + \widetilde{\varepsilon}. && \text{(\reflem{lem:non-negative-chebyshev-error})} \notag 
-    \end{align}
+    \end{align*}
     From \reflem{lem:non-negative-chebyshev-error} and the discussion after \reflem{lem:chebyshev-error} we see that the choice $m = \mathcal{O}((\log(\widetilde{\varepsilon}^{-1}) + \log(\sigma^{-1})) / \log(\sigma + 1))$ ensures $\underline{E}_{\sigma, m} \leq \widetilde{\varepsilon}$, and thus
     the result follows by setting $\varepsilon = 3 \widetilde{\varepsilon}$.
 %    if $\widetilde{\varepsilon} \leq 1$,
@@ -427,19 +426,19 @@ Combining results derived above, we obtain that
 
 %We now discuss what value to choose for $n_{\mtx{\Omega}}$ in the Nyström trace estimator introduced in \refsec{subsec:nystrom}. In order to guarantee an even better approximation error based on \refthm{thm:nystrom}, we analyze the numerical rank of the matrix function $g_{\sigma}(t\mtx{I}_n - \mtx{A})$.
 
-In practice, the $\varepsilon^{-1}$ complexity of $n_{\mtx{\Omega}}$ and $n_{\mtx{\Psi}}$ in \refthm{thm:chebyshev-nystrom} is often pessimistic, because  the underlying result of \refthm{thm:nystrom-pp} is agnostic to the low-rank structure of the matrix $\mtx{B}(t) = g_{\sigma}(t\mtx{I}_n - \mtx{A})$. The singular values of this matrix are given by
-\begin{equation}
+In practice, the $\mathcal{O}(\varepsilon^{-1})$ complexity of $n_{\mtx{\Omega}}$ and $n_{\mtx{\Psi}}$ in \refthm{thm:chebyshev-nystrom} is often pessimistic, because  the underlying result of \refthm{thm:nystrom-pp} is agnostic to the low-rank structure of the matrix $\mtx{B}(t) = g_{\sigma}(t\mtx{I}_n - \mtx{A})$. The singular values of this matrix are given by
+\begin{equation*}
     \sigma_i(t) = g_{\sigma}(t - \lambda_{(i)}) = \frac{1}{\sigma\sqrt{2 \pi}} \exp\Big( -\frac{(t - \lambda_{(i)})^2}{2 \sigma^2} \Big),  
     \label{equ:gaussian-kernel-eigenvalues}
-\end{equation}
-where $\lambda_{(1)}, \dots, \lambda_{(n)}$ denote the eigenvalues of $\mtx{A}$ sorted by increasing distance from $t$, such that $\sigma_1(t) \geq \dots \geq \sigma_n(t) \ge 0$. A distant eigenvalue $\lambda_{(i)}$ results in an exponentially small singular value $\sigma_i(t)$. In particular, for a small value of $\sigma$, all singular values corresponding to eigenvalues outside a certain window $[t - d, t + d]$ are negligibly small; see \reffig{fig:numerical-rank}).
+\end{equation*}
+where $\lambda_{(1)}, \dots, \lambda_{(n)}$ denote the eigenvalues of $\mtx{A}$ sorted by increasing distance from $t$, such that $\sigma_1(t) \geq \dots \geq \sigma_n(t) \ge 0$. A distant eigenvalue $\lambda_{(i)}$ results in an exponentially small singular value $\sigma_i(t)$. In particular, for a small value of $\sigma$, all singular values corresponding to eigenvalues outside a certain window $[t - d, t + d]$ are negligibly small; see \reffig{fig:numerical-rank}.
 \begin{figure}[ht]
     \centering
     \input{figures/numerical-rank.tex}
     \caption{Singular values $\sigma_i$ of $g_{\sigma}(t\mtx{I}_n - \mtx{A})$ corresponding to eigenvalues $\lambda_{(i)}$ of $\mtx{A}$ which lie further away from $t$ than a certain distance $d$ are negligibly small.}
     \label{fig:numerical-rank}
 \end{figure}
-By choosing $n_{\mtx{\Omega}}$ such that the sum $\sum_{i=n_{\mtx{\Omega}}+5}^{n} \sigma_i(t)$ becomes negligibly small,  \refthm{thm:nystrom} implies an excellent approximation with high probability. In particular, if we assume the eigenvalues of $\mtx{A}$ to be roughly uniformly distributed, a small calculation shows that \textcolor{red}{??? The point of the start of this discussion was the dependence on $\epsilon$. Please verify this dependence; it is hopefully something like $\log\varepsilon^{-1}$ ???} $n_{\mtx{\Omega}} = \mathcal{O}(n \sigma)$ will ensure this.
+By choosing $n_{\mtx{\Omega}}$ such that the sum $\sum_{i=n_{\mtx{\Omega}}+5}^{n} \sigma_i(t)$ becomes negligibly small,  \refthm{thm:nystrom} implies an excellent approximation with high probability. In particular, if we assume the eigenvalues of $\mtx{A}$ to be roughly uniformly distributed, a small calculation shows that $n_{\mtx{\Omega}} = \mathcal{O}(n \sigma \sqrt{\log(\varepsilon^{-1}) + \log(\sigma^{-1})})$ will ensure this.
 
 %\textcolor{red}{Make briefer:
 %\begin{itemize}

@@ -104,14 +104,14 @@ In this section, we derive bounds on the $L^1$-error (with respect to $t$) for e
 \label{subsec:hutchinson}
 
 We first derive an $L^1$-error bound for the Girard-Hutchinson estimator~\refequ{equ:hutchinson-trace-estimator} that is relative to the $L^1$-norms of the Frobenius and spectral norms of $\mtx{B}(t)$, defined by
-\[
+\begin{equation*}
  \|\mtx{B}(t)\|_{F,1} := \int_{a}^{b} \|\mtx{B}(t)\|_{F}~\mathrm{d}t, \quad  \|\mtx{B}(t)\|_{2,1} := \int_{a}^{b} \|\mtx{B}(t)\|_{2}~\mathrm{d}t.
-\]
+\end{equation*}
 
 
 %\begin{theorem}{Girard-Hutchinson estimator for parameter-dependent matrices}{hutchinson}
 %    For a symmetric matrix $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ that depends continuously on $t \in [a, b]$, consider the  Girard-Hutchinson estimator~\refequ{equ:hutchinson-trace-estimator} with an $n\times n_{\mtx{\Psi}}$ Gaussian random matrix $\mtx{\Psi}$. Then for any $p \geq 1, p \in \mathbb{R}$ and $\gamma \geq 1$ the bound 
-%    \begin{equation} \label{eq:ghbound}
+%    \begin{equation} \label{equ:girard-hutchinson-bound}
 %        \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq c \gamma \max\left\{ \sqrt{\frac{p}{n_{\mtx{\Psi}}}}, \frac{p}{n_{\mtx{\Psi}}}  \right\} \int_{a}^{b} \lVert \mtx{B}(t) \rVert _F~\mathrm{d}t.
 %    \end{equation}
 %    holds with probability at least $1 - \gamma^{-p}$.
@@ -120,10 +120,11 @@ We first derive an $L^1$-error bound for the Girard-Hutchinson estimator~\refequ
 %\end{theorem}
 
 \begin{theorem}{Girard-Hutchinson estimator for parameter-dependent matrices}{hutchinson}
-    For a symmetric matrix $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ that depends continuously on $t \in [a, b]$, consider the  Girard-Hutchinson estimator~\refequ{equ:hutchinson-trace-estimator} with an $n\times n_{\mtx{\Psi}}$ Gaussian random matrix $\mtx{\Psi}$. Then for any $p \geq 1$, $p \in \mathbb{R}$ and $\gamma \geq 1$, the following bound holds with probability at least $1 - \gamma^{-p}$:
-    \begin{equation} \label{eq:ghbound}
-        \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq 4 \gamma \Big( \sqrt{\frac{p}{n_{\mtx{\Psi}}}}  \|\mtx{B}(t)\|_{F,1} + \frac{2 p}{n_{\mtx{\Psi}}} \|\mtx{B}(t)\|_{2,1} \Big).
-    \end{equation}
+For a symmetric matrix $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ that depends continuously on $t \in [a, b]$, consider the  Girard-Hutchinson estimator~\refequ{equ:hutchinson-trace-estimator} with an $n\times n_{\mtx{\Psi}}$ Gaussian random matrix $\mtx{\Psi}$. Then for any $p \geq 1$, $p \in \mathbb{R}$ and $\gamma \geq 1$, the following bound holds with probability at least $1 - \gamma^{-p}$:
+\begin{equation}
+    \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq 4 \gamma \Big( \sqrt{\frac{p}{n_{\mtx{\Psi}}}}  \|\mtx{B}(t)\|_{F,1} + \frac{2 p}{n_{\mtx{\Psi}}} \|\mtx{B}(t)\|_{2,1} \Big).
+    \label{equ:girard-hutchinson-bound}
+\end{equation}
 In particular, given $\varepsilon \in (0, 1)$ and $\delta \in (0, e^{-1}]$, the bound $\int_{a}^{b} | \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) | ~\mathrm{d}t \leq \varepsilon \|\mtx{B}(t)\|_{F,1}$ holds 
     with probability at least $1-\delta$ if $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2} \log(\delta^{-1}))$.
 \end{theorem}
@@ -159,12 +160,12 @@ In particular, given $\varepsilon \in (0, 1)$ and $\delta \in (0, e^{-1}]$, the 
 %    \end{equation}
 
     To address the parameter-dependent case, we first note that the continuity assumption implies that $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))$ is measurable. Therefore, we can apply Minkowski's integral inequality~\cite[Theorem 202]{hardy-1952-inequalities} to conclude from the moment bound~\refequ{equ:moment-bound-hutchinson} that
-    \begin{align}
+    \begin{align*}
         \mathbb{E}^{p}\left[ \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t  \right]
         &\leq \int_{a}^{b} \mathbb{E}^{p}\left[ \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) \right]~\mathrm{d}t \notag \\
         &\leq 4 \sqrt{\frac{p}{n_{\mtx{\Psi}}}} \lVert \mtx{B}(t) \rVert_{F,1} + 8 \frac{p}{n_{\mtx{\Psi}}} \lVert \mtx{B}(t) \rVert_{2,1}.
-    \end{align}
-    This implies~\refequ{eq:ghbound} by Markov's inequality.
+    \end{align*}
+    This implies~\refequ{equ:girard-hutchinson-bound} by Markov's inequality.
 
     Bounding $\lVert \mtx{B}(t) \rVert _2 \leq \lVert \mtx{B}(t) \rVert _F$, setting $\gamma = e$, and choosing $p = \log(\delta^{-1}) \geq 1$, the second part of the theorem follows by taking,  e.g., $n_{\mtx{\Psi}} = \lceil (8 e)^2 \log(\delta^{-1}) \varepsilon^{-2} \rceil$.
 \end{proof}
@@ -283,7 +284,7 @@ is small when the singular values of $\mtx{B}(t)$ decay slowly for the majority 
 %            \vct{\psi}_{n_{\mtx{\Psi}}}
 %        \end{pmatrix},
 %    \end{equation}
-%    we note that $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) = r(\widetilde{\mtx{B}}(t), \widetilde{\vct{\psi}})$ and $\lVert \widetilde{\mtx{B}}(t) \rVert _F = \lVert \mtx{B}(t) \rVert _F / \sqrt{n_{\mtx{\Psi}}}$ hold. Thus, the claimed probabilistic bound~\refequ{eq:ghbound} follows from applying~\refequ{equ:hutchinson-trace-onequery-uniform} to $r(\widetilde{\mtx{B}}(t), \widetilde{\vct{\psi}})$.
+%    we note that $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) = r(\widetilde{\mtx{B}}(t), \widetilde{\vct{\psi}})$ and $\lVert \widetilde{\mtx{B}}(t) \rVert _F = \lVert \mtx{B}(t) \rVert _F / \sqrt{n_{\mtx{\Psi}}}$ hold. Thus, the claimed probabilistic bound~\refequ{equ:girard-hutchinson-bound} follows from applying~\refequ{equ:hutchinson-trace-onequery-uniform} to $r(\widetilde{\mtx{B}}(t), \widetilde{\vct{\psi}})$.
 %%     Then 
 %%     where $\vct{\psi}_1, \dots, \vct{\psi}_{n_{\mtx{\Psi}}} \in \mathbb{R}^{n}$ are independent Gaussian random vectors. Then $\lVert \widetilde{\mtx{B}}(t) \rVert _F = \lVert \mtx{B}(t) \rVert _F / \sqrt{n_{\mtx{\Psi}}}$, and
 %%     \begin{equation}
@@ -356,7 +357,7 @@ Our analysis mimicks the strategy from~\cite{meyer-2021-hutch-optimal}, by first
     Then, for any $\gamma \geq 1$, the bound
     \begin{equation}
         \int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \leq \gamma \frac{c}{\sqrt{n_{\mtx{\Omega}}}} \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t
-        \label{qu:nystrompp-theorem-bound}
+        \label{equ:nystrompp-theorem-bound}
     \end{equation}
         holds with probability at least $1 - \gamma^{-n_{\mtx{\Omega}} / 4}$ for 
         $c = 154$. In particular, given $\varepsilon > 0$ and $\delta \in (0, 1)$, the bound $\int_{a}^{b} \lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F~\mathrm{d}t \leq \varepsilon \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t$ holds with probability at least $1-\delta$ if $n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-2} + \log(\delta^{-1}))$.
@@ -406,20 +407,21 @@ its $q$th moment using the independence of $\mtx{\Omega}_1$ and $\mtx{\Omega}_2$
         \label{equ:nystrom-proof-processed-tail}
     \end{equation}
     To continue from here, we set $k = n_{\mtx{\Omega}}/2$ and $q = n_{\mtx{\Omega}}/4$. By the calculations after~\cite[Eqn~(B.7)]{tropp-2023-randomized-algorithms}, one has
-    \[
+    \begin{equation*}
      \mathbb{E}\left[ \big\| ( \mtx{\Omega}_1 \mtx{\Omega}_1^{\top} )^{-1} \big\|_2^{\sfrac{n_{\mtx{\Omega}}}{4}} \right]%  \notag \\
         \leq
         \left(1 + \frac{n_{\mtx{\Omega}}}{2}\right)
         \left( \frac{3}{4} n_{\mtx{\Omega}}\right)^{\sfrac{n_{\mtx{\Omega}}}{4}}
         \big( ( n_{\mtx{\Omega}} / 2 + 1)!\big)^{-\frac{n_{\mtx{\Omega}}}{2+n_{\mtx{\Omega}}}}.
-    \]
+    \end{equation*}
     Therefore,
-    \begin{equation} \label{equ:pinv-spectral-norm-bound}
+    \begin{equation}
       \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \big\| \mtx{\Omega}_1^{\dagger} \big\|_2^2 \right]
         = \mathbb{E}\left[ \big\| ( \mtx{\Omega}_1 \mtx{\Omega}_1^{\top} )^{-1} \big\|_2^{\sfrac{n_{\mtx{\Omega}}}{4}} \right]^{\sfrac{4}{n_{\mtx{\Omega}}}}
         \le \frac{3}{4}  
         \frac{e^4 n_{\mtx{\Omega}}}{(n_{\mtx{\Omega}} / 2+ 1)^2} \le 
         \frac{3}{4}  \frac{e^4}{n_{\mtx{\Omega}}},
+        \label{equ:pinv-spectral-norm-bound}
     \end{equation}
     where we used $(1 + m)^{\sfrac{1}{m}} \leq e$ and $(m!)^{-\sfrac{1}{m}} \leq e/m$. Note that, in contrast 
     to the result of~\cite[Lemma B.3]{tropp-2023-randomized-algorithms}, this inequality is valid for arbitrarily large $n_{\mtx{\Omega}}$, at the expense of a slightly larger constant.
@@ -440,11 +442,11 @@ its $q$th moment using the independence of $\mtx{\Omega}_1$ and $\mtx{\Omega}_2$
 %     As opposed to \cite[Lemma B.3]{tropp-2023-randomized-algorithms}, our bound holds for all even $n_{\mtx{\Omega}} \in \mathbb{N}$, at the cost of a factor of $e^2$.
 %
     The second factor in~\refequ{equ:nystrom-proof-processed-tail} is bounded using \reflem{lem:spectral-norm-moment} with $\mtx{A} = \mtx{\Lambda}_2^{\sfrac{1}{2}}$: % and $p = n_{\mtx{\Omega}}/2$:
-    \[
+    \begin{equation*}
         \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \big\| \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \big\|_2^2 \right]
         \leq \frac{5}{4} n_{\mtx{\Omega}} \Big( 2 \big\| \mtx{\Lambda}_2^{\sfrac{1}{2}} \big\|_2^2 + \frac{1}{n_{\mtx{\Omega}}} \big\| \mtx{\Lambda}_2^{\sfrac{1}{2}} \big\|_F^2 \Big).
       %  \label{equ:spectral-norm-bound-applied}
-    \]
+    \end{equation*}
     %The $q$-th moment of the second term can be processed with standard matrix norm manipulations and the stochastic independence of $\mtx{\Omega}_1$ and $\mtx{\Omega}_2$ to
     %\begin{equation}
     %    \mathbb{E}^{q}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2 \right]
@@ -475,11 +477,11 @@ its $q$th moment using the independence of $\mtx{\Omega}_1$ and $\mtx{\Omega}_2$
     %    \label{equ:pinv-spectral-norm-bound}
     %\end{equation}
     Inserting this inequality and~\refequ{equ:pinv-spectral-norm-bound} into~\refequ{equ:nystrom-proof-processed-tail} gives
-    \begin{equation}
+    \begin{equation*}
         \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2 \right]
         \leq \frac{15 e^4}{16}  \sqrt{n_{\mtx{\Omega}}} \Big( 2 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{1}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \Big).
         %\leq \sqrt{k} \frac{e^4}{2} \frac{(k + n_{\mtx{\Omega}})(2p + n_{\mtx{\Omega}})}{(n_{\mtx{\Omega}} - k + 1)^2}  \left( 3 \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 + \frac{1}{n_{\mtx{\Omega}}} \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 \right).
-    \end{equation}
+    \end{equation*}
     Bounding $\lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _2^2 = \lambda_{k+1}  \leq \Trace(\mtx{B})/k$ and $\lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \rVert _F^2 = \Trace(\mtx{\Lambda}_2) \le \Trace(\mtx{B})$ (recall that $k = n_{\mtx{\Omega}}/2$) yields
     \begin{equation}
         \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2 \right]
@@ -490,14 +492,15 @@ its $q$th moment using the independence of $\mtx{\Omega}_1$ and $\mtx{\Omega}_2$
     \end{equation}
     
     Inserting~\refequ{equ:nystrom-proof-tail-bound} along with \refequ{equ:nystrom-proof-frobenius-trace} in \refequ{equ:nystrom-proof-persson-bonud}, letting $c=154$, and using the triangle inequality for $\mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}[\cdot]$, we obtain
-    \begin{equation} \label{eq:blubber}
+    \begin{equation}
         \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}} \left[\lVert \mtx{B} - \Nystr{\mtx{\Omega}}{\mtx{B}} \rVert _F \right]
         \leq \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}} \left[ \lVert \mtx{\Lambda}_2 \rVert _F \right] + \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}} \left[ \lVert \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \rVert _{(4)}^2 \right]
         \leq \frac{c}{\sqrt{n_{\mtx{\Omega}}}} \Trace(\mtx{B}).
+        \label{equ:frobenius-moment-bound}
     \end{equation}
     As in \cite{kressner-2024-randomized-lowrank}, one can show that the error $\lVert \mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t) \rVert _F$ is measurable.
-    As in the proof of~\refthm{thm:hutchinson}, the claimed bound~\refequ{qu:nystrompp-theorem-bound}
-    follows from~\refequ{eq:blubber} using Minkowski's integral inequality and Markov's inequality.
+    As in the proof of~\refthm{thm:hutchinson}, the claimed bound~\refequ{equ:nystrompp-theorem-bound}
+    follows from~\refequ{equ:frobenius-moment-bound} using Minkowski's integral inequality and Markov's inequality.
 %     
 %     
 %         
@@ -534,10 +537,10 @@ Combining the bound on the Girard-Hutchinson estimator from~\refthm{thm:hutchins
     Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be SPSD and continuous for $t \in [a, b]$. Choose $\delta \in (0, 2e^{-1}]$ and $\varepsilon \in (0, 1)$.
     Then, for $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-1} \log(\delta^{-1}))$,
     the inequality 
-    \begin{equation}
+    \begin{equation*}
         \int_{a}^{b} | \Trace(\mtx{B}(t)) - \Nystrpp{\mtx{\Omega}}{\mtx{\Psi}}(\mtx{B}(t)) |~\mathrm{d}t
         \leq \varepsilon \int_{a}^{b} \Trace(\mtx{B}(t))~\mathrm{d}t
-    \end{equation}
+    \end{equation*}
     holds with probability at least $1 - \delta$.
 \end{theorem}
 \begin{proof}

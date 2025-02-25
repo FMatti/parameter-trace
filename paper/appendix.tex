@@ -53,10 +53,10 @@ It is well known that
 
 \begin{lemma}{Spectral norm moments of Gaussian random vector}{spectral-norm-moment-vector}
     Given $\mtx{A} \in \mathbb{R}^{m \times m}$ and a Gaussian random vector $\vct{\omega} \in \mathbb{R}^{m}$, the bound
-    \[
+    \begin{equation*}
         \mathbb{E}^{p}\big[ \lVert \mtx{A} \vct{\omega} \rVert _2^2 \big]
-        \leq  (k + p - 1) \Big( \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \Big).
-    \]
+        \leq  (k + p - 1) \Big( \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \Big).        
+    \end{equation*}
     %\begin{equation}
     %    \mathbb{E}^{p}\left[ \lVert \mtx{\Sigma} \mtx{\Omega}_2\rVert _2 \right]
     %    &\leq \sqrt{\frac{k + p}{2}} \cdot \left( 2 + \frac{1}{\sqrt{k}} \right) \cdot \lVert \mtx{\Sigma} \rVert _2 + \sqrt{\frac{k + p}{2k}} \cdot \lVert \mtx{\Sigma} \rVert _F. \notag \\
@@ -76,9 +76,9 @@ It is well known that
 \begin{proof}
 By the unitary invariance of Gaussian random vectors, we may assume w.l.o.g. that $\mtx{A} = \mtx{\Sigma} = \operatorname{diag}(\sigma_1, \dots, \sigma_m)$ with $\sigma_1 \geq \dots \geq \sigma_m \geq 0$.
 Following the proof of \cite[Theorem 1]{cohen-2016-optimal-approximate}, we split the singular values into $\ell = \lceil m/k \rceil$ groups of size $k$:
-    \begin{equation}
+    \begin{equation*}
         \overbrace{\underbrace{\sigma_1, \dots, \sigma_k}_{\leq \sigma_1}}^{\geq \sigma_{k+1}}, \overbrace{\underbrace{\sigma_{k+1}, \dots, \sigma_{2k}}_{\leq \sigma_{k+1}}}^{\geq \sigma_{2k+1}}, \dots, \overbrace{\underbrace{\sigma_{(\ell - 1)k + 1}, \dots, \sigma_{\ell k}}_{\leq \sigma_{(\ell - 1)k + 1}}}^{\geq 0}.
-    \end{equation}
+    \end{equation*}
     If $m$ is not a multiple of $k$, we set $\sigma_i = 0$ for $i > m$. Using that
     %Since $\sigma_1 \geq \dots \geq \sigma_{\ell k} \geq 0$,
     %\begin{equation}
@@ -117,10 +117,10 @@ Following the proof of \cite[Theorem 1]{cohen-2016-optimal-approximate}, we spli
 
 \begin{lemma}{Spectral norm moments of Gaussian random matrix}{spectral-norm-moment}
     Given $\mtx{A} \in \mathbb{R}^{m \times m}$ and a Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{m \times k}$, the bound
-    \begin{equation}
+    \begin{equation*}
         \mathbb{E}^{p}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]
         \leq  (k + p-1) \Big( 2 \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \Big).
-    \end{equation}
+    \end{equation*}
     holds for every $k \ge 2$, $k\in \mathbb{N}$, and $p \ge 1$, $p\in \mathbb R$.
     %\begin{equation}
     %    \mathbb{E}^{p}\left[ \lVert \mtx{\Sigma} \mtx{\Omega}_2\rVert _2 \right]
@@ -133,15 +133,15 @@ Following the proof of \cite[Theorem 1]{cohen-2016-optimal-approximate}, we spli
 \begin{proof}
     By the proof of \cite[Lemma B.1]{tropp-2023-randomized-algorithms}, we have that
     %it is shown that Slepian's inequality \cite[Theorem 7.2.1]{vershynin-2018-highdimensional-probability} applied to two appropriately constructed Gaussian random fields yields
-    \begin{equation}
+    \begin{equation*}
         \mathbb{E}^{p}\big[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \big]
         \leq \lVert \mtx{A} \rVert _2^2 \mathbb{E}^{p}\big[ \lVert \vct{\omega}_1 \rVert _2^2 \big] + \mathbb{E}^{p}\big[ \lVert \mtx{A} \vct{\omega}_2 \rVert _2^2 \big]
-    \end{equation}
+    \end{equation*}
     for Gaussian random vectors $\vct{\omega}_1 \in \mathbb{R}^{k}$ and $\vct{\omega}_2 \in \mathbb{R}^{m}$. The claimed result follows from applying \reflem{lem:gamma} and \reflem{lem:spectral-norm-moment-vector}:
-    \[
+    \begin{equation*}
         \mathbb{E}^{p}\big[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \big]
         \leq (k + p - 1) \lVert \mtx{A} \rVert _2^2  + (k + p - 1) \Big( \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \Big).
-    \]
+    \end{equation*}
     %The moments of $\lVert \mtx{\Omega}_1^{\dagger} \rVert _2$ can be bound with help of the proof of \cite[Lemma B.3]{tropp-2023-randomized-algorithms}
     %\begin{align}
     %    \mathbb{E}^{p}\left[ \lVert \mtx{\Omega}_1^{\dagger} \rVert _2 \right]
@@ -160,9 +160,9 @@ Following the proof of \cite[Theorem 1]{cohen-2016-optimal-approximate}, we spli
 
 
 In passing, we note that \reflem{lem:spectral-norm-moment}  yields the bound
-    \begin{equation}
+    \begin{equation*}
         \mathbb{E}^{p}\big[ \lVert \mtx{A} \mtx{\Omega} \rVert _2 \big] = \sqrt{\mathbb{E}^{\sfrac{p}{2}}\big[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \big]} \leq \sqrt{k + p/2-1} \cdot \Big(\sqrt{2} \lVert \mtx{A} \rVert _2 + \frac{1}{\sqrt{k}}\lVert \mtx{A} \rVert_F\Big)
-    \end{equation}
+    \end{equation*}
     with $k\ge 2, p\ge 2$. For $p = 2$, this nearly matches the corresponding bound from~\cite[Lemma B.1]{tropp-2023-randomized-algorithms}, except for the additional factor $\sqrt{2}$.
 
 %\section{Moment bound for simple trace estimator}
@@ -295,20 +295,20 @@ In passing, we note that \reflem{lem:spectral-norm-moment}  yields the bound
 \section{Moment bounds for sub-gamma random variables}
 
 A real centered random variable $X$ is called sub-gamma with parameters $(\nu,c)$ if its moment generating function satisfies
-\[
+\begin{equation*}
  \mathbb E[ \exp( tX ) ] \le \exp\left( \frac{ t^2 \nu}{2(1-c|t|)} \right) \ \text{for every} \ 0 < |t| < 1/c.
-\]
+\end{equation*}
 Any such $X$ satisfies the following tail bound~\cite[P. 29]{boucheron-2013-concentration-inequalities}:
 \begin{equation}
-  \label{equ:subgammatail}
   \mathbb P\big(|X| > \sqrt{2\nu t} + ct\big) \le 2 e^{-t} \ \text{for every} \ t>0.
+  \label{equ:subgammatail}
 \end{equation}
 
 \begin{lemma}{Moment bounds for sub-gamma random variables}{sub-gamma-moments}
     Let $X$ be a centered, $(\nu,c)$-sub-gamma random variable for $\nu,c>0$. Then
-    \begin{equation}
+    \begin{equation*}
         \mathbb{E}^p[X] \leq 2 \sqrt{2 \nu p} + 4 c p
-    \end{equation}
+    \end{equation*}
     holds for any $p \geq 1$, $p \in \mathbb{R}$.
 \end{lemma}
 \begin{proof}
@@ -327,9 +327,10 @@ we have that
  &= 2^{p} (2\nu)^{p/2} \Gamma(p/2+1) + 2^{p-1} (2c)^p  \Gamma(p+1).
 \end{align*}
 Using $(a+b)^{1/p} \le a^{1/p} + b^{1/p}$, we obtain
-\[
+
+\begin{equation*}
 \mathbb{E}^p[X] \leq 2 \sqrt{2\nu} \Gamma(p/2+1)^{1/p}  + 4 c \Gamma(p+1)^{1/p}.
-\]
+\end{equation*}
 Combined with $\Gamma(p/2+1)^{1/p} \le \sqrt{p}$ and $\Gamma(p+1)^{1/p} \le p$, this completes the proof.
 \end{proof}
 
