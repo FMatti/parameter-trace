@@ -1,26 +1,108 @@
-\documentclass[11pt]{article}
+% SIAM Article Template
+\documentclass[review,hidelinks,onefignum,onetabnum]{siamart250211}
 
-\usepackage{stylesheet}
+% Information that is shared between the article and the supplement
+% (title and author information, macros, packages, etc.) goes into
+% ex_shared.tex. If there is no supplement, this file can be included
+% directly.
 
-\title{Stochastic trace estimation for parameter-dependent matrices applied to spectral density approximation}
+\input{shared}
 
-\author{Fabio Matti\thanks{Institute of Mathematics, EPFL, 1015 Lausanne, Switzerland. {\textbf{(\href{mailto:fabio.matti@epfl.ch}{fabio.matti}, \href{mailto:haoze.he@epfl.ch}{haoze.he}, \href{mailto:daniel.kressner@epfl.ch}{daniel.kressner}, \href{mailto:hysan.lam@epfl.ch}{hysan.lam})@epfl.ch}}.}
-\and Haoze He\footnotemark[1]
-\and Daniel Kressner\footnotemark[1]
-\and Hei Yin Lam\footnotemark[1]}
+
+%%% FIGURES
+% Figures
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{subcaption}
+\usepackage{booktabs}
+
+%%% COLOR THEME
+
+% Color package
+\usepackage{xcolor}
+
+% Color definitions
+\definecolor{darkblue}{HTML}{2F455C}
+\definecolor{mainblue}{HTML}{0e437c}
+\definecolor{darkorange}{HTML}{F98125}
+\colorlet{lightblue}{darkblue!10!white}
+\colorlet{lightorange}{darkorange!10!white}
+\colorlet{linkcolor}{black}
+
+% Fix undefined contorl sequence issue with pyplot pgf exports
+\def\mathdefault#1{#1}
+
+% Custom commands
+\newcommand{\pp}{\text{\raisebox{0.3ex}{\relscale{0.9}++}}}
+\newcommand*\rfrac[2]{{}^{#1}\!/_{#2}}
+\newcommand{\mtx}[1]{\boldsymbol{#1}}
+\newcommand{\vct}[1]{\boldsymbol{#1}}
+
+% Trace estimator notations
+\DeclareMathOperator{\Trace}{Tr}
+\newcommand\Hutch[1]{\Trace_{#1}}
+\newcommand\Nystr[2]{\widehat{#2}_{#1}}
+\newcommand\Nystrpp[2]{\Trace_{#2, #1}}
+
+% Sideway fractions for simple exponents (e.g. 1/2)
+\newcommand\sfrac[2]{{}^{#1}{\mskip -5mu/\mskip -3mu}_{#2}}
+
+
+% Algorithms
+%\usepackage{algpseudocodex}
+
+
+%%% Theorem environments
+
+
+% Optional PDF information
+\ifpdf
+\hypersetup{
+  pdftitle={Trace estimation for parameter-dependent matrices},
+  pdfauthor={F. Matti, H. He, D. Kressner, H. Lam}
+}
+\fi
+
+% The next statement enables references to information in the
+% supplement. See the xr-hyperref package for details.
+
+\externaldocument[][nocite]{ex_supplement}
+
+% FundRef data to be entered by SIAM
+%<funding-group specific-use="FundRef">
+%<award-group>
+%<funding-source>
+%<named-content content-type="funder-name"> 
+%</named-content> 
+%<named-content content-type="funder-identifier"> 
+%</named-content>
+%</funding-source>
+%<award-id> </award-id>
+%</award-group>
+%</funding-group>
 
 \begin{document}
-
 \maketitle
 
+% REQUIRED
 \begin{abstract}
-    Stochastic trace estimation is a well-established tool for approximating the trace of a large symmetric matrix $\mtx{B}$. Several applications involve a matrix that depends continuously on a parameter $t \in [a,b]$, and require trace estimates of $\mtx{B}(t)$ for many values of $t$. This is, for example, the case when approximating the spectral density of a matrix. Approximating the trace separately for each matrix
-    $\mtx{B}(t_1), \dots, \mtx{B}(t_m)$ clearly incurs redundancies and a cost that scales linearly with $m$. To address this issue, we propose and analyze modifications for three stochastic trace estimators, the Girard-Hutchinson, Nyström, and Nyström++ estimators. Our modification uses \emph{constant} randomization across different values of $t$, that is,
-    every matrix $\mtx{B}(t_1), \dots, \mtx{B}(t_m)$ is multiplied with the \emph{same} set of random vectors.
-    When combined with Chebyshev approximation in $t$, the use of such constant random matrices allows one to reuse matrix-vector products across different values of $t$, leading to significant cost reduction.
-    Our analysis shows that the loss of stochastic independence across different $t$ does not lead to deterioration. In particular, we show that $\mathcal{O}(\varepsilon^{-1})$ random matrix-vector products suffice to ensure an error of $\varepsilon > 0$ for Nyström++, independent of low-rank properties of $\mtx{B}(t)$. We discuss in detail how the combination of Nyström++ with 
-    Chebyshev approximation applies to spectral density estimation and provide an analysis of the resulting method. This  improves various aspects of an existing stochastic estimator for spectral density estimation. Several numerical experiments from electronic structure interaction, statistical thermodynamics, and neural network optimization validate our findings.
+Stochastic trace estimation is a well-established tool for approximating the trace of a large symmetric matrix $\mtx{B}$. Several applications involve a matrix that depends continuously on a parameter $t \in [a,b]$, and require trace estimates of $\mtx{B}(t)$ for many values of $t$. This is, for example, the case when approximating the spectral density of a matrix. Approximating the trace separately for each matrix
+$\mtx{B}(t_1), \dots, \mtx{B}(t_m)$ clearly incurs redundancies and a cost that scales linearly with $m$. To address this issue, we propose and analyze modifications for three stochastic trace estimators, the Girard-Hutchinson, Nyström, and Nyström++ estimators. Our modification uses \emph{constant} randomization across different values of $t$, that is,
+every matrix $\mtx{B}(t_1), \dots, \mtx{B}(t_m)$ is multiplied with the \emph{same} set of random vectors.
+When combined with Chebyshev approximation in $t$, the use of such constant random matrices allows one to reuse matrix-vector products across different values of $t$, leading to significant cost reduction.
+Our analysis shows that the loss of stochastic independence across different $t$ does not lead to deterioration. In particular, we show that $\mathcal{O}(\varepsilon^{-1})$ random matrix-vector products suffice to ensure an error of $\varepsilon > 0$ for Nyström++, independent of low-rank properties of $\mtx{B}(t)$. We discuss in detail how the combination of Nyström++ with 
+Chebyshev approximation applies to spectral density estimation and provide an analysis of the resulting method. This  improves various aspects of an existing stochastic estimator for spectral density estimation. Several numerical experiments from electronic structure interaction, statistical thermodynamics, and neural network optimization validate our findings.
 \end{abstract}
+
+% REQUIRED
+\begin{keywords}
+trace estimation, low-rank approximation, parameter-dependent matrix, Chebyshev interpolation, spectral density, density of states
+\end{keywords}
+
+% REQUIRED
+\begin{MSCcodes}
+65C05, 65F15, 65Y20, 68W20, 68W25, 68W40
+\end{MSCcodes}
 
 \input{intro.tex}
 \input{analysis.tex}
@@ -28,10 +110,16 @@
 \input{numresults.tex}
 \input{conclusion.tex}
 
-\paragraph{Acknowledgements.} The authors gratefully acknowledge the help of Lin Lin in reproducing the example in \refsec{subsec:hamiltonian}. They thank David Persson for many enlightening discussions relating the proof in \refsec{subsec:nystrom-pp}.
-
-\printbibliography
-
 \input{appendix.tex}
+
+\section*{Acknowledgments}
+The authors gratefully acknowledge the help of Lin Lin in reproducing the example in \cref{subsec:hamiltonian}. They thank David Persson for many enlightening discussions relating the proof in \cref{subsec:nystrom-pp}.
+
+%\section*{Acknowledgments}
+%We would like to acknowledge the assistance of volunteers in putting
+%together this example manuscript and supplement.
+
+\bibliographystyle{siamplain}
+\bibliography{bibliography}
 
 \end{document}

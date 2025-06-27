@@ -2,10 +2,10 @@
 
 \section{Moment bounds for Gaussian random vectors and matrices}
 
-The goal of this section is to establish moment bounds for $\lVert \mtx{A} \mtx{\Omega} \rVert _2^2$ with a fixed matrix $\mtx{A}$ and a Gaussian random matrix $\mtx{\Omega}$. These bounds are needed in the proof of \reflem{lem:nystrom}, but may also be of independent interest.
+The goal of this section is to establish moment bounds for $\lVert \mtx{A} \mtx{\Omega} \rVert _2^2$ with a fixed matrix $\mtx{A}$ and a Gaussian random matrix $\mtx{\Omega}$. These bounds are needed in the proof of \cref{lem:nystrom}, but may also be of independent interest.
 The corresponding result for the Frobenius norm can be found in~\cite[Lemma 3]{kressner-2024-randomized-lowrank}. For the spectral norm, moment bounds for $\lVert \mtx{\Omega} \rVert _2^2$ (that is, $\mtx{A} = \mtx{I}$) are well established\cite{chen-2005-condition-numbers, edelman-1988-eigenvalues-condition, james-1964-distributions-matrix}. In \cite[Lemma B.1]{tropp-2023-randomized-algorithms} bounds on the first- and second-order moments for general $\mtx{A}$ are derived. In the following, we will generalize this result to moments of arbitrarily high order. To do so, we first establish two preliminary results.
 
-\begin{lemma}{Moment bound of chi-squared random variable}{gamma}
+\begin{lemma}[Moment bound of chi-squared random variable]\label{lem:gamma}
     Let $X \sim \chi_k^2$, where $\chi_k^2$ denotes the chi-squared distribution with $k \ge 2$ degrees of freedom. Then 
     $
         \mathbb{E}^{{p}}[X] \leq k + p-1
@@ -18,7 +18,7 @@ It is well known that
     $ For every $\alpha \ge 0$, $\beta \ge 2$ the bound $\frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha + 1)} \le (\alpha+\beta/2)^{\beta-1}$ holds~\cite[Equation 2.2]{laforgia-1984-further-inequalities}. The result of the lemma follows by using this bound with $\alpha = k/2-1$ and $\beta = p+1$.
 \end{proof}
 
-\begin{lemma}{Spectral norm moments of Gaussian random vector}{spectral-norm-moment-vector}
+\begin{lemma}[Spectral norm moments of Gaussian random vector]\label{lem:spectral-norm-moment-vector}
     Given $\mtx{A} \in \mathbb{R}^{m \times m}$ and a Gaussian random vector $\vct{\omega} \in \mathbb{R}^{m}$, the bound
     \begin{equation*}
         \mathbb{E}^{p}\big[ \lVert \mtx{A} \vct{\omega} \rVert _2^2 \big]
@@ -47,10 +47,10 @@ Following the proof of \cite[Theorem 1]{cohen-2016-optimal-approximate}, we spli
         \leq \sum_{i=0}^{\ell - 1} \sigma_{ik + 1}^2 ~ \mathbb{E}^{p}\Big[ \sum_{j=1}^{k} \omega_{ik + j}^2 \Big] \\
         &\leq (k + p - 1) \sum_{i=0}^{\ell - 1} \sigma_{ik + 1}^2 \leq (k + p - 1) \Big( \lVert \mtx{\Sigma} \rVert _2^2 + \frac{1}{k} \lVert \mtx{\Sigma} \rVert _F^2 \Big), 
     \end{align*}
-    where we used the triangle inequality, \reflem{lem:gamma}, and \refequ{equ:singular-value-group-bound} for the last three inequalities.
+    where we used the triangle inequality, \cref{lem:gamma}, and \cref{equ:singular-value-group-bound} for the last three inequalities.
 \end{proof}
 
-\begin{lemma}{Spectral norm moments of Gaussian random matrix}{spectral-norm-moment}
+\begin{lemma}[Spectral norm moments of Gaussian random matrix]\label{lem:spectral-norm-moment}
     Given $\mtx{A} \in \mathbb{R}^{m \times m}$ and a Gaussian random matrix $\mtx{\Omega} \in \mathbb{R}^{m \times k}$, the bound
     \begin{equation*}
         \mathbb{E}^{p}\left[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \right]
@@ -64,7 +64,7 @@ Following the proof of \cite[Theorem 1]{cohen-2016-optimal-approximate}, we spli
         \mathbb{E}^{p}\big[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \big]
         \leq \lVert \mtx{A} \rVert _2^2 \mathbb{E}^{p}\big[ \lVert \vct{\omega}_1 \rVert _2^2 \big] + \mathbb{E}^{p}\big[ \lVert \mtx{A} \vct{\omega}_2 \rVert _2^2 \big]
     \end{equation*}
-    for Gaussian random vectors $\vct{\omega}_1 \in \mathbb{R}^{k}$ and $\vct{\omega}_2 \in \mathbb{R}^{m}$. The claimed result follows from applying \reflem{lem:gamma} and \reflem{lem:spectral-norm-moment-vector}:
+    for Gaussian random vectors $\vct{\omega}_1 \in \mathbb{R}^{k}$ and $\vct{\omega}_2 \in \mathbb{R}^{m}$. The claimed result follows from applying \cref{lem:gamma} and \cref{lem:spectral-norm-moment-vector}:
     \begin{equation*}
         \mathbb{E}^{p}\big[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \big]
         \leq (k + p - 1) \lVert \mtx{A} \rVert _2^2  + (k + p - 1) \Big( \lVert \mtx{A} \rVert _2^2 + \frac{1}{k} \lVert \mtx{A} \rVert _F^2 \Big).
@@ -72,7 +72,7 @@ Following the proof of \cite[Theorem 1]{cohen-2016-optimal-approximate}, we spli
 \end{proof}
 
 
-In passing, we note that \reflem{lem:spectral-norm-moment}  yields the bound
+In passing, we note that \cref{lem:spectral-norm-moment}  yields the bound
     \begin{equation*}
         \mathbb{E}^{p}\big[ \lVert \mtx{A} \mtx{\Omega} \rVert _2 \big] = \sqrt{\mathbb{E}^{\sfrac{p}{2}}\big[ \lVert \mtx{A} \mtx{\Omega} \rVert _2^2 \big]} \leq \sqrt{k + p/2-1} \cdot \Big(\sqrt{2} \lVert \mtx{A} \rVert _2 + \frac{1}{\sqrt{k}}\lVert \mtx{A} \rVert_F\Big)
     \end{equation*}
@@ -90,7 +90,7 @@ Any such $X$ satisfies the following tail bound~\cite[P. 29]{boucheron-2013-conc
   \label{equ:subgammatail}
 \end{equation}
 
-\begin{lemma}{Moment bounds for sub-gamma random variables}{sub-gamma-moments}
+\begin{lemma}[Moment bounds for sub-gamma random variables]\label{lem:sub-gamma-moments}
     Let $X$ be a centered, $(\nu,c)$-sub-gamma random variable for $\nu,c>0$. Then
     \begin{equation*}
         \mathbb{E}^p[X] \leq 2 \sqrt{2 \nu p} + 4 c p
@@ -98,7 +98,7 @@ Any such $X$ satisfies the following tail bound~\cite[P. 29]{boucheron-2013-conc
     holds for any $p \geq 1$, $p \in \mathbb{R}$.
 \end{lemma}
 \begin{proof}
-The statement follows from a straightforward extension of the proof of~\cite[Theorem 2.3]{boucheron-2013-concentration-inequalities} from  even integers $p$ to general $p$. We include the detailed argument for completeness. Using integration by parts, the reparametrization $x = \sqrt{2\nu t} + ct$, and~\refequ{equ:subgammatail}, one gets
+The statement follows from a straightforward extension of the proof of~\cite[Theorem 2.3]{boucheron-2013-concentration-inequalities} from  even integers $p$ to general $p$. We include the detailed argument for completeness. Using integration by parts, the reparametrization $x = \sqrt{2\nu t} + ct$, and~\cref{equ:subgammatail}, one gets
 \begin{align*}
  \mathbb{E}\big[|X|^p\big] &= p \int_0^\infty  |x|^{p-1} \mathbb P\big(|X| > x\big) \,\mathrm{d}x \\
  &=  p \int_0^\infty  (\sqrt{2\nu t} + ct)^{p-1} \mathbb P\big(|X| > \sqrt{2\nu t} + ct \big) \frac{ \sqrt{2\nu t} + 2ct}{2t} \,\mathrm{d}t \\
