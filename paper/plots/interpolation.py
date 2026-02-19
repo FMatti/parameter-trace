@@ -9,7 +9,7 @@ from algorithms.helpers import spectral_transformation, form_spectral_density, g
 np.random.seed(0)
 
 # Load matrix
-A = hamiltonian(dim=2)
+A = hamiltonian()
 
 # Perform spectral transform with A and its eigenvalues
 eigvals = np.linalg.eigvalsh(A.toarray())
@@ -20,7 +20,7 @@ eigvals_st = spectral_transformation(eigvals, min_ev, max_ev)
 # Set parameter
 t = np.linspace(-1, 1, 100)
 sigma = 0.005
-n_Omega = 80
+n_Omega = 120
 m_list = (np.logspace(1.8, 3.3, 7).astype(int) // 2) * 2
 
 plt.style.use("paper/plots/stylesheet.mplstyle")

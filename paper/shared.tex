@@ -1,10 +1,3 @@
-% SIAM Shared Information Template
-% This is information that is shared between the main document and any
-% supplement. If no supplement is required, then this information can
-% be included directly in the main document.
-
-
-% Packages and macros go here
 \usepackage{lipsum}
 \usepackage{amsfonts}
 \usepackage{graphicx}
@@ -45,8 +38,43 @@
 \usepackage{amsopn}
 \DeclareMathOperator{\diag}{diag}
 
+%%% FIGURES
 
-%%% Local Variables: 
-%%% mode:latex
-%%% TeX-master: "ex_article"
-%%% End: 
+% Figures
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{subcaption}
+\usepackage{booktabs}
+
+%%% COLOR THEME
+
+% Color package
+\usepackage{xcolor}
+
+% Color definitions
+\definecolor{darkblue}{HTML}{2F455C}
+\definecolor{mainblue}{HTML}{0e437c}
+\definecolor{darkorange}{HTML}{F98125}
+\colorlet{lightblue}{darkblue!10!white}
+\colorlet{lightorange}{darkorange!10!white}
+\colorlet{linkcolor}{black}
+
+% Fix undefined contorl sequence issue with pyplot pgf exports
+\def\mathdefault#1{#1}
+
+%%% CUSTOM COMMANDS
+
+% Custom commands
+\newcommand{\pp}{\text{\raisebox{0.3ex}{\relscale{0.9}++}}}
+\newcommand*\rfrac[2]{{}^{#1}\!/_{#2}}
+\newcommand{\mtx}[1]{\boldsymbol{#1}}
+\newcommand{\vct}[1]{\boldsymbol{#1}}
+
+% Trace estimator notations
+\DeclareMathOperator{\Trace}{Tr}
+\newcommand\Hutch[1]{\Trace_{#1}}
+\newcommand\Nystr[2]{\widehat{#2}_{#1}}
+\newcommand\Nystrpp[2]{\Trace_{#2, #1}}
+
+% Sideway fractions for simple exponents (e.g. 1/2)
+\newcommand\sfrac[2]{{}^{#1}{\mskip -5mu/\mskip -3mu}_{#2}}

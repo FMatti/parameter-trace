@@ -13,7 +13,7 @@ V_0 = -4.0
 beta = 2.0
 
 # Plot periodic Gaussian wells for different number of repetitions
-ns = [1, 2, 5]
+ns = [1, 2, 3]
 for n in ns:
     fig, ax = plt.subplots(figsize=(2, 1.75))
     grid_points = regular_grid(a=0, b=n*L, N=N, dim=2)

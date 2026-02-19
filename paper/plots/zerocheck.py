@@ -24,8 +24,10 @@ m = 2000
 n_Omega = 80
 
 plt.style.use("paper/plots/stylesheet.mplstyle")
-colors = ["#648FFF", "#DC267F", "#FFB000"]
+colors = ["#648FFF", "#DC267F", "#FFB000"]#["#648FFF", "#DC267F", "#FFB000"]
 labels = ["baseline", "without zero-check", "with zero-check"]
+linestyles = ["solid", (0, (2, 2)), (0, (3.5, 3.5))]# , (0, (5, 10))]
+linewidths = [1.5, 1, 1]
 kappa_list = [-1, 1e-5]
 
 # Determine the baseline spectral density
@@ -37,7 +39,7 @@ for i, kappa in enumerate(kappa_list):
     estimate.append(chebyshev_nystrom(A_st, t, m, 0, n_Omega, kernel, kappa=kappa))
 
 for i in range(3):
-    plt.plot(t, estimate[i], color=colors[i], label=labels[i])
+    plt.plot(t, estimate[i], color=colors[i], linestyle=linestyles[i], linewidth=linewidths[i], label=labels[i])
 
 plt.grid(True, which="both")
 plt.ylabel(r"smoothed spectral density $\phi_{\sigma}(t)$")

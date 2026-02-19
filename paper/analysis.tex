@@ -2,8 +2,8 @@
 \label{sec:analysis}
 
 Consider a general parameter-dependent matrix
-$\mtx{B}(t) \in \mathbb{R}^{n \times n}$ for which each
-entry $b_{ij}(t)$ is a 
+$\mtx{B}(t) \in \mathbb{R}^{n \times n}$ --- not necessarily of the form $g_{\sigma}(t\mtx{I} - \mtx{A})$, as will be used later in spectral density estimation (see \cref{sec:application}). Each
+entry $b_{ij}(t)$ is assumed to be a 
 continuous function on a bounded interval $[a,b]$. In this section, we 
 describe and analyze methods that estimate, for several values of $t$, the 
 trace $\Trace(\mtx{B}(t)) = b_{11}(t)+ \cdots + b_{nn}(t)$
@@ -22,7 +22,7 @@ and computes the approximation
 \end{equation}
 Here, $\mtx{\Psi} := [\vct{\psi}_1 ~ \cdots ~ \vct{\psi}_{n_{\mtx{\Psi}}}] \in \mathbb{R}^{n \times n_{\mtx{\Psi}}}$ is a Gaussian random matrix, that is, 
 its entries are independent standard normal random variables.
-There are other sensible choices for the probability distribution, such as the Rademacher distribution. Our theoretical developments, however, only apply to the Gaussian case.
+There are other sensible choices for the probability distribution, such as the Rademacher distribution or the uniform distribution on the $(n-1)$-sphere of radius $\sqrt{n}$ \cite{epperly-2024-xtrace-making,chen-2025-randomized-matrixfree}. Our theoretical developments, however, are intended for the Gaussian case.
 
 The Girard-Hutchinson estimator is a popular choice for spectral density estimation; it has been used in the Haydock method \cite{haydock-1972-electronic-structure}, as well as the Delta-Gauss-Legendre and Delta-Gauss-Chebyshev methods from~\cite{lin-2016-approximating-spectral, lin-2017-randomized-estimation}. However, it shares the disadvantage of Monte Carlo methods: Its error is proportional to $n^{-\sfrac{1}{2}}_{\mtx{\Psi}}$, making it expensive in applications that require decent accuracy.
 
@@ -68,16 +68,16 @@ We first derive an $L^1$-error bound for the Girard-Hutchinson estimator~\cref{e
 \end{equation*}
 
 \begin{theorem}[Girard-Hutchinson estimator for parameter-dependent matrices]\label{thm:hutchinson}
-For a symmetric matrix $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ that depends continuously on $t \in [a, b]$, consider the  Girard-Hutchinson estimator~\cref{equ:hutchinson-trace-estimator} with an $n\times n_{\mtx{\Psi}}$ Gaussian random matrix $\mtx{\Psi}$. Then for any $p \geq 1$, $p \in \mathbb{R}$ and $\gamma \geq 1$, the following bound holds with probability at least $1 - \gamma^{-p}$:
+For a symmetric matrix $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ that depends continuously on $t \in [a, b]$, consider the  Girard-Hutchinson estimator~\cref{equ:hutchinson-trace-estimator} with an $n\times n_{\mtx{\Psi}}$ Gaussian random matrix $\mtx{\Psi}$. Then for any $p \geq 1$, $p \in \mathbb{R}$, and $\gamma \geq 1$, the following bound holds with probability at least $1 - \gamma^{-p}$:
 \begin{equation}
     \int_{a}^{b} |\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))|~\mathrm{d}t \leq 4 \gamma \Big( \sqrt{\frac{p}{n_{\mtx{\Psi}}}}  \|\mtx{B}(t)\|_{F,1} + \frac{2 p}{n_{\mtx{\Psi}}} \|\mtx{B}(t)\|_{2,1} \Big).
     \label{equ:girard-hutchinson-bound}
 \end{equation}
-In particular, given $\varepsilon \in (0, 1)$ and $\delta \in (0, e^{-1}]$, the bound $\int_{a}^{b} | \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) | ~\mathrm{d}t \leq \varepsilon \|\mtx{B}(t)\|_{F,1}$ holds 
-    with probability at least $1-\delta$ if $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2} \log(\delta^{-1}))$.
+In particular, given $\varepsilon \in (0, 1)$ and $\delta \in (0, \sfrac{1}{2}]$, the bound $\int_{a}^{b} | \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) | ~\mathrm{d}t \leq \varepsilon \|\mtx{B}(t)\|_{F,1}$ holds with probability at least $1-\delta$ if $n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-2} \log(\delta^{-1}))$.
 \end{theorem}
 \begin{proof}
-    Let us first consider $t$ fixed. From the proof of \cite[Theorem 1]{cortinovis-2022-randomized-trace}, we know that $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))$ is a $(2 \lVert \mtx{B}(t) \rVert _F^2 / n_{\mtx{\Psi}}, 2 \lVert \mtx{B}(t) \rVert _2 / n_{\mtx{\Psi}})$-sub-gamma random variable. Therefore, \cref{lem:sub-gamma-moments} yields
+    Let us first consider $t$ fixed. From the proof of \cite[Theorem 1]{cortinovis-2022-randomized-trace}, we know that $\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))$ is a $(2 \lVert \mtx{B}(t) \rVert _F^2 / n_{\mtx{\Psi}}, 2 \lVert \mtx{B}(t) \rVert _2 / n_{\mtx{\Psi}})$-sub-gamma random variable. This observation allows us to apply
+    \cref{lem:sub-gamma-moments}, which spells out moment bounds for sub-gamma random variables and yields
     \begin{equation}
         \mathbb{E}^{p}[\Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t))] \leq 4  \sqrt{\frac{p}{n_{\mtx{\Psi}}}} \lVert \mtx{B}(t) \rVert _F + 8 \frac{p}{n_{\mtx{\Psi}}} \lVert \mtx{B}(t) \rVert _2.
         \label{equ:moment-bound-hutchinson}
@@ -91,21 +91,37 @@ In particular, given $\varepsilon \in (0, 1)$ and $\delta \in (0, e^{-1}]$, the 
     \end{align*}
     This implies~\cref{equ:girard-hutchinson-bound} by Markov's inequality.
 
-    Bounding $\lVert \mtx{B}(t) \rVert _2 \leq \lVert \mtx{B}(t) \rVert _F$, setting $\gamma = e$, and choosing $p = \log(\delta^{-1}) \geq 1$, the second part of the theorem follows by taking,  e.g., $n_{\mtx{\Psi}} = \lceil (8 e)^2 \log(\delta^{-1}) \varepsilon^{-2} \rceil$.
+    We now use $\lVert \mtx{B}(t) \rVert _2 \leq \lVert \mtx{B}(t) \rVert _F$ and determine $n_{\mtx{\Psi}}$, such that for some $\gamma, p \geq 1$
+    \begin{equation}
+    4 \gamma \left( \sqrt{\frac{p}{n_{\mtx{\Psi}}}} + \frac{2p}{n_{\mtx{\Psi}}} \right) \leq \varepsilon.
+    \label{equ:girard-hutchinson-bound-constants}
+    \end{equation}
+    The left-hand side of \cref{equ:girard-hutchinson-bound-constants} monotonically decreases with $n_{\mtx{\Psi}}$. Equality is achieved for
+    \begin{equation*}
+    n_{\mtx{\Psi}} = 4 \left( 1 + \sqrt{1 + 2 \varepsilon/\gamma} \right)^2 \varepsilon^{-2} p \gamma^2.
+    \end{equation*}
+    We define the failure probability $\delta = \gamma^{-p} \in (0, \sfrac{1}{2}]$. Since $\varepsilon / \gamma \leq 1$, we can bound $(1 + \sqrt{1 + 2 \varepsilon/\gamma})^2 \leq (1 + \sqrt{3})^2$. The factor $p \gamma^{2} = p \delta^{-\sfrac{2}{p}}$ takes its minimum when $p = 2 \log(\delta^{-1})$, at which point it assumes the value $2 \log(\delta^{-1})e$. With these observations, we see that inequality \cref{equ:girard-hutchinson-bound-constants} still holds for
+    \begin{equation*}
+    n_{\mtx{\Psi}} \geq 8 e \big( 1 + \sqrt{3} \big)^2 \varepsilon^{-2} \log(\delta^{-1}) = \mathcal{O}(\varepsilon^{-2} \log(\delta^{-1})).
+    \end{equation*}
 \end{proof}
 
-\cref{thm:hutchinson} parallels an analogous result for the constant case~\cite[Lemma 2.1]{meyer-2021-hutch-optimal}, except for a slightly more restricted choice of the failure probability $\delta$.
+When setting $\mtx{B}(t) \equiv \mtx{B}$ for a constant matrix $\mtx{B}$, \cref{thm:hutchinson} exactly matches an existing bound for the Girard-Hutchinson estimator; see \cite[Lemma 2.1]{meyer-2021-hutch-optimal}. 
 
 \begin{remark}
-    A variant of \cref{thm:hutchinson} can be derived when assuming that $\mtx{B}(t)$ is SPSD and nonzero for every $t \in [a, b]$. After dividing both sides of \cref{equ:moment-bound-hutchinson} by $\Trace(\mtx{B}(t))$, one can apply the remaining steps of the proof to deduce that
-    \begin{equation*}
-        \int_{a}^{b} \frac{| \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) |}{\Trace(\mtx{B}(t))} ~\mathrm{d}t < \varepsilon
-    \end{equation*}
-    holds with probability at least $1 - \delta$ if $n_{\mtx{\Psi}} = \mathcal{O}(\log(\delta^{-1}) \varepsilon^{-2} \rho^2)$. Here, 
-    the quantity $
-        \rho := \frac{1}{b-a} \int_{a}^{b} \frac{\lVert \mtx{B}(t) \rVert _F}{\Trace(\mtx{B}(t))} ~\mathrm{d}t \in [1,n]
-    $
-is small when the singular values of $\mtx{B}(t)$ decay slowly for the majority of $t\in [a,b]$ and large otherwise. This parallels an analogous result for constant matrices; see~\cite[Remark 2]{cortinovis-2022-randomized-trace}.
+We note the following:
+\begin{enumerate}
+\item A variant of \cref{thm:hutchinson} can be derived when assuming that $\mtx{B}(t)$ is SPSD and nonzero for every $t \in [a, b]$. After dividing both sides of \cref{equ:moment-bound-hutchinson} by $\Trace(\mtx{B}(t))$, one can apply the remaining steps of the proof to deduce that
+\begin{equation*}
+    \int_{a}^{b} \frac{| \Trace(\mtx{B}(t)) - \Hutch{\mtx{\Psi}}(\mtx{B}(t)) |}{\Trace(\mtx{B}(t))} ~\mathrm{d}t < \varepsilon
+\end{equation*}
+holds with probability at least $1 - \delta$ if $n_{\mtx{\Psi}} = \mathcal{O}(\log(\delta^{-1}) \varepsilon^{-2} \rho^2)$. Here, 
+the quantity $
+    \rho := \frac{1}{b-a} \int_{a}^{b} \frac{\lVert \mtx{B}(t) \rVert _F}{\Trace(\mtx{B}(t))} ~\mathrm{d}t \in [1,n]
+$
+is small when the singular values of $\mtx{B}(t)$ decay slowly for the majority of $t\in [a,b]$ and large otherwise. This parallels a similar result for constant matrices; see~\cite[Remark 2]{cortinovis-2022-randomized-trace}.
+\item Using the observations of \cite{epperly-2024-note-self}, \cref{thm:hutchinson} can be restated in the same form for random vectors $\vct{\psi}_1, \dots, \vct{\psi}_{n_{\mtx{\Psi}}} \in \mathbb{R}^{n}$ drawn uniformly from the $(n-1)$-sphere of radius $\sqrt{n}$. In the bound, $\mtx{B}(t)$ is replaced by $\overline{\mtx{B}}(t) := \mtx{B}(t) - n^{-1} \Trace(\mtx{B}(t)) \mtx{I}$.
+\end{enumerate}
 \end{remark}
 
 \subsubsection{Nyström estimator}
@@ -132,7 +148,7 @@ Using that $\mtx{B}(t) - \Nystr{\mtx{\Omega}}{\mtx{B}}(t)$ is SPSD (see, e.g.,~\
     where $\lVert \cdot \rVert _{\ast}$ denotes the nuclear norm and we used \cite[Theorem 1]{gittens-2011-spectral-norm} in the last equality. This allows us to apply \cite[Theorem 5]{kressner-2024-randomized-lowrank}, which immediately implies the statement claimed by the theorem.
 \end{proof}
 
-Compared to the constant case~\cite[Theorem 8.1]{tropp-2023-randomized-algorithms}, the bound of \cref{thm:nystrom} features an additional factor $1+r$, which cannot be compensated for with oversampling.
+Compared to the constant case~\cite[Theorem 8.1]{tropp-2023-randomized-algorithms}, the bound of \cref{thm:nystrom} features an additional factor $1+r$, which cannot straightforwardly be compensated for with oversampling.
 
 \subsection{Nyström++ estimator for parameter-dependent matrices}
 \label{subsec:nystrom-pp}
@@ -184,7 +200,7 @@ Applying \cite[Theorem B.1]{persson-2023-randomized-lowrank} for $f(x) = x$, see
     \end{equation}
     
 To treat the second term in~\cref{equ:nystrom-proof-persson-bonud}, we bound 
-its $q$th moment using the independence of $\mtx{\Omega}_1$ and $\mtx{\Omega}_2$:
+its $q$th moment using a standard Schatten norm bound and submultiplicativity of the spectral norm along with the independence of $\mtx{\Omega}_1$ and $\mtx{\Omega}_2$:
     \begin{equation}
         \mathbb{E}^{q}\left[ \big\| \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \big\|_{(4)}^2 \right]
         \leq \mathbb{E}^{q}\left[ \sqrt{k} \big\| \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \mtx{\Omega}_1^{\dagger} \big\| _2^2 \right]
@@ -211,7 +227,7 @@ its $q$th moment using the independence of $\mtx{\Omega}_1$ and $\mtx{\Omega}_2$
     where we used $(1 + m)^{\sfrac{1}{m}} \leq e$ and $(m!)^{-\sfrac{1}{m}} \leq e/m$. Note that, in contrast 
     to the result of~\cite[Lemma B.3]{tropp-2023-randomized-algorithms}, this inequality is valid for arbitrarily large $n_{\mtx{\Omega}}$, at the expense of a slightly larger constant.
 
-    The second factor in~\cref{equ:nystrom-proof-processed-tail} is bounded using \cref{lem:spectral-norm-moment} with $\mtx{A} = \mtx{\Lambda}_2^{\sfrac{1}{2}}$:
+    The other factor in~\cref{equ:nystrom-proof-processed-tail} is treated using moment bounds for the spectral norm of a non-standard Gaussian random matrix (\cref{lem:spectral-norm-moment} with $\mtx{A} = \mtx{\Lambda}_2^{\sfrac{1}{2}}$):
     \begin{equation*}
         \mathbb{E}^{\sfrac{n_{\mtx{\Omega}}}{4}}\left[ \big\| \mtx{\Lambda}_2^{\sfrac{1}{2}} \mtx{\Omega}_2 \big\|_2^2 \right]
         \leq \frac{5}{4} n_{\mtx{\Omega}} \Big( 2 \big\| \mtx{\Lambda}_2^{\sfrac{1}{2}} \big\|_2^2 + \frac{1}{n_{\mtx{\Omega}}} \big\| \mtx{\Lambda}_2^{\sfrac{1}{2}} \big\|_F^2 \Big).
@@ -245,7 +261,7 @@ its $q$th moment using the independence of $\mtx{\Omega}_1$ and $\mtx{\Omega}_2$
 
 Combining the bound on the Girard-Hutchinson estimator from~\cref{thm:hutchinson} with the result of~\cref{lem:nystrom} finally gives the desired error bound for the Nyström++ trace estimator.
 \begin{theorem}[Nyström++ trace estimator for parameter-dependent matrices]\label{thm:nystrom-pp}
-    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be SPSD and continuous for $t \in [a, b]$. Choose $\delta \in (0, 2e^{-1}]$ and $\varepsilon \in (0, 1)$.
+    Let $\mtx{B}(t) \in \mathbb{R}^{n \times n}$ be SPSD and continuous for $t \in [a, b]$. Choose $\delta \in (0, 1]$ and $\varepsilon \in (0, 1)$.
     Then, for $n_{\mtx{\Psi}} = n_{\mtx{\Omega}} = \mathcal{O}(\varepsilon^{-1} \log(\delta^{-1}))$,
     the inequality 
     \begin{equation*}

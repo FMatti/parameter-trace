@@ -1,0 +1,14 @@
+The supplementary material "parameter-trace.zip" contains the GitHub repository https://github.com/FMatti/parameter-trace. It is structured as follows:
+
+
+parameter-trace
+│   README.md           (project description)
+|   requirements.txt    (Python package requirements file)
+|   reproduce.py        (script for easy reproduction of project)
+|
+└───paper               (the LaTeX project for the paper)
+└───reproduce           (scripts which help setup and reproduce project)
+└───algorithms          (the algorithms introduced in the paper)
+└───matrices            (the example matrices used for the numerical results)
+└───test                (unit tests written for the algorithms)
+
