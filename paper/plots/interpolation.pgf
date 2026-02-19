@@ -620,7 +620,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=0.303703in, y=0.765092in, left, base]{\color{textcolor}{\rmfamily\fontsize{12.000000}{14.400000}\selectfont\catcode`\^=\active\def^{\ifmmode\sp\else\^{}\fi}\catcode`\%=\active\def%{\%}$\mathdefault{10^{-5}}$}}%
+\pgftext[x=0.303703in, y=0.765093in, left, base]{\color{textcolor}{\rmfamily\fontsize{12.000000}{14.400000}\selectfont\catcode`\^=\active\def^{\ifmmode\sp\else\^{}\fi}\catcode`\%=\active\def%{\%}$\mathdefault{10^{-5}}$}}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfpathrectangle{\pgfqpoint{0.721913in}{0.549073in}}{\pgfqpoint{4.518250in}{2.310000in}}%
@@ -798,8 +798,8 @@
 \pgfpathlineto{\pgfqpoint{2.269077in}{2.009321in}}%
 \pgfpathlineto{\pgfqpoint{2.989445in}{1.828200in}}%
 \pgfpathlineto{\pgfqpoint{3.704102in}{1.411721in}}%
-\pgfpathlineto{\pgfqpoint{4.419657in}{0.741666in}}%
-\pgfpathlineto{\pgfqpoint{5.132586in}{0.741576in}}%
+\pgfpathlineto{\pgfqpoint{4.419657in}{0.741665in}}%
+\pgfpathlineto{\pgfqpoint{5.132586in}{0.741575in}}%
 \pgfusepath{stroke}%
 \end{pgfscope}%
 \begin{pgfscope}%
@@ -848,11 +848,11 @@
 \pgfsys@useobject{currentmarker}{}%
 \end{pgfscope}%
 \begin{pgfscope}%
-\pgfsys@transformshift{4.419657in}{0.741666in}%
+\pgfsys@transformshift{4.419657in}{0.741665in}%
 \pgfsys@useobject{currentmarker}{}%
 \end{pgfscope}%
 \begin{pgfscope}%
-\pgfsys@transformshift{5.132586in}{0.741576in}%
+\pgfsys@transformshift{5.132586in}{0.741575in}%
 \pgfsys@useobject{currentmarker}{}%
 \end{pgfscope}%
 \end{pgfscope}%
@@ -868,9 +868,9 @@
 \pgfpathmoveto{\pgfqpoint{0.829491in}{1.951822in}}%
 \pgfpathlineto{\pgfqpoint{1.562672in}{1.960635in}}%
 \pgfpathlineto{\pgfqpoint{2.269077in}{1.909660in}}%
-\pgfpathlineto{\pgfqpoint{2.989445in}{1.715950in}}%
-\pgfpathlineto{\pgfqpoint{3.704102in}{1.318999in}}%
-\pgfpathlineto{\pgfqpoint{4.419657in}{0.741719in}}%
+\pgfpathlineto{\pgfqpoint{2.989445in}{1.715951in}}%
+\pgfpathlineto{\pgfqpoint{3.704102in}{1.319000in}}%
+\pgfpathlineto{\pgfqpoint{4.419657in}{0.741721in}}%
 \pgfpathlineto{\pgfqpoint{5.132586in}{0.741573in}}%
 \pgfusepath{stroke}%
 \end{pgfscope}%
@@ -907,15 +907,15 @@
 \pgfsys@useobject{currentmarker}{}%
 \end{pgfscope}%
 \begin{pgfscope}%
-\pgfsys@transformshift{2.989445in}{1.715950in}%
+\pgfsys@transformshift{2.989445in}{1.715951in}%
 \pgfsys@useobject{currentmarker}{}%
 \end{pgfscope}%
 \begin{pgfscope}%
-\pgfsys@transformshift{3.704102in}{1.318999in}%
+\pgfsys@transformshift{3.704102in}{1.319000in}%
 \pgfsys@useobject{currentmarker}{}%
 \end{pgfscope}%
 \begin{pgfscope}%
-\pgfsys@transformshift{4.419657in}{0.741719in}%
+\pgfsys@transformshift{4.419657in}{0.741721in}%
 \pgfsys@useobject{currentmarker}{}%
 \end{pgfscope}%
 \begin{pgfscope}%
