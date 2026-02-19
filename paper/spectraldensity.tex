@@ -361,7 +361,7 @@ Especially for small smoothing parameters $\sigma$, the rapid decay of the Gauss
 \subsubsection{Analysis}
 \label{subsubsec:chebyshev-nystrom-analysis}
 
-In this section, we analyze the accuracy of Chebyshev-Nyström++ estimate returned by~\cref{alg:nystrom-chebyshev-pp}.
+In this section, we analyze the accuracy of the Chebyshev-Nyström++ estimate returned by~\cref{alg:nystrom-chebyshev-pp}.
 \begin{theorem}[Error of Chebyshev-Nyström++ estimate for smoothed spectral density]\label{thm:chebyshev-nystrom}
     For a smoothing parameter $\sigma > 0$, let $\phi_{\sigma}$ be the smoothed spectral density~\cref{equ:smooth-spectral-density} of a symmetric matrix $\mtx{A} \in \mathbb{R}^{n \times n}$ with spectrum contained in $[-1, 1]$. Consider $\varepsilon \in (0, 3)$ and $\delta \in (0, 1]$.
     Then the Chebyshev-Nyström++ estimate $\widetilde{\underline{\phi}}_{\sigma}^{(m)}$ 
@@ -370,7 +370,7 @@ In this section, we analyze the accuracy of Chebyshev-Nyström++ estimate return
         \int_{-1}^{1} \left| \phi_{\sigma}(t) - \widetilde{\underline{\phi}}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t \leq \varepsilon
         \label{equ:chebyshev-nystrom-error}
     \end{equation*}
-    with probability at least $1 - \delta$ for $m = \mathcal{O}(\sigma^{-1} \log(\sigma^{-2} \varepsilon^{-1}))$ and $n_{\mtx{\Omega}} = n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-1}\log(\delta^{-1}))$.
+    with probability $\geq 1 - \delta$ for $m = \mathcal{O}(\sigma^{-1} \log(\sigma^{-2} \varepsilon^{-1}))$ and $n_{\mtx{\Omega}} = n_{\mtx{\Psi}} = \mathcal{O}(\varepsilon^{-1}\log(\delta^{-1}))$.
 \end{theorem}
 
 \begin{proof}
@@ -378,7 +378,7 @@ Combining results derived above, we obtain that
     \begin{align*}
         &\int_{-1}^{1} \left| \phi_{\sigma}(t) - \widetilde{\underline{\phi}}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t \notag \\
         &\leq \int_{-1}^{1} \left| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \int_{-1}^{1} \left| \underline{\phi}_{\sigma}^{(m)}(t) - \widetilde{\underline{\phi}}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t &&  \notag \\
-        &\leq \int_{-1}^{1} \left| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \widetilde{\varepsilon} \int_{-1}^{1} \left| \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t && \text{(\cref{thm:nystrom-pp} w.p. $\geq 1 - \delta$)} \notag \\
+        &\leq \int_{-1}^{1} \left| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \widetilde{\varepsilon} \int_{-1}^{1} \left| \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t && \text{(\cref{thm:nystrom-pp}, $\mathbb{P} \geq 1 - \delta$)} \notag \\
         &\leq (1 + \widetilde{\varepsilon}) \int_{-1}^{1} \left| \phi_{\sigma}(t) - \underline{\phi}_{\sigma}^{(m)}(t) \right|~\mathrm{d}t + \widetilde{\varepsilon} \int_{-1}^{1} \left| \phi_{\sigma}(t) \right|~\mathrm{d}t &&  \notag \\
         &\leq (1 + \widetilde{\varepsilon}) \underline{E}_{\sigma, m} + \widetilde{\varepsilon}. && \text{(\cref{lem:non-negative-chebyshev-error})} \notag 
     \end{align*}

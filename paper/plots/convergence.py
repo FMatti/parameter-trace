@@ -9,7 +9,7 @@ from matrices.electronic_structure import hamiltonian
 np.random.seed(0)
 
 # Load matrix
-for n in [1, 3]:
+for n in [1]:#, 3]:
     A = hamiltonian(n=n)
 
     # Perform spectral transform with A and its eigenvalues
